@@ -42,24 +42,4 @@ public class User {
     public String getProfilePhotoURL() {
         return profilePhotoURL;
     }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setProfilePhotoURL(String profilePhotoURL) {
-        this.profilePhotoURL = profilePhotoURL;
-    }
 }
