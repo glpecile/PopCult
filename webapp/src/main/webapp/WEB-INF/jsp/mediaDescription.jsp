@@ -2,11 +2,21 @@
 
 <html>
 <head>
-    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <title><c:out value="${media.title}"/> &#8226; PopCult</title>
 </head>
 <body>
-<div>
-    <h2><c:out value="${media.title}"/></h2>
+<div class="row justify-content-center">
+    <div class="col-8 clearfix">
+        <img src="${media.image}" class="img-fluid img-thumbnail float-left mr-2" width="20%" alt="Media Image">
+        <div class="list-group list-group-horizontal">
+        <h1><c:out value="${media.title}"/></h1>
+        <h4 class = "mt-3 ml-5">${media.releaseYear}</h4>
+        </div>
+        <p>${media.description}</p>
+    </div>
 </div>
 </body>
 </html>

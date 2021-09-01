@@ -54,6 +54,10 @@ public class Media {
         return releaseDate;
     }
 
+    public String getReleaseYear(){
+        return String.valueOf(releaseDate).substring(0, 4);
+    }
+
     public int getSeasons() {
         return seasons;
     }
