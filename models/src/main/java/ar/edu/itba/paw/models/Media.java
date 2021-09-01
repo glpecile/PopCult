@@ -4,22 +4,34 @@ import java.util.Date;
 
 
 public class Media {
+    private int mediaId;
+    private int type;
     private String title;
     private String description;
-    private String imageURL;
-    private Integer length;
+    private String image;
+    private int length;
     private Date releaseDate;
-    private Integer votesQty;
-    private Integer votesAvg;
+    private int seasons;
+    private int country;
 
-    public Media(String title, String description, String imageURL, Integer length, Date releaseDate, Integer votesQty, Integer votesAvg) {
+    public Media(int mediaId, int type, String title, String description, String image, int length, Date releaseDate, int seasons, int country) {
+        this.mediaId = mediaId;
+        this.type = type;
         this.title = title;
         this.description = description;
-        this.imageURL = imageURL;
+        this.image = image;
         this.length = length;
         this.releaseDate = releaseDate;
-        this.votesQty = votesQty;
-        this.votesAvg = votesAvg;
+        this.seasons = seasons;
+        this.country = country;
+    }
+
+    public int getMediaId() {
+        return mediaId;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public String getTitle() {
@@ -31,10 +43,10 @@ public class Media {
     }
 
     public String getImageURL() {
-        return imageURL;
+        return image;
     }
 
-    public Integer getLength() {
+    public int getLength() {
         return length;
     }
 
@@ -42,11 +54,11 @@ public class Media {
         return releaseDate;
     }
 
-    public Integer getVotesQty() {
-        return votesQty;
+    public int getSeasons() {
+        return seasons;
     }
 
-    public Integer getVotesAvg() {
-        return votesAvg;
+    public int getCountry() {
+        return country;
     }
 }
