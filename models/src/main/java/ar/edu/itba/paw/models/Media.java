@@ -42,7 +42,7 @@ public class Media {
         return description;
     }
 
-    public String getImageURL() {
+    public String getImage() {
         return image;
     }
 

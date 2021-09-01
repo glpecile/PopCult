@@ -22,7 +22,7 @@ public class MediaDaoJdbcImpl implements MediaDao {
                     rs.getInt("type"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    rs.getString("imageURL"),
+                    rs.getString("image"),
                     rs.getInt("length"),
                     rs.getDate("releaseDate"),
                     rs.getInt("seasons"),
