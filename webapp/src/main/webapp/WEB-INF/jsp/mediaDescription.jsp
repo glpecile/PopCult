@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -12,10 +10,11 @@
     <div class="col-8 clearfix">
         <img src="${media.image}" class="img-fluid img-thumbnail float-left mr-2" width="20%" alt="Media Image">
         <div class="list-group list-group-horizontal">
-        <h1><c:out value="${media.title}"/></h1>
-        <h4 class = "mt-3 ml-5">${media.releaseYear}</h4>
+            <h1><c:out value="${media.title}"/></h1>
+            <h4 class="mx-3 mt-3">&#8226;</h4>
+            <h4 class="mt-3">${media.releaseYear}</h4>
         </div>
-        <p>${media.description}</p>
+        <p class="text-justify">${media.description}</p>
     </div>
 </div>
 </body>
