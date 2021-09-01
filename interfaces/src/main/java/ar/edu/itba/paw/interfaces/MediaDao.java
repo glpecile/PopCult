@@ -10,4 +10,5 @@ public interface MediaDao {
 
     List<Media> getMediaList();
 
+    List<Media> getMediaList(int mediaType, int page, int pageSize);
 }

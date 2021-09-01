@@ -16,6 +16,7 @@ import java.util.Optional;
 public class MediaDaoJdbcImpl implements MediaDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
     private static final RowMapper<Media> ROW_MAPPER =
             (rs, rowNum) -> new Media(
                     rs.getInt("mediaId"),
@@ -53,5 +54,10 @@ public class MediaDaoJdbcImpl implements MediaDao {
     @Override
     public List<Media> getMediaList() {
         return jdbcTemplate.query("SELECT * FROM media", ROW_MAPPER);
+    }
+
+    @Override
+    public List<Media> getMediaList(int mediaType, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, 10 * page, pageSize}, ROW_MAPPER);
     }
 }

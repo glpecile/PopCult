@@ -9,4 +9,6 @@ public interface MediaService {
     Optional<Media> getById(int mediaId);
 
     List<Media> getMediaList();
+
+    List<Media> getMediaList(int mediaType, int page, int pageSize);
 }

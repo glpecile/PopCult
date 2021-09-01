@@ -23,4 +23,9 @@ public class MediaServiceImpl implements MediaService {
     public List<Media> getMediaList() {
         return mediaDao.getMediaList();
     }
+
+    @Override
+    public List<Media> getMediaList(int mediaType, int page, int pageSize) {
+        return mediaDao.getMediaList(mediaType, page, pageSize);
+    }
 }
