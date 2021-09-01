@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface MediaDao {
     Optional<Media> getById(int mediaId);
 
-    Optional<List<Media>> getMediaList();
+    List<Media> getMediaList();
 
 }

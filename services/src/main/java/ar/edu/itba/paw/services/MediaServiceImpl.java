@@ -20,7 +20,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public Optional<List<Media>> getMediaList() {
+    public List<Media> getMediaList() {
         return mediaDao.getMediaList();
     }
 }

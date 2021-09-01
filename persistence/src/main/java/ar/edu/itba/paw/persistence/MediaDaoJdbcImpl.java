@@ -34,8 +34,8 @@ public class MediaDaoJdbcImpl implements MediaDao {
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("media").usingGeneratedKeyColumns("mediaId");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS media (" +
                 "mediaId SERIAL PRIMARY KEY," +
-                "type INT," +
-                "title VARCHAR(100), " +
+                "type INT NOT NULL," +
+                "title VARCHAR(100) NOT NULL, " +
                 "description TEXT," +
                 "image TEXT," +
                 "length INT," +
@@ -51,7 +51,7 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public Optional<List<Media>> getMediaList() {
-        return Optional.empty();
+    public List<Media> getMediaList() {
+        return jdbcTemplate.query("SELECT * FROM media", ROW_MAPPER);
     }
 }

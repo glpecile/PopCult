@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface MediaService {
     Optional<Media> getById(int mediaId);
 
-    Optional<List<Media>> getMediaList();
+    List<Media> getMediaList();
 }
