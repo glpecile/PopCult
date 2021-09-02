@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.models.Media;
-import ar.edu.itba.paw.models.MediaType;
+import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
