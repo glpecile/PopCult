@@ -17,7 +17,7 @@ public class MediaDaoJdbcImpl implements MediaDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final RowMapper<Media> ROW_MAPPER =
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER =
             (rs, rowNum) -> new Media(
                     rs.getInt("mediaId"),
                     rs.getInt("type"),
@@ -47,17 +47,22 @@ public class MediaDaoJdbcImpl implements MediaDao {
 
     @Override
     public Optional<Media> getById(int mediaId) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE mediaId = ?", new Object[]{mediaId}, ROW_MAPPER)
+        return jdbcTemplate.query("SELECT * FROM media WHERE mediaId = ?", new Object[]{mediaId}, MEDIA_ROW_MAPPER)
                 .stream().findFirst();
     }
 
     @Override
+    public List<Media> getById(List<Integer> mediaIds) {
+        return jdbcTemplate.query("SELECT * FROM media WHERE mediaId IN (?)", new Object[]{mediaIds.toArray()}, MEDIA_ROW_MAPPER);
+    }
+
+    @Override
     public List<Media> getMediaList() {
-        return jdbcTemplate.query("SELECT * FROM media", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM media", MEDIA_ROW_MAPPER);
     }
 
     @Override
     public List<Media> getMediaList(int mediaType, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, 10 * page, pageSize}, ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
     }
 }
