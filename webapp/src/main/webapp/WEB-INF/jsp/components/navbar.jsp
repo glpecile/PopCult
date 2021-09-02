@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="https://media.discordapp.net/attachments/851847371851956334/882715247721463808/PopCultTextLogo.png"
+            <img src="<c:url value='/resources/images/PopCultTextLogo.png'/>"
                  alt="popcult_text_logo" width="15%">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll"
