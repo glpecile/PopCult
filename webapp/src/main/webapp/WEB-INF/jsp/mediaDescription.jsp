@@ -1,9 +1,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title><c:out value="${media.title}"/> &#8226; PopCult</title>
 </head>
 <body>
@@ -29,8 +30,8 @@
                 <%--                <div class="small mb-1">${media.releaseYear}</div>--%>
                 <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
                 <div class="fs-5 mb-5">
-                    <span class="text-decoration-line-through">${media.releaseYear}</span>
-                    <span class="text-decoration-line-through mx-3 mt-3">&#8226;</span>
+                    <span>${media.releaseYear}</span>
+                    <span class="mx-3 mt-3">&#8226;</span>
                     <span>Country</span>
                 </div>
                 <p class="lead">${media.description}</p>
