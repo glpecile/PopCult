@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +55,13 @@ public class MediaDaoJdbcImpl implements MediaDao {
 
     @Override
     public List<Media> getById(List<Integer> mediaIds) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE mediaId IN (?)", new Object[]{mediaIds.toArray()}, MEDIA_ROW_MAPPER);
+        if(mediaIds.size() == 0)
+            return new ArrayList<>();
+        String inSql = String.join(",", Collections.nCopies(mediaIds.size(), "?"));
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM media WHERE mediaId IN (%s)", inSql),
+                 mediaIds.toArray(), MEDIA_ROW_MAPPER);
+
     }
 
     @Override
