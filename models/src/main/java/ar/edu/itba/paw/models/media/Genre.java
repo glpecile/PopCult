@@ -25,7 +25,12 @@ public enum Genre {
     Genre(String genre) {
         this.genre = genre;
     }
+
     public String getGenre() {
         return genre;
+    }
+
+    public int getOrdinal(String name) {
+        return Genre.valueOf(name).ordinal() + 1;
     }
 }
