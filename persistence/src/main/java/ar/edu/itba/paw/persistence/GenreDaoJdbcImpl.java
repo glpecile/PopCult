@@ -29,7 +29,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
         genrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("genre").usingGeneratedKeyColumns("genreId");
         mediaGenrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaGenre");
 
-        jdbcTemplate.execute("DROP TABLE IF EXISTS genre");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS genre(" +
                 "genreId SERIAL PRIMARY KEY," +
                 "name TEXT NOT NULL)");
