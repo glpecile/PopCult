@@ -17,10 +17,10 @@
     <div class="row">
         <c:forEach var="media" items="${mediaList}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/card.jsp" >
+                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
                     <jsp:param name="title" value="${media.title}"/>
-                    <jsp:param name="releaseDate" value="${media.releaseDate}"/>
+                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                     <jsp:param name="mediaId" value="${media.mediaId}"/>
                 </jsp:include>
             </div>
@@ -28,5 +28,10 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
+<%--<script>--%>
+<%--    $(function () {--%>
+<%--        $('[data-toggle="tooltip"]').tooltip();--%>
+<%--    });--%>
+<%--</script>--%>
 </body>
 </html>
