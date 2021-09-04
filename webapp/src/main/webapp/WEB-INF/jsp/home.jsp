@@ -15,6 +15,7 @@
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 
 <div class="col-8 offset-2">
+    <br>
 
     <h4>Recently Added Films</h4>
     <div class="container-fluid">
@@ -32,7 +33,7 @@
         </div>
     </div>
 
-    <br>
+    <hr>
 
     <h4>Recently Added Series</h4>
     <div class="container-fluid">
@@ -50,7 +51,7 @@
         </div>
     </div>
 
-    <br>
+    <hr>
 
     <div class="row">
         <h4>Explore some Films and Series</h4>
@@ -65,6 +66,21 @@
             </div>
         </c:forEach>
     </div>
+
+    <br>
+
+    <nav>
+        <ul class="pagination">
+            <c:forEach var="i" begin="1" end="${mediaPages}">
+                <li class="page-item">
+                    <a class="page-link" href="<c:url value="/?page=${i}"/>">
+                        <c:out value="${i}"/>
+                    </a>
+                </li>
+            </c:forEach>
+        </ul>
+    </nav>
+
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 <%--<script>--%>

@@ -31,6 +31,9 @@ public class MediaDaoJdbcImpl implements MediaDao {
                     rs.getInt("seasons"),
                     rs.getInt("country"));
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
+
     @Autowired
     public MediaDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -72,6 +75,12 @@ public class MediaDaoJdbcImpl implements MediaDao {
     @Override
     public List<Media> getMediaList(int mediaType, int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCount() {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER)
+                .stream().findFirst();
     }
 
     @Override
