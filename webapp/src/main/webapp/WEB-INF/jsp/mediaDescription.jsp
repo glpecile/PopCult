@@ -35,14 +35,6 @@
                     <span>Country</span>
                 </div>
                 <p class="lead">${media.description}</p>
-                <div class="d-flex">
-                    <img class="ml-2"
-                         src="https://media.discordapp.net/attachments/851847371851956334/882715243460034630/PopCultLogo.png"
-                         alt="popcult_eye_logo" width="10%">
-                    <img class="ml-2"
-                         src="https://www.clipartmax.com/png/middle/13-133226_purple-heart-clip-art-dark-purple-heart-clip-art.png"
-                         alt="popcult_eye_logo" width="10%"/>
-                </div>
             </div>
         </div>
     </div>
