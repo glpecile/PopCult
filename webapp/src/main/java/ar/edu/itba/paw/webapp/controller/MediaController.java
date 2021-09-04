@@ -29,8 +29,12 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        final List<Media> mediaList = mediaService.getMediaList();
+        final List<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0,itemsPerPage);
+        final List<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0,itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(0,itemsPerPage);
         mav.addObject("mediaList", mediaList);
+        mav.addObject("filmsList", filmsLatest);
+        mav.addObject("seriesList", seriesLatest);
         return mav;
     }
 

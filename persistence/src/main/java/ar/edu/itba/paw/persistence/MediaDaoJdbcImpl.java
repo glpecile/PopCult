@@ -65,12 +65,17 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public List<Media> getMediaList() {
-        return jdbcTemplate.query("SELECT * FROM media", MEDIA_ROW_MAPPER);
+    public List<Media> getMediaList(int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM media OFFSET ? LIMIT ? ", new Object[] {pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
     }
 
     @Override
     public List<Media> getMediaList(int mediaType, int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? ORDER BY releasedate DESC OFFSET ? LIMIT ?  ", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
     }
 }

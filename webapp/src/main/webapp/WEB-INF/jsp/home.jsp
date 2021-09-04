@@ -13,8 +13,47 @@
 
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+
 <div class="col-8 offset-2">
+
+    <h4>Recently Added Films</h4>
+    <div class="container-fluid">
+        <div class="row flex-row flex-nowrap overflow-auto">
+            <c:forEach var="film" items="${filmsList}">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                        <jsp:param name="image" value="${film.image}"/>
+                        <jsp:param name="title" value="${film.title}"/>
+                        <jsp:param name="releaseDate" value="${film.releaseYear}"/>
+                        <jsp:param name="mediaId" value="${film.mediaId}"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+
+    <br>
+
+    <h4>Recently Added Series</h4>
+    <div class="container-fluid">
+        <div class="row flex-row flex-nowrap overflow-auto">
+            <c:forEach var="serie" items="${seriesList}">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                        <jsp:param name="image" value="${serie.image}"/>
+                        <jsp:param name="title" value="${serie.title}"/>
+                        <jsp:param name="releaseDate" value="${serie.releaseYear}"/>
+                        <jsp:param name="mediaId" value="${serie.mediaId}"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+
+    <br>
+
     <div class="row">
+        <h4>Explore some Films and Series</h4>
         <c:forEach var="media" items="${mediaList}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
