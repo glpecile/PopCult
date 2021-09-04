@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HelloWorldController {
 
-    @RequestMapping("/")
+    @RequestMapping("/test")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("greeting", "PopCult");
