@@ -12,12 +12,17 @@ public enum Genre {
     FANTASY("Fantasy"),
     HISTORY("History"),
     HORROR("Horror"),
+    KIDS("Kids"),
     MUSIC("Music"),
     MYSTERY("Mystery"),
+    NEWS("News"),
+    REALITY("Reality"),
     ROMANCE("Romance"),
     SCIENCEFICTION("Science Fiction"),
-    THRILLER("Thriller"),
+    SOAP("Soap"),
     TVMOVIE("TV Movie"),
+    TALK("Talk"),
+    THRILLER("Thriller"),
     WAR("War"),
     WESTERN("Western");
     private final String genre;
