@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MediaService;
+import ar.edu.itba.paw.interfaces.StaffService;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
+import ar.edu.itba.paw.models.staff.Actor;
+import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,8 @@ public class MediaController {
 
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private StaffService staffService;
 
     private static final int itemsPerPage = 12;
 
@@ -33,7 +38,11 @@ public class MediaController {
     public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId) {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
+        final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         mav.addObject("media", media);
+        mav.addObject("directorList", directorList);
+        mav.addObject("actorList", actorList);
         return mav;
     }
 
