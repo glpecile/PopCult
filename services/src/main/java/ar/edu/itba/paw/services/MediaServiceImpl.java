@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.models.Media;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,11 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public Optional<Media> getById(int mediaId) {
         return mediaDao.getById(mediaId);
+    }
+
+    @Override
+    public List<Media> getById(List<Integer> mediaIds) {
+        return mediaDao.getById(mediaIds);
     }
 
     @Override
