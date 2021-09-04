@@ -69,18 +69,11 @@
 
     <br>
 
-    <nav>
-        <ul class="pagination">
-            <c:forEach var="i" begin="1" end="${mediaPages}">
-                <li class="page-item">
-                    <a class="page-link" href="<c:url value="/?page=${i}"/>">
-                        <c:out value="${i}"/>
-                    </a>
-                </li>
-            </c:forEach>
-        </ul>
-    </nav>
-
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${mediaPages}"/>
+        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="urlBase" value="/"/>
+    </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 <%--<script>--%>

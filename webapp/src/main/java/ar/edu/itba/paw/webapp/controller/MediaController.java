@@ -37,6 +37,7 @@ public class MediaController {
         mav.addObject("seriesList", seriesLatest);
         mav.addObject("mediaList", mediaList);
         mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
