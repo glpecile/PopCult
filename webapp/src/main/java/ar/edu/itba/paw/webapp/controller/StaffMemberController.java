@@ -16,9 +16,9 @@ import java.util.List;
 @Controller
 public class StaffMemberController {
     @Autowired
-    private StaffService staffService;
-    @Autowired
     private MediaService mediaService;
+    @Autowired
+    private StaffService staffService;
 
     private static final int itemsPerPage = 4;
 
