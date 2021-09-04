@@ -23,6 +23,7 @@ public class MediaController {
     private MediaService mediaService;
     @Autowired
     private StaffService staffService;
+
     private static final int itemsPerPage = 12;
 
     @RequestMapping("/")
