@@ -11,7 +11,11 @@ public interface MediaDao {
 
     List<Media> getById(List<Integer> mediaIds);
 
-    List<Media> getMediaList();
+    List<Media> getMediaList(int page, int pageSize);
 
     List<Media> getMediaList(int mediaType, int page, int pageSize);
+
+    Optional<Integer> getMediaCount();
+
+    List<Media> getLatestMediaList(int mediaType, int page, int pageSize);
 }

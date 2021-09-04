@@ -27,10 +27,17 @@ public class MediaController {
     private static final int itemsPerPage = 12;
 
     @RequestMapping("/")
-    public ModelAndView home() {
+    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("home");
-        final List<Media> mediaList = mediaService.getMediaList();
+        final List<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerPage);
+        final List<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(page - 1, itemsPerPage);
+        final Integer mediaCount = mediaService.getMediaCount().orElse(0);
+        mav.addObject("filmsList", filmsLatest);
+        mav.addObject("seriesList", seriesLatest);
         mav.addObject("mediaList", mediaList);
+        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
