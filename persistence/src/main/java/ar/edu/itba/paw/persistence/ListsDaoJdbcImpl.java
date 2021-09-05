@@ -28,7 +28,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
                     rs.getString("image"));
 
     private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaListId");
+            (rs, rowNum) -> rs.getInt("mediaId");
 
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
@@ -69,6 +69,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<Integer> getMediaIdInList(int mediaListId) {
-        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE medialistid = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
     }
 }
