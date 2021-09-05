@@ -36,9 +36,10 @@ public class StaffServiceImpl implements StaffService {
         return staffDao.getMediaByActor(staffMemberId, page, pageSize);
     }
 
+
     @Override
-    public List<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType) {
-        return staffDao.getMediaByRoleType(staffMemberId,page,pageSize,roleType);
+    public List<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+        return staffDao.getMedia(staffMemberId, page, pageSize);
     }
 
     @Override
@@ -50,4 +51,20 @@ public class StaffServiceImpl implements StaffService {
     public List<Actor> getActorsByMedia(int mediaId) {
         return staffDao.getActorsByMedia(mediaId);
     }
+
+    @Override
+    public Optional<Integer> getMediaCount(int staffMemberId) {
+        return staffDao.getMediaCount(staffMemberId);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
+        return staffDao.getMediaCountByDirector(staffMemberId);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByActor(int staffMemberId) {
+        return staffDao.getMediaCountByActor(staffMemberId);
+    }
+
 }

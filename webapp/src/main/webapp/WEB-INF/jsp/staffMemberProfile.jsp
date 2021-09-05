@@ -10,6 +10,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<br>
 <div class="col-8 offset-2">
     <div class="row justify-content-center">
         <div class="col-4 clearfix">
@@ -58,7 +59,12 @@
             </div>
         </c:forEach>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${mediaPages}"/>
+        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="urlBase" value="${urlBase}"/>
+    </jsp:include>
 </div>
-
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

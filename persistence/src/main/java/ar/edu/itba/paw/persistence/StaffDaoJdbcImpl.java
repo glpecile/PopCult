@@ -39,6 +39,9 @@ public class StaffDaoJdbcImpl implements StaffDao {
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
+
     @Autowired
     public StaffDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -90,11 +93,13 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
     }
+
     @Override
-    public List<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType) {
-        if(roleType == RoleType.ACTOR.ordinal())
-            return getMediaByActor(staffMemberId,page,pageSize);
-        return getMediaByDirector(staffMemberId,page,pageSize);
+    public List<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+        return jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
+                "UNION" +
+                "(SELECT crew.mediaId FROM crew WHERE staffMemberId = ?)" +
+                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, staffMemberId,pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
     }
     @Override
     public List<Director> getDirectorsByMedia(int mediaId) {
@@ -108,4 +113,25 @@ public class StaffDaoJdbcImpl implements StaffDao {
         return jdbcTemplate.query("SELECT * FROM staffMember NATURAL JOIN crew " +
                 "WHERE mediaId = ? ORDER BY name ASC", new Object[]{mediaId}, ACTOR_ROW_MAPPER);
     }
+
+
+    @Override
+    public Optional<Integer> getMediaCountByActor(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+    @Override
+    public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Optional<Integer> getMediaCount(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
+                "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
+                "UNION" +
+                "(SELECT crew.mediaId FROM crew WHERE staffmemberid = ?)) AS aux", new Object[]{staffMemberId, staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+
 }
