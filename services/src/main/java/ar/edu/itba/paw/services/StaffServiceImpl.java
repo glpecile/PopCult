@@ -37,6 +37,11 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public List<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType) {
+        return staffDao.getMediaByRoleType(staffMemberId,page,pageSize,roleType);
+    }
+
+    @Override
     public List<Director> getDirectorsByMedia(int mediaId) {
         return staffDao.getDirectorsByMedia(mediaId);
     }

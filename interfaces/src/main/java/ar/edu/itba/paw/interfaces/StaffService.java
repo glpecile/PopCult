@@ -17,7 +17,11 @@ public interface StaffService {
 
     List<Integer> getMediaByActor(int staffMemberId, int page, int pageSize);
 
+    public List<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType);
+
     List<Director> getDirectorsByMedia(int mediaId);
 
     List<Actor> getActorsByMedia(int mediaId);
+
+
 }
