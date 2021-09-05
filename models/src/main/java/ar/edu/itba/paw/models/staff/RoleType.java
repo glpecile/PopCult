@@ -8,4 +8,8 @@ public enum RoleType {
     RoleType(String roleType) {
         this.roleType = roleType;
     }
+
+    public String getRoleType() {
+        return roleType;
+    }
 }
