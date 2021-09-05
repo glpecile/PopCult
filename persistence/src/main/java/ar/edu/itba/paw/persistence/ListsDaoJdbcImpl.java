@@ -25,7 +25,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
                     rs.getInt("mediaListId"),
                     rs.getString("name"),
                     rs.getString("description"),
-                    rs.getString("image"));
+                    rs.getString("image"),
+                    rs.getDate("creationDate"));
 
     private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
@@ -36,12 +37,14 @@ public class ListsDaoJdbcImpl implements ListsDao {
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaList").usingGeneratedKeyColumns("mediaListId");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listElement");
 
+//        jdbcTemplate.execute("DROP TABLE mediaList CASCADE");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
                 "userId SERIAL NOT NULL," +
                 "name TEXT NOT NULL," +
                 "description TEXT NOT NULL," +
                 "image TEXT NOT NULL," +
+                "creationDate DATE," +
                 "FOREIGN KEY(userId) REFERENCES users(userId))");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +

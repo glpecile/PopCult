@@ -73,4 +73,10 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public List<Media> getMediaList(int mediaType, int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
     }
+
+    @Override
+    public List<Media> getMediaListByListId(int listId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM media NATURAL JOIN listelement WHERE medialistid = ? OFFSET ? LIMIT ?", new Object[] {listId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+
+    }
 }
