@@ -43,7 +43,7 @@ public class ListsController {
         List<Media> mediaList;
         for (MediaList list: discoveryLists) {
             mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4); //request fijo de 4 para el thumbnail
-            listCovers.add(new ListCover(list.getName(), list.getDescription(),
+            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
                     mediaList.get(0).getImage(),mediaList.get(1).getImage(),
                     mediaList.get(2).getImage(), mediaList.get(3).getImage()));
         }

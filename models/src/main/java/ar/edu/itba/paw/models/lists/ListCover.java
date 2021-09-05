@@ -9,7 +9,8 @@ public class ListCover {
     private String image3;
     private String image4;
 
-    public ListCover(String name, String description, String image1, String image2, String image3, String image4) {
+    public ListCover(int listId, String name, String description, String image1, String image2, String image3, String image4) {
+        this.listId = listId;
         this.name = name;
         this.description = description;
         this.image1 = image1;
@@ -32,5 +33,17 @@ public class ListCover {
 
     public String getImage4() {
         return image4;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getListId() {
+        return listId;
     }
 }

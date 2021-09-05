@@ -8,5 +8,6 @@
             <div class="col px-0 mx-0"><img class="img-fluid" src="<c:out value="${param.image3}"/>" alt="media_image"></div>
             <div class="col px-0 mx-0"><img class="img-fluid" src="<c:out value="${param.image4}"/>" alt="media_image"></div>
         </div>
+        <a href="<c:url value="/lists/${param.listId}"/>" class="stretched-link" title="<c:out value="${param.title}"/>"></a>
     </div>
 </div>
