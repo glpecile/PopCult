@@ -17,4 +17,6 @@ public interface ListsService {
 
     List<MediaList> getLastAddedLists(int page, int pageSize);
 
+    List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
+
 }
