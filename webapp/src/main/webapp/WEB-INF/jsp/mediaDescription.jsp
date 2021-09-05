@@ -29,12 +29,11 @@
 
             <c:if test="${genreList.size() > 0}">
                 <h5>Genre</h5>
-                <%--                    TODO connect with /genres:--%>
                 <c:forEach var="genre" items="${genreList}">
                     <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                         <jsp:param name="text" value="${genre}"/>
                         <jsp:param name="tooltip" value=""/>
-                        <jsp:param name="url" value="/#"/>
+                        <jsp:param name="url" value="/genre/${genre}/"/>
                     </jsp:include>
                 </c:forEach>
             </c:if>

@@ -27,11 +27,12 @@ public class GenreController {
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("genreView");
-        final int genreOrdinal = Genre.valueOf(genre.toUpperCase()).ordinal() + 1;
+        final String normalizedGenre = genre.replaceAll("\\s+","").toUpperCase();
+        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
         final List<Integer> mediaIdList = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
         final List<Media> mediaList = mediaService.getById(mediaIdList);
         final Integer mediaCount = genreService.getMediaCountByGenre(genreOrdinal).orElse(0);
-        mav.addObject("genreName", Genre.valueOf(genre.toUpperCase()).getGenre());
+        mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaList", mediaList);
         mav.addObject("mediaCount", mediaCount);
         mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
