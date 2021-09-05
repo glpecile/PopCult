@@ -73,10 +73,15 @@ public class MediaController {
     }
 
     @RequestMapping("/media/series")
-    public ModelAndView series(@RequestParam(value = "page", defaultValue = "0") final int page) {
-        final ModelAndView mav = new ModelAndView("home");
-        final List<Media> mediaList = mediaService.getMediaList(MediaType.SERIE.ordinal(), page, itemsPerPage);
+    public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
+        final ModelAndView mav = new ModelAndView("series");
+        final List<Media> latestSeries = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
+        final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
+        mav.addObject("latestSeries", latestSeries);
         mav.addObject("mediaList", mediaList);
+        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 }
