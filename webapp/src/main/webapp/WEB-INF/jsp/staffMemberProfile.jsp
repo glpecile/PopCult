@@ -12,15 +12,13 @@
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
-    <div class="row justify-content-center">
-        <div class="col-4 clearfix">
-            <img src="${member.image}" class="img-fluid img-thumbnail float-left mr-2" alt="Media Image">
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            <img src="${member.image}" class="img-fluid img-thumbnail card-img-top" alt="Media Image">
         </div>
-        <div class="col-8">
-            <div class="list-group list-group-horizontal">
-                <h1><c:out value="${member.name}"/></h1>
-            </div>
-            <p>${member.description}</p>
+        <div class="col-12 col-lg-8">
+            <h1 class="display-5 fw-bolder"><c:out value="${member.name}"/></h1>
+            <p p class="lead"><c:out value="${member.description}"/></p>
         </div>
     </div>
     <br>
