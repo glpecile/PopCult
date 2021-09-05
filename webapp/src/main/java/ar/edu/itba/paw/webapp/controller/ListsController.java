@@ -26,7 +26,7 @@ public class ListsController {
     private static final int itemsPerPage = 4;
 
     @RequestMapping("/lists")
-    public ModelAndView lists(@RequestParam(value = "page", defaultValue = "0") final int page){
+    public ModelAndView lists(@RequestParam(value = "page", defaultValue = "0") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
         final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists();
         final List<ListCover> listCovers = new ArrayList<>();
@@ -40,27 +40,29 @@ public class ListsController {
     }
 
     private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
-        List<Media> mediaList;
-        List<Integer> id;
-        for (MediaList list: discoveryLists) {
-            id = listsService.getMediaIdInList(list.getMediaListId());
-            mediaList = mediaService.getById(id);
-//            mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4); //request fijo de 4 para el thumbnail
-            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
-                    mediaList.get(0).getImage(),mediaList.get(1).getImage(),
-                    mediaList.get(2).getImage(), mediaList.get(3).getImage()));
-        }
+        getListCover(discoveryLists, listCovers, listsService, mediaService);
     }
 
     @RequestMapping("/lists/{listId}")
-    public ModelAndView listDescription(@PathVariable("listId") final int listId){
+    public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
-        mav.addObject("list",mediaList);
-        mav.addObject("media",mediaFromList);
+        mav.addObject("list", mediaList);
+        mav.addObject("media", mediaFromList);
         return mav;
     }
 
+    static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
+        List<Media> mediaList;
+        List<Integer> id;
+        for (MediaList list : discoveryLists) {
+            id = listsService.getMediaIdInList(list.getMediaListId());
+            mediaList = mediaService.getById(id);
+            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
+                    mediaList.get(0).getImage(), mediaList.get(1).getImage(),
+                    mediaList.get(2).getImage(), mediaList.get(3).getImage()));
+        }
+    }
 }

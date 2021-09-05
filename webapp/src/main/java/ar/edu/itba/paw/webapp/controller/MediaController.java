@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.GenreService;
-import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.StaffService;
-import ar.edu.itba.paw.interfaces.StudioService;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.lists.ListCover;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.staff.Actor;
@@ -17,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static ar.edu.itba.paw.webapp.controller.ListsController.getListCover;
 
 @Controller
 public class MediaController {
@@ -30,8 +32,11 @@ public class MediaController {
     private GenreService genreService;
     @Autowired
     private StudioService studioService;
+    @Autowired
+    private ListsService listsService;
 
     private static final int itemsPerPage = 12;
+    private static final int listsPerPage = 4;
 
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -49,19 +54,27 @@ public class MediaController {
     }
 
     @RequestMapping("/media/{mediaId}")
-    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId) {
+    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "0") final int page) {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
         final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
+        final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page, listsPerPage);
+        final List<ListCover> relatedListsCover = new ArrayList<>();
+        generateCoverList(mediaList, relatedListsCover);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
+        mav.addObject("relatedLists", relatedListsCover);
         return mav;
+    }
+
+    private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
+        getListCover(discoveryLists, listCovers, listsService, mediaService);
     }
 
     @RequestMapping("/media/films")

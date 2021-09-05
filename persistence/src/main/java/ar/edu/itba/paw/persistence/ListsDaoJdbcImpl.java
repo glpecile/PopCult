@@ -82,6 +82,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT medialistid, name, description, image, creationdate FROM listElement NATURAL JOIN mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM listElement NATURAL JOIN mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 }
