@@ -23,7 +23,7 @@
                 <span class="mx-3 mt-3">&#8226;</span>
                 <span>Country</span>
             </div>
-            <p class="lead "><c:out value="${media.description}"/></p>
+            <p class="lead"><c:out value="${media.description}"/></p>
 
             <hr>
 
