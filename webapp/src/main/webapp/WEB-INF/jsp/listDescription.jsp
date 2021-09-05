@@ -9,8 +9,21 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<h1><c:out value="${list.name}"/></h1>
-<h1><c:out value="${list.description}"/></h1>
-<%--TODO cuando esten listas las cartas de home.--%>
+<div class="col-8 offset-2">
+    <h2><c:out value="${list.name}"/></h2>
+    <small><c:out value="${list.description}"/></small>
+    <div class="row">
+        <c:forEach var="media" items="${media}">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                    <jsp:param name="image" value="${media.image}"/>
+                    <jsp:param name="title" value="${media.title}"/>
+                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                    <jsp:param name="mediaId" value="${media.mediaId}"/>
+                </jsp:include>
+            </div>
+        </c:forEach>
+    </div>
+</div>
 </body>
 </html>
