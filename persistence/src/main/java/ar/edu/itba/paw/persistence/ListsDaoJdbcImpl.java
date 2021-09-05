@@ -20,7 +20,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private final SimpleJdbcInsert mediaListjdbcInsert;
     private final SimpleJdbcInsert listElementjdbcInsert;
 
-    private static final RowMapper<MediaList> ROW_MAPPER =
+    private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
             (rs, rowNum) -> new MediaList(
                     rs.getInt("mediaListId"),
                     rs.getString("name"),
@@ -56,22 +56,27 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public Optional<MediaList> getMediaListById(int mediaListId) {
-        return jdbcTemplate.query("SELECT * FROM mediaList WHERE mediaListId = ?", new Object[]{mediaListId}, ROW_MAPPER)
+        return jdbcTemplate.query("SELECT * FROM mediaList WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_LIST_ROW_MAPPER)
                 .stream().findFirst();
     }
 
     @Override
     public List<MediaList> getMediaListByUserId(int userId) {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{userId}, ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{userId}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
     public List<MediaList> getDiscoveryMediaLists() {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{1}, ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{1}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
     public List<Integer> getMediaIdInList(int mediaListId) {
         return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
+    }
+
+    @Override
+    public List<MediaList> getLastAddedLists(int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM medialist ORDER BY creationDate OFFSET ? LIMIT ?", new Object[] {pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 }

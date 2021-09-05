@@ -33,4 +33,9 @@ public class ListsServiceImpl implements ListsService {
     public List<Integer> getMediaIdInList(int mediaListId) {
         return listsDao.getMediaIdInList(mediaListId);
     }
+
+    @Override
+    public List<MediaList> getLastAddedLists(int page, int pageSize) {
+        return listsDao.getLastAddedLists(page, pageSize);
+    }
 }

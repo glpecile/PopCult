@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -22,19 +23,30 @@ public class ListsController {
     @Autowired
     private ListsService listsService;
 
+    private static final int itemsPerPage = 4;
+
     @RequestMapping("/lists")
-    public ModelAndView lists(){
+    public ModelAndView lists(@RequestParam(value = "page", defaultValue = "0") final int page){
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists(); //obtengo todas las listas de discovery
+        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists();
         final List<ListCover> listCovers = new ArrayList<>();
+        final List<ListCover> recentlyAddedCovers = new ArrayList<>();
+        final List<MediaList> recentlyAdded = listsService.getLastAddedLists(page, itemsPerPage);
+        generateCoverList(discoveryLists, listCovers);
+        generateCoverList(recentlyAdded, recentlyAddedCovers);
+        mav.addObject("covers", listCovers);
+        mav.addObject("recentyAdded", recentlyAddedCovers);
+        return mav;
+    }
+
+    private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
+        List<Media> mediaList;
         for (MediaList list: discoveryLists) {
-            List<Media> mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4);
+            mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4); //request fijo de 4 para el thumbnail
             listCovers.add(new ListCover(list.getName(), list.getDescription(),
                     mediaList.get(0).getImage(),mediaList.get(1).getImage(),
                     mediaList.get(2).getImage(), mediaList.get(3).getImage()));
         }
-        mav.addObject("covers", listCovers);
-        return mav;
     }
 
     @RequestMapping("/lists/{listId}")
