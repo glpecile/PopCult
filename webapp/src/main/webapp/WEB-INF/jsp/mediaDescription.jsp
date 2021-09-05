@@ -38,6 +38,17 @@
                 </c:forEach>
             </c:if>
 
+            <c:if test="${studioList.size() > 0}">
+                <h5><br>Production Companies</h5>
+                <c:forEach var="studio" items="${studioList}">
+                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                        <jsp:param name="text" value="${studio.name}"/>
+                        <jsp:param name="tooltip" value=""/>
+                        <jsp:param name="url" value="/studio/${studio.studioId}/"/>
+                    </jsp:include>
+                </c:forEach>
+            </c:if>
+
             <c:if test="${directorList.size() > 0}">
                 <h5><br>Director</h5>
                 <c:forEach var="director" items="${directorList}">

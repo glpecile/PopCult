@@ -3,10 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.GenreService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.StaffService;
+import ar.edu.itba.paw.interfaces.StudioService;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
+import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,8 @@ public class MediaController {
     private StaffService staffService;
     @Autowired
     private GenreService genreService;
+    @Autowired
+    private StudioService studioService;
 
     private static final int itemsPerPage = 12;
 
@@ -49,10 +53,12 @@ public class MediaController {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
+        final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
+        mav.addObject("studioList", studioList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
         return mav;
