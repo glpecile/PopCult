@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.StaffDao;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
+import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -89,7 +90,12 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
     }
-
+    @Override
+    public List<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType) {
+        if(roleType == RoleType.ACTOR.ordinal())
+            return getMediaByActor(staffMemberId,page,pageSize);
+        return getMediaByDirector(staffMemberId,page,pageSize);
+    }
     @Override
     public List<Director> getDirectorsByMedia(int mediaId) {
         return jdbcTemplate.query("SELECT * FROM staffMember NATURAL JOIN director " +
