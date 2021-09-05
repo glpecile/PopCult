@@ -17,5 +17,7 @@ public interface MediaService {
 
     Optional<Integer> getMediaCount();
 
+    Optional<Integer> getMediaCountByMediaType(int mediaType);
+
     List<Media> getLatestMediaList(int mediaType, int page, int pageSize);
 }
