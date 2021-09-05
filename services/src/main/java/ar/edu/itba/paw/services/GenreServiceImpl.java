@@ -18,6 +18,11 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    public List<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+        return genreDao.getMediaByGenre(genreId, page, pageSize);
+    }
+
+    @Override
     public void loadGenres() {
         genreDao.loadGenres();
     }

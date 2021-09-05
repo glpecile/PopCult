@@ -23,6 +23,9 @@ public class GenreDaoJdbcImpl implements GenreDao {
             (rs, rowNum) -> new String(
                     rs.getString("name"));
 
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("mediaId");
+
     @Autowired
     public GenreDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -44,6 +47,11 @@ public class GenreDaoJdbcImpl implements GenreDao {
     @Override
     public List<String> getGenreByMediaId(int mediaId) {
         return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
     }
 
     public void loadGenres() {
