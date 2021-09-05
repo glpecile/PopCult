@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudioServiceImpl implements StudioService {
@@ -16,6 +17,16 @@ public class StudioServiceImpl implements StudioService {
     @Override
     public List<Studio> getStudioByMediaId(int mediaId) {
         return studioDao.getStudioByMediaId(mediaId);
+    }
+
+    @Override
+    public List<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
+        return studioDao.getMediaByStudio(studioId, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByStudio(int studioId) {
+        return studioDao.getMediaCountByStudio(studioId);
     }
 
     @Override

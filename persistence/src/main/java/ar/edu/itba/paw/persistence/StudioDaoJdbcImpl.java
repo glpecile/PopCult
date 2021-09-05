@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class StudioDaoJdbcImpl implements StudioDao {
@@ -20,6 +21,12 @@ public class StudioDaoJdbcImpl implements StudioDao {
             rs.getInt("studioId"),
             rs.getString("name"),
             rs.getString("image"));
+
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("mediaId");
+
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
 
     @Autowired
     public StudioDaoJdbcImpl(final DataSource ds) {
@@ -39,12 +46,22 @@ public class StudioDaoJdbcImpl implements StudioDao {
 
     @Override
     public List<Studio> getStudioByMediaId(int mediaId) {
-        return jdbcTemplate.query("SELECT studioid, name, image FROM studio NATURAL JOIN mediaStudio WHERE mediaId = ?", new Object[]{mediaId}
-                ,STUDIO_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT studioid, name, image FROM studio NATURAL JOIN mediaStudio WHERE mediaId = ?", new Object[]{mediaId}, STUDIO_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT mediaId FROM mediaStudio WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByStudio(int studioId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
     }
 
     @Override
     public List<Studio> getStudios() {
-        return jdbcTemplate.query("SELECT * FROM studio",STUDIO_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM studio", STUDIO_ROW_MAPPER);
     }
 }
