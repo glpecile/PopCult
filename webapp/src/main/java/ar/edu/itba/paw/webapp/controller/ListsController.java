@@ -41,8 +41,11 @@ public class ListsController {
 
     private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
         List<Media> mediaList;
+        List<Integer> id;
         for (MediaList list: discoveryLists) {
-            mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4); //request fijo de 4 para el thumbnail
+            id = listsService.getMediaIdInList(list.getMediaListId());
+            mediaList = mediaService.getById(id);
+//            mediaList = mediaService.getMediaListByListId(list.getMediaListId(),0,4); //request fijo de 4 para el thumbnail
             listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
                     mediaList.get(0).getImage(),mediaList.get(1).getImage(),
                     mediaList.get(2).getImage(), mediaList.get(3).getImage()));
