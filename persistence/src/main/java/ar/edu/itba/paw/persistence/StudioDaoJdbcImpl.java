@@ -28,6 +28,12 @@ public class StudioDaoJdbcImpl implements StudioDao {
     private static final RowMapper<Integer> COUNT_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("count");
 
+    @Override
+    public Optional<Studio> getById(int studioId) {
+        return jdbcTemplate.query("SELECT * FROM studio WHERE studioId = ?", new Object[]{studioId}, STUDIO_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
     @Autowired
     public StudioDaoJdbcImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudioDao {
+    Optional<Studio> getById(int studioId);
+
     List<Studio> getStudioByMediaId(int mediaId);
 
     List<Integer> getMediaByStudio(int studioId, int page, int pageSize);

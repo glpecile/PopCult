@@ -10,4 +10,16 @@ public class Studio {
         this.name = name;
         this.image = image;
     }
+
+    public int getStudioId() {
+        return studioId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

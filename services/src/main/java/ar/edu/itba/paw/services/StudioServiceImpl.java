@@ -15,6 +15,11 @@ public class StudioServiceImpl implements StudioService {
     private StudioDao studioDao;
 
     @Override
+    public Optional<Studio> getById(int studioId) {
+        return studioDao.getById(studioId);
+    }
+
+    @Override
     public List<Studio> getStudioByMediaId(int mediaId) {
         return studioDao.getStudioByMediaId(mediaId);
     }
