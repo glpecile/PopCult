@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GenreServiceImpl implements GenreService {
@@ -20,6 +21,11 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public List<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
         return genreDao.getMediaByGenre(genreId, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByGenre(int genreId) {
+        return genreDao.getMediaCountByGenre(genreId);
     }
 
     @Override
