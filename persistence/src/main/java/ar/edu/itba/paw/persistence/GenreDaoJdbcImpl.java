@@ -41,10 +41,10 @@ public class GenreDaoJdbcImpl implements GenreDao {
                 "name TEXT NOT NULL)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaGenre(" +
-                "mediaId SERIAL NOT NULL," +
-                "genreId SERIAL NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaid)," +
-                "FOREIGN KEY(genreId) REFERENCES genre(genreId))");
+                "mediaId INT NOT NULL," +
+                "genreId INT NOT NULL," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaid) ON DELETE CASCADE ," +
+                "FOREIGN KEY(genreId) REFERENCES genre(genreId) ON DELETE CASCADE )");
 
     }
 

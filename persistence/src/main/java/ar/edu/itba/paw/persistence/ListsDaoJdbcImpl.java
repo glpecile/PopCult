@@ -40,18 +40,18 @@ public class ListsDaoJdbcImpl implements ListsDao {
 //        jdbcTemplate.execute("DROP TABLE mediaList CASCADE");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
-                "userId SERIAL NOT NULL," +
+                "userId INT NOT NULL," +
                 "name TEXT NOT NULL," +
                 "description TEXT NOT NULL," +
                 "image TEXT NOT NULL," +
                 "creationDate DATE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId))");
+                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +
-                "mediaId SERIAL NOT NULL," +
-                "mediaListId SERIAL NOT NULL, " +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId)," +
-                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid))");
+                "mediaId INT NOT NULL," +
+                "mediaListId INT NOT NULL, " +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE ," +
+                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
     }
 
     @Override
