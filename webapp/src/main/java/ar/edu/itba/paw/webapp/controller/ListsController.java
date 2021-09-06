@@ -61,12 +61,26 @@ public class ListsController {
     static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
         List<Media> mediaList;
         List<Integer> id;
+        ListCover cover;
+        int size;
         for (MediaList list : discoveryLists) {
             id = listsService.getMediaIdInList(list.getMediaListId());
             mediaList = mediaService.getById(id);
-            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
-                    mediaList.get(0).getImage(), mediaList.get(1).getImage(),
-                    mediaList.get(2).getImage(), mediaList.get(3).getImage()));
+            size = mediaList.size();
+            cover = new ListCover(list.getMediaListId(), list.getName(), list.getDescription());
+            if (size > 0) cover.setImage1(mediaList.get(0).getImage());
+            if (size > 1) cover.setImage2(mediaList.get(1).getImage());
+            if (size > 2) cover.setImage3(mediaList.get(2).getImage());
+            if (size > 3) cover.setImage4(mediaList.get(3).getImage());
+            System.out.println(cover.getName() + " " + size);
+            listCovers.add(cover);
         }
+//        for (MediaList list : discoveryLists) {
+//            id = listsService.getMediaIdInList(list.getMediaListId());
+//            mediaList = mediaService.getById(id);
+//            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
+//                    mediaList.get(0).getImage(), mediaList.get(1).getImage(),
+//                    mediaList.get(2).getImage(), mediaList.get(3).getImage(), mediaList.size()));
+//        }
     }
 }
