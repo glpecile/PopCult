@@ -12,7 +12,7 @@ public class Media {
     private int length;
     private Date releaseDate;
     private int seasons;
-    private int country;
+    private String country;
 
     public Media(int mediaId, int type, String title, String description, String image, int length, Date releaseDate, int seasons, int country) {
         this.mediaId = mediaId;
@@ -23,7 +23,7 @@ public class Media {
         this.length = length;
         this.releaseDate = releaseDate;
         this.seasons = seasons;
-        this.country = country;
+        this.country = Country.values()[country].getCountryName();
     }
 
     public int getMediaId() {
@@ -62,7 +62,7 @@ public class Media {
         return seasons;
     }
 
-    public int getCountry() {
+    public String getCountry() {
         return country;
     }
 }
