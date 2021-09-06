@@ -39,7 +39,17 @@
         <div class="dropdown pr-4">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                Role
+                <c:choose>
+                    <c:when test="${roleType == 'actor'}">
+                        Actor
+                    </c:when>
+                    <c:when test="${roleType == 'director'}">
+                        Director
+                    </c:when>
+                    <c:otherwise>
+                        All
+                    </c:otherwise>
+                </c:choose>
             </button>
             <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">
                 <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
