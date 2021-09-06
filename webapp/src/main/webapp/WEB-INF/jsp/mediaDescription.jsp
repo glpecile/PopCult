@@ -73,6 +73,21 @@
             </c:if>
         </div>
     </div>
+    <div class="row">
+        <h2>Popular Lists</h2>
+        <c:forEach var="cover" items="${relatedLists}">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                    <jsp:param name="title" value="${cover.name}"/>
+                    <jsp:param name="listId" value="${cover.listId}"/>
+                    <jsp:param name="image1" value="${cover.image1}"/>
+                    <jsp:param name="image2" value="${cover.image2}"/>
+                    <jsp:param name="image3" value="${cover.image3}"/>
+                    <jsp:param name="image4" value="${cover.image4}"/>
+                </jsp:include>
+            </div>
+        </c:forEach>
+    </div>
 </div>
 
 </body>

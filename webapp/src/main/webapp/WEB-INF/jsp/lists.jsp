@@ -10,12 +10,11 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-
     <div class="row">
-        <h2>Discover our favorite lists!</h2>
-        <c:forEach var="cover" items="${covers}">
+        <h2>Recently added lists</h2>
+        <c:forEach var="cover" items="${recentlyAdded}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/multilayeredImage.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
                     <jsp:param name="image1" value="${cover.image1}"/>
@@ -25,12 +24,19 @@
                 </jsp:include>
             </div>
         </c:forEach>
+        <br>
+        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+            <jsp:param name="mediaPages" value="${recentListsPages}"/>
+            <jsp:param name="currentPage" value="${currentPage}"/>
+            <jsp:param name="urlBase" value="/"/>
+        </jsp:include>
     </div>
+
     <div class="row">
-        <h2>Recently added lists</h2>
-        <c:forEach var="cover" items="${recentyAdded}">
+        <h2>Discover our favorite lists!</h2>
+        <c:forEach var="cover" items="${covers}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/multilayeredImage.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
                     <jsp:param name="image1" value="${cover.image1}"/>
