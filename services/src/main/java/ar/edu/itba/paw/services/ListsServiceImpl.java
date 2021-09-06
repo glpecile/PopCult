@@ -53,4 +53,9 @@ public class ListsServiceImpl implements ListsService {
     public Optional<Integer> getListCountFromMedia(int mediaId) {
         return listsDao.getListCountFromMedia(mediaId);
     }
+
+    @Override
+    public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
+        return listsDao.getListsContainingGenre(genreId, pageSize, minMatches);
+    }
 }

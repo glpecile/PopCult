@@ -23,4 +23,6 @@ public interface ListsService {
 
     Optional<Integer> getListCountFromMedia(int mediaId);
 
+    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
+
 }

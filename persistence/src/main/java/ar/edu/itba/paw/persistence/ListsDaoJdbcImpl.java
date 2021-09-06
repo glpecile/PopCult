@@ -20,6 +20,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private final SimpleJdbcInsert mediaListjdbcInsert;
     private final SimpleJdbcInsert listElementjdbcInsert;
 
+    private static final int discoveryUserId = 1;
+
+
     private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
             (rs, rowNum) -> new MediaList(
                     rs.getInt("mediaListId"),
@@ -70,7 +73,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getDiscoveryMediaLists() {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{1}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{discoveryUserId}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -98,6 +101,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public Optional<Integer> getListCountFromMedia(int mediaId) {
         return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
                 .stream().findFirst();
+    }
+
+    @Override
+    public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
+        return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN medialist WHERE genreId = ? GROUP BY medialistid, medialist.name, description, image, creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
 }
