@@ -38,17 +38,11 @@
                 </jsp:include>
             </div>
         </c:forEach>
-        <br>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${recentListsPages}"/>
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="urlBase" value="/lists"/>
-        </jsp:include>
     </div>
 
     <div class="row">
         <h2>Discover our favorite lists!</h2>
-        <c:forEach var="cover" items="${covers}">
+        <c:forEach var="cover" items="${discovery}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
@@ -60,6 +54,27 @@
                 </jsp:include>
             </div>
         </c:forEach>
+    </div>
+    <div class="row">
+        <h2>All lists</h2>
+        <c:forEach var="cover" items="${allLists}">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                    <jsp:param name="title" value="${cover.name}"/>
+                    <jsp:param name="listId" value="${cover.listId}"/>
+                    <jsp:param name="image1" value="${cover.image1}"/>
+                    <jsp:param name="image2" value="${cover.image2}"/>
+                    <jsp:param name="image3" value="${cover.image3}"/>
+                    <jsp:param name="image4" value="${cover.image4}"/>
+                </jsp:include>
+            </div>
+        </c:forEach>
+        <br>
+        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+            <jsp:param name="mediaPages" value="${allListsPages}"/>
+            <jsp:param name="currentPage" value="${currentPage}"/>
+            <jsp:param name="urlBase" value="/lists"/>
+        </jsp:include>
     </div>
 </div>
 </body>

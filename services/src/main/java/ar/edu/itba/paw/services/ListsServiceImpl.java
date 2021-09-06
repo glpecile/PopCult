@@ -20,6 +20,11 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
+    public List<MediaList> getAllLists(int page, int pageSize) {
+        return listsDao.getAllLists(page, pageSize);
+    }
+
+    @Override
     public List<MediaList> getMediaListByUserId(int userId) {
         return listsDao.getMediaListByUserId(userId);
     }
@@ -37,6 +42,11 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
         return listsDao.getLastAddedLists(page, pageSize);
+    }
+
+    @Override
+    public List<MediaList> getNLastAddedList(int amount) {
+        return listsDao.getNLastAddedList(amount);
     }
 
     @Override
