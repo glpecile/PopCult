@@ -48,4 +48,9 @@ public class ListsServiceImpl implements ListsService {
     public Optional<Integer> getListCount() {
         return listsDao.getListCount();
     }
+
+    @Override
+    public Optional<Integer> getListCountFromMedia(int mediaId) {
+        return listsDao.getListCountFromMedia(mediaId);
+    }
 }

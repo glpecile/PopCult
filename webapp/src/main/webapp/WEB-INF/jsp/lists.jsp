@@ -28,7 +28,7 @@
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${recentListsPages}"/>
             <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="urlBase" value="/"/>
+            <jsp:param name="urlBase" value="/lists"/>
         </jsp:include>
     </div>
 

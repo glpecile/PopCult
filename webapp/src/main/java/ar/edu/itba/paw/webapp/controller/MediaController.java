@@ -63,6 +63,7 @@ public class MediaController {
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = new ArrayList<>();
+        final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
         generateCoverList(mediaList, relatedListsCover);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
@@ -70,6 +71,8 @@ public class MediaController {
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
         mav.addObject("relatedLists", relatedListsCover);
+        mav.addObject("popularListPages", popularListsAmount / listsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 

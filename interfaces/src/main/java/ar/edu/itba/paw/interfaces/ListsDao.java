@@ -20,4 +20,7 @@ public interface ListsDao {
     List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
     Optional<Integer> getListCount();
+
+    Optional<Integer> getListCountFromMedia(int mediaId);
+
 }

@@ -94,4 +94,10 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 .stream().findFirst();
     }
 
+    @Override
+    public Optional<Integer> getListCountFromMedia(int mediaId) {
+        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
 }

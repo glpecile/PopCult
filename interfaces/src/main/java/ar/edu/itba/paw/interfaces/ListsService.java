@@ -21,4 +21,6 @@ public interface ListsService {
 
     Optional<Integer> getListCount();
 
+    Optional<Integer> getListCountFromMedia(int mediaId);
+
 }
