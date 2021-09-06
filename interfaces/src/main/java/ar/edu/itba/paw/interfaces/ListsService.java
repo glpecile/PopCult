@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface ListsService {
     Optional<MediaList> getMediaListById(int mediaListId);
 
+    List<MediaList> getAllLists(int page, int pageSize);
+
     List<MediaList> getMediaListByUserId(int userId);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
@@ -16,6 +18,8 @@ public interface ListsService {
     List<Integer> getMediaIdInList(int mediaListId);
 
     List<MediaList> getLastAddedLists(int page, int pageSize);
+
+    List<MediaList> getNLastAddedList(int amount);
 
     List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 

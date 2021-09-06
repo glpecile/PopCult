@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -19,32 +20,39 @@ import java.util.List;
 @Controller
 public class ListsController {
     @Autowired
+    private UserService userService;
+    @Autowired
     private MediaService mediaService;
     @Autowired
     private ListsService listsService;
 
     private static final int itemsPerPage = 4;
     private static final int discoveryListsAmount = 4;
+    private static final int lastAddedAmount = 4;
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
         final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists(discoveryListsAmount);
-        final List<ListCover> listCovers = new ArrayList<>();
+        final List<MediaList> recentlyAdded = listsService.getNLastAddedList(lastAddedAmount);
+        final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
+        final List<ListCover> discoveryCovers = new ArrayList<>();
         final List<ListCover> recentlyAddedCovers = new ArrayList<>();
-        final List<MediaList> recentlyAdded = listsService.getLastAddedLists(page - 1, itemsPerPage);
-        final Integer recentListsCount = listsService.getListCount().orElse(0);
-        generateCoverList(discoveryLists, listCovers);
+        final List<ListCover> allListsCovers = new ArrayList<>();
+        final Integer allListsCount = listsService.getListCount().orElse(0);
+        generateCoverList(discoveryLists, discoveryCovers);
         generateCoverList(recentlyAdded, recentlyAddedCovers);
-        mav.addObject("covers", listCovers);
+        generateCoverList(allLists, allListsCovers);
+        mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
-        mav.addObject("recentListsPages", recentListsCount / itemsPerPage + 1);
+        mav.addObject("allLists", allListsCovers);
+        mav.addObject("allListsPages", allListsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
     }
 
-    private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
-        getListCover(discoveryLists, listCovers, listsService, mediaService);
+    private void generateCoverList(List<MediaList> MediaListLists, List<ListCover> covers) {
+        getListCover(MediaListLists, covers, listsService, mediaService);
     }
 
     @RequestMapping("/lists/{listId}")
