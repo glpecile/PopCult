@@ -52,7 +52,7 @@ public class StaffMemberController {
         mav.addObject("roleType", roleType);
         mav.addObject("member", member);
         mav.addObject("media", media);
-        mav.addObject("mediaPages", mediaCount/itemsPerPage);
+        mav.addObject("mediaPages", mediaCount/itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("urlBase", "/staff/"+staffMemberId+"/"+normalizerRole.getRoleType()+"/");
         return mav;

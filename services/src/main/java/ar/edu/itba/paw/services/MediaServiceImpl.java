@@ -40,6 +40,11 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
+    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
+        return mediaDao.getMediaCountByMediaType(mediaType);
+    }
+
+    @Override
     public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
     }

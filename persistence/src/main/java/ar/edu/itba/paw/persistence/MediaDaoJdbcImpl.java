@@ -82,6 +82,11 @@ public class MediaDaoJdbcImpl implements MediaDao {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER)
                 .stream().findFirst();
     }
+    @Override
+    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
+    }
 
     @Override
     public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {

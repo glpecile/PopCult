@@ -13,7 +13,7 @@
 <br>
 
 <div class="row">
-    <h4>There are <c:out value="${mediaCount}"/> <c:out value="${genreName}"/> medias</h4>
+    <h4>There are <c:out value="${mediaCount}"/> <c:out value="${genreName}"/> Films & Series</h4>
     <c:forEach var="media" items="${mediaList}">
         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
             <jsp:include page="/WEB-INF/jsp/components/card.jsp">

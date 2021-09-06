@@ -56,14 +56,14 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "image TEXT)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS director (" +
-                "mediaId INTEGER," +
-                "staffMemberId INTEGER," +
+                "mediaId INT NOT NULL," +
+                "staffMemberId INT NOT NULL," +
                 "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE )");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS crew (" +
-                "mediaId INTEGER," +
-                "staffMemberId INTEGER," +
+                "mediaId INT NOT NULL," +
+                "staffMemberId INT NOT NULL," +
                 "characterName VARCHAR(100) NOT NULL," +
                 "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE)");
