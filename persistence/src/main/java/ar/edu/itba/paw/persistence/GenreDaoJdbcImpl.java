@@ -21,8 +21,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
     private final SimpleJdbcInsert mediaGenrejdbcInsert;
 
     private static final RowMapper<String> STRING_ROW_MAPPER =
-            (rs, rowNum) -> new String(
-                    rs.getString("name"));
+            (rs, rowNum) -> rs.getString("name");
 
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");

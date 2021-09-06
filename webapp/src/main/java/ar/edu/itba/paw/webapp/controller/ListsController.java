@@ -46,7 +46,7 @@ public class ListsController {
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
         mav.addObject("allLists", allListsCovers);
-        mav.addObject("allListsPages", allListsCount / itemsPerPage + 1);
+        mav.addObject("allListsPages", (int)Math.ceil((double)allListsCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -80,7 +80,6 @@ public class ListsController {
             if (size > 1) cover.setImage2(mediaList.get(1).getImage());
             if (size > 2) cover.setImage3(mediaList.get(2).getImage());
             if (size > 3) cover.setImage4(mediaList.get(3).getImage());
-            System.out.println(cover.getName() + " " + size);
             listCovers.add(cover);
         }
 //        for (MediaList list : discoveryLists) {

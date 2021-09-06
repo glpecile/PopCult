@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.models.staff;
 
 public class Studio {
-    private int studioId;
-    private String name;
-    private String image;
+    private final int studioId;
+    private final String name;
+    private final String image;
 
     public Studio(int studioId, String name, String image) {
         this.studioId = studioId;

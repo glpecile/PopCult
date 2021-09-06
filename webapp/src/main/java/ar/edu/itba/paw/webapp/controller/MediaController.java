@@ -36,19 +36,20 @@ public class MediaController {
     private ListsService listsService;
 
     private static final int itemsPerPage = 12;
+    private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
 
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("home");
-        final List<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerPage);
-        final List<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerPage);
+        final List<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final List<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final List<Media> mediaList = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCount().orElse(0);
         mav.addObject("filmsList", filmsLatest);
         mav.addObject("seriesList", seriesLatest);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -71,7 +72,7 @@ public class MediaController {
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
         mav.addObject("relatedLists", relatedListsCover);
-        mav.addObject("popularListPages", popularListsAmount / listsPerPage + 1);
+        mav.addObject("popularListPages", (int) Math.ceil((double)popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -83,12 +84,12 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
-        final List<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerPage);
+        final List<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
         mav.addObject("latestFilms", latestFilms);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -96,12 +97,12 @@ public class MediaController {
     @RequestMapping("/media/series")
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("series");
-        final List<Media> latestSeries = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerPage);
+        final List<Media> latestSeries = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final List<Media> mediaList = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
         mav.addObject("latestSeries", latestSeries);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
