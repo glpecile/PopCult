@@ -43,4 +43,9 @@ public class ListsServiceImpl implements ListsService {
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
         return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
     }
+
+    @Override
+    public Optional<Integer> getListCount() {
+        return listsDao.getListCount();
+    }
 }

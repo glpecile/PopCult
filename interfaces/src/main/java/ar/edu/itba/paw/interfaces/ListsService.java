@@ -19,4 +19,6 @@ public interface ListsService {
 
     List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
+    Optional<Integer> getListCount();
+
 }

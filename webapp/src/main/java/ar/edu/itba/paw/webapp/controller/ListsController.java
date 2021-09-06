@@ -32,10 +32,13 @@ public class ListsController {
         final List<ListCover> listCovers = new ArrayList<>();
         final List<ListCover> recentlyAddedCovers = new ArrayList<>();
         final List<MediaList> recentlyAdded = listsService.getLastAddedLists(page - 1, itemsPerPage);
+        final Integer recentListsCount = listsService.getListCount().orElse(0);
         generateCoverList(discoveryLists, listCovers);
         generateCoverList(recentlyAdded, recentlyAddedCovers);
         mav.addObject("covers", listCovers);
-        mav.addObject("recentyAdded", recentlyAddedCovers);
+        mav.addObject("recentlyAdded", recentlyAddedCovers);
+        mav.addObject("recentListsPages", recentListsCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
