@@ -37,15 +37,16 @@
             <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>
                 <span class="mx-3 mt-3">&#8226;</span>
-                <span>Country</span>
+                <span><c:out value="${media.country}"/></span>
             </div>
-            <p class="lead"><c:out value="${media.description}"/></p>
+
+            <p class="lead text-justify"><c:out value="${media.description}"/></p>
 
             <br>
 
             <c:if test="${genreList.size() > 0}">
                 <h5 class="font-bold text-2xl py-2">Genre</h5>
-                <div class="flex justify-start items-center space-x-1.5 space-y-1.5">
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="genre" items="${genreList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                             <jsp:param name="text" value="${genre}"/>
@@ -58,7 +59,7 @@
 
             <c:if test="${studioList.size() > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
-                <div class="flex justify-start items-center space-x-1.5 space-y-1.5">
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="studio" items="${studioList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                             <jsp:param name="text" value="${studio.name}"/>
@@ -71,7 +72,7 @@
 
             <c:if test="${directorList.size() > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Director</h5>
-                <div class="flex justify-start items-center space-x-1.5 space-y-1.5">
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="director" items="${directorList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                             <jsp:param name="text" value="${director.staffMember.name}"/>

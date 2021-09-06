@@ -29,17 +29,18 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-2">
-            <img class="img-fluid img-thumbnail card-img-top" src="${studio.image}" alt="Media Image"/>
+            <img class="img-fluid img-thumbnail card-img-top rounded" src="${studio.image}"
+                 onerror="this.src='https://media.discordapp.net/attachments/851847371851956334/884465752307015740/local-file-not-found.png';"
+                 alt="StudioPicture"/>
         </div>
         <div class="col-12 col-lg-10">
             <h1 class="display-5 fw-bolder"><c:out value="${studio.name}"/></h1>
         </div>
     </div>
 
-    <hr>
+    <h4 class="lead py-4">There are <c:out value="${mediaCount}"/> productions by this studio.</h4>
 
     <div class="row">
-        <h4>There are <c:out value="${mediaCount}"/> productions by this studio</h4>
         <c:forEach var="media" items="${mediaList}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -61,6 +62,5 @@
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
-</body>
 </body>
 </html>
