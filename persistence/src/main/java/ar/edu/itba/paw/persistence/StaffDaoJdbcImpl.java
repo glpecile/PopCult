@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.StaffDao;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
+import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +39,9 @@ public class StaffDaoJdbcImpl implements StaffDao {
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
+
     @Autowired
     public StaffDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -52,14 +56,14 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "image TEXT)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS director (" +
-                "mediaId INTEGER," +
-                "staffMemberId INTEGER," +
+                "mediaId INT NOT NULL," +
+                "staffMemberId INT NOT NULL," +
                 "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE )");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS crew (" +
-                "mediaId INTEGER," +
-                "staffMemberId INTEGER," +
+                "mediaId INT NOT NULL," +
+                "staffMemberId INT NOT NULL," +
                 "characterName VARCHAR(100) NOT NULL," +
                 "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE)");
@@ -91,6 +95,13 @@ public class StaffDaoJdbcImpl implements StaffDao {
     }
 
     @Override
+    public List<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+        return jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
+                "UNION" +
+                "(SELECT crew.mediaId FROM crew WHERE staffMemberId = ?)" +
+                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, staffMemberId,pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+    }
+    @Override
     public List<Director> getDirectorsByMedia(int mediaId) {
         return jdbcTemplate.query("SELECT * FROM staffMember NATURAL JOIN director " +
                         "WHERE mediaId = ? ORDER BY name ASC", new Object[]{mediaId}, STAFF_MEMBER_ROW_MAPPER)
@@ -102,4 +113,25 @@ public class StaffDaoJdbcImpl implements StaffDao {
         return jdbcTemplate.query("SELECT * FROM staffMember NATURAL JOIN crew " +
                 "WHERE mediaId = ? ORDER BY name ASC", new Object[]{mediaId}, ACTOR_ROW_MAPPER);
     }
+
+
+    @Override
+    public Optional<Integer> getMediaCountByActor(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+    @Override
+    public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Optional<Integer> getMediaCount(int staffMemberId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
+                "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
+                "UNION" +
+                "(SELECT crew.mediaId FROM crew WHERE staffmemberid = ?)) AS aux", new Object[]{staffMemberId, staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+
 }

@@ -25,8 +25,8 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<MediaList> getDiscoveryMediaLists() {
-        return listsDao.getDiscoveryMediaLists();
+    public List<MediaList> getDiscoveryMediaLists(int pageSize) {
+        return listsDao.getDiscoveryMediaLists(pageSize);
     }
 
     @Override
@@ -42,5 +42,20 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
         return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getListCount() {
+        return listsDao.getListCount();
+    }
+
+    @Override
+    public Optional<Integer> getListCountFromMedia(int mediaId) {
+        return listsDao.getListCountFromMedia(mediaId);
+    }
+
+    @Override
+    public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
+        return listsDao.getListsContainingGenre(genreId, pageSize, minMatches);
     }
 }

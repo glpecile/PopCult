@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class GenreDaoJdbcImpl implements GenreDao {
@@ -22,6 +23,12 @@ public class GenreDaoJdbcImpl implements GenreDao {
     private static final RowMapper<String> STRING_ROW_MAPPER =
             (rs, rowNum) -> new String(
                     rs.getString("name"));
+
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("mediaId");
+
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
 
     @Autowired
     public GenreDaoJdbcImpl(final DataSource ds) {
@@ -34,16 +41,27 @@ public class GenreDaoJdbcImpl implements GenreDao {
                 "name TEXT NOT NULL)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaGenre(" +
-                "mediaId SERIAL NOT NULL," +
-                "genreId SERIAL NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaid)," +
-                "FOREIGN KEY(genreId) REFERENCES genre(genreId))");
+                "mediaId INT NOT NULL," +
+                "genreId INT NOT NULL," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaid) ON DELETE CASCADE ," +
+                "FOREIGN KEY(genreId) REFERENCES genre(genreId) ON DELETE CASCADE )");
 
     }
 
     @Override
     public List<String> getGenreByMediaId(int mediaId) {
         return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByGenre(int genreId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
     }
 
     public void loadGenres() {
