@@ -15,7 +15,7 @@
         <h2>Discover our favorite lists!</h2>
         <c:forEach var="cover" items="${covers}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/multilayeredImage.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
                     <jsp:param name="image1" value="${cover.image1}"/>
@@ -30,7 +30,7 @@
         <h2>Recently added lists</h2>
         <c:forEach var="cover" items="${recentyAdded}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/multilayeredImage.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
                     <jsp:param name="image1" value="${cover.image1}"/>
