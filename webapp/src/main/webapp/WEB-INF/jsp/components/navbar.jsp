@@ -2,7 +2,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-purple-900 shadow-lg backdrop-filter">
     <div class="container-fluid group focus:bg-yellow-600">
         <a class="navbar-brand" href="<c:url value="/"/>">
-            <img src="<c:url value='/resources/images/PopCultTextLogo.png'/>"
+            <img class="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2"
+                 src="<c:url value='/resources/images/PopCultTextLogo.png'/>"
                  alt="popcult_text_logo" width="15%">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll"
@@ -10,14 +11,15 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
-            <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                <li class="nav-item">
+            <ul
+                    class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/media/films"/>">Films</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/media/series"/>">Series</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/lists"/>">Lists</a>
                 </li>
                 <%-- TODO Dropdown when user profiles added.--%>
