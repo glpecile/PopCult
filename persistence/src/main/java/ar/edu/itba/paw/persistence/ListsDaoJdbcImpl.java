@@ -43,7 +43,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaList").usingGeneratedKeyColumns("mediaListId");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listElement");
 
-        jdbcTemplate.execute("DROP TABLE mediaList CASCADE");
+//        jdbcTemplate.execute("DROP TABLE mediaList CASCADE");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
                 "userId INT NOT NULL," +
