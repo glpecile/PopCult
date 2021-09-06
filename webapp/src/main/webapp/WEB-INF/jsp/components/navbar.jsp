@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg navbar-dark bg-purple-900 shadow-lg backdrop-filter">
-    <div class="container-fluid">
+    <div class="container-fluid group focus:bg-yellow-600">
         <a class="navbar-brand" href="<c:url value="/"/>">
             <img src="<c:url value='/resources/images/PopCultTextLogo.png'/>"
                  alt="popcult_text_logo" width="15%">
@@ -17,9 +17,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/media/series"/>">Series</a>
                 </li>
-                <%--                <li class="nav-item">--%>
-                <%--                    <a class="nav-link active" aria-current="page" href="<c:url value="/media/series/lists">">Lists</a>--%>
-                <%--                </li>--%>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="<c:url value="/lists"/>">Lists</a>
+                </li>
                 <%-- TODO Dropdown when user profiles added.--%>
                 <%--                <li class="nav-item dropdown">--%>
                 <%--                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"--%>
