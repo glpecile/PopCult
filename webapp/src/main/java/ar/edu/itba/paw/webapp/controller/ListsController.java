@@ -24,11 +24,12 @@ public class ListsController {
     private ListsService listsService;
 
     private static final int itemsPerPage = 4;
+    private static final int discoveryListsAmount = 4;
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists();
+        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists(discoveryListsAmount);
         final List<ListCover> listCovers = new ArrayList<>();
         final List<ListCover> recentlyAddedCovers = new ArrayList<>();
         final List<MediaList> recentlyAdded = listsService.getLastAddedLists(page - 1, itemsPerPage);

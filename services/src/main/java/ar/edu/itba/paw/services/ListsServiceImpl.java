@@ -25,8 +25,8 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<MediaList> getDiscoveryMediaLists() {
-        return listsDao.getDiscoveryMediaLists();
+    public List<MediaList> getDiscoveryMediaLists(int pageSize) {
+        return listsDao.getDiscoveryMediaLists(pageSize);
     }
 
     @Override

@@ -72,8 +72,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public List<MediaList> getDiscoveryMediaLists() {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{discoveryUserId}, MEDIA_LIST_ROW_MAPPER);
+    public List<MediaList> getDiscoveryMediaLists(int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY creationdate DESC LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override

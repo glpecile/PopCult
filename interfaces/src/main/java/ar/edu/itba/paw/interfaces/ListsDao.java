@@ -11,7 +11,7 @@ public interface ListsDao {
 
     List<MediaList> getMediaListByUserId(int userId);
 
-    List<MediaList> getDiscoveryMediaLists();
+    List<MediaList> getDiscoveryMediaLists(int pageSize);
 
     List<Integer> getMediaIdInList(int mediaListId);
 
