@@ -26,11 +26,36 @@
     <br>
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Role
+            <c:choose>
+                <c:when test="${roleType == 'actor'}">
+                    Actor
+                </c:when>
+                <c:when test="${roleType == 'director'}">
+                    Director
+                </c:when>
+                <c:otherwise>
+                    All
+                </c:otherwise>
+            </c:choose>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
-            <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/director'/>">Director</a></li>
+            <c:choose>
+                <c:when test="${roleType == 'actor'}">
+                    <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/'/>">All</a></li>
+                    <li><a class="dropdown-item active" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
+                    <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/director'/>">Director</a></li>
+                </c:when>
+                <c:when test="${roleType == 'director'}">
+                    <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/'/>">All</a></li>
+                    <li><a class="dropdown-item " href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
+                    <li><a class="dropdown-item active" href="<c:url value='/staff/${staffMemberId}/director'/>">Director</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li><a class="dropdown-item active" href="<c:url value='/staff/${staffMemberId}/'/>">All</a></li>
+                    <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
+                    <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/director'/>">Director</a></li>
+                </c:otherwise>
+            </c:choose>
         </ul>
     </div>
     <br>
