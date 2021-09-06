@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <nav>
-    <ul class="pagination justify-content-center">
+    <ul class="pagination pagination-circle justify-content-center">
 
         <%--    Previous button--%>
         <c:choose>
