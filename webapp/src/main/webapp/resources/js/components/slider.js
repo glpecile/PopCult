@@ -31,8 +31,9 @@
 
         scrollTo() {
             const imageId = event.target.dataset.imageId
+            console.log(imageId)
             const imageElement = document.getElementById(imageId)
-            imageElement.scrollIntoView({block: "end", inline: "nearest", behavior: "smooth"})
+            imageElement.scrollIntoView({block: "nearest", inline: "nearest", behavior: "smooth"})
         }
     })
 })()

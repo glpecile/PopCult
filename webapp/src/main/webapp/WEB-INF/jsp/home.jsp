@@ -21,10 +21,10 @@
     <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
-            <%! private int i = 1; %>
+            <c:set var="i" value="1"/>
             <c:forEach var="film" items="${filmsList}">
-<%--                                <p><%=i%></p>--%>
-                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="<%=i++%>">
+                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
+                    <c:set var="i" value="${i + 1}"/>
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${film.image}"/>
                         <jsp:param name="title" value="${film.title}"/>
@@ -56,9 +56,11 @@
     <h2 class="font-bold text-2xl pt-2">Recently Added Series</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
+            <c:set var="j" value="7"/>
             <c:forEach var="serie" items="${seriesList}">
                 <%--                <div class="w-96 h-64 px-4 flex-shrink-0" data-slider-target="image">--%>
-                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image">
+                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
+                    <c:set var="j" value="${j + 1}"/>
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${serie.image}"/>
                         <jsp:param name="title" value="${serie.title}"/>
@@ -70,12 +72,18 @@
         </div>
         <div class="flex mx-auto my-2">
             <ul class="flex justify-center">
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="7"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="8"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="9"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="10"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="11"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="12"
+                    data-action="click->slider#scrollTo"></li>
             </ul>
         </div>
     </div>
