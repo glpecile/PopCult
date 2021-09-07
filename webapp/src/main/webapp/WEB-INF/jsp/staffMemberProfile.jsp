@@ -15,6 +15,7 @@
     <div class="row">
         <div class="col-12 col-lg-4">
             <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg" alt="Media Image">
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${member.name}"/></h1>

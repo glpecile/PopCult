@@ -13,6 +13,7 @@
 <div class="col-8 offset-2">
     <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
     <p class="lead text-justify"><c:out value="${list.description}"/></p>
+    <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

@@ -15,6 +15,7 @@
     <div class="row">
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
 
         <div class="col-12 col-lg-8">
