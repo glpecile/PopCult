@@ -3,7 +3,7 @@
 <share>
     <div class="flex justify-center py-2">
         <button type="button" class="btn btn-secondary btn-rounded" onclick="copyToClipboard()">
-            <i class="fas fa-share pr-2"></i>Share
+            <i class="fas fa-share-alt pr-2"></i>Share
         </button>
     </div>
     <div class="collapse fixed bottom-0 left-2" id="notification-container">
