@@ -6,8 +6,8 @@
             <i class="fas fa-share-alt pr-2"></i>Share
         </button>
     </div>
-    <div class="collapse fixed bottom-0 left-2" id="notification-container">
-        <div class="alert alert-secondary d-flex align-items-center z-50 shadow-lg" role="alert">
+    <div class="collapse fixed bottom-0 left-2 z-50" id="notification-container">
+        <div class="alert alert-secondary d-flex align-items-center shadow-lg" role="alert">
             <i class="far fa-check-circle pr-2"></i>Link copied to the clipboard.
         </div>
     </div>

@@ -10,11 +10,12 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<br>
 <div class="col-8 offset-2">
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
         <c:forEach var="cover" items="${recentlyAdded}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
@@ -26,11 +27,11 @@
             </div>
         </c:forEach>
     </div>
-
+    <br>
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Discover our favorite lists!</h2>
         <c:forEach var="cover" items="${discovery}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
@@ -42,10 +43,11 @@
             </div>
         </c:forEach>
     </div>
+    <br>
     <div class="row">
         <h2 class="font-bold text-2xl py-2">All lists</h2>
         <c:forEach var="cover" items="${allLists}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>
                     <jsp:param name="listId" value="${cover.listId}"/>
