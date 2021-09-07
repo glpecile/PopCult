@@ -49,7 +49,7 @@ public class MediaController {
         mav.addObject("filmsList", filmsLatest);
         mav.addObject("seriesList", seriesLatest);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -71,8 +71,13 @@ public class MediaController {
         mav.addObject("studioList", studioList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
+        mav.addObject("relatedListsAmount", relatedListsCover.size());
+        mav.addObject("actorsAmount", actorList.size());
+        mav.addObject("directorsAmount", directorList.size());
+        mav.addObject("studiosAmount", studioList.size());
+        mav.addObject("genresAmount", genreList.size());
         mav.addObject("relatedLists", relatedListsCover);
-        mav.addObject("popularListPages", (int) Math.ceil((double)popularListsAmount / itemsPerPage));
+        mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -89,7 +94,7 @@ public class MediaController {
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
         mav.addObject("latestFilms", latestFilms);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -102,7 +107,7 @@ public class MediaController {
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
         mav.addObject("latestSeries", latestSeries);
         mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaPages", (int) Math.ceil((double)mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }

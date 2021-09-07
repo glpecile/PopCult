@@ -18,7 +18,8 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <!-- BS5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
     <title><c:out value="${media.title}"/> &#8226; PopCult</title>
@@ -44,7 +45,7 @@
 
             <br>
 
-            <c:if test="${genreList.size() > 0}">
+            <c:if test="${genresAmount > 0}">
                 <h5 class="font-bold text-2xl py-2">Genre</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="genre" items="${genreList}">
@@ -57,7 +58,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${studioList.size() > 0}">
+            <c:if test="${studiosAmount > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="studio" items="${studioList}">
@@ -70,7 +71,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${directorList.size() > 0}">
+            <c:if test="${directorsAmount > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Director</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="director" items="${directorList}">
@@ -83,7 +84,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${actorList.size() > 0}">
+            <c:if test="${actorsAmount > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Cast</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="actor" items="${actorList}">
@@ -99,25 +100,27 @@
         </div>
     </div>
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
-        <c:forEach var="cover" items="${relatedLists}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
-                    <jsp:param name="title" value="${cover.name}"/>
-                    <jsp:param name="listId" value="${cover.listId}"/>
-                    <jsp:param name="image1" value="${cover.image1}"/>
-                    <jsp:param name="image2" value="${cover.image2}"/>
-                    <jsp:param name="image3" value="${cover.image3}"/>
-                    <jsp:param name="image4" value="${cover.image4}"/>
-                </jsp:include>
-            </div>
-        </c:forEach>
-        <br>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${popularListPages}"/>
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="urlBase" value="/lists"/>
-        </jsp:include>
+        <c:if test="${relatedListsAmount > 0}">
+            <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
+            <c:forEach var="cover" items="${relatedLists}">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                        <jsp:param name="title" value="${cover.name}"/>
+                        <jsp:param name="listId" value="${cover.listId}"/>
+                        <jsp:param name="image1" value="${cover.image1}"/>
+                        <jsp:param name="image2" value="${cover.image2}"/>
+                        <jsp:param name="image3" value="${cover.image3}"/>
+                        <jsp:param name="image4" value="${cover.image4}"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+            <br>
+            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                <jsp:param name="mediaPages" value="${popularListPages}"/>
+                <jsp:param name="currentPage" value="${currentPage}"/>
+                <jsp:param name="urlBase" value="/lists"/>
+            </jsp:include>
+        </c:if>
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
