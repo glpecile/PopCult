@@ -88,7 +88,7 @@
         <c:if test="${relatedListsAmount > 0}">
             <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
             <c:forEach var="cover" items="${relatedLists}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                     <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                         <jsp:param name="title" value="${cover.name}"/>
                         <jsp:param name="listId" value="${cover.listId}"/>

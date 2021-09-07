@@ -2,9 +2,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-yellow-500 to-purple-900">
     <div class="container-fluid">
         <a class="navbar-brand" href="<c:url value="/"/>">
-            <img class="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2"
+            <img class="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2 w-44"
                  src="<c:url value='/resources/images/PopCultTextLogo.png'/>"
-                 alt="popcult_text_logo" width="15%">
+                 alt="popcult_text_logo" >
+<%--            width="15%"--%>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
                 aria-controls="navbarScroll"
@@ -43,4 +44,3 @@
         </div>
     </div>
 </nav>
-<%--<p><c:url value="/resources/images/PopCultTextLogo.png"/></p>--%>

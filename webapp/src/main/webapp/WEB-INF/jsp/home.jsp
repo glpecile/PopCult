@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title>Film and Series Discovery &#8226;PopCult</title>
+    <title>Film and Series Discovery &#8226; PopCult</title>
 </head>
 
 <body class="bg-gray-50">
