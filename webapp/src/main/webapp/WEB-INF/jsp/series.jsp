@@ -25,50 +25,57 @@
 
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-
-<div class="col-8 offset-2">
-    <br>
-
-    <h4>Recently Added Series</h4>
-    <div class="container-fluid">
-        <div class="row flex-row flex-nowrap overflow-auto">
-            <c:forEach var="latestSerie" items="${latestSeries}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                        <jsp:param name="image" value="${latestSerie.image}"/>
-                        <jsp:param name="title" value="${latestSerie.title}"/>
-                        <jsp:param name="releaseDate" value="${latestSerie.releaseYear}"/>
-                        <jsp:param name="mediaId" value="${latestSerie.mediaId}"/>
-                    </jsp:include>
+<c:choose>
+    <c:when test="${mediaList.size() == 0}">
+        <br>
+        <h3 style="text-align:center"> Sorry, we don't have series to show you right now.</h3>
+    </c:when>
+    <c:otherwise>
+        <div class="col-8 offset-2">
+            <br>
+            <h4>Recently Added Series</h4>
+            <div class="container-fluid">
+                <div class="row flex-row flex-nowrap overflow-auto">
+                    <c:forEach var="latestSerie" items="${latestSeries}">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                                <jsp:param name="image" value="${latestSerie.image}"/>
+                                <jsp:param name="title" value="${latestSerie.title}"/>
+                                <jsp:param name="releaseDate" value="${latestSerie.releaseYear}"/>
+                                <jsp:param name="mediaId" value="${latestSerie.mediaId}"/>
+                            </jsp:include>
+                        </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <h4>Explore some Series</h4>
-        <c:forEach var="media" items="${mediaList}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                    <jsp:param name="image" value="${media.image}"/>
-                    <jsp:param name="title" value="${media.title}"/>
-                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                    <jsp:param name="mediaId" value="${media.mediaId}"/>
-                </jsp:include>
             </div>
-        </c:forEach>
-    </div>
 
-    <br>
+            <hr>
 
-    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="/series/"/>
-    </jsp:include>
-</div>
+            <div class="row">
+                <h4>Explore some Series</h4>
+                <c:forEach var="media" items="${mediaList}">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                        <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                            <jsp:param name="image" value="${media.image}"/>
+                            <jsp:param name="title" value="${media.title}"/>
+                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                            <jsp:param name="mediaId" value="${media.mediaId}"/>
+                        </jsp:include>
+                    </div>
+                </c:forEach>
+            </div>
+
+            <br>
+
+            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                <jsp:param name="mediaPages" value="${mediaPages}"/>
+                <jsp:param name="currentPage" value="${currentPage}"/>
+                <jsp:param name="urlBase" value="/series/"/>
+            </jsp:include>
+        </div>
+    </c:otherwise>
+</c:choose>
+
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
