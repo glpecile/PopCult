@@ -26,11 +26,11 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <h2><c:out value="${list.name}"/></h2>
-    <small><c:out value="${list.description}"/></small>
+    <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+    <p class="lead text-justify"><c:out value="${list.description}"/></p>
     <div class="row">
         <c:forEach var="media" items="${media}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
                     <jsp:param name="title" value="${media.title}"/>
@@ -41,5 +41,6 @@
         </c:forEach>
     </div>
 </div>
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

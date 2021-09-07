@@ -33,24 +33,8 @@
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 
 <div class="col-8 offset-2">
-    <%--    <h2 class="font-bold text-2xl py-2">Recently Added Films</h2>--%>
-    <%--    <div class="container-fluid">--%>
-    <%--        <div class="row flex-row flex-nowrap">--%>
-    <%--            <c:forEach var="film" items="${filmsList}">--%>
-    <%--                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">--%>
-    <%--                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">--%>
-    <%--                            <jsp:param name="image" value="${film.image}"/>--%>
-    <%--                            <jsp:param name="title" value="${film.title}"/>--%>
-    <%--                            <jsp:param name="releaseDate" value="${film.releaseYear}"/>--%>
-    <%--                            <jsp:param name="mediaId" value="${film.mediaId}"/>--%>
-    <%--                    </jsp:include>--%>
-    <%--                </div>--%>
-    <%--            </c:forEach>--%>
-    <%--        </div>--%>
-    <%--    </div>--%>
-
     <!-- Slider for films -->
-    <h2 class="font-bold text-2xl py-2">Recently Added Films</h2>
+    <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:forEach var="film" items="${filmsList}">
@@ -78,7 +62,7 @@
     </div>
 
     <!-- Slider for series -->
-    <h2 class="font-bold text-2xl py-2">Recently Added Series</h2>
+    <h2 class="font-bold text-2xl pt-2">Recently Added Series</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:forEach var="serie" items="${seriesList}">
@@ -105,22 +89,7 @@
         </div>
     </div>
 
-    <%--    <h2 class="font-bold text-2xl py-2">Recently Added Series</h2>--%>
-    <%--    <div class="container-fluid">--%>
-    <%--        <div class="row flex-row flex-nowrap">--%>
-    <%--            <c:forEach var="serie" items="${seriesList}">--%>
-    <%--                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">--%>
-    <%--                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">--%>
-    <%--                        <jsp:param name="image" value="${serie.image}"/>--%>
-    <%--                        <jsp:param name="title" value="${serie.title}"/>--%>
-    <%--                        <jsp:param name="releaseDate" value="${serie.releaseYear}"/>--%>
-    <%--                        <jsp:param name="mediaId" value="${serie.mediaId}"/>--%>
-    <%--                    </jsp:include>--%>
-    <%--                </div>--%>
-    <%--            </c:forEach>--%>
-    <%--        </div>--%>
-    <%--    </div>--%>
-
+    <!-- Every Film and Series -->
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Explore some Films and Series</h2>
         <c:forEach var="media" items="${mediaList}">

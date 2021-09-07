@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <html>
 <head>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <!-- BS5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -31,6 +33,7 @@
         </div>
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${member.name}"/></h1>
+            <br>
             <p class="lead text-justify"><c:out value="${member.description}"/></p>
         </div>
     </div>
