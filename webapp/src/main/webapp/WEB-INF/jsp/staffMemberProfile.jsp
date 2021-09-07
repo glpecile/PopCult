@@ -26,7 +26,7 @@
     <br>
     <div class="flex text-center">
         <div class="dropdown pr-4">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                     aria-expanded="false">
                 <c:choose>
                     <c:when test="${roleType == 'actor'}">
