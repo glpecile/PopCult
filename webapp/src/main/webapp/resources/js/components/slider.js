@@ -1,3 +1,4 @@
+// source: https://dev.to/davidcolbyatx/building-a-horizontal-slider-with-stimulus-and-tailwind-css-1fjp
 (() => {
     const application = Stimulus.Application.start()
 
@@ -27,5 +28,16 @@
                 }
             })
         }
+
+        scrollTo() {
+            const imageId = event.target.dataset.imageId
+            const imageElement = document.getElementById(imageId)
+            println(imageId);
+            imageElement.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" })
+        }
+        aux(){
+            println(event.target.dataset.imageId)
+        }
+
     })
 })()

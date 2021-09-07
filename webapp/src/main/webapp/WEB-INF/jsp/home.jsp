@@ -37,9 +37,10 @@
     <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
+            <%! private int i = 1; %>
             <c:forEach var="film" items="${filmsList}">
-                <%--                <div class="w-96 h-64 px-4 flex-shrink-0" data-slider-target="image">--%>
-                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image">
+                <%--                <p><%=i%></p>--%>
+                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="<%=i++%>">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${film.image}"/>
                         <jsp:param name="title" value="${film.title}"/>
@@ -51,12 +52,18 @@
         </div>
         <div class="flex mx-auto my-2">
             <ul class="flex justify-center">
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="1"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="2"
+                    data-action="click->slider#aux"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="4"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="5"
+                    data-action="click->slider#scrollTo"></li>
             </ul>
         </div>
     </div>
