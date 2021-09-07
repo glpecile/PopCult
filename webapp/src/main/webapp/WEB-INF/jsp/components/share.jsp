@@ -13,17 +13,4 @@
     </div>
 </share>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-    function copyToClipboard() {
-        const inputc = document.body.appendChild(document.createElement("input"));
-        inputc.value = window.location.href;
-        inputc.focus();
-        inputc.select();
-        document.execCommand('copy');
-        inputc.parentNode.removeChild(inputc);
-        $('#notification-container').show();
-        setTimeout(() => {
-            $('#notification-container').hide();
-        }, 3000);
-    }
-</script>
+<script type="text/javascript" src="<c:url value="/resources/js/components/share.js"/>"></script>
