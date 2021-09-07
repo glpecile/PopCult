@@ -12,7 +12,7 @@
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
     <div class="row">
-        <h2>Recently added lists</h2>
+        <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
         <c:forEach var="cover" items="${recentlyAdded}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="row">
-        <h2>Discover our favorite lists!</h2>
+        <h2 class="font-bold text-2xl py-2">Discover our favorite lists!</h2>
         <c:forEach var="cover" items="${discovery}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -43,7 +43,7 @@
         </c:forEach>
     </div>
     <div class="row">
-        <h2>All lists</h2>
+        <h2 class="font-bold text-2xl py-2">All lists</h2>
         <c:forEach var="cover" items="${allLists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -56,14 +56,14 @@
                 </jsp:include>
             </div>
         </c:forEach>
-        <br>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${allListsPages}"/>
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="urlBase" value="/lists"/>
-        </jsp:include>
     </div>
 </div>
+<br>
+<jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+    <jsp:param name="mediaPages" value="${allListsPages}"/>
+    <jsp:param name="currentPage" value="${currentPage}"/>
+    <jsp:param name="urlBase" value="/lists"/>
+</jsp:include>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

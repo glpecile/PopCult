@@ -10,13 +10,14 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title>PopCult</title>
+    <title>Film and Series Discovery &#8226;PopCult</title>
 </head>
 
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 
 <div class="col-8 offset-2">
+    <br>
     <!-- Slider for films -->
     <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">
