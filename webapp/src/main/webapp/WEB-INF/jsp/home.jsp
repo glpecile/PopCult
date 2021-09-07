@@ -39,7 +39,7 @@
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <%! private int i = 1; %>
             <c:forEach var="film" items="${filmsList}">
-                <%--                <p><%=i%></p>--%>
+<%--                                <p><%=i%></p>--%>
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="<%=i++%>">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${film.image}"/>
@@ -55,14 +55,14 @@
                 <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="1"
                     data-action="click->slider#scrollTo"></li>
                 <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="2"
-                    data-action="click->slider#aux"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
                     data-action="click->slider#scrollTo"></li>
                 <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
                     data-action="click->slider#scrollTo"></li>
                 <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="4"
                     data-action="click->slider#scrollTo"></li>
                 <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="5"
+                    data-action="click->slider#scrollTo"></li>
+                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="6"
                     data-action="click->slider#scrollTo"></li>
             </ul>
         </div>
