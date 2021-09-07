@@ -120,6 +120,6 @@
         </jsp:include>
     </div>
 </div>
-
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
