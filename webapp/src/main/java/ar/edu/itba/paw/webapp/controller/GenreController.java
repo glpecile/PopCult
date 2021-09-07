@@ -48,6 +48,7 @@ public class GenreController {
         mav.addObject("mediaCount", mediaCount);
         mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
+        mav.addObject("listAmount", listCovers.size());
         mav.addObject("genreLists", listCovers);
         return mav;
     }
