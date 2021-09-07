@@ -50,6 +50,7 @@
         <jsp:param name="urlBase" value="/genre/"/>
     </jsp:include>
     <div class="row">
+        <c:if test="${listAmount > 0}}">
         <h2>Lists that contain this genre</h2>
         <c:forEach var="cover" items="${genreLists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
@@ -63,6 +64,7 @@
                 </jsp:include>
             </div>
         </c:forEach>
+        </c:if>
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
