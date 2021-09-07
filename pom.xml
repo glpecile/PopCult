@@ -15,6 +15,7 @@
         <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
         <servlet-api.version>2.5</servlet-api.version>
         <jstl.version>1.2</jstl.version>
+        <org.postgresql.version>42.2.5</org.postgresql.version>
     </properties>
 
     <modules>
@@ -48,6 +49,16 @@
                 <artifactId>jstl</artifactId>
                 <version>${jstl.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${org.postgresql.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -60,21 +71,21 @@
                     <version>3.3.1</version>
                 </plugin>
 
-<!--                <plugin>-->
-<!--                    <groupId>org.eclipse.jetty</groupId>-->
-<!--                    <artifactId>jetty-maven-plugin</artifactId>-->
-<!--                    <version>9.4.43.v20210629</version>-->
-<!--                    <configuration>-->
-<!--                        <scanIntervalSeconds>10</scanIntervalSeconds>-->
-<!--                        <contextPath>/webapp</contextPath>-->
-<!--                        <connectors>-->
-<!--                            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">-->
-<!--                                <port>8080</port>-->
-<!--                                <maxIdleTime>60000</maxIdleTime>-->
-<!--                            </connector>-->
-<!--                        </connectors>-->
-<!--                    </configuration>-->
-<!--                </plugin>-->
+                <!--                <plugin>-->
+                <!--                    <groupId>org.eclipse.jetty</groupId>-->
+                <!--                    <artifactId>jetty-maven-plugin</artifactId>-->
+                <!--                    <version>9.4.43.v20210629</version>-->
+                <!--                    <configuration>-->
+                <!--                        <scanIntervalSeconds>10</scanIntervalSeconds>-->
+                <!--                        <contextPath>/webapp</contextPath>-->
+                <!--                        <connectors>-->
+                <!--                            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">-->
+                <!--                                <port>8080</port>-->
+                <!--                                <maxIdleTime>60000</maxIdleTime>-->
+                <!--                            </connector>-->
+                <!--                        </connectors>-->
+                <!--                    </configuration>-->
+                <!--                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>
