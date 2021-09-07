@@ -10,7 +10,8 @@ public class StaffMember {
         this.staffMemberId = staffMemberId;
         this.name = name;
         this.description = description;
-        this.image = image;
+        this.image = image.equals("") ? "https://cdn.discordapp.com/attachments/851847371851956334/884191657535344710/depositphotos_179490486-stock-illustration-profile-anonymous-face-icon-gray.png" :
+                image;
     }
 
     public int getStaffMemberId() {

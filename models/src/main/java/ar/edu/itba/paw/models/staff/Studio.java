@@ -8,7 +8,7 @@ public class Studio {
     public Studio(int studioId, String name, String image) {
         this.studioId = studioId;
         this.name = name;
-        this.image = image;
+        this.image = image.equals("") ? "https://cdn.discordapp.com/attachments/851847371851956334/884854181586944030/clipart85790.png" : image;
     }
 
     public int getStudioId() {
