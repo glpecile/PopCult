@@ -90,7 +90,7 @@ public class MediaController {
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
         final List<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page, itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page-1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
         mav.addObject("latestFilms", latestFilms);
         mav.addObject("mediaList", mediaList);
