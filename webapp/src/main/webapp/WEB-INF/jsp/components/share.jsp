@@ -15,13 +15,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="row justify-content-center">
-                        <div class="col-4">
+                        <div class="col">
                             <jsp:include page="/WEB-INF/jsp/components/twitter.jsp"/>
                         </div>
-                        <div class="col-4">
-                            <jsp:include page="/WEB-INF/jsp/components/copyClipboard.jsp">
-                            <jsp:param name="link" value="This%20content%20is%20great"/>
-                            </jsp:include>
+                        <div class="col">
+                            <jsp:include page="/WEB-INF/jsp/components/whatsapp.jsp"/>
+                        </div>
+                        <div class="col">
+                            <jsp:include page="/WEB-INF/jsp/components/copyClipboard.jsp"/>
                         </div>
                     </div>
                 </div>
