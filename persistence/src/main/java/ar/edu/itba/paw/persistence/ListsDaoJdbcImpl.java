@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +17,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert mediaListjdbcInsert;
     private final SimpleJdbcInsert listElementjdbcInsert;
+
+    private static final int discoveryUserId = 1;
+
 
     private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
             (rs, rowNum) -> new MediaList(
@@ -64,13 +65,18 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public List<MediaList> getAllLists(int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM mediaList OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
     public List<MediaList> getMediaListByUserId(int userId) {
         return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{userId}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
-    public List<MediaList> getDiscoveryMediaLists() {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ?", new Object[]{1}, MEDIA_LIST_ROW_MAPPER);
+    public List<MediaList> getDiscoveryMediaLists(int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY name LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -81,6 +87,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM medialist ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
+    public List<MediaList> getNLastAddedList(int amount) {
+        return jdbcTemplate.query("SELECT * from medialist ORDER BY creationDate DESC LIMIT ?", new Object[]{amount}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -98,6 +109,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public Optional<Integer> getListCountFromMedia(int mediaId) {
         return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
                 .stream().findFirst();
+    }
+
+    @Override
+    public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
+        return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN medialist WHERE genreId = ? GROUP BY medialistid, medialist.name, description, image, creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
 }

@@ -3,8 +3,9 @@
 
 <html>
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <jsp:include page="/resources/externalResources.jsp"/>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${media.title}"/> &#8226; PopCult</title>
 </head>
 <body>
@@ -13,88 +14,100 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img class="img-fluid img-thumbnail card-img-top" src="${media.image}" alt="Media Image"/>
+            <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
 
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
-            <div class="fs-5 mb-5">
+            <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>
                 <span class="mx-3 mt-3">&#8226;</span>
-                <span>Country</span>
+                <span><c:out value="${media.country}"/></span>
             </div>
-            <p class="lead"><c:out value="${media.description}"/></p>
 
-            <hr>
+            <p class="lead text-justify"><c:out value="${media.description}"/></p>
 
-            <c:if test="${genreList.size() > 0}">
-                <h5>Genre</h5>
-                <c:forEach var="genre" items="${genreList}">
-                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${genre}"/>
-                        <jsp:param name="tooltip" value=""/>
-                        <jsp:param name="url" value="/genre/${genre}/"/>
-                    </jsp:include>
-                </c:forEach>
+            <br>
+
+            <c:if test="${genresAmount > 0}">
+                <h5 class="font-bold text-2xl py-2">Genre</h5>
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
+                    <c:forEach var="genre" items="${genreList}">
+                        <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                            <jsp:param name="text" value="${genre}"/>
+                            <jsp:param name="tooltip" value=""/>
+                            <jsp:param name="url" value="/genre/${genre}/"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
             </c:if>
 
-            <c:if test="${studioList.size() > 0}">
-                <h5><br>Production Companies</h5>
-                <c:forEach var="studio" items="${studioList}">
-                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${studio.name}"/>
-                        <jsp:param name="tooltip" value=""/>
-                        <jsp:param name="url" value="/studio/${studio.studioId}/"/>
-                    </jsp:include>
-                </c:forEach>
+            <c:if test="${studiosAmount > 0}">
+                <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
+                    <c:forEach var="studio" items="${studioList}">
+                        <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                            <jsp:param name="text" value="${studio.name}"/>
+                            <jsp:param name="tooltip" value=""/>
+                            <jsp:param name="url" value="/studio/${studio.studioId}/"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
             </c:if>
 
-            <c:if test="${directorList.size() > 0}">
-                <h5><br>Director</h5>
-                <c:forEach var="director" items="${directorList}">
-                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${director.staffMember.name}"/>
-                        <jsp:param name="tooltip" value=""/>
-                        <jsp:param name="url" value="/staff/${director.staffMember.staffMemberId}"/>
-                    </jsp:include>
-                </c:forEach>
+            <c:if test="${directorsAmount > 0}">
+                <h5 class="font-bold text-2xl py-2"><br>Director</h5>
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
+                    <c:forEach var="director" items="${directorList}">
+                        <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                            <jsp:param name="text" value="${director.staffMember.name}"/>
+                            <jsp:param name="tooltip" value=""/>
+                            <jsp:param name="url" value="/staff/${director.staffMember.staffMemberId}"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
             </c:if>
 
-            <c:if test="${actorList.size() > 0}">
-                <h5><br>Cast</h5>
-                <c:forEach var="actor" items="${actorList}">
-                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${actor.staffMember.name}"/>
-                        <jsp:param name="tooltip" value="${actor.characterName}"/>
-                        <jsp:param name="url" value="/staff/${actor.staffMember.staffMemberId}"/>
-                    </jsp:include>
-                </c:forEach>
-                <hr>
+            <c:if test="${actorsAmount > 0}">
+                <h5 class="font-bold text-2xl py-2"><br>Cast</h5>
+                <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
+                    <c:forEach var="actor" items="${actorList}">
+                        <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                            <jsp:param name="text" value="${actor.staffMember.name}"/>
+                            <jsp:param name="tooltip" value="${actor.characterName}"/>
+                            <jsp:param name="url" value="/staff/${actor.staffMember.staffMemberId}"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
+                <br>
             </c:if>
         </div>
     </div>
     <div class="row">
-        <h2>Popular Lists</h2>
-        <c:forEach var="cover" items="${relatedLists}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
-                    <jsp:param name="title" value="${cover.name}"/>
-                    <jsp:param name="listId" value="${cover.listId}"/>
-                    <jsp:param name="image1" value="${cover.image1}"/>
-                    <jsp:param name="image2" value="${cover.image2}"/>
-                    <jsp:param name="image3" value="${cover.image3}"/>
-                    <jsp:param name="image4" value="${cover.image4}"/>
-                </jsp:include>
-            </div>
-        </c:forEach>
-        <br>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${popularListPages}"/>
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="urlBase" value="/lists"/>
-        </jsp:include>
+        <c:if test="${relatedListsAmount > 0}">
+            <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
+            <c:forEach var="cover" items="${relatedLists}">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                    <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                        <jsp:param name="title" value="${cover.name}"/>
+                        <jsp:param name="listId" value="${cover.listId}"/>
+                        <jsp:param name="image1" value="${cover.image1}"/>
+                        <jsp:param name="image2" value="${cover.image2}"/>
+                        <jsp:param name="image3" value="${cover.image3}"/>
+                        <jsp:param name="image4" value="${cover.image4}"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+            <br>
+            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                <jsp:param name="mediaPages" value="${popularListPages}"/>
+                <jsp:param name="currentPage" value="${currentPage}"/>
+                <jsp:param name="urlBase" value="/lists"/>
+            </jsp:include>
+        </c:if>
     </div>
 </div>
-
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

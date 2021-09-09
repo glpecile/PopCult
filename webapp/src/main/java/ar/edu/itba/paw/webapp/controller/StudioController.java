@@ -34,7 +34,7 @@ public class StudioController {
         mav.addObject("studio", studio);
         mav.addObject("mediaList", mediaList);
         mav.addObject("mediaCount", mediaCount);
-        mav.addObject("mediaPages", mediaCount / itemsPerPage + 1);
+        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }

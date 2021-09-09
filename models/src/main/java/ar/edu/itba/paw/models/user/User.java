@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.models.user;
 
 public class User {
-    private int userId;
-    private String mail;
-    private String username;
-    private String password;
+    private final int userId;
+    private final String mail;
+    private final String username;
+    private final String password;
 //    private String name;
 //    private String profilePhotoURL;
 

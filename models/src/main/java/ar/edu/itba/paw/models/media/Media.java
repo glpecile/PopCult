@@ -4,15 +4,15 @@ import java.util.Date;
 
 
 public class Media {
-    private int mediaId;
-    private int type;
-    private String title;
-    private String description;
-    private String image;
-    private int length;
-    private Date releaseDate;
-    private int seasons;
-    private int country;
+    private final int mediaId;
+    private final int type;
+    private final String title;
+    private final String description;
+    private final String image;
+    private final int length;
+    private final Date releaseDate;
+    private final int seasons;
+    private final String country;
 
     public Media(int mediaId, int type, String title, String description, String image, int length, Date releaseDate, int seasons, int country) {
         this.mediaId = mediaId;
@@ -23,7 +23,7 @@ public class Media {
         this.length = length;
         this.releaseDate = releaseDate;
         this.seasons = seasons;
-        this.country = country;
+        this.country = Country.values()[country].getCountryName();
     }
 
     public int getMediaId() {
@@ -62,7 +62,7 @@ public class Media {
         return seasons;
     }
 
-    public int getCountry() {
+    public String getCountry() {
         return country;
     }
 }
