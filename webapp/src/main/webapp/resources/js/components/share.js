@@ -25,6 +25,5 @@ function whatsappCurrentPage() {
 
 function removeCookies(originalURL){
     let trimmedURL = originalURL.substring(0, originalURL.indexOf("%3B"))
-    console.log(originalURL)
     return trimmedURL?trimmedURL:originalURL;
 }
