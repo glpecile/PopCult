@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +76,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getDiscoveryMediaLists(int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY creationdate DESC LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY name LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override

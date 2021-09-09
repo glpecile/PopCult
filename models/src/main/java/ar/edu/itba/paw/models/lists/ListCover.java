@@ -13,10 +13,10 @@ public class ListCover {
         this.listId = listId;
         this.name = name;
         this.description = description;
-        this.image1 = "https://cdn.discordapp.com/attachments/758850104517460008/884462244145008761/dot-transparent-png-3.png";
-        this.image2 = "https://cdn.discordapp.com/attachments/758850104517460008/884462244145008761/dot-transparent-png-3.png";
-        this.image3 = "https://cdn.discordapp.com/attachments/758850104517460008/884462244145008761/dot-transparent-png-3.png";
-        this.image4 = "https://cdn.discordapp.com/attachments/758850104517460008/884462244145008761/dot-transparent-png-3.png";
+        this.image1 = "https://media.discordapp.net/attachments/851847371851956334/884777473085177896/penege.png?width=275&height=413";
+        this.image2 = "https://media.discordapp.net/attachments/851847371851956334/884777473085177896/penege.png?width=275&height=413";
+        this.image3 = "https://media.discordapp.net/attachments/851847371851956334/884777473085177896/penege.png?width=275&height=413";
+        this.image4 = "https://media.discordapp.net/attachments/851847371851956334/884777473085177896/penege.png?width=275&height=413";
     }
 
     public String getImage1() {
