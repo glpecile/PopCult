@@ -77,7 +77,7 @@
 <%--    <!-- Footer Links -->--%>
 
     <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <div class="footer-copyright inset-x-0 bottom-0 text-center py-3">© 2021 Copyright:
         <a href="http://pawserver.it.itba.edu.ar/paw-2021b-2//"> Popcult.com</a>
     </div>
     <!-- Copyright -->

@@ -14,11 +14,13 @@
 </head>
 
 <body class="bg-gray-50">
-
+<div class="flex flex-col h-screen">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="flex justify-center py-24">
-    <h1 class="display-5 fw-bolder">Error 404: Page not found :c</h1>
+<div class="flex-grow py-24 whitespace-pre-line">
+    <h1 class="display-5 font-black whitespace-pre text-center text-justify">Error 404: </h1>
+    <p class="display-5 font-semibold text-center text-justify">Page not found :c</p>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
+</div>
 </body>
 </html>
