@@ -10,11 +10,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="shareModalLabel">Share</h5>
+                    <h5 class="modal-title font-bold text-2xl" id="shareModalLabel">Share</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row justify-content-center">
+                    <div class="row justify-center items-center">
                         <div class="col">
                             <jsp:include page="/WEB-INF/jsp/components/twitter.jsp"/>
                         </div>
