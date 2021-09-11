@@ -29,6 +29,6 @@ public interface ListsService {
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
-    MediaList createMediaList(String title, String description, String image, boolean visibility, boolean collaborative);
+    MediaList createMediaList(String title, String description, String image, int visibility, int collaborative);
 
 }

@@ -76,8 +76,8 @@ public class ListsController {
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors){
         if (errors.hasErrors())
             return createListForm(form);
-        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), form.getImage(), form.isVisible(), form.isCollaborative());
-        return new ModelAndView("redirect:/lists/?listId="+ mediaList.getMediaListId());
+        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), "",0,0);
+        return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }
     static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
         List<Media> mediaList;
