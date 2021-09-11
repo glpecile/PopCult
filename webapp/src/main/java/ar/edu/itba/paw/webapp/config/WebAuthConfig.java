@@ -50,9 +50,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
-                .antMatchers("/register", "/login", "/").anonymous()
+                .antMatchers("/register", "/login").anonymous()
+                .antMatchers("/").permitAll()
                 .antMatchers("/resources/**").permitAll()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/**").authenticated() //TODO
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
                 .and().csrf().disable();
