@@ -18,4 +18,28 @@ public class User {
         this.name = name;
         this.profilePhotoURL = profilePhotoURL;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProfilePhotoURL() {
+        return profilePhotoURL;
+    }
 }

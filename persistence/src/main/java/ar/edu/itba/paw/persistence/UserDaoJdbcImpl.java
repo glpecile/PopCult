@@ -38,7 +38,9 @@ public class UserDaoJdbcImpl implements UserDao {
                 "password TEXT NOT NULL," +
                 "name VARCHAR(100)," +
                 "profilephoto BYTEA," +
-                "UNIQUE(email))");
+                "UNIQUE(email)," +
+                "UNIQUE(username)" +
+                ")");
     }
 
     @Override
