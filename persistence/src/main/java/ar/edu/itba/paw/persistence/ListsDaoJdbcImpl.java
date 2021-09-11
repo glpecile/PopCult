@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Time;
+import java.util.*;
 
 @Repository
 public class ListsDaoJdbcImpl implements ListsDao {
@@ -114,6 +114,19 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
         return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN medialist WHERE genreId = ? GROUP BY medialistid, medialist.name, description, image, creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
+    public MediaList createMediaList(String title, String description, String image, boolean visibility, boolean collaborative) {
+        Map<String, Object> data = new HashMap<>();
+        Date localDate = new Date();
+        data.put("userid", 1);
+        data.put("name", title);
+        data.put("description", description);
+        data.put("image", image);
+        data.put("creationDate", localDate );
+        final int mediaListId = listElementjdbcInsert.execute(data);
+        return new MediaList(mediaListId, title, description, image, localDate);
     }
 
 }

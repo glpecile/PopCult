@@ -7,13 +7,14 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,18 @@ public class ListsController {
         return mav;
     }
 
+    @RequestMapping(value = "/createList", method = {RequestMethod.GET})
+    public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
+        return new ModelAndView("createListForm");
+    }
+
+    @RequestMapping(value = "/createList", method = {RequestMethod.POST})
+    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors){
+        if (errors.hasErrors())
+            return createListForm(form);
+        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), form.getImage(), form.isVisible(), form.isCollaborative());
+        return new ModelAndView("redirect:/lists/?listId="+ mediaList.getMediaListId());
+    }
     static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
         List<Media> mediaList;
         List<Integer> id;
@@ -82,12 +95,5 @@ public class ListsController {
             if (size > 3) cover.setImage4(mediaList.get(3).getImage());
             listCovers.add(cover);
         }
-//        for (MediaList list : discoveryLists) {
-//            id = listsService.getMediaIdInList(list.getMediaListId());
-//            mediaList = mediaService.getById(id);
-//            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
-//                    mediaList.get(0).getImage(), mediaList.get(1).getImage(),
-//                    mediaList.get(2).getImage(), mediaList.get(3).getImage(), mediaList.size()));
-//        }
     }
 }

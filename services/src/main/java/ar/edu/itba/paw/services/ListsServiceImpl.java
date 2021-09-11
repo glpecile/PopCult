@@ -68,4 +68,9 @@ public class ListsServiceImpl implements ListsService {
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
         return listsDao.getListsContainingGenre(genreId, pageSize, minMatches);
     }
+
+    @Override
+    public MediaList createMediaList(String title, String description, String image, boolean visibility, boolean collaborative) {
+        return listsDao.createMediaList(title,description,image,visibility,collaborative);
+    }
 }
