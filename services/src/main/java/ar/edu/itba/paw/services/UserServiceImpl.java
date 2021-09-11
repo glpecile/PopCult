@@ -16,4 +16,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getById(int userId) {
         return userDao.getById(userId);
     }
+
+    @Override
+    public Optional<User> getByEmail(String email) {
+        return userDao.getByEmail(email);
+    }
+
+    @Override
+    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
+        return userDao.register(email,userName, password, name, profilePhotoURL);
+    }
 }
