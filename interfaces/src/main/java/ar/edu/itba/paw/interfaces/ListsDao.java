@@ -29,7 +29,9 @@ public interface ListsDao {
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
-   MediaList createMediaList(String title, String description, String image, int visibility, int collaborative);
+    MediaList createMediaList(String title, String description, String image, int visibility, int collaborative);
 
+    void addToMediaList(int mediaListId, int mediaId);
 
+    void addToMediaList(int mediaListId, List<Integer> mediaIdList);
 }

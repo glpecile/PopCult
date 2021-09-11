@@ -65,6 +65,7 @@ public class MediaController {
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = new ArrayList<>();
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
+        final List<MediaList> userLists = listsService.getMediaListByUserId(1);
         generateCoverList(mediaList, relatedListsCover);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
@@ -79,6 +80,7 @@ public class MediaController {
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
+        mav.addObject("userLists", userLists);
         return mav;
     }
 
@@ -90,7 +92,7 @@ public class MediaController {
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
         final List<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page-1, itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
         mav.addObject("latestFilms", latestFilms);
         mav.addObject("mediaList", mediaList);

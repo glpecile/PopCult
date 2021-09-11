@@ -73,4 +73,14 @@ public class ListsServiceImpl implements ListsService {
     public MediaList createMediaList(String title, String description, String image, int visibility, int collaborative) {
         return listsDao.createMediaList(title,description,image,visibility,collaborative);
     }
+
+    @Override
+    public void addToMediaList(int mediaListId, int mediaId) {
+        listsDao.addToMediaList(mediaListId, mediaId);
+    }
+
+    @Override
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+        listsDao.addToMediaList(mediaListId, mediaIdList);
+    }
 }

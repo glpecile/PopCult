@@ -95,7 +95,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, name, description, image, creationdate FROM listElement NATURAL JOIN" +
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, name, description, creationdate FROM listElement NATURAL JOIN" +
                 " mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
@@ -113,8 +113,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, name, description, image, creationdate FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = ? GROUP BY mediaList.medialistid, medialist.name, description, image, " +
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, name, description, creationdate FROM mediaGenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
                 "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
@@ -128,6 +128,21 @@ public class ListsDaoJdbcImpl implements ListsDao {
         data.put("creationDate", localDate);
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
         return new MediaList((int) key.getKey(), title, description, localDate);
+    }
+
+    @Override
+    public void addToMediaList(int mediaListId, int mediaId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("mediaId",mediaId);
+        data.put("mediaListId", mediaListId);
+        listElementjdbcInsert.execute(data);
+    }
+
+    @Override
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+        for(int mediaId: mediaIdList){
+            addToMediaList(mediaListId, mediaId);
+        }
     }
 
 }
