@@ -30,7 +30,7 @@ public class UserDaoJdbcImpl implements UserDao {
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userId");
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
                 "userId SERIAL PRIMARY KEY," +
                 "email TEXT NOT NULL," +
