@@ -16,21 +16,23 @@
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
-                <%-- dropdown lists list--%>
-            <div class="dropdown flex justify-center py-2">
-                <button class="btn btn-secondary dropdown-toggle btn-rounded" type="button" id="addMediaToList"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    Add Media to List
-                </button>
-                <form action="<c:url value="/media/${mediaId}" />" method="GET">
+            <%-- dropdown lists list--%>
+            <form action="<c:url value="/media/${mediaId}" />" method="POST">
+
+                <div class="dropdown flex justify-center py-2">
+                    <button class="btn btn-secondary dropdown-toggle btn-rounded" type="button" id="addMediaToList"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Add to a list
+                    </button>
                     <ul class="dropdown-menu" aria-labelledby="Add Media to List">
-                        <jsp:useBean id="userLists" scope="request" type="java.util.List"/>
                         <c:forEach var="list" items="${userLists}">
-                            <li><input class="dropdown-item" type="submit" name="action" value="<c:out value="${list.name}"/>"></li>
+                            <p class="p-2 hover:text-purple-900 absolute z-0"><c:out value="${list.name}"/></p>
+                            <input class="opacity-0 dropdown-item relative z-50" type="submit" name="mediaListId"
+                                   value="${list.mediaListId}">
                         </c:forEach>
                     </ul>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
 
         <div class="col-12 col-lg-8">
