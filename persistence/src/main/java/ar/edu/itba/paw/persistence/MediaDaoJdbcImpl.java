@@ -95,14 +95,10 @@ public class MediaDaoJdbcImpl implements MediaDao {
 
     @Override
     public List<Media> searchMediaByTitle(String title, int page, int pageSize){
-        String toReturn = "'%" + title + "%'";
-        //return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE ? ORDER BY title LIMIT 5", MEDIA_ROW_MAPPER);
-        return jdbcTemplate.query(String.format("SELECT * FROM media WHERE title ILIKE %s ORDER BY title OFFSET %d LIMIT %d", toReturn, page, pageSize), MEDIA_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') ORDER BY title OFFSET ? LIMIT ?", new Object[]{title, page, pageSize},MEDIA_ROW_MAPPER);
     }
     @Override
     public Optional<Integer> getCountSearchMediaByTitle(String title){
-        String toReturn = "'%" + title + "%'";
-        //return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE ? ORDER BY title LIMIT 5", MEDIA_ROW_MAPPER);
-        return jdbcTemplate.query(String.format("SELECT COUNT(*) FROM media WHERE title ILIKE %s ", toReturn), COUNT_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title},COUNT_ROW_MAPPER).stream().findFirst();
     }
 }
