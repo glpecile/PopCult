@@ -48,4 +48,14 @@ public class MediaServiceImpl implements MediaService {
     public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
     }
+
+    @Override
+    public List<Media> searchMediaByTitle(String title, int page, int pageSize) {
+        return mediaDao.searchMediaByTitle(title, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getCountSearchMediaByTitle(String title) {
+        return mediaDao.getCountSearchMediaByTitle(title);
+    }
 }
