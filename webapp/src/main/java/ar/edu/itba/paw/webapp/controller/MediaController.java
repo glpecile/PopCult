@@ -64,10 +64,9 @@ public class MediaController {
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
-        final List<ListCover> relatedListsCover = new ArrayList<>();
+        final List<ListCover> relatedListsCover = generateCoverList(mediaList);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
         final List<MediaList> userLists = listsService.getMediaListByUserId(1);
-        generateCoverList(mediaList, relatedListsCover);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -86,13 +85,13 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
-    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam final int mediaListId) {
+    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
         listsService.addToMediaList(mediaListId, mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
-        getListCover(discoveryLists, listCovers, listsService, mediaService);
+    private  List<ListCover> generateCoverList(List<MediaList> discoveryLists) {
+       return getListCover(discoveryLists, listsService, mediaService);
     }
 
     @RequestMapping("/media/films")

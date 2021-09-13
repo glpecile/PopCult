@@ -34,26 +34,21 @@ public class ListsController {
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists(discoveryListsAmount);
-        final List<MediaList> recentlyAdded = listsService.getNLastAddedList(lastAddedAmount);
         final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
-        final List<ListCover> discoveryCovers = new ArrayList<>();
-        final List<ListCover> recentlyAddedCovers = new ArrayList<>();
-        final List<ListCover> allListsCovers = new ArrayList<>();
+        final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
+        final List<ListCover> recentlyAddedCovers = generateCoverList(listsService.getNLastAddedList(lastAddedAmount));
+        final List<ListCover> allListsCovers = generateCoverList(allLists);
         final Integer allListsCount = listsService.getListCount().orElse(0);
-        generateCoverList(discoveryLists, discoveryCovers);
-        generateCoverList(recentlyAdded, recentlyAddedCovers);
-        generateCoverList(allLists, allListsCovers);
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
         mav.addObject("allLists", allListsCovers);
-        mav.addObject("allListsPages", (int)Math.ceil((double)allListsCount / itemsPerPage));
+        mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
 
-    private void generateCoverList(List<MediaList> MediaListLists, List<ListCover> covers) {
-        getListCover(MediaListLists, covers, listsService, mediaService);
+    private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {
+        return getListCover(MediaListLists, listsService, mediaService);
     }
 
     @RequestMapping("/lists/{listId}")
@@ -73,13 +68,15 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/createList", method = {RequestMethod.POST})
-    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors){
+    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return createListForm(form);
-        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), "",0,0);
+        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), "", 0, 0);
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }
-    static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
+
+    static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService, MediaService mediaService) {
+        List<ListCover> listCovers = new ArrayList<>();
         List<Media> mediaList;
         List<Integer> id;
         ListCover cover;
@@ -95,5 +92,6 @@ public class ListsController {
             if (size > 3) cover.setImage4(mediaList.get(3).getImage());
             listCovers.add(cover);
         }
+        return listCovers;
     }
 }

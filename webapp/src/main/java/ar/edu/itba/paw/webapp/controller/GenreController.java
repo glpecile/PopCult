@@ -41,8 +41,7 @@ public class GenreController {
         final List<Media> mediaList = mediaService.getById(mediaIdList);
         final Integer mediaCount = genreService.getMediaCountByGenre(genreOrdinal).orElse(0);
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
-        final List<ListCover> listCovers = new ArrayList<>();
-        ListsController.getListCover(genreLists, listCovers, listsService, mediaService);
+        final List<ListCover> listCovers =  ListsController.getListCover(genreLists, listsService, mediaService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaList", mediaList);
         mav.addObject("mediaCount", mediaCount);
