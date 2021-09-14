@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -169,5 +170,21 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
         jdbcTemplate.update("UPDATE medialist SET name = ?, description = ?, visibility = ?, collaborative = ? WHERE medialistid = ?", title, description, visibility, collaborative, mediaListId);
+    }
+
+    @Override
+    public MediaList createMediaListCopy(int userId, int toCopyListId) {
+        Map<String, Object> data = new HashMap<>();
+        MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
+        Date localDate = new Date();
+        data.put("userid", userId);
+        data.put("name", toCopy.getName());
+        data.put("description", toCopy.getDescription());
+        data.put("creationDate", localDate);
+        data.put("visibility", toCopy.isVisible());
+        data.put("collaborative", toCopy.isCollaborative());
+        KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
+        addToMediaList((int) key.getKey(), getMediaIdInList(toCopyListId));
+        return new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative());
     }
 }

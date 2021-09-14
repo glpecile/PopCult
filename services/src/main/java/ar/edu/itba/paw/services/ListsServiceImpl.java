@@ -98,4 +98,9 @@ public class ListsServiceImpl implements ListsService {
     public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
         listsDao.updateList(mediaListId, title, description, visibility, collaborative);
     }
+
+    @Override
+    public MediaList createMediaListCopy(int userId, int toCopy) {
+        return listsDao.createMediaListCopy(userId, toCopy);
+    }
 }

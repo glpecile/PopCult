@@ -68,6 +68,7 @@ public class ListsController {
         return mav;
     }
 
+
     @RequestMapping(value = "/createList", method = {RequestMethod.GET})
     public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
         return new ModelAndView("createListForm");
@@ -110,7 +111,12 @@ public class ListsController {
             return editList(listId, form);
         listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         //update stuff
-        return new ModelAndView("redirect:/lists/{listId}");
+        return listDescription(listId);
     }
 
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST})
+    public ModelAndView createListCopy(@PathVariable("listId") final int listId, @RequestParam("currentUserId") final int currentUserId) {
+        final MediaList newList = listsService.createMediaListCopy(currentUserId, listId);
+        return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
+    }
 }
