@@ -24,8 +24,8 @@ public class UserDaoJdbcImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"),
-                    rs.getString("profilePhoto"));
+                    "name", //TODO
+                    "profilePhoto"); //TODO
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
