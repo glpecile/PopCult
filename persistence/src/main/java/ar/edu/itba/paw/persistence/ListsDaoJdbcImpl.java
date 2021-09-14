@@ -154,4 +154,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ? AND mediaId = ?", mediaListId, mediaId);
     }
 
+    @Override
+    public void deleteList(int mediaListId) {
+        jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ?", mediaListId);
+        jdbcTemplate.update("DELETE FROM medialist WHERE medialistid = ?", mediaListId);
+    }
 }

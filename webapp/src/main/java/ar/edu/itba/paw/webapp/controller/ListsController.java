@@ -78,8 +78,8 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }
 
-    @RequestMapping("/editList/{listId}")
-    public ModelAndView editList(@PathVariable("listId") final int listId) {
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.GET})
+    public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
@@ -89,12 +89,22 @@ public class ListsController {
         return mav;
     }
 
-    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST}, params = "mediaId")
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "mediaId")
     public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId) {
-        System.out.println(mediaId);
-        System.out.println(listId);
         listsService.deleteMediaFromList(listId, mediaId);
         return new ModelAndView("redirect:/editList/" + listId);
+    }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
+    public ModelAndView deleteList(@PathVariable("listId") final int listId) {
+        listsService.deleteList(listId);
+        return new ModelAndView("redirect:/lists");
+    }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST})
+    public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
+        //update stuff
+        return new ModelAndView("redirect:/lists/{listId}");
     }
 
     static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService, MediaService mediaService) {

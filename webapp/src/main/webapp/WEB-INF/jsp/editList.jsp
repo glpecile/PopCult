@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <head>
@@ -7,17 +8,33 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Edit List <c:out value="${list.name}"/> &#8226; PopCult</title>
+    <c:url value="/editList/${list.mediaListId}" var="deletePath"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
     <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
     <p class="lead text-justify"><c:out value="${list.description}"/></p>
-    <div class="row">
-        <div class="col flex justify-center py-2">
+    <div class="row justify-content-md-end">
+        <div class="col">
+            <form:form action="${deletePath}" method="DELETE">
+                <button type="submit" class="btn btn-outline-dark btn-rounded">
+                    Delete
+                </button>
+                <input id="delete" type="hidden" name="delete" value=<c:out value="true"/>>
+            </form:form>
+        </div>
+        <div class="col">
             <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
-                <button type="button" class="btn btn-secondary btn-rounded">
-                    Done
+                <button type="button" class="btn btn-danger btn-rounded">
+                    Discard
+                </button>
+            </a>
+        </div>
+        <div class="col">
+            <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
+                <button class="btn btn-success btn-rounded">
+                    Save
                 </button>
             </a>
         </div>

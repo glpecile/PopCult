@@ -36,4 +36,6 @@ public interface ListsDao {
     void addToMediaList(int mediaListId, List<Integer> mediaIdList);
 
     void deleteMediaFromList(int mediaListId, int mediaId);
+
+    void deleteList(int mediaListId);
 }

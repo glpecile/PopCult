@@ -88,4 +88,9 @@ public class ListsServiceImpl implements ListsService {
     public void deleteMediaFromList(int mediaListId, int mediaId) {
         listsDao.deleteMediaFromList(mediaListId, mediaId);
     }
+
+    @Override
+    public void deleteList(int mediaListId) {
+        listsDao.deleteList(mediaListId);
+    }
 }

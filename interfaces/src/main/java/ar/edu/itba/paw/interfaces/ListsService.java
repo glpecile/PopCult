@@ -37,4 +37,5 @@ public interface ListsService {
 
     void deleteMediaFromList(int mediaListId, int mediaId);
 
+    void deleteList(int mediaListId);
 }
