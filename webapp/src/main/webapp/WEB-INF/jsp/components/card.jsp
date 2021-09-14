@@ -9,17 +9,20 @@
         <%--    <h5><c:out value="${param.releaseDate}"/></h5>--%>
         <c:choose>
             <c:when test="${param.editListId != null}">
-            <form action="<c:url value="/editList/${param.editListId}" />" method="POST">
-                delete this media
-                <input class="opacity-0" type="submit" name="mediaId"
-                       value="${param.mediaId}">
-            </form>
+                <div class="flex justify-center py-2 ">
+                    <form action="<c:url value="/editList/${param.editListId}" />" method="POST">
+                        <button type="submit"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded">
+                            <i class="fa fa-trash pr-2" aria-hidden="true"></i>Delete Media
+                        </button>
+                        <input id="mediaId" type="hidden" name="mediaId" value="${param.mediaId}">
+                    </form>
+                </div>
             </c:when>
             <c:otherwise>
                 <a href="<c:url value="/media/${param.mediaId}"/>" class="stretched-link" title="<c:out
         value="${param.title}"/>(<c:out value="${param.releaseDate}"/>)"></a>
             </c:otherwise>
         </c:choose>
-
     </div>
 </div>
