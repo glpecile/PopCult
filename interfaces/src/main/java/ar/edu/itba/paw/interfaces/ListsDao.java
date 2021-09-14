@@ -13,6 +13,8 @@ public interface ListsDao {
 
     List<MediaList> getMediaListByUserId(int userId);
 
+    List<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
+
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
     List<Integer> getMediaIdInList(int mediaListId);
@@ -24,6 +26,8 @@ public interface ListsDao {
     List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
     Optional<Integer> getListCount();
+
+    Optional<Integer> getListCountFromUserId(int userId);
 
     Optional<Integer> getListCountFromMedia(int mediaId);
 

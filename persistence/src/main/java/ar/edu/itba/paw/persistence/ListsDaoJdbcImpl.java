@@ -82,6 +82,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public List<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
     public List<MediaList> getDiscoveryMediaLists(int pageSize) {
         return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY name LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
@@ -110,6 +115,12 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public Optional<Integer> getListCount() {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist", COUNT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<Integer> getListCountFromUserId(int userId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst();
     }
 

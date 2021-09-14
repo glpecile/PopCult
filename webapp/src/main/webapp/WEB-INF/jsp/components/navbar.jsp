@@ -25,6 +25,19 @@
                 <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/lists"/>">Lists</a>
                 </li>
+                <c:choose>
+                    <c:when test="${param.user != null}">
+                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                            <a class="nav-link active" aria-current="page" href="<c:url value="/profile"/>">${param.user}</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                            <a class="nav-link active" aria-current="page" href="<c:url value="/login"/>">Log-In</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+
                 <%-- TODO Dropdown when user profiles added.--%>
                 <%--                <li class="nav-item dropdown">--%>
                 <%--                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"--%>
