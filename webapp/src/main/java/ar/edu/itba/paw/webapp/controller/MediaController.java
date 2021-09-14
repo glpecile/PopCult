@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.controller.ListsController.getListCover;
+import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
+
 
 @Controller
 public class MediaController {
@@ -64,7 +64,7 @@ public class MediaController {
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
-        final List<ListCover> relatedListsCover = generateCoverList(mediaList);
+        final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
         final List<MediaList> userLists = listsService.getMediaListByUserId(1);
         mav.addObject("media", media);
@@ -90,9 +90,6 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    private  List<ListCover> generateCoverList(List<MediaList> discoveryLists) {
-       return getListCover(discoveryLists, listsService, mediaService);
-    }
 
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
