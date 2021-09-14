@@ -57,7 +57,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +
                 "mediaId INT NOT NULL," +
                 "mediaListId INT NOT NULL, " +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE ," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
     }
 
