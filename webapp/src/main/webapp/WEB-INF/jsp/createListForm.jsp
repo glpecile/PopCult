@@ -32,32 +32,18 @@
                     <form:errors path="description" cssClass="formError" element="p"/>
                 </div>
             </div>
-            <%--            <div class="col-md-4">--%>
-            <%--                <div class="form-check">--%>
-            <%--                    <form:input--%>
-            <%--                            path="visible"--%>
-            <%--                            class="form-check-input"--%>
-            <%--                            value=""--%>
-            <%--                            id="invalidCheck2"--%>
-            <%--                    />--%>
-            <%--                    <form:label path="visible" class="form-check-label" for="invalidCheck2">--%>
-            <%--                        Make list public for everyone.--%>
-            <%--                    </form:label>--%>
-            <%--                </div>--%>
-            <%--            </div>--%>
-            <%--            <div class="col-md-6">--%>
-            <%--                <div class="form-check">--%>
-            <%--                    <form:input--%>
-            <%--                            path="collaborative"--%>
-            <%--                            class="form-check-input"--%>
-            <%--                            value=""--%>
-            <%--                            id="invalidCheck3"--%>
-            <%--                    />--%>
-            <%--                    <form:label path="collaborative" class="form-check-label" for="invalidCheck3">--%>
-            <%--                        Enable others to suggest new movies to add.--%>
-            <%--                    </form:label>--%>
-            <%--                </div>--%>
-            <%--            </div>--%>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <form:checkbox path="visible" class="form-check-label" for="invalidCheck2"/>
+                                    Make list public for everyone.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"/>
+                                    Enable others to suggest new movies to add.
+                            </div>
+                        </div>
             <div class="col-12 py-2">
                 <button class="btn btn-secondary" type="submit">Save</button>
             </div>

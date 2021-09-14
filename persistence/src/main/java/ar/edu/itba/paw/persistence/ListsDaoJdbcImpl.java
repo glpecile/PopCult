@@ -43,6 +43,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
 
 //        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
+//        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
+//        jdbcTemplate.execute("ALTER TABLE mediaList ADD collaborative BOOLEAN NOT NULL default FALSE");
+
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
                 "userId INT NOT NULL," +
@@ -120,7 +123,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public MediaList createMediaList(int userId, String title, String description, int visibility, int collaborative) {
+    public MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative) {
         Map<String, Object> data = new HashMap<>();
         Date localDate = new Date();
         data.put("userid", userId);

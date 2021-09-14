@@ -29,7 +29,7 @@ public interface ListsDao {
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
-    MediaList createMediaList(int userId, String title, String description, int visibility, int collaborative);
+    MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative);
 
     void addToMediaList(int mediaListId, int mediaId);
 

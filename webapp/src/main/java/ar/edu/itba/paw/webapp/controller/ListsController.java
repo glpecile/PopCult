@@ -74,7 +74,7 @@ public class ListsController {
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return createListForm(form);
-        final MediaList mediaList = listsService.createMediaList(1, form.getListTitle(), form.getDescription(), 0, 0);
+        final MediaList mediaList = listsService.createMediaList(1, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }
 

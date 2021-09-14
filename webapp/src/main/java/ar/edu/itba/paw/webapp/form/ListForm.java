@@ -4,18 +4,18 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class ListForm {
-    @Size(min=3, max = 100)
+    @Size(min = 3, max = 100)
 //    @Pattern(regexp = "[a-zA-Z0-9]")
     private String listTitle;
 
-//    @Pattern(regexp = "[a-zA-Z0-9]")
+    //    @Pattern(regexp = "[a-zA-Z0-9]")
     private String description;
 
-//    @Pattern(regexp = "[0|1]")
-    private int visible;
+    //    @Pattern(regexp = "[0|1]")
+    private boolean visible;
 
-//    @Pattern(regexp = "[0|1]")
-    private int collaborative;
+    //    @Pattern(regexp = "[0|1]")
+    private boolean collaborative;
 
     public String getListTitle() {
         return listTitle;
@@ -33,19 +33,19 @@ public class ListForm {
         this.description = description;
     }
 
-    public int getVisible() {
+    public boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(int visible) {
+    public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
-    public int getCollaborative() {
+    public boolean isCollaborative() {
         return collaborative;
     }
 
-    public void setCollaborative(int collaborative) {
+    public void setCollaborative(boolean collaborative) {
         this.collaborative = collaborative;
     }
 }

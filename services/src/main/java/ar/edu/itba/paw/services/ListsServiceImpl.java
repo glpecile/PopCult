@@ -70,7 +70,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public MediaList createMediaList(int userId, String title, String description, int visibility, int collaborative) {
+    public MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative) {
         return listsDao.createMediaList(userId, title,description,visibility,collaborative);
     }
 
