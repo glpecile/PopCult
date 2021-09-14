@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,7 +61,7 @@ public class ListsController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
-        final User currentUser = new User(1, "", "", ""); //esto despues se reemplaza por el context del current user
+        final User currentUser = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //esto despues se reemplaza por el context del current user
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("currentUser", currentUser);
