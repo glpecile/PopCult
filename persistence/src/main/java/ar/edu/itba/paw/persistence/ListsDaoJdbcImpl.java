@@ -187,7 +187,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
         Date localDate = new Date();
         data.put("userid", userId);
-        data.put("name", toCopy.getName());
+        data.put("name","Copy from " + toCopy.getName());
         data.put("description", toCopy.getDescription());
         data.put("creationDate", localDate);
         data.put("visibility", toCopy.isVisible());

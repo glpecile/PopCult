@@ -25,7 +25,8 @@
             </div>
             <div class="col-md-6">
                 <form:label path="description" for="listDesc" class="form-label">Description</form:label>
-                <form:input path="description" type="text" class="form-control resize" id="listDesc"
+                <form:input path="description" type="text"
+                            class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
                             value="${list.description}"/>
                 <form:errors path="description" cssClass="formError text-red-500" element="p"/>
             </div>
@@ -42,8 +43,6 @@
                 </div>
             </div>
         </div>
-        <%--        <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>--%>
-        <%--        <p class="lead text-justify"><c:out value="${list.description}"/></p>--%>
         <div class="row justify-content-end">
             <div class="col">
                 <form:form action="${deletePath}" method="DELETE">
