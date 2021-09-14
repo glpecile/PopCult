@@ -44,6 +44,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate = new JdbcTemplate(ds);
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("medialist").usingGeneratedKeyColumns("medialistid");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
+        //forkedListsjdbcInsert = new SimpleJdbcInsert(ds).withTableName("forkedlists");
 
 //        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
@@ -64,6 +65,14 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 "mediaListId INT NOT NULL, " +
                 "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
+
+//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
+//                "mediaListId INT NOT NULL, " +
+//                "originalOwnerId INT NOT NULL,"+
+//                "forkerId INT NOT NULL,"+
+//                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
+//                "FOREIGN KEY(originalOwnerId) REFERENCES users(userId) ON DELETE CASCADE," +
+//                "FOREIGN KEY(forkerId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
@@ -185,6 +194,13 @@ public class ListsDaoJdbcImpl implements ListsDao {
         data.put("collaborative", toCopy.isCollaborative());
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
         addToMediaList((int) key.getKey(), getMediaIdInList(toCopyListId));
+        Map<String, Object> forkData = new HashMap<>();
+        /*
+        forkData.put("mediaListId", (int) key.getKey());
+        forkData.put("originalOwnerId", toCopy.getUserId());
+        forkData.put("forkerId", userId);
+        forkedListsjdbcInsert.execute(forkData)
+        */
         return new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative());
     }
 }
