@@ -71,7 +71,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Override
     public MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative) {
-        return listsDao.createMediaList(userId, title,description,visibility,collaborative);
+        return listsDao.createMediaList(userId, title, description, visibility, collaborative);
     }
 
     @Override
@@ -92,5 +92,10 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public void deleteList(int mediaListId) {
         listsDao.deleteList(mediaListId);
+    }
+
+    @Override
+    public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
+        listsDao.updateList(mediaListId, title, description, visibility, collaborative);
     }
 }

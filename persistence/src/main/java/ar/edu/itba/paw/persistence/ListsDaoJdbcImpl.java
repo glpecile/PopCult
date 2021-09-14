@@ -131,20 +131,20 @@ public class ListsDaoJdbcImpl implements ListsDao {
         data.put("description", description);
         data.put("creationDate", localDate);
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
-        return new MediaList((int) key.getKey(),userId, title, description, localDate);
+        return new MediaList((int) key.getKey(), userId, title, description, localDate);
     }
 
     @Override
     public void addToMediaList(int mediaListId, int mediaId) {
         Map<String, Object> data = new HashMap<>();
-        data.put("mediaId",mediaId);
+        data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
         listElementjdbcInsert.execute(data);
     }
 
     @Override
     public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
-        for(int mediaId: mediaIdList){
+        for (int mediaId : mediaIdList) {
             addToMediaList(mediaListId, mediaId);
         }
     }
@@ -158,5 +158,10 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public void deleteList(int mediaListId) {
         jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ?", mediaListId);
         jdbcTemplate.update("DELETE FROM medialist WHERE medialistid = ?", mediaListId);
+    }
+
+    @Override
+    public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
+        jdbcTemplate.update("UPDATE medialist SET name = ?, description = ? WHERE medialistid = ?", title, description, mediaListId);
     }
 }

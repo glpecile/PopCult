@@ -101,8 +101,11 @@ public class ListsController {
         return new ModelAndView("redirect:/lists");
     }
 
-    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST})
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST}, params = "save")
     public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return editList(listId, form);
+        listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         //update stuff
         return new ModelAndView("redirect:/lists/{listId}");
     }
