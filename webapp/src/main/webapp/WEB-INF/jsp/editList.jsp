@@ -6,7 +6,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><c:out value="${list.name}"/> &#8226; PopCult</title>
+    <title>Edit List <c:out value="${list.name}"/> &#8226; PopCult</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -14,18 +14,13 @@
     <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
     <p class="lead text-justify"><c:out value="${list.description}"/></p>
     <div class="row">
-        <div class="col">
-            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
-        </div>
-        <%--    <c:if test="${list.userId == currentUser.getUserId}">--%>
         <div class="col flex justify-center py-2">
-            <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
+            <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
                 <button type="button" class="btn btn-secondary btn-rounded">
-                    Edit list
+                    Done
                 </button>
             </a>
         </div>
-        <%--    </c:if>--%>
     </div>
     <div class="row">
         <c:forEach var="media" items="${media}">
@@ -35,6 +30,7 @@
                     <jsp:param name="title" value="${media.title}"/>
                     <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                     <jsp:param name="mediaId" value="${media.mediaId}"/>
+                    <jsp:param name="editListId" value="${list.mediaListId}"/>
                 </jsp:include>
             </div>
         </c:forEach>

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,10 @@ public class ListsController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final User currentUser = new User(1, "", "", ""); //esto despues se reemplaza por el context del current user
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
+        mav.addObject("currentUser", currentUser);
         return mav;
     }
 
@@ -71,8 +74,27 @@ public class ListsController {
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return createListForm(form);
-        final MediaList mediaList = listsService.createMediaList(form.getListTitle(), form.getDescription(), "", 0, 0);
+        final MediaList mediaList = listsService.createMediaList(1, form.getListTitle(), form.getDescription(), 0, 0);
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
+    }
+
+    @RequestMapping("/editList/{listId}")
+    public ModelAndView editList(@PathVariable("listId") final int listId) {
+        final ModelAndView mav = new ModelAndView("editList");
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
+        final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        mav.addObject("list", mediaList);
+        mav.addObject("media", mediaFromList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST}, params = "mediaId")
+    public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId) {
+        System.out.println(mediaId);
+        System.out.println(listId);
+        listsService.deleteMediaFromList(listId, mediaId);
+        return new ModelAndView("redirect:/editList/" + listId);
     }
 
     static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService, MediaService mediaService) {

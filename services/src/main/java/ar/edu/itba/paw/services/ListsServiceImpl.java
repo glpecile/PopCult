@@ -70,8 +70,8 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public MediaList createMediaList(String title, String description, String image, int visibility, int collaborative) {
-        return listsDao.createMediaList(title,description,image,visibility,collaborative);
+    public MediaList createMediaList(int userId, String title, String description, int visibility, int collaborative) {
+        return listsDao.createMediaList(userId, title,description,visibility,collaborative);
     }
 
     @Override
@@ -82,5 +82,10 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
         listsDao.addToMediaList(mediaListId, mediaIdList);
+    }
+
+    @Override
+    public void deleteMediaFromList(int mediaListId, int mediaId) {
+        listsDao.deleteMediaFromList(mediaListId, mediaId);
     }
 }
