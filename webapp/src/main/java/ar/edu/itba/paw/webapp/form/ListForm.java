@@ -5,16 +5,14 @@ import javax.validation.constraints.Size;
 
 public class ListForm {
     @Size(min = 3, max = 100)
-//    @Pattern(regexp = "[a-zA-Z0-9]")
+    @Pattern(regexp = "[a-zA-Z0-9&$\\-.,;()\\[\\]|/\\s]")
     private String listTitle;
 
-    //    @Pattern(regexp = "[a-zA-Z0-9]")
+    @Pattern(regexp = "[a-zA-Z0-9&$\\-.,;()\\[\\]|/\\s]")
     private String description;
 
-    //    @Pattern(regexp = "[0|1]")
     private boolean visible;
 
-    //    @Pattern(regexp = "[0|1]")
     private boolean collaborative;
 
     public String getListTitle() {
