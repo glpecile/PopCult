@@ -13,13 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.controller.ListsController.getListCover;
+import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
+
 
 @Controller
 public class MediaController {
@@ -63,9 +64,9 @@ public class MediaController {
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
-        final List<ListCover> relatedListsCover = new ArrayList<>();
+        final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
-        generateCoverList(mediaList, relatedListsCover);
+        final List<MediaList> userLists = listsService.getMediaListByUserId(1);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -79,18 +80,22 @@ public class MediaController {
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
+        mav.addObject("userLists", userLists);
         return mav;
     }
 
-    private void generateCoverList(List<MediaList> discoveryLists, List<ListCover> listCovers) {
-        getListCover(discoveryLists, listCovers, listsService, mediaService);
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
+    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
+        listsService.addToMediaList(mediaListId, mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId);
     }
+
 
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
         final List<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page-1, itemsPerPage);
+        final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
         mav.addObject("latestFilms", latestFilms);
         mav.addObject("mediaList", mediaList);

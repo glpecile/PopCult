@@ -4,17 +4,21 @@ import java.util.Date;
 
 public class MediaList {
     private final int mediaListId;
+    private final int userId;
     private final String name;
     private final String description;
-    private final String image;
     private final Date creationDate;
 
-    public MediaList(int mediaListId, String name, String description, String image, Date creationDate) {
+    public MediaList(int mediaListId, int userId, String name, String description, Date creationDate) {
         this.mediaListId = mediaListId;
         this.name = name;
         this.description = description;
-        this.image = image;
         this.creationDate = creationDate;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -23,10 +27,6 @@ public class MediaList {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getImage() {
-        return image;
     }
 
     public int getMediaListId() {

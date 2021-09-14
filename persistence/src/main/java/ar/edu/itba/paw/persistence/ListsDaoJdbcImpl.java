@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Time;
+import java.util.*;
 
 @Repository
 public class ListsDaoJdbcImpl implements ListsDao {
@@ -24,9 +25,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
             (rs, rowNum) -> new MediaList(
                     rs.getInt("mediaListId"),
+                    rs.getInt("userId"),
                     rs.getString("name"),
                     rs.getString("description"),
-                    rs.getString("image"),
                     rs.getDate("creationDate"));
 
     private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
@@ -38,16 +39,18 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaList").usingGeneratedKeyColumns("mediaListId");
-        listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listElement");
+        mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("medialist").usingGeneratedKeyColumns("medialistid");
+        listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
 
-//        jdbcTemplate.execute("DROP TABLE mediaList CASCADE");
+//        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
+//        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
+//        jdbcTemplate.execute("ALTER TABLE mediaList ADD collaborative BOOLEAN NOT NULL default FALSE");
+
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
                 "userId INT NOT NULL," +
                 "name TEXT NOT NULL," +
                 "description TEXT NOT NULL," +
-                "image TEXT NOT NULL," +
                 "creationDate DATE," +
                 "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
 
@@ -96,7 +99,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM listElement NATURAL JOIN mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate FROM listElement NATURAL JOIN" +
+                " mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -113,7 +117,51 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
-        return jdbcTemplate.query("SELECT DISTINCT medialistid, name, description, image, creationdate FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN medialist WHERE genreId = ? GROUP BY medialistid, medialist.name, description, image, creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate FROM mediaGenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
+                "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
+    @Override
+    public MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative) {
+        Map<String, Object> data = new HashMap<>();
+        Date localDate = new Date();
+        data.put("userid", userId);
+        data.put("name", title);
+        data.put("description", description);
+        data.put("creationDate", localDate);
+        KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
+        return new MediaList((int) key.getKey(), userId, title, description, localDate);
+    }
+
+    @Override
+    public void addToMediaList(int mediaListId, int mediaId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("mediaId", mediaId);
+        data.put("mediaListId", mediaListId);
+        listElementjdbcInsert.execute(data);
+    }
+
+    @Override
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+        for (int mediaId : mediaIdList) {
+            addToMediaList(mediaListId, mediaId);
+        }
+    }
+
+    @Override
+    public void deleteMediaFromList(int mediaListId, int mediaId) {
+        jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ? AND mediaId = ?", mediaListId, mediaId);
+    }
+
+    @Override
+    public void deleteList(int mediaListId) {
+        jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ?", mediaListId);
+        jdbcTemplate.update("DELETE FROM medialist WHERE medialistid = ?", mediaListId);
+    }
+
+    @Override
+    public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
+        jdbcTemplate.update("UPDATE medialist SET name = ?, description = ? WHERE medialistid = ?", title, description, mediaListId);
+    }
 }

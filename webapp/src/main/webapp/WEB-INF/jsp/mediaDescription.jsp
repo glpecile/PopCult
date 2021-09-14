@@ -16,6 +16,23 @@
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+            <%-- dropdown lists list--%>
+
+            <div class="dropdown flex justify-center py-2">
+                <button class="btn btn-secondary dropdown-toggle btn-rounded" type="button" id="addMediaToList"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Add to a list
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="Add Media to List">
+                    <c:forEach var="list" items="${userLists}">
+                        <form action="<c:url value="/media/${mediaId}" />" method="POST">
+                            <button class="dropdown-item" type="submit"><c:out value="${list.name}"/></button>
+                            <input type="hidden" id="mediaListId" name="mediaListId"
+                                   value="<c:out value = "${list.mediaListId}"/>">
+                        </form>
+                    </c:forEach>
+                </ul>
+            </div>
         </div>
 
         <div class="col-12 col-lg-8">

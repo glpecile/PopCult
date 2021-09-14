@@ -6,16 +6,20 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
+
+import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
+
 
 @Controller
 public class ListsController {
@@ -33,26 +37,21 @@ public class ListsController {
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> discoveryLists = listsService.getDiscoveryMediaLists(discoveryListsAmount);
-        final List<MediaList> recentlyAdded = listsService.getNLastAddedList(lastAddedAmount);
         final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
-        final List<ListCover> discoveryCovers = new ArrayList<>();
-        final List<ListCover> recentlyAddedCovers = new ArrayList<>();
-        final List<ListCover> allListsCovers = new ArrayList<>();
+        final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
+        final List<ListCover> recentlyAddedCovers = generateCoverList(listsService.getNLastAddedList(lastAddedAmount));
+        final List<ListCover> allListsCovers = generateCoverList(allLists);
         final Integer allListsCount = listsService.getListCount().orElse(0);
-        generateCoverList(discoveryLists, discoveryCovers);
-        generateCoverList(recentlyAdded, recentlyAddedCovers);
-        generateCoverList(allLists, allListsCovers);
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
         mav.addObject("allLists", allListsCovers);
-        mav.addObject("allListsPages", (int)Math.ceil((double)allListsCount / itemsPerPage));
+        mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
         mav.addObject("currentPage", page);
         return mav;
     }
 
-    private void generateCoverList(List<MediaList> MediaListLists, List<ListCover> covers) {
-        getListCover(MediaListLists, covers, listsService, mediaService);
+    private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {
+        return getListCover(MediaListLists, listsService, mediaService);
     }
 
     @RequestMapping("/lists/{listId}")
@@ -61,33 +60,56 @@ public class ListsController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final User currentUser = new User(1, "", "", ""); //esto despues se reemplaza por el context del current user
+        mav.addObject("list", mediaList);
+        mav.addObject("media", mediaFromList);
+        mav.addObject("currentUser", currentUser);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createList", method = {RequestMethod.GET})
+    public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
+        return new ModelAndView("createListForm");
+    }
+
+    @RequestMapping(value = "/createList", method = {RequestMethod.POST})
+    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return createListForm(form);
+        final MediaList mediaList = listsService.createMediaList(1, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
+        return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
+    }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.GET})
+    public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
+        final ModelAndView mav = new ModelAndView("editList");
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
+        final List<Media> mediaFromList = mediaService.getById(mediaInList);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         return mav;
     }
 
-    static void getListCover(List<MediaList> discoveryLists, List<ListCover> listCovers, ListsService listsService, MediaService mediaService) {
-        List<Media> mediaList;
-        List<Integer> id;
-        ListCover cover;
-        int size;
-        for (MediaList list : discoveryLists) {
-            id = listsService.getMediaIdInList(list.getMediaListId());
-            mediaList = mediaService.getById(id);
-            size = mediaList.size();
-            cover = new ListCover(list.getMediaListId(), list.getName(), list.getDescription());
-            if (size > 0) cover.setImage1(mediaList.get(0).getImage());
-            if (size > 1) cover.setImage2(mediaList.get(1).getImage());
-            if (size > 2) cover.setImage3(mediaList.get(2).getImage());
-            if (size > 3) cover.setImage4(mediaList.get(3).getImage());
-            listCovers.add(cover);
-        }
-//        for (MediaList list : discoveryLists) {
-//            id = listsService.getMediaIdInList(list.getMediaListId());
-//            mediaList = mediaService.getById(id);
-//            listCovers.add(new ListCover(list.getMediaListId(), list.getName(), list.getDescription(),
-//                    mediaList.get(0).getImage(), mediaList.get(1).getImage(),
-//                    mediaList.get(2).getImage(), mediaList.get(3).getImage(), mediaList.size()));
-//        }
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "mediaId")
+    public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId) {
+        listsService.deleteMediaFromList(listId, mediaId);
+        return new ModelAndView("redirect:/editList/" + listId);
     }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
+    public ModelAndView deleteList(@PathVariable("listId") final int listId) {
+        listsService.deleteList(listId);
+        return new ModelAndView("redirect:/lists");
+    }
+
+    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.POST}, params = "save")
+    public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return editList(listId, form);
+        listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
+        //update stuff
+        return new ModelAndView("redirect:/lists/{listId}");
+    }
+
 }
