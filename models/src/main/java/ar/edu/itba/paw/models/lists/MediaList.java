@@ -8,13 +8,17 @@ public class MediaList {
     private final String name;
     private final String description;
     private final Date creationDate;
+    private final boolean visible;
+    private final boolean collaborative;
 
-    public MediaList(int mediaListId, int userId, String name, String description, Date creationDate) {
+    public MediaList(int mediaListId, int userId, String name, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
-        this.userId = userId;
+        this.visible = visible;
+        this.collaborative = collaborative;
     }
 
     public int getUserId() {
@@ -35,5 +39,13 @@ public class MediaList {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isCollaborative() {
+        return collaborative;
     }
 }

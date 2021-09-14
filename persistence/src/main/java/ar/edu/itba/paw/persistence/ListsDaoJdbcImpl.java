@@ -28,7 +28,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
                     rs.getInt("userId"),
                     rs.getString("name"),
                     rs.getString("description"),
-                    rs.getDate("creationDate"));
+                    rs.getDate("creationDate"),
+                    rs.getBoolean("visibility"),
+                    rs.getBoolean("collaborative"));
 
     private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
@@ -52,6 +54,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 "name TEXT NOT NULL," +
                 "description TEXT NOT NULL," +
                 "creationDate DATE," +
+                "visibility BOOLEAN," +
+                "collaborative BOOLEAN," +
                 "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +
@@ -99,7 +103,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate FROM listElement NATURAL JOIN" +
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM listElement NATURAL JOIN" +
                 " mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
@@ -117,7 +121,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate FROM mediaGenre NATURAL JOIN " +
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
                 "listelement NATURAL JOIN mediaList WHERE genreId = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
                 "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
@@ -130,8 +134,10 @@ public class ListsDaoJdbcImpl implements ListsDao {
         data.put("name", title);
         data.put("description", description);
         data.put("creationDate", localDate);
+        data.put("visibility", visibility);
+        data.put("collaborative", collaborative);
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
-        return new MediaList((int) key.getKey(), userId, title, description, localDate);
+        return new MediaList((int) key.getKey(), userId, title, description, localDate, visibility, collaborative);
     }
 
     @Override
@@ -162,6 +168,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
-        jdbcTemplate.update("UPDATE medialist SET name = ?, description = ? WHERE medialistid = ?", title, description, mediaListId);
+        jdbcTemplate.update("UPDATE medialist SET name = ?, description = ?, visibility = ?, collaborative = ? WHERE medialistid = ?", title, description, visibility, collaborative, mediaListId);
     }
 }
