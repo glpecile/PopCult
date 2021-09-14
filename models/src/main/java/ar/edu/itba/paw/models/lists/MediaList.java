@@ -4,17 +4,25 @@ import java.util.Date;
 
 public class MediaList {
     private final int mediaListId;
+    private final int userId;
     private final String name;
     private final String description;
-    private final String image;
     private final Date creationDate;
+    private final boolean visible;
+    private final boolean collaborative;
 
-    public MediaList(int mediaListId, String name, String description, String image, Date creationDate) {
+    public MediaList(int mediaListId, int userId, String name, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
+        this.userId = userId;
         this.name = name;
         this.description = description;
-        this.image = image;
         this.creationDate = creationDate;
+        this.visible = visible;
+        this.collaborative = collaborative;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -25,15 +33,19 @@ public class MediaList {
         return description;
     }
 
-    public String getImage() {
-        return image;
-    }
-
     public int getMediaListId() {
         return mediaListId;
     }
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isCollaborative() {
+        return collaborative;
     }
 }

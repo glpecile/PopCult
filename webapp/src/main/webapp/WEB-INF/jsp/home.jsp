@@ -16,8 +16,7 @@
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 
-<div class="col-8 offset-2">
-    <br>
+<div class="col-8 offset-2 py-2">
     <!-- Slider for films -->
     <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">

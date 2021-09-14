@@ -13,7 +13,20 @@
 <div class="col-8 offset-2">
     <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
     <p class="lead text-justify"><c:out value="${list.description}"/></p>
-    <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+    <div class="row">
+        <div class="col">
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+        </div>
+        <%--    <c:if test="${list.userId == currentUser.getUserId}">--%>
+        <div class="col flex justify-center py-2">
+            <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
+                <button type="button" class="btn btn-secondary btn-rounded">
+                    Edit list
+                </button>
+            </a>
+        </div>
+        <%--    </c:if>--%>
+    </div>
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

@@ -24,8 +24,8 @@ public class UserDaoJdbcImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"),
-                    rs.getString("profilePhoto"));
+                    "name", //TODO
+                    "profilePhoto"); //TODO
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
@@ -45,16 +45,16 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public Optional<User> getById(int userId) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{userId},ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{userId}, ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<User> getByEmail(String email){
-        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{email},ROW_MAPPER).stream().findFirst();
+    public Optional<User> getByEmail(String email) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{email}, ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL){
+    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);

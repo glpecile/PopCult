@@ -10,17 +10,17 @@ public class UserForm {
     @Size(min = 6, max = 100)
     private String email;
 
-    @Size(min = 6, max = 100)
+    @Size(min = 1, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
 
-    @Size(min = 6, max = 100)
+    @Size(min = 8, max = 100)
     private String password;
 
-    @Size(min = 6, max = 100)
+    @Size(min = 8, max = 100)
     private String repeatPassword;
 
-    @Size(min = 6, max = 100)
+    @Size(min = 3, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9\\s]+")
     private String name;
 

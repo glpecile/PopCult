@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
+
 
 @Controller
 public class GenreController {
@@ -41,12 +43,11 @@ public class GenreController {
         final List<Media> mediaList = mediaService.getById(mediaIdList);
         final Integer mediaCount = genreService.getMediaCountByGenre(genreOrdinal).orElse(0);
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
-        final List<ListCover> listCovers = new ArrayList<>();
-        ListsController.getListCover(genreLists, listCovers, listsService, mediaService);
+        final List<ListCover> listCovers = getListCover(genreLists, listsService, mediaService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaList", mediaList);
         mav.addObject("mediaCount", mediaCount);
-        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         mav.addObject("listAmount", listCovers.size());
         mav.addObject("genreLists", listCovers);
