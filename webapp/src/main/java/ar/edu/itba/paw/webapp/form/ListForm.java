@@ -8,7 +8,8 @@ public class ListForm {
     @Pattern(regexp = "[^/><]+")
     private String listTitle;
 
-    @Pattern(regexp = "[^></]*")
+    @Size(min = 1, max = 1000)
+    @Pattern(regexp = "[^></]+")
     private String description;
 
     private boolean visible;
