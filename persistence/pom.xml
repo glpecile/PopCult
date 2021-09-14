@@ -13,14 +13,15 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>persistence</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <dependencies>
+<!--    Springframework dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+
+<!--    JDBC & Postgres dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
@@ -30,6 +31,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
+<!--    Modules dependencies-->
         <dependency>
             <groupId>ar.edu.itba.paw</groupId>
             <artifactId>models</artifactId>
