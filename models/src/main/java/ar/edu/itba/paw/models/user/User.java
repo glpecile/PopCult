@@ -1,18 +1,45 @@
 package ar.edu.itba.paw.models.user;
 
+
 public class User {
     private final int userId;
-    private final String mail;
-    private final String username;
+    private final String email;
+    private final String userName;
     private final String password;
-//    private String name;
-//    private String profilePhotoURL;
+    private final String name;
+    private final String profilePhotoURL;
 
 
-    public User(int userId, String mail, String username, String password) {
+    public User(int userId, String email, String userName, String password, String name, String profilePhotoURL) {
         this.userId = userId;
-        this.mail = mail;
-        this.username = username;
+        this.email = email;
+        this.userName = userName;
         this.password = password;
+        this.name = name;
+        this.profilePhotoURL = profilePhotoURL;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProfilePhotoURL() {
+        return profilePhotoURL;
     }
 }
