@@ -82,6 +82,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public List<MediaList> getMediaListById(List<Integer> mediaListId) {
+        if(mediaListId.size() == 0)
+            return new ArrayList<>();
+        String inSql = String.join(",", Collections.nCopies(mediaListId.size(), "?"));
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM mediaList WHERE mediaListId IN (%s)", inSql),
+                mediaListId.toArray(), MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
     public List<MediaList> getAllLists(int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM mediaList WHERE visibility = ? OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }

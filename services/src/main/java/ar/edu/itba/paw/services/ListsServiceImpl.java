@@ -25,6 +25,13 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
+    public List<MediaList> getMediaListById(List<Integer> mediaListId) {
+        List<MediaList> lists = listsDao.getMediaListById(mediaListId);
+        lists.forEach(list -> list.setFavorite(userService.isFavoriteList(list.getMediaListId())));
+        return lists;
+    }
+
+    @Override
     public List<MediaList> getAllLists(int page, int pageSize) {
         return listsDao.getAllLists(page, pageSize);
     }

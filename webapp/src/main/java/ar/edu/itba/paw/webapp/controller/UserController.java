@@ -63,4 +63,18 @@ public class UserController {
         return mav;
     }
 
+    @RequestMapping("/profile/favoriteLists")
+    public ModelAndView userFavoriteLists(@RequestParam(value = "page", defaultValue = "1") final int page){
+        ModelAndView mav = new ModelAndView("userFavoriteLists");
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        mav.addObject(user);
+        List<Integer> userFavListsId = userService.getUserFavoriteLists(page-1, itemsPerPage);
+        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
+        Integer favCount = userService.getFavoriteMediaCount().orElse(0);
+        mav.addObject("favoriteLists", favoriteCovers);
+        mav.addObject("currentPage", page);
+        mav.addObject("listsPages",(int) Math.ceil((double) favCount / itemsPerPage));
+        mav.addObject("listsAmount", favCount);
+        return mav;
+    }
 }

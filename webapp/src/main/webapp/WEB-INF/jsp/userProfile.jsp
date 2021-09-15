@@ -32,6 +32,9 @@
             <a href="${pageContext.request.contextPath}/profile/favoriteMedia">
                 <button class="btn btn-secondary btn-rounded">Favorite Media</button>
             </a>
+            <a href="${pageContext.request.contextPath}/profile/favoriteLists">
+                <button class="btn btn-secondary btn-rounded">Favorite Lists</button>
+            </a>
         </div>
     </div>
 

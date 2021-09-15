@@ -37,6 +37,9 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
 
+    private static final RowMapper<Integer> MEDIA_LIST_ID_MAPPER =
+            (rs, rowNum) -> rs.getInt("mediaListId");
+
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -149,7 +152,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public List<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM favoritelists WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, INTEGER_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM favoritelists WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ID_MAPPER);
     }
 
     @Override

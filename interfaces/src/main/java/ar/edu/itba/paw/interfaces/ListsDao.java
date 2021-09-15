@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface ListsDao {
     Optional<MediaList> getMediaListById(int mediaListId);
 
+    List<MediaList> getMediaListById(List<Integer> mediaListId);
+
     List<MediaList> getAllLists(int page, int pageSize);
 
     List<MediaList> getMediaListByUserId(int userId);
