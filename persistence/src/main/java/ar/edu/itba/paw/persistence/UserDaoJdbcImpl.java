@@ -17,6 +17,8 @@ import java.util.Optional;
 public class UserDaoJdbcImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert favoriteMediaJdbcInsert;
+    private final SimpleJdbcInsert toWatchMediaJdbcInsert;
 
     private static final RowMapper<User> ROW_MAPPER =
             (rs, rowNum) -> new User(
@@ -31,6 +33,8 @@ public class UserDaoJdbcImpl implements UserDao {
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
+        favoriteMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("favoritemedia");
+        toWatchMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("towatchmedia");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
                 "userId SERIAL PRIMARY KEY," +
                 "email TEXT NOT NULL," +
@@ -41,6 +45,20 @@ public class UserDaoJdbcImpl implements UserDao {
                 "UNIQUE(email)," +
                 "UNIQUE(username)" +
                 ")");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritemedia(" +
+                "userId INT NOT NULL," +
+                "mediaId INT NOT NULL," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
+                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS towatchmedia(" +
+                "userId INT NOT NULL," +
+                "mediaId INT NOT NULL," +
+                "watchedDate DATE," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
+                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
+
     }
 
     @Override
