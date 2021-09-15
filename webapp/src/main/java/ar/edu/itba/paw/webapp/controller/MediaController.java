@@ -8,7 +8,9 @@ import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
+import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +37,8 @@ public class MediaController {
     private StudioService studioService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private UserService userService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -66,7 +70,8 @@ public class MediaController {
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
-        final List<MediaList> userLists = listsService.getMediaListByUserId(1);
+        final User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //TODO check exception
+        final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
