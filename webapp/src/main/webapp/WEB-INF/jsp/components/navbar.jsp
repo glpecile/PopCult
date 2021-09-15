@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-yellow-500 to-purple-900">
     <div class="container-fluid">
         <a class="navbar-brand" href="<c:url value="/"/>">
@@ -25,18 +26,32 @@
                 <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active" aria-current="page" href="<c:url value="/lists"/>">Lists</a>
                 </li>
-                <c:choose>
-                    <c:when test="${param.user != null}">
-                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <a class="nav-link active" aria-current="page" href="<c:url value="/profile"/>">${param.user}</a>
-                        </li>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <a class="nav-link active" aria-current="page" href="<c:url value="/login"/>">Log-In</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
+
+                <sec:authorize access="!isAuthenticated()">
+                    <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                        <a class="nav-link active" aria-current="page" href="<c:url value="/login"/>">Log-In</a>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <c:set var="username">
+                        <sec:authentication property="principal.username"/>
+                    </c:set>
+                    <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                        <a class="nav-link active" aria-current="page" href="<c:url value="/${username}"/>">${username}</a>
+                    </li>
+                </sec:authorize>
+<%--                <c:choose>--%>
+<%--                    <c:when test="${param.user != null}">--%>
+<%--                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">--%>
+<%--                            <a class="nav-link active" aria-current="page" href="<c:url value="/${param.user}"/>">${param.user}</a>--%>
+<%--                        </li>--%>
+<%--                    </c:when>--%>
+<%--                    <c:otherwise>--%>
+<%--                        <li class="nav-item  transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">--%>
+<%--                            <a class="nav-link active" aria-current="page" href="<c:url value="/login"/>">Log-In</a>--%>
+<%--                        </li>--%>
+<%--                    </c:otherwise>--%>
+<%--                </c:choose>--%>
 
                 <%-- TODO Dropdown when user profiles added.--%>
                 <%--                <li class="nav-item dropdown">--%>
