@@ -38,8 +38,9 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     }
 
     @Override
-    public List<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType){
-        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ?  OFFSET ? LIMIT ?", new Object[]{title, page, pageSize, mediaType},MEDIA_ROW_MAPPER);
+    public List<Media> searchMediaByTitle(String title, int page, int pageSize, int sort){
+        String orderBy = "ORDER BY " + SortType.values()[sort].nameMedia;
+        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%')" + orderBy + " OFFSET ? LIMIT ?", new Object[]{title ,page * pageSize, pageSize},MEDIA_ROW_MAPPER);
     }
 
     @Override
@@ -59,6 +60,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
 
     @Override
     public List<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') ORDER BY ? OFFSET ? LIMIT ?", new Object[]{title, page, pageSize, SortType.values()[sort].nameMedia},MEDIA_ROW_MAPPER);
+        String orderBy = "ORDER BY " + SortType.values()[sort].nameMedia;
+        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ?" + orderBy + "OFFSET ? LIMIT ?", new Object[]{title, mediaType,SortType.values()[sort].colNumberMedia,page, pageSize},MEDIA_ROW_MAPPER);
     }
 }
