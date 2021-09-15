@@ -11,7 +11,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.userName}"/>
+    <jsp:param name="user" value="${user.username}"/>
 </jsp:include>
 <br>
 <div class="col-8 offset-2">
@@ -24,15 +24,15 @@
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${user.name}"/></h1>
             <%--            <jsp:include page="/WEB-INF/jsp/components/edit.jsp"/>--%>
-            <p class="lead text-justify"><c:out value="@${user.userName}"/></p>
+            <p class="lead text-justify"><c:out value="@${user.username}"/></p>
         </div>
     </div>
     <div class="row py-2 justify-content-end">
         <div class="col-4">
-            <a href="${pageContext.request.contextPath}/profile/favoriteMedia">
+            <a href="${pageContext.request.contextPath}/${user.username}/favoriteMedia">
                 <button class="btn btn-secondary btn-rounded">Favorite Media</button>
             </a>
-            <a href="${pageContext.request.contextPath}/profile/favoriteLists">
+            <a href="${pageContext.request.contextPath}/${user.username}/favoriteLists">
                 <button class="btn btn-secondary btn-rounded">Favorite Lists</button>
             </a>
         </div>

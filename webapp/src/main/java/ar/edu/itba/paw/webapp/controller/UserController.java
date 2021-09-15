@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,8 +33,8 @@ public class UserController {
     private static final int itemsPerPage = 12;
 
 
-    @RequestMapping("/profile")
-    public ModelAndView userProfile(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    @RequestMapping("/{username}")
+    public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
@@ -45,8 +46,8 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping("/profile/favoriteMedia")
-    public ModelAndView userFavoriteMedia(@RequestParam(value = "page", defaultValue = "1") final int page){
+    @RequestMapping("/{username}/favoriteMedia")
+    public ModelAndView userFavoriteMedia(@PathVariable("username") final String username,@RequestParam(value = "page", defaultValue = "1") final int page){
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         List<Media> userMedia = mediaService.getById(userService.getUserFavoriteMedia(page - 1, itemsPerPage));
@@ -63,8 +64,8 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping("/profile/favoriteLists")
-    public ModelAndView userFavoriteLists(@RequestParam(value = "page", defaultValue = "1") final int page){
+    @RequestMapping("/{username}/favoriteLists")
+    public ModelAndView userFavoriteLists(@PathVariable("username") final String username,@RequestParam(value = "page", defaultValue = "1") final int page){
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject(user);

@@ -11,7 +11,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.userName}"/>
+    <jsp:param name="user" value="${user.username}"/>
 </jsp:include>
 <br>
 <div class="col-8 offset-2 py-2">

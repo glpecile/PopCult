@@ -22,7 +22,6 @@ public class ListCoverImpl {
             id = listsService.getMediaIdInList(list.getMediaListId(), 0, coverMoviesAmount);
             mediaList = mediaService.getById(id);
             size = mediaList.size();
-            System.out.println(size);
             cover = new ListCover(list.getMediaListId(), list.getName(), list.getDescription());
             if (size > 0) cover.setImage1(mediaList.get(0).getImage());
             if (size > 1) cover.setImage2(mediaList.get(1).getImage());
