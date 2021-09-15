@@ -76,4 +76,34 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser().orElseThrow(RuntimeException::new);
         return userDao.getFavoriteMediaCount(user.getUserId());
     }
+
+    @Override
+    public void addListToFav(int mediaListId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        userDao.addListToFav(user.getUserId(), mediaListId);
+    }
+
+    @Override
+    public void deleteListFromFav(int mediaListId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        userDao.deleteListFromFav(user.getUserId(), mediaListId);
+    }
+
+    @Override
+    public boolean isFavoriteList(int mediaListId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.isFavoriteList(user.getUserId(), mediaListId);
+    }
+
+    @Override
+    public List<Integer> getUserFavoriteLists(int page, int pageSize) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.getUserFavoriteLists(user.getUserId(), page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getFavoriteListsCount() {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.getFavoriteListsCount(user.getUserId());
+    }
 }

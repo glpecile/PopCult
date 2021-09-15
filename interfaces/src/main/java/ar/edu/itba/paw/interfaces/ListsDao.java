@@ -19,6 +19,8 @@ public interface ListsDao {
 
     List<Integer> getMediaIdInList(int mediaListId);
 
+    List<Integer> getNMediaIdInList(int mediaListId, int amount);
+
     List<MediaList> getLastAddedLists(int page, int pageSize);
 
     List<MediaList> getNLastAddedList(int amount);
