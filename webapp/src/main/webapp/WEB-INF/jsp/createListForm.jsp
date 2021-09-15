@@ -26,7 +26,7 @@
             <div>
                 <div>
                     <form:label path="description" for="listDesc" class="form-label">Description</form:label>
-                    <form:textarea path="description" type="text" class="form-control h-24 resize overflow-clip overflow-auto" id="listDesc"
+                    <form:textarea path="description" type="text" class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
                                    value=""/>
                     <form:errors path="description" cssClass="formError text-red-500" element="p"/>
                 </div>

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,6 +44,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate = new JdbcTemplate(ds);
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("medialist").usingGeneratedKeyColumns("medialistid");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
+        //forkedListsjdbcInsert = new SimpleJdbcInsert(ds).withTableName("forkedlists");
 
 //        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
@@ -63,6 +65,14 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 "mediaListId INT NOT NULL, " +
                 "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
+
+//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
+//                "mediaListId INT NOT NULL, " +
+//                "originalOwnerId INT NOT NULL,"+
+//                "forkerId INT NOT NULL,"+
+//                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
+//                "FOREIGN KEY(originalOwnerId) REFERENCES users(userId) ON DELETE CASCADE," +
+//                "FOREIGN KEY(forkerId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
@@ -73,7 +83,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getAllLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM mediaList OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM mediaList WHERE visibility = ? OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -98,7 +108,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM medialist ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE visibility = ? ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{true, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -114,7 +124,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public Optional<Integer> getListCount() {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist", COUNT_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
                 .stream().findFirst();
     }
 
@@ -180,5 +190,28 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
         jdbcTemplate.update("UPDATE medialist SET name = ?, description = ?, visibility = ?, collaborative = ? WHERE medialistid = ?", title, description, visibility, collaborative, mediaListId);
+    }
+
+    @Override
+    public MediaList createMediaListCopy(int userId, int toCopyListId) {
+        Map<String, Object> data = new HashMap<>();
+        MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
+        Date localDate = new Date();
+        data.put("userid", userId);
+        data.put("name", "Copy from " + toCopy.getName());
+        data.put("description", toCopy.getDescription());
+        data.put("creationDate", localDate);
+        data.put("visibility", toCopy.isVisible());
+        data.put("collaborative", toCopy.isCollaborative());
+        KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
+        addToMediaList((int) key.getKey(), getMediaIdInList(toCopyListId));
+        Map<String, Object> forkData = new HashMap<>();
+        /*
+        forkData.put("mediaListId", (int) key.getKey());
+        forkData.put("originalOwnerId", toCopy.getUserId());
+        forkData.put("forkerId", userId);
+        forkedListsjdbcInsert.execute(forkData)
+        */
+        return new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative());
     }
 }

@@ -44,4 +44,6 @@ public interface ListsDao {
     void deleteList(int mediaListId);
 
     void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative);
+
+    MediaList createMediaListCopy(int userId, int toCopy);
 }

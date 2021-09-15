@@ -25,25 +25,39 @@
             </div>
             <div class="col-md-6">
                 <form:label path="description" for="listDesc" class="form-label">Description</form:label>
-                <form:input path="description" type="text" class="form-control resize" id="listDesc"
+                <form:input path="description" type="text"
+                            class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
                             value="${list.description}"/>
                 <form:errors path="description" cssClass="formError text-red-500" element="p"/>
             </div>
             <div class="col-md-4">
                 <div class="form-check">
-                    <form:checkbox path="visible" class="form-check-label" for="invalidCheck2" value="true"/>
+                    <c:choose>
+                        <c:when test="${list.visible}">
+                            <form:checkbox path="visible" class="form-check-label" for="invalidCheck2" checked="true"/>
+                        </c:when>
+                        <c:otherwise>
+                            <form:checkbox path="visible" class="form-check-label" for="invalidCheck2"/>
+                        </c:otherwise>
+                    </c:choose>
                     Make list public for everyone.
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-check">
-                    <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"/>
+                    <c:choose>
+                        <c:when test="${list.collaborative}">
+                            <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3" checked="true"/>
+                        </c:when>
+                        <c:otherwise>
+                            <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck2"/>
+                        </c:otherwise>
+                    </c:choose>
+
                     Enable others to suggest new movies to add.
                 </div>
             </div>
         </div>
-        <%--        <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>--%>
-        <%--        <p class="lead text-justify"><c:out value="${list.description}"/></p>--%>
         <div class="row justify-content-end">
             <div class="col">
                 <form:form action="${deletePath}" method="DELETE">

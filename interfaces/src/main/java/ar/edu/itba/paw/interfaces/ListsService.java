@@ -45,4 +45,5 @@ public interface ListsService {
 
     void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative);
 
+    MediaList createMediaListCopy(int userId, int toCopy);
 }
