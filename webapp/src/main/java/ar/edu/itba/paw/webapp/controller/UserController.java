@@ -30,7 +30,7 @@ public class UserController {
     private ListsService listsService;
 
     private static final int listsPerPage = 4;
-    private static final int itemsPerPage = 12;
+    private static final int itemsPerPage = 4;
 
 
     @RequestMapping("/{username}")
@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping("/{username}/favoriteMedia")
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
-        User user = userService.getCurrentUser();
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         List<Media> userMedia = mediaService.getById(userService.getUserFavoriteMedia(page - 1, itemsPerPage));
         List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
@@ -69,7 +69,7 @@ public class UserController {
     @RequestMapping("/{username}/toWatchMedia")
     public ModelAndView userToWatchMedia(@PathVariable("username") final String username) {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
-        User user = userService.getCurrentUser();
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
         return mav;
     }
@@ -86,7 +86,7 @@ public class UserController {
     @RequestMapping("/{username}/favoriteLists")
     public ModelAndView userFavoriteLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
-        User user = userService.getCurrentUser();
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
         List<Integer> userFavListsId = userService.getUserFavoriteLists(page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
