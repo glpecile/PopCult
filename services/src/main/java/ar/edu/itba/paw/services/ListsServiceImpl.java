@@ -50,6 +50,11 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
+    public List<Integer> getNMediaIdInList(int mediaListId, int amount) {
+        return listsDao.getNMediaIdInList(mediaListId, amount);
+    }
+
+    @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
         return listsDao.getLastAddedLists(page, pageSize);
     }

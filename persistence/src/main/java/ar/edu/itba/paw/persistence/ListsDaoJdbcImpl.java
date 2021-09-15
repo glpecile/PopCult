@@ -107,6 +107,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public List<Integer> getNMediaIdInList(int mediaListId, int amount) {
+        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? LIMIT ?", new Object[]{mediaListId, amount}, INTEGER_ROW_MAPPER);
+    }
+
+    @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM medialist WHERE visibility = ? ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{true, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
