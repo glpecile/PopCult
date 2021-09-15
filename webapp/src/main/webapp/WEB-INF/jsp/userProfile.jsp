@@ -15,31 +15,19 @@
 </jsp:include>
 <br>
 <div class="col-8 offset-2">
-    <div class="row py-2">
-        <div class="col-12 col-lg-4">
-            <img src="https://media.discordapp.net/attachments/872172548102705162/887167057236484156/cross-png-icon-2.png?width=413&height=413"
-                 class="rounded-circle img-fluid img-thumbnail card-img-top "
-                 alt="Profile Image">
-        </div>
-        <div class="col-12 col-lg-8">
-            <h1 class="display-5 fw-bolder"><c:out value="${user.name}"/></h1>
-            <%--            <jsp:include page="/WEB-INF/jsp/components/edit.jsp"/>--%>
-            <p class="lead text-justify"><c:out value="@${user.username}"/></p>
-        </div>
-    </div>
-    <div class="row py-2 justify-content-end">
-        <div class="col-4">
-            <a href="${pageContext.request.contextPath}/${user.username}/favoriteMedia">
-                <button class="btn btn-secondary btn-rounded">Favorite Media</button>
-            </a>
-            <a href="${pageContext.request.contextPath}/${user.username}/favoriteLists">
-                <button class="btn btn-secondary btn-rounded">Favorite Lists</button>
-            </a>
-        </div>
-    </div>
+    <%--    profile   --%>
 
+    <%--    tabs     --%>
+    <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
+        <jsp:param name="username" value="${user.username}"/>
+        <jsp:param name="path" value="myLists"/>
+    </jsp:include>
+    <%-- current tab --%>
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">My lists</h2>
+        <%--        <h2 class="font-bold text-2xl py-2">My lists</h2>--%>
+        <c:if test="${listsAmount == 0}">
+            <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
+        </c:if>
         <c:forEach var="cover" items="${lists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">

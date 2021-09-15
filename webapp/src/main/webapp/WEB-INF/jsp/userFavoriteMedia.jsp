@@ -15,10 +15,15 @@
 </jsp:include>
 <br>
 <div class="col-8 offset-2 py-2">
+    <%--    tabs     --%>
+    <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
+        <jsp:param name="username" value="${user.username}"/>
+        <jsp:param name="path" value="favMedia"/>
+    </jsp:include>
+    <%-- current tab --%>
     <c:choose>
         <c:when test="${favoriteAmount > 0}">
             <div class="row">
-                <h2 class="font-bold text-2xl py-2">Favorite Media</h2>
                 <c:forEach var="media" items="${mediaList}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                         <jsp:include page="/WEB-INF/jsp/components/card.jsp">

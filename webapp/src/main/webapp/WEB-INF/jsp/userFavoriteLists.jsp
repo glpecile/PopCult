@@ -15,8 +15,13 @@
 </jsp:include>
 <br>
 <div class="col-8 offset-2 py-2">
+    <%--    tabs     --%>
+    <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
+        <jsp:param name="username" value="${user.username}"/>
+        <jsp:param name="path" value="favLists"/>
+    </jsp:include>
+    <%-- current tab --%>
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">Favorite lists</h2>
         <c:if test="${listsAmount == 0}">
             <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
         </c:if>
