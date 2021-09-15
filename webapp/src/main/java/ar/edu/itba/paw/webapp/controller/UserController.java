@@ -77,7 +77,7 @@ public class UserController {
     @RequestMapping("/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username) {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
-        User user = userService.getCurrentUser();
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
         return mav;
     }

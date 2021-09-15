@@ -14,6 +14,8 @@
 </jsp:include>
 <br>
 <div class="col-8 offset-2">
+    <%--    profile   --%>
+
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>

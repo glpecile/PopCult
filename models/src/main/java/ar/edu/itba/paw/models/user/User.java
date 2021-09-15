@@ -44,6 +44,6 @@ public class User {
     }
 
     public static User getDummyUser() {
-        return new User(0, "", "Anonymous", "", "", "");
+        return new User(0, "", "anon", "", "", "");
     }
 }
