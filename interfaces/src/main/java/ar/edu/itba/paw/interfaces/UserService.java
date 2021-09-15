@@ -10,6 +10,8 @@ public interface UserService {
 
     Optional<User> getByEmail(String email);
 
+    Optional<User> getByUsername(String username);
+
     User register(String email, String userName, String password, String name, String profilePhotoURL);
 
     User getCurrentUser();

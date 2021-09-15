@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getByUsername(String username) {
+        return userDao.getByUsername(username);
+    }
+
+    @Override
     public User register(String email, String userName, String password, String name, String profilePhotoURL) {
         return userDao.register(email, userName, passwordEncoder.encode(password), name, profilePhotoURL);
     }

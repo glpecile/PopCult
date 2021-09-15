@@ -36,7 +36,7 @@ public class UserController {
     @RequestMapping("/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
-        User user = userService.getCurrentUser();
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         final List<ListCover> userListsCover = getListCover(userLists, listsService, mediaService);
         mav.addObject(user);

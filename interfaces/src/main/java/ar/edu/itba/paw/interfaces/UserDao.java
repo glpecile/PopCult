@@ -10,6 +10,8 @@ public interface UserDao {
 
     Optional<User> getByEmail(String email);
 
+    Optional<User> getByUsername(String username);
+
     User register(String email, String userName, String password, String name, String profilePhotoURL);
 
     void addMediaToFav(int mediaId, int userId);

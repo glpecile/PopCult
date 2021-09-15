@@ -91,6 +91,11 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> getByUsername(String username) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{username}, ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public User register(String email, String userName, String password, String name, String profilePhotoURL) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
