@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
-
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -37,73 +35,70 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getCurrentUser() {
+    public User getCurrentUser() {
         if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return getByEmail(userDetails.getUsername());
+            return getByEmail(userDetails.getUsername()).orElse(User.getDummyUser());
         }
-        return Optional.empty();
+        return User.getDummyUser();
     }
 
     @Override
     public void addMediaToFav(int mediaId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         userDao.addMediaToFav(mediaId, user.getUserId());
     }
 
     @Override
     public void deleteMediaFromFav(int mediaId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         userDao.deleteMediaFromFav(mediaId, user.getUserId());
     }
 
     @Override
     public boolean isFavorite(int mediaId) {
-        if(getCurrentUser().isPresent()) {
-            return userDao.isFavorite(mediaId, getCurrentUser().get().getUserId());
-        }
-        return false;
+        return userDao.isFavorite(mediaId, getCurrentUser().getUserId());
     }
 
     @Override
     public List<Integer> getUserFavoriteMedia(int page, int pageSize) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         return userDao.getUserFavoriteMedia(user.getUserId(), page, pageSize);
     }
 
     @Override
     public Optional<Integer> getFavoriteMediaCount() {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         return userDao.getFavoriteMediaCount(user.getUserId());
     }
 
     @Override
     public void addListToFav(int mediaListId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         userDao.addListToFav(user.getUserId(), mediaListId);
     }
 
     @Override
     public void deleteListFromFav(int mediaListId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         userDao.deleteListFromFav(user.getUserId(), mediaListId);
     }
 
     @Override
     public boolean isFavoriteList(int mediaListId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         return userDao.isFavoriteList(user.getUserId(), mediaListId);
     }
 
     @Override
     public List<Integer> getUserFavoriteLists(int page, int pageSize) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         return userDao.getUserFavoriteLists(user.getUserId(), page, pageSize);
     }
 
     @Override
     public Optional<Integer> getFavoriteListsCount() {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        User user = getCurrentUser();
         return userDao.getFavoriteListsCount(user.getUserId());
     }
 }

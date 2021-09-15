@@ -42,4 +42,8 @@ public class User {
     public String getProfilePhotoURL() {
         return profilePhotoURL;
     }
+
+    public static User getDummyUser() {
+        return new User(0, "", "Anonymous", "", "", "");
+    }
 }

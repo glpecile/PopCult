@@ -36,7 +36,7 @@ public class UserController {
     @RequestMapping("/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getCurrentUser();
         List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         final List<ListCover> userListsCover = getListCover(userLists, listsService, mediaService);
         mav.addObject(user);
@@ -49,7 +49,7 @@ public class UserController {
     @RequestMapping("/{username}/favoriteMedia")
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username,@RequestParam(value = "page", defaultValue = "1") final int page){
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getCurrentUser();
         List<Media> userMedia = mediaService.getById(userService.getUserFavoriteMedia(page - 1, itemsPerPage));
         List<Media> suggestedMedia = mediaService.getMediaList(page-1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
@@ -67,7 +67,7 @@ public class UserController {
     @RequestMapping("/{username}/favoriteLists")
     public ModelAndView userFavoriteLists(@PathVariable("username") final String username,@RequestParam(value = "page", defaultValue = "1") final int page){
         ModelAndView mav = new ModelAndView("userFavoriteLists");
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getCurrentUser();
         mav.addObject(user);
         List<Integer> userFavListsId = userService.getUserFavoriteLists(page-1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);

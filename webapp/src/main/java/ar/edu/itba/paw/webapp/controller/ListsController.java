@@ -63,12 +63,8 @@ public class ListsController {
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
-        try {
-            final User currentUser = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //esto despues se reemplaza por el context del current user
-            mav.addObject("currentUser", currentUser);
-        } catch(Exception e) {
-            //TODO USAR LOGGER
-        }
+        final User currentUser = userService.getCurrentUser(); //esto despues se reemplaza por el context del current user
+        mav.addObject("currentUser", currentUser);
         return mav;
     }
 
@@ -82,7 +78,7 @@ public class ListsController {
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return createListForm(form);
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getCurrentUser();
         final MediaList mediaList = listsService.createMediaList(user.getUserId(), form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }

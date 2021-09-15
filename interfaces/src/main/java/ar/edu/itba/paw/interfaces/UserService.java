@@ -12,7 +12,7 @@ public interface UserService {
 
     User register(String email, String userName, String password, String name, String profilePhotoURL);
 
-    Optional<User> getCurrentUser();
+    User getCurrentUser();
 
     void addMediaToFav(int mediaId);
 
