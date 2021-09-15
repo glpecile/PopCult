@@ -32,13 +32,28 @@
             </div>
             <div class="col-md-4">
                 <div class="form-check">
-                    <form:checkbox path="visible" class="form-check-label" for="invalidCheck2" value="true"/>
+                    <c:choose>
+                        <c:when test="${list.visible}">
+                            <form:checkbox path="visible" class="form-check-label" for="invalidCheck2" checked="true"/>
+                        </c:when>
+                        <c:otherwise>
+                            <form:checkbox path="visible" class="form-check-label" for="invalidCheck2"/>
+                        </c:otherwise>
+                    </c:choose>
                     Make list public for everyone.
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-check">
-                    <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"/>
+                    <c:choose>
+                        <c:when test="${list.collaborative}">
+                            <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3" checked="true"/>
+                        </c:when>
+                        <c:otherwise>
+                            <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck2"/>
+                        </c:otherwise>
+                    </c:choose>
+
                     Enable others to suggest new movies to add.
                 </div>
             </div>

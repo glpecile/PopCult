@@ -83,7 +83,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getAllLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM mediaList OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM mediaList WHERE visibility = ? OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getLastAddedLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM medialist ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE visibility = ? ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{true, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public Optional<Integer> getListCount() {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist", COUNT_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
                 .stream().findFirst();
     }
 
@@ -187,7 +187,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
         Date localDate = new Date();
         data.put("userid", userId);
-        data.put("name","Copy from " + toCopy.getName());
+        data.put("name", "Copy from " + toCopy.getName());
         data.put("description", toCopy.getDescription());
         data.put("creationDate", localDate);
         data.put("visibility", toCopy.isVisible());
