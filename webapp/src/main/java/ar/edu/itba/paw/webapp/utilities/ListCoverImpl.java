@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListCoverImpl {
-    private static final int coverMediaAmount = 4;
+    private static final int coverMoviesAmount = 4;
 
     public static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService, MediaService mediaService) {
         List<ListCover> listCovers = new ArrayList<>();
@@ -19,9 +19,10 @@ public class ListCoverImpl {
         ListCover cover;
         int size;
         for (MediaList list : discoveryLists) {
-            id = listsService.getNMediaIdInList(list.getMediaListId(), coverMediaAmount);
+            id = listsService.getMediaIdInList(list.getMediaListId(), 0, coverMoviesAmount);
             mediaList = mediaService.getById(id);
             size = mediaList.size();
+            System.out.println(size);
             cover = new ListCover(list.getMediaListId(), list.getName(), list.getDescription());
             if (size > 0) cover.setImage1(mediaList.get(0).getImage());
             if (size > 1) cover.setImage2(mediaList.get(1).getImage());
