@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -18,4 +19,8 @@ public interface UserService {
     void deleteMediaFromFav(int mediaId);
 
     boolean isFavorite(int mediaId);
+
+    List<Integer> getUserFavoriteMedia(int page, int pageSize);
+
+    Optional<Integer> getFavoriteMediaCount();
 }

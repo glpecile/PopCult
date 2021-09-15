@@ -23,10 +23,18 @@
         </div>
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${user.name}"/></h1>
-<%--            <jsp:include page="/WEB-INF/jsp/components/edit.jsp"/>--%>
+            <%--            <jsp:include page="/WEB-INF/jsp/components/edit.jsp"/>--%>
             <p class="lead text-justify"><c:out value="@${user.userName}"/></p>
         </div>
     </div>
+    <div class="row py-2 justify-content-end">
+        <div class="col-4">
+            <a href="${pageContext.request.contextPath}/profile/favoriteMedia">
+                <button class="btn btn-secondary btn-rounded">Favorite Media</button>
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         <h2 class="font-bold text-2xl py-2">My lists</h2>
         <c:forEach var="cover" items="${lists}">

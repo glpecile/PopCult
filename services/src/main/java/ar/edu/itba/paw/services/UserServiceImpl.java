@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,5 +56,17 @@ public class UserServiceImpl implements UserService {
     public boolean isFavorite(int mediaId) {
         User user = getCurrentUser().orElseThrow(RuntimeException::new);
         return userDao.isFavorite(mediaId, user.getUserId());
+    }
+
+    @Override
+    public List<Integer> getUserFavoriteMedia(int page, int pageSize) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.getUserFavoriteMedia(user.getUserId(), page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getFavoriteMediaCount() {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.getFavoriteMediaCount(user.getUserId());
     }
 }

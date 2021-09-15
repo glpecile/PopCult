@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,6 +32,9 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("count");
+
+    private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("mediaId");
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
@@ -103,5 +107,15 @@ public class UserDaoJdbcImpl implements UserDao {
     public boolean isFavorite(int mediaId, int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM favoritemedia WHERE mediaid = ? AND userid = ?", new Object[]{mediaId, userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0) > 0;
+    }
+
+    @Override
+    public List<Integer> getUserFavoriteMedia(int userId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, INTEGER_ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Integer> getFavoriteMediaCount(int userId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst();
     }
 }
