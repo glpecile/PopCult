@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -36,8 +38,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getCurrentUser() {
-        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return getByEmail(userDetails.getUsername());
+        if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
+            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return getByEmail(userDetails.getUsername());
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -54,8 +59,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isFavorite(int mediaId) {
-        User user = getCurrentUser().orElseThrow(RuntimeException::new);
-        return userDao.isFavorite(mediaId, user.getUserId());
+        if(getCurrentUser().isPresent()) {
+            return userDao.isFavorite(mediaId, getCurrentUser().get().getUserId());
+        }
+        return false;
     }
 
     @Override

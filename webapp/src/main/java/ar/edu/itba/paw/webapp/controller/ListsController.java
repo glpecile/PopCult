@@ -61,10 +61,14 @@ public class ListsController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
-        final User currentUser = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //esto despues se reemplaza por el context del current user
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
-        mav.addObject("currentUser", currentUser);
+        try {
+            final User currentUser = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //esto despues se reemplaza por el context del current user
+            mav.addObject("currentUser", currentUser);
+        } catch(Exception e) {
+            //TODO USAR LOGGER
+        }
         return mav;
     }
 
