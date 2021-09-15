@@ -42,7 +42,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .defaultSuccessUrl("/", false)
                 .loginPage("/login")
-                .usernameParameter("email")
+                .usernameParameter("username")
                 .passwordParameter("password")
                 .and().rememberMe()
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))

@@ -23,8 +23,8 @@
             <form class="space-y-4" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="flex flex-col justify-center items-center">
                     <label class="py-2 text-semibold w-full">
-                        <spring:message code="login.email"/>
-                        <input class="form-control shadow-sm" type="text" name="email"/>
+                        <spring:message code="login.username"/>
+                        <input class="form-control shadow-sm" type="text" name="username"/>
                     </label>
                     <label class="py-2 text-semibold w-full">
                         <spring:message code="login.password"/>

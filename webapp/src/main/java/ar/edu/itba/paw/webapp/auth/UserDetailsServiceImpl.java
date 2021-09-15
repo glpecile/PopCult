@@ -20,11 +20,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        final ar.edu.itba.paw.models.user.User user = userService.getByEmail(email).orElseThrow(UserNotFoundException::new);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final ar.edu.itba.paw.models.user.User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE EDITOR"));
         authorities.add(new SimpleGrantedAuthority("ROLE READER"));
-        return new User(email,user.getPassword(),authorities);
+        return new User(username, user.getPassword(), authorities);
     }
 }
