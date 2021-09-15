@@ -120,4 +120,16 @@ public class ListsController {
         final MediaList newList = listsService.createMediaListCopy(currentUserId, listId);
         return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
     }
+
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "addFav")
+    public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
+        userService.addListToFav(listId);
+        return listDescription(listId);
+    }
+
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "deleteFav")
+    public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
+        userService.deleteListFromFav(listId);
+        return listDescription(listId);
+    }
 }

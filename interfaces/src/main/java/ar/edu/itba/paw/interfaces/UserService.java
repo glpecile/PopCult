@@ -23,4 +23,14 @@ public interface UserService {
     List<Integer> getUserFavoriteMedia(int page, int pageSize);
 
     Optional<Integer> getFavoriteMediaCount();
+
+    void addListToFav(int mediaListId);
+
+    void deleteListFromFav(int mediaListId);
+
+    boolean isFavoriteList(int mediaListId);
+
+    List<Integer> getUserFavoriteLists(int page, int pageSize);
+
+    Optional<Integer> getFavoriteListsCount();
 }

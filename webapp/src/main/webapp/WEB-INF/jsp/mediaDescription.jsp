@@ -17,7 +17,6 @@
             <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
             <%-- dropdown lists list--%>
-
             <div class="dropdown flex justify-center py-2">
                 <button class="btn btn-secondary dropdown-toggle btn-rounded" type="button" id="addMediaToList"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,24 +32,19 @@
                     </c:forEach>
                 </ul>
             </div>
-            <form action="<c:url value="/media/${mediaId}" />" method="POST">
-                <c:choose>
-                    <c:when test="${media.favorite}">
-                        <button class="btn btn-secondary btn-rounded" type="submit" id="deleteFav" name="deleteFav">
-                            Remove from fav
-                        </button>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="btn btn-secondary btn-rounded" type="submit" id="addFav" name="addFav">
-                            Add to fav
-                        </button>
-                    </c:otherwise>
-                </c:choose>
-            </form>
         </div>
-
         <div class="col-12 col-lg-8">
-            <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
+            <div class="row justify-content-start">
+                <div class="col-md-auto">
+                    <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
+                </div>
+                <div class="col col-lg-2 pt-2">
+                    <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                        <jsp:param name="mediaId" value="${mediaId}"/>
+                        <jsp:param name="favorite" value="${media.favorite}"/>
+                    </jsp:include>
+                </div>
+            </div>
             <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>
                 <span class="mx-3 mt-3">&#8226;</span>

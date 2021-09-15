@@ -22,4 +22,14 @@ public interface UserDao {
 
     Optional<Integer> getFavoriteMediaCount(int userId);
 
+    void addListToFav(int userId, int mediaListId);
+
+    void deleteListFromFav(int userId, int mediaListId);
+
+    boolean isFavoriteList(int userId, int mediaListId);
+
+    List<Integer> getUserFavoriteLists(int userId, int page, int pageSize);
+
+    Optional<Integer> getFavoriteListsCount(int userId);
+
 }
