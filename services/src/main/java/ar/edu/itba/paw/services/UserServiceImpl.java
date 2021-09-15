@@ -1,13 +1,18 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public Optional<User> getById(int userId) {
@@ -30,7 +41,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String userName, String password, String name, String profilePhotoURL) {
-        return userDao.register(email, userName, passwordEncoder.encode(password), name, profilePhotoURL);
+        User user = userDao.register(email, userName, passwordEncoder.encode(password), name, profilePhotoURL);
+
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", userName); //TODO swap to full name
+        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
+        emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
+
+        return user;
     }
 
     @Override
