@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +14,21 @@ import java.util.Optional;
 public class MediaServiceImpl implements MediaService {
     @Autowired
     private MediaDao mediaDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Optional<Media> getById(int mediaId) {
-        return mediaDao.getById(mediaId);
+        Optional<Media> media = mediaDao.getById(mediaId);
+        media.ifPresent(value -> value.setFavorite(userService.isFavorite(mediaId)));
+        return media;
     }
 
     @Override
     public List<Media> getById(List<Integer> mediaIds) {
-        return mediaDao.getById(mediaIds);
+        List<Media> mediaList = mediaDao.getById(mediaIds);
+        mediaList.forEach(media -> media.setFavorite(userService.isFavorite(media.getMediaId())));
+        return mediaList;
     }
 
     @Override

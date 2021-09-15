@@ -38,4 +38,22 @@ public class UserServiceImpl implements UserService {
         org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getByEmail(userDetails.getUsername());
     }
+
+    @Override
+    public void addMediaToFav(int mediaId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        userDao.addMediaToFav(mediaId, user.getUserId());
+    }
+
+    @Override
+    public void deleteMediaFromFav(int mediaId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        userDao.deleteMediaFromFav(mediaId, user.getUserId());
+    }
+
+    @Override
+    public boolean isFavorite(int mediaId) {
+        User user = getCurrentUser().orElseThrow(RuntimeException::new);
+        return userDao.isFavorite(mediaId, user.getUserId());
+    }
 }

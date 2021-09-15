@@ -35,6 +35,8 @@ public class MediaController {
     private StudioService studioService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private UserService userService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -90,6 +92,17 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
+    public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
+        userService.addMediaToFav(mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
+    public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
+        userService.deleteMediaFromFav(mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
 
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {

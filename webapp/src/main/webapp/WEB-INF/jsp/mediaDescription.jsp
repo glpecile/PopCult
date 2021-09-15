@@ -33,6 +33,20 @@
                     </c:forEach>
                 </ul>
             </div>
+            <form action="<c:url value="/media/${mediaId}" />" method="POST">
+                <c:choose>
+                    <c:when test="${media.favorite}">
+                        <button class="btn btn-secondary btn-rounded" type="submit" id="deleteFav" name="deleteFav">
+                            Remove from fav
+                        </button>
+                    </c:when>
+                    <c:otherwise>
+                        <button class="btn btn-secondary btn-rounded" type="submit" id="addFav" name="addFav">
+                            Add to fav
+                        </button>
+                    </c:otherwise>
+                </c:choose>
+            </form>
         </div>
 
         <div class="col-12 col-lg-8">

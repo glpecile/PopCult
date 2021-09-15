@@ -12,4 +12,10 @@ public interface UserService {
     User register(String email, String userName, String password, String name, String profilePhotoURL);
 
     Optional<User> getCurrentUser();
+
+    void addMediaToFav(int mediaId);
+
+    void deleteMediaFromFav(int mediaId);
+
+    boolean isFavorite(int mediaId);
 }

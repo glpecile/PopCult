@@ -29,6 +29,9 @@ public class UserDaoJdbcImpl implements UserDao {
                     "name", //TODO
                     "profilePhoto"); //TODO
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
+            (rs, rowNum) -> rs.getInt("count");
+
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -81,5 +84,24 @@ public class UserDaoJdbcImpl implements UserDao {
         args.put("profilephoto", profilePhotoURL);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
         return new User(userId.intValue(), email, userName, password, name, profilePhotoURL);
+    }
+
+    @Override
+    public void addMediaToFav(int mediaId, int userId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("mediaId", mediaId);
+        data.put("userId", userId);
+        favoriteMediaJdbcInsert.execute(data);
+    }
+
+    @Override
+    public void deleteMediaFromFav(int mediaId, int userId) {
+        jdbcTemplate.update("DELETE FROM favoritemedia WHERE mediaid = ? AND userid = ?", mediaId, userId);
+    }
+
+    @Override
+    public boolean isFavorite(int mediaId, int userId) {
+        return jdbcTemplate.query("SELECT COUNT(*) FROM favoritemedia WHERE mediaid = ? AND userid = ?", new Object[]{mediaId, userId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0) > 0;
     }
 }
