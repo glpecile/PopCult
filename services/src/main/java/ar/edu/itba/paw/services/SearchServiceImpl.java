@@ -4,10 +4,12 @@ import ar.edu.itba.paw.interfaces.SearchDAO;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SearchServiceImpl implements SearchService {
 
     @Autowired
