@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.StaffMember;
@@ -13,11 +14,11 @@ public interface StaffDao {
 
     List<StaffMember> getPersonList();
 
-    List<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize);
+    PageContainer<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize);
 
-    List<Integer> getMediaByActor(int staffMemberId, int page, int pageSize);
+    PageContainer<Integer> getMediaByActor(int staffMemberId, int page, int pageSize);
 
-    List<Integer> getMedia(int staffMemberId, int page, int pageSize);
+    PageContainer<Integer> getMedia(int staffMemberId, int page, int pageSize);
 
     List<Director> getDirectorsByMedia(int mediaId);
 

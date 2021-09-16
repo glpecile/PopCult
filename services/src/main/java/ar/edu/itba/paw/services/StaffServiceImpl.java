@@ -2,11 +2,13 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.StaffDao;
 import ar.edu.itba.paw.interfaces.StaffService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -27,18 +29,18 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByDirector(staffMemberId, page, pageSize);
     }
 
     @Override
-    public List<Integer> getMediaByActor(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByActor(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByActor(staffMemberId, page, pageSize);
     }
 
 
     @Override
-    public List<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Integer> getMedia(int staffMemberId, int page, int pageSize) {
         return staffDao.getMedia(staffMemberId, page, pageSize);
     }
 
