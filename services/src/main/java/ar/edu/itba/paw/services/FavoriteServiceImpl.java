@@ -21,7 +21,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void deleteMediaFromFav(int mediaId, int userId) {
-        favoriteDao.deleteListFromFav(mediaId, userId);
+        favoriteDao.deleteMediaFromFav(mediaId, userId);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void deleteListFromFav(int mediaListId, int userId) {
-        favoriteDao.deleteMediaFromFav(mediaListId, userId);
+        favoriteDao.deleteListFromFav(mediaListId, userId);
     }
 
     @Override

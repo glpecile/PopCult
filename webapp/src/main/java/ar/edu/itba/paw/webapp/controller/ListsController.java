@@ -128,14 +128,14 @@ public class ListsController {
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
         User user = userService.getCurrentUser();
-        favoriteService.addListToFav(user.getUserId(), listId);
+        favoriteService.addListToFav( listId, user.getUserId());
         return listDescription(listId);
     }
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
         User user = userService.getCurrentUser();
-        favoriteService.deleteListFromFav(user.getUserId(), listId);
+        favoriteService.deleteListFromFav(listId, user.getUserId());
         return listDescription(listId);
     }
 }

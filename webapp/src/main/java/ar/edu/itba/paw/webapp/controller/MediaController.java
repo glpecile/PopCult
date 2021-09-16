@@ -87,7 +87,7 @@ public class MediaController {
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
         mav.addObject("userLists", userLists);
-        mav.addObject("isFavoriteMedia", favoriteService.isFavorite(media.getMediaId(), user.getUserId()));
+        mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
         return mav;
     }
 
