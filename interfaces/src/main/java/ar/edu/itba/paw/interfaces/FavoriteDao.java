@@ -14,11 +14,11 @@ public interface FavoriteDao {
 
     Optional<Integer> getFavoriteMediaCount(int userId);
 
-    void addListToFav(int userId, int mediaListId);
+    void addListToFav(int mediaListId, int userId);
 
-    void deleteListFromFav(int userId, int mediaListId);
+    void deleteListFromFav(int mediaListId, int userId);
 
-    boolean isFavoriteList(int userId, int mediaListId);
+    boolean isFavoriteList(int mediaListId, int userId);
 
     List<Integer> getUserFavoriteLists(int userId, int page, int pageSize);
 

@@ -40,18 +40,18 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void addListToFav(int userId, int mediaListId) {
-        favoriteDao.addListToFav(userId, mediaListId);
+    public void addListToFav(int mediaListId, int userId) {
+        favoriteDao.addListToFav(mediaListId, userId);
     }
 
     @Override
-    public void deleteListFromFav(int userId, int mediaListId) {
-        favoriteDao.deleteMediaFromFav(userId, mediaListId);
+    public void deleteListFromFav(int mediaListId, int userId) {
+        favoriteDao.deleteMediaFromFav(mediaListId, userId);
     }
 
     @Override
-    public boolean isFavoriteList(int userId, int mediaListId) {
-        return favoriteDao.isFavoriteList(userId, mediaListId);
+    public boolean isFavoriteList(int mediaListId, int userId) {
+        return favoriteDao.isFavoriteList(mediaListId, userId);
     }
 
     @Override

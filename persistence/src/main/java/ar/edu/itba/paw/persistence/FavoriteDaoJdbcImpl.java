@@ -82,7 +82,7 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
-    public void addListToFav(int userId, int mediaListId) {
+    public void addListToFav(int mediaListId, int userId) {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaListId", mediaListId);
         data.put("userId", userId);
@@ -90,12 +90,12 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
-    public void deleteListFromFav(int userId, int mediaListId) {
+    public void deleteListFromFav(int mediaListId,int userId) {
         jdbcTemplate.update("DELETE FROM favoritelists WHERE medialistid = ? AND userid = ?", mediaListId, userId);
     }
 
     @Override
-    public boolean isFavoriteList(int userId, int mediaListId) {
+    public boolean isFavoriteList(int mediaListId, int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM favoritelists WHERE medialistid = ? AND userid = ?", new Object[]{mediaListId, userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0) > 0;
     }
