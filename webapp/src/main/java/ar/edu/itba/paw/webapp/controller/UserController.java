@@ -70,7 +70,7 @@ public class UserController {
 
     @RequestMapping("/{username}/toWatchMedia")
     public ModelAndView userToWatchMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
-        ModelAndView mav = new ModelAndView("userWatchMedia");
+        ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
         List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
@@ -87,7 +87,7 @@ public class UserController {
 
     @RequestMapping("/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
-        ModelAndView mav = new ModelAndView("userWatchMedia");
+        ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
         List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));

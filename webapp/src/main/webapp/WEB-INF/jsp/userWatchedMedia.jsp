@@ -39,6 +39,7 @@
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${mediaPages}"/>
             <jsp:param name="currentPage" value="${currentPage}"/>
+            <jsp:param name="url" value="/${user.username}/watchedMedia?"/>
         </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

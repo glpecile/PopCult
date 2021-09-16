@@ -134,7 +134,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${popularListPages}"/>
                 <jsp:param name="currentPage" value="${currentPage}"/>
-                <jsp:param name="urlBase" value="/lists"/>
+                <jsp:param name="url" value="/lists?"/>
             </jsp:include>
         </c:if>
     </div>
