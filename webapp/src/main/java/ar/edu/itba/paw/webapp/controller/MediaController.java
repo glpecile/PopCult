@@ -121,14 +121,14 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatched")
     public ModelAndView addMediaToWatched(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         watchService.addWatchedMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatched")
     public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         watchService.deleteWatchedMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
