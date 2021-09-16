@@ -13,19 +13,19 @@ public interface ListsDao {
 
     List<MediaList> getAllLists(int page, int pageSize);
 
-    List<MediaList> getMediaListByUserId(int userId);
+    List<MediaList> getMediaListByUserId(int userId);//TODO BORRAR
 
     List<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-    List<Integer> getMediaIdInList(int mediaListId);
+    List<Integer> getMediaIdInList(int mediaListId);//TODO BORRAR
 
     List<Integer> getMediaIdInList(int mediaListId, int page, int pageSize);
 
-    List<MediaList> getLastAddedLists(int page, int pageSize);
+    List<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
 
-    List<MediaList> getNLastAddedList(int amount);
+    List<MediaList> getNLastAddedList(int amount);//TODO BORRAR. reemplaza la de arriba
 
     List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
@@ -35,7 +35,7 @@ public interface ListsDao {
 
     Optional<Integer> getListCountFromMedia(int mediaId);
 
-    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
+    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches); //TODO paginar
 
     MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative);
 
