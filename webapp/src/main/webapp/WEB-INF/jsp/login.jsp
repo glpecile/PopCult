@@ -13,8 +13,8 @@
     <div class="flex-grow space-y-2">
         <%-- Logo and card title --%>
         <a class="flex justify-center items-center pt-16" href="<c:url value="/"/>">
-            <img class="w-32 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2"
-                 src="<c:url value='/resources/images/PopCultLogo.png'/>" alt="popcult_logo">
+            <img class="w-32" src="<c:url value='/resources/images/PopCultLogo.png'/>" alt="popcult_logo" onclick="this.src='<c:url
+                    value='/resources/images/PopCultLogoClosed.png'/>'">
         </a>
         <h2 class="font-bold text-4xl text-center text-white py-2"><spring:message code="login.greeting"/></h2>
 

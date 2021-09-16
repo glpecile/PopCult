@@ -14,8 +14,8 @@
     <div class="flex-grow">
         <%-- Logo and card title --%>
         <a class="flex justify-center items-center pt-4" href="<c:url value="/"/>">
-            <img class="w-32 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2"
-                 src="<c:url value='/resources/images/PopCultLogo.png'/>" alt="popcult_logo">
+            <img class="w-32" src="<c:url value='/resources/images/PopCultLogo.png'/>" onclick="this.src='<c:url
+                    value='/resources/images/PopCultLogoClosed.png'/>'" alt="popcult_logo">
         </a>
         <h2 class="font-bold text-4xl text-center text-white py-2"><spring:message code="register.default"/></h2>
     </div>
