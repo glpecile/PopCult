@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
+import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,8 @@ public class MediaController {
     private ListsService listsService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -94,13 +97,15 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
-        userService.addMediaToFav(mediaId);
+        User user = userService.getCurrentUser();
+        favoriteService.addMediaToFav(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
-        userService.deleteMediaFromFav(mediaId);
+        User user = userService.getCurrentUser();
+        favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

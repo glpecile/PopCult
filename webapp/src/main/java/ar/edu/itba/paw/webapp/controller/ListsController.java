@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -30,6 +31,8 @@ public class ListsController {
     private MediaService mediaService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     private static final int itemsPerPage = 4;
     private static final int discoveryListsAmount = 4;
@@ -123,13 +126,15 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
-        userService.addListToFav(listId);
+        User user = userService.getCurrentUser();
+        favoriteService.addListToFav(user.getUserId(), listId);
         return listDescription(listId);
     }
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
-        userService.deleteListFromFav(listId);
+        User user = userService.getCurrentUser();
+        favoriteService.deleteListFromFav(user.getUserId(), listId);
         return listDescription(listId);
     }
 }

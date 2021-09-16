@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -28,6 +29,8 @@ public class UserController {
     private MediaService mediaService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
@@ -52,10 +55,10 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        List<Media> userMedia = mediaService.getById(userService.getUserFavoriteMedia(page - 1, itemsPerPage));
+        List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(),page - 1, itemsPerPage));
         List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
-        Integer mediaCount = userService.getFavoriteMediaCount().orElse(0);
+        Integer mediaCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("mediaList", userMedia);
         mav.addObject("favoriteAmount", mediaCount);
         mav.addObject("suggestedMedia", suggestedMedia);
@@ -88,9 +91,9 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
-        List<Integer> userFavListsId = userService.getUserFavoriteLists(page - 1, itemsPerPage);
+        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(),page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
-        Integer favCount = userService.getFavoriteMediaCount().orElse(0);
+        Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("currentPage", page);
         mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
