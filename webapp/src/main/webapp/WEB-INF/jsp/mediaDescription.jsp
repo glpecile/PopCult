@@ -38,10 +38,16 @@
                 <div class="col-md-auto">
                     <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
                 </div>
-                <div class="col col-lg-2 pt-2">
+                <div class="col-md-auto pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
                         <jsp:param name="URL" value="media/${mediaId}"/>
                         <jsp:param name="favorite" value="${isFavoriteMedia}"/>
+                    </jsp:include>
+                </div>
+                <div class="col col-lg-2 pt-2">
+                    <jsp:include page="/WEB-INF/jsp/components/watchedMedia.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="isWatched" value="${isWatchedMedia}"/>
                     </jsp:include>
                 </div>
             </div>

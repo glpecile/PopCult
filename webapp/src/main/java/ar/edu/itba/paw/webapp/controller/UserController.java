@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.FavoriteService;
-import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -31,6 +28,8 @@ public class UserController {
     private ListsService listsService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private WatchService watchService;
 
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
@@ -55,7 +54,7 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(),page - 1, itemsPerPage));
+        List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage));
         List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
         Integer mediaCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
@@ -70,17 +69,33 @@ public class UserController {
     }
 
     @RequestMapping("/{username}/toWatchMedia")
-    public ModelAndView userToWatchMedia(@PathVariable("username") final String username) {
-        ModelAndView mav = new ModelAndView("userToWatchMedia");
+    public ModelAndView userToWatchMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        int userId = user.getUserId();
+        List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
+        Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
+        mav.addObject("title", "Watchlist");
+        mav.addObject("mediaList", toWatchMedia);
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("currentPage", page);
         mav.addObject(user);
         return mav;
     }
 
+    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd
+
     @RequestMapping("/{username}/watchedMedia")
-    public ModelAndView userWatchedMedia(@PathVariable("username") final String username) {
-        ModelAndView mav = new ModelAndView("userWatchedMedia");
+    public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        int userId = user.getUserId();
+        List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));
+        Integer mediaCount = watchService.getWatchedMediaCount(userId).orElse(0);
+        mav.addObject("title", "Watched Media");
+        mav.addObject("mediaList", watchedMedia);
+        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("currentPage", page);
         mav.addObject(user);
         return mav;
     }
@@ -91,7 +106,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
-        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(),page - 1, itemsPerPage);
+        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
         Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);

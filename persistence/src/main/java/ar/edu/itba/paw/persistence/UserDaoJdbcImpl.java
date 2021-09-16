@@ -19,7 +19,6 @@ public class UserDaoJdbcImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-
     private static final RowMapper<User> ROW_MAPPER =
             (rs, rowNum) -> new User(
                     rs.getInt("userId"),
@@ -29,26 +28,10 @@ public class UserDaoJdbcImpl implements UserDao {
                     "name", //TODO
                     "profilePhoto"); //TODO
 
-
-
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
-
-//        toWatchMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("towatchmedia");
-
-
-
-
-
-
-//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS towatchmedia(" +
-//                "userId INT NOT NULL," +
-//                "mediaId INT NOT NULL," +
-//                "watchedDate DATE," +
-//                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-//                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritelists(" +
                 "userId INT NOT NULL," +
