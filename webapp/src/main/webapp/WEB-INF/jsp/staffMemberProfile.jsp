@@ -74,7 +74,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaPages}"/>
         <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="${urlBase}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

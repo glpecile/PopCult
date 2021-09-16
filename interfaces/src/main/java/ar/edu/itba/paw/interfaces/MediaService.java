@@ -20,4 +20,8 @@ public interface MediaService {
     Optional<Integer> getMediaCountByMediaType(int mediaType);
 
     List<Media> getLatestMediaList(int mediaType, int page, int pageSize);
+
+    List<Media> searchMediaByTitle(String title, int page, int pageSize);
+
+    Optional<Integer> getCountSearchMediaByTitle(String title);
 }
