@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
 
 import java.util.List;
 
@@ -55,13 +57,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage));
-        List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        //List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
         Integer mediaCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("mediaList", userMedia);
         mav.addObject("favoriteAmount", mediaCount);
-        mav.addObject("suggestedMedia", suggestedMedia);
-        mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        //mav.addObject("suggestedMedia", suggestedMedia);
+        mav.addObject("suggestedMedia", suggestedMedia.getElements());
+        //mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        mav.addObject("suggestedMediaPages", suggestedMedia.getTotalPages());
         mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
         mav.addObject(user);

@@ -29,11 +29,6 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("search");
         final List<Media> searchResults = searchService.searchMediaByTitle(content,page-1,itemsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
         final Integer searchResultsCount = searchService.getCountSearchMediaByTitle(content).orElse(0);
-        for (Media media:
-             searchResults) {
-            System.out.println(media.getTitle());
-        }
-        System.out.println(searchResultsCount);
         final Map<String,String> queries = new HashMap<>();
         queries.put("content",content);
         queries.put("sort", sortType);
