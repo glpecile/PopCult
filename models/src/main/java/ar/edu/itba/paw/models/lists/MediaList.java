@@ -11,6 +11,7 @@ public class MediaList {
     private final boolean visible;
     private final boolean collaborative;
 
+
     public MediaList(int mediaListId, int userId, String name, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
         this.userId = userId;
@@ -48,4 +49,5 @@ public class MediaList {
     public boolean isCollaborative() {
         return collaborative;
     }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,16 +32,12 @@ public class UserDaoJdbcImpl implements UserDao {
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId SERIAL PRIMARY KEY," +
-                "email TEXT NOT NULL," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL," +
-                "name VARCHAR(100)," +
-                "profilephoto BYTEA," +
-                "UNIQUE(email)," +
-                "UNIQUE(username)" +
-                ")");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritelists(" +
+                "userId INT NOT NULL," +
+                "mediaListId INT NOT NULL," +
+                "FOREIGN KEY(mediaListId) REFERENCES medialist(mediaListId) ON DELETE CASCADE," +
+                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
@@ -54,6 +51,11 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> getByUsername(String username) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{username}, ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public User register(String email, String userName, String password, String name, String profilePhotoURL) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
@@ -64,4 +66,6 @@ public class UserDaoJdbcImpl implements UserDao {
         final Number userId = jdbcInsert.executeAndReturnKey(args);
         return new User(userId.intValue(), email, userName, password, name, profilePhotoURL);
     }
+
+
 }

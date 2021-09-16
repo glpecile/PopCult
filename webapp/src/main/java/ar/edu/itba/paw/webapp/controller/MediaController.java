@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,10 @@ public class MediaController {
     private ListsService listsService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FavoriteService favoriteService;
+    @Autowired
+    private WatchService watchService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -70,8 +75,6 @@ public class MediaController {
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
-        final User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new); //TODO check exception
-        final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -85,7 +88,14 @@ public class MediaController {
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
-        mav.addObject("userLists", userLists);
+
+        userService.getCurrentUser().ifPresent(user -> {
+            mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
+            mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
+            final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
+            mav.addObject("userLists", userLists);
+        });
+
         return mav;
     }
 
@@ -95,6 +105,33 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
+    public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        favoriteService.addMediaToFav(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
+    public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatched")
+    public ModelAndView addMediaToWatched(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser();
+        watchService.addWatchedMedia(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatched")
+    public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser();
+        watchService.deleteWatchedMedia(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
 
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {

@@ -13,7 +13,17 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+    <div class="row justify-content-start">
+        <div class="col-md-auto">
+            <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+        </div>
+        <div class="col col-lg-2 pt-2">
+            <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
+                <jsp:param name="favorite" value="${isFavoriteList}"/>
+            </jsp:include>
+        </div>
+    </div>
     <p class="lead text-justify"><c:out value="${list.description}"/></p>
 
     <div class="row">

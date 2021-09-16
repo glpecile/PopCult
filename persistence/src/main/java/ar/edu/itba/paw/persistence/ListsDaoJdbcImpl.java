@@ -82,6 +82,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public List<MediaList> getMediaListById(List<Integer> mediaListId) {
+        if(mediaListId.size() == 0)
+            return new ArrayList<>();
+        String inSql = String.join(",", Collections.nCopies(mediaListId.size(), "?"));
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM mediaList WHERE mediaListId IN (%s)", inSql),
+                mediaListId.toArray(), MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
     public List<MediaList> getAllLists(int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM mediaList WHERE visibility = ? OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
@@ -104,6 +114,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public List<Integer> getMediaIdInList(int mediaListId) {
         return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
+        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, INTEGER_ROW_MAPPER);
     }
 
     @Override
@@ -183,7 +198,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public void deleteList(int mediaListId) {
-        jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ?", mediaListId);
         jdbcTemplate.update("DELETE FROM medialist WHERE medialistid = ?", mediaListId);
     }
 
