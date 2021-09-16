@@ -10,9 +10,7 @@
     <title>To Watch Media &#8226; PopCult</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.username}"/>
-</jsp:include>
+<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <%--    profile   --%>

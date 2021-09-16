@@ -5,14 +5,17 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.ListForm;
+import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -116,5 +119,19 @@ public class UserController {
         return mav;
     }
 
+    @RequestMapping(value = "/settings", method = {RequestMethod.GET})
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form){
+        ModelAndView mav = new ModelAndView("userSettings");
+        User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", u);
+        return mav;
+    }
+
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST})
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return editUserDetails(form);
+        return new ModelAndView("redirect:/"+form.getUsername());
+    }
 
 }
