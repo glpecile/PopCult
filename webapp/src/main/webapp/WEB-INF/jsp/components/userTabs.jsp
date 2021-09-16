@@ -35,7 +35,7 @@
             </a>
             <a href="${pageContext.request.contextPath}/${param.username}/watchedMedia">
                 <c:choose>
-                    <c:when test="${param.path == 'watchedMedia'}">
+                    <c:when test="${param.path == 'Watched Media'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">Watched Media</button>
                     </c:when>
                     <c:otherwise>
@@ -45,7 +45,7 @@
             </a>
             <a href="${pageContext.request.contextPath}/${param.username}/toWatchMedia">
                 <c:choose>
-                    <c:when test="${param.path == 'toWatchMedia'}">
+                    <c:when test="${param.path == 'Watchlist'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">To Watch Media</button>
                     </c:when>
                     <c:otherwise>
