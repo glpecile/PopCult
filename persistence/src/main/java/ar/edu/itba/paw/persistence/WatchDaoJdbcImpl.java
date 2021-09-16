@@ -45,12 +45,14 @@ public class WatchDaoJdbcImpl implements WatchDao {
     }
 
     @Override
-    public void deleteWatchMedia(int mediaId, int userId, Date date) {
-        if (date == null) {
-            jdbcTemplate.update("DELETE FROM towatchmedia WHERE mediaId = ? AND userId = ? AND watchDate IS NULL", mediaId, userId);
-        } else {
-            jdbcTemplate.update("DELETE FROM towatchmedia WHERE mediaId = ? AND userId = ? AND watchDate IS NOT NULL", mediaId, userId);
-        }
+    public void deleteWatchedMedia(int mediaId, int userId) {
+        jdbcTemplate.update("DELETE FROM towatchmedia WHERE mediaId = ? AND userId = ? AND watchDate IS NOT NULL", mediaId, userId);
+
+    }
+
+    @Override
+    public void deleteToWatchMedia(int mediaId, int userId) {
+        jdbcTemplate.update("DELETE FROM towatchmedia WHERE mediaId = ? AND userId = ? AND watchDate IS NULL", mediaId, userId);
     }
 
     @Override

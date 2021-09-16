@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface WatchDao {
     void addWatchMedia(int mediaId, int userId, Date date);
 
-    void deleteWatchMedia(int mediaId, int userId, Date date);
+    void deleteWatchedMedia(int mediaId, int userId);
+
+    void deleteToWatchMedia(int mediaId, int userId);
 
     boolean isWatched(int mediaId, int userId);
 

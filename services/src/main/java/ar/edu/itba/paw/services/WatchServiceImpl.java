@@ -27,12 +27,12 @@ public class WatchServiceImpl implements WatchService {
 
     @Override
     public void deleteWatchedMedia(int mediaId, int userId) {
-        watchDao.deleteWatchMedia(mediaId, userId, new Date());
+        watchDao.deleteWatchedMedia(mediaId, userId);
     }
 
     @Override
     public void deleteToWatchMedia(int mediaId, int userId) {
-        watchDao.deleteWatchMedia(mediaId, userId, null);
+        watchDao.deleteToWatchMedia(mediaId, userId);
     }
 
     @Override
