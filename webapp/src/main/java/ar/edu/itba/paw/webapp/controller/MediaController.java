@@ -40,6 +40,8 @@ public class MediaController {
     private UserService userService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private WatchService watchService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -88,6 +90,7 @@ public class MediaController {
         mav.addObject("currentPage", page);
         mav.addObject("userLists", userLists);
         mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
+        mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
         return mav;
     }
 
@@ -108,6 +111,20 @@ public class MediaController {
     public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser();
         favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatched")
+    public ModelAndView addMediaToWatched(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser();
+        watchService.addWatchedMedia(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatched")
+    public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser();
+        watchService.deleteWatchedMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
