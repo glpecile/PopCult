@@ -47,7 +47,6 @@
         </c:when>
         <c:otherwise>
             <div class="row">
-                <h2 class="font-bold text-2xl py-2">Favorite Media</h2>
                 <h3 class="text-center">You don't seem to have any favorite media to show!</h3>
                 <h4 class="text-center py-2">Why dont you check this recommendations out?</h4>
                 <c:forEach var="media" items="${suggestedMedia}">
