@@ -13,7 +13,6 @@ public class Media {
     private final Date releaseDate;
     private final int seasons;
     private final String country;
-    private boolean isFavorite;
 
     public Media(int mediaId, int type, String title, String description, String image, int length, Date releaseDate, int seasons, int country) {
         this.mediaId = mediaId;
@@ -25,7 +24,6 @@ public class Media {
         this.releaseDate = releaseDate;
         this.seasons = seasons;
         this.country = Country.values()[country].getCountryName();
-        this.isFavorite = false;
     }
 
     public int getMediaId() {
@@ -68,11 +66,4 @@ public class Media {
         return country;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
 }

@@ -71,7 +71,8 @@ public class MediaController {
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
-        final List<MediaList> userLists = listsService.getMediaListByUserId(1);
+        User user = userService.getCurrentUser();
+        final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -86,6 +87,7 @@ public class MediaController {
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
         mav.addObject("userLists", userLists);
+        mav.addObject("isFavoriteMedia", favoriteService.isFavorite(media.getMediaId(), user.getUserId()));
         return mav;
     }
 

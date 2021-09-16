@@ -68,6 +68,7 @@ public class ListsController {
         mav.addObject("media", mediaFromList);
         final User currentUser = userService.getCurrentUser(); //esto despues se reemplaza por el context del current user
         mav.addObject("currentUser", currentUser);
+        mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, currentUser.getUserId()));
         return mav;
     }
 

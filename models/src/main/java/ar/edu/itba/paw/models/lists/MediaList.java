@@ -10,7 +10,6 @@ public class MediaList {
     private final Date creationDate;
     private final boolean visible;
     private final boolean collaborative;
-    private boolean isFavorite;
 
 
     public MediaList(int mediaListId, int userId, String name, String description, Date creationDate, boolean visible, boolean collaborative) {
@@ -21,7 +20,6 @@ public class MediaList {
         this.creationDate = creationDate;
         this.visible = visible;
         this.collaborative = collaborative;
-        this.isFavorite = false;
     }
 
     public int getUserId() {
@@ -52,11 +50,4 @@ public class MediaList {
         return collaborative;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
 }

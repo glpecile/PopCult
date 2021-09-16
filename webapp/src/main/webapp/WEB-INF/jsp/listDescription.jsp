@@ -20,7 +20,7 @@
         <div class="col col-lg-2 pt-2">
             <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
                 <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
-                <jsp:param name="favorite" value="${list.favorite}"/>
+                <jsp:param name="favorite" value="${isFavoriteList}"/>
             </jsp:include>
         </div>
     </div>

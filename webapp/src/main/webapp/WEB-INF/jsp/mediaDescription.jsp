@@ -41,7 +41,7 @@
                 <div class="col col-lg-2 pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
                         <jsp:param name="URL" value="media/${mediaId}"/>
-                        <jsp:param name="favorite" value="${media.favorite}"/>
+                        <jsp:param name="favorite" value="${isFavoriteMedia}"/>
                     </jsp:include>
                 </div>
             </div>

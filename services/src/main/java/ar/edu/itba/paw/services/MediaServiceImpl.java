@@ -15,21 +15,15 @@ import java.util.Optional;
 public class MediaServiceImpl implements MediaService {
     @Autowired
     private MediaDao mediaDao;
-//    @Autowired
-//    private FavoriteService favoriteService;
 
     @Override
     public Optional<Media> getById(int mediaId) {
-        Optional<Media> media = mediaDao.getById(mediaId);
-//        media.ifPresent(value -> value.setFavorite(favoriteService.isFavorite(mediaId))); TODO
-        return media;
+        return mediaDao.getById(mediaId);
     }
 
     @Override
     public List<Media> getById(List<Integer> mediaIds) {
-        List<Media> mediaList = mediaDao.getById(mediaIds);
-//        mediaList.forEach(media -> media.setFavorite(favoriteService.isFavorite(media.getMediaId()))); TODO
-        return mediaList;
+        return mediaDao.getById(mediaIds);
     }
 
     @Override
