@@ -40,12 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getCurrentUser() {
+    public Optional<User> getCurrentUser() {
         if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return getByUsername(userDetails.getUsername()).orElse(User.getDummyUser());
+            return getByUsername(userDetails.getUsername());
         }
-        return User.getDummyUser();
+        return Optional.empty();
     }
 
 }

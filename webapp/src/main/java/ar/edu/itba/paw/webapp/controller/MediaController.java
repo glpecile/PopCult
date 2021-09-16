@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,8 +72,6 @@ public class MediaController {
         final List<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList, listsService, mediaService);
         final int popularListsAmount = listsService.getListCountFromMedia(mediaId).orElse(0);
-        User user = userService.getCurrentUser();
-        final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -86,8 +85,13 @@ public class MediaController {
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("currentPage", page);
-        mav.addObject("userLists", userLists);
-        mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
+
+        userService.getCurrentUser().ifPresent(user -> {
+            mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
+            final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
+            mav.addObject("userLists", userLists);
+        });
+
         return mav;
     }
 
@@ -99,14 +103,14 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.addMediaToFav(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }

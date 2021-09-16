@@ -9,7 +9,7 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,9 +66,11 @@ public class ListsController {
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
-        final User currentUser = userService.getCurrentUser(); //esto despues se reemplaza por el context del current user
-        mav.addObject("currentUser", currentUser);
-        mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, currentUser.getUserId()));
+
+        userService.getCurrentUser().ifPresent(user -> {
+            mav.addObject("currentUser", user);
+            mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
+        });
         return mav;
     }
 
@@ -82,7 +84,7 @@ public class ListsController {
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return createListForm(form);
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user.getUserId(), form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
     }
@@ -127,14 +129,14 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
-        User user = userService.getCurrentUser();
-        favoriteService.addListToFav( listId, user.getUserId());
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        favoriteService.addListToFav(listId, user.getUserId());
         return listDescription(listId);
     }
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.deleteListFromFav(listId, user.getUserId());
         return listDescription(listId);
     }

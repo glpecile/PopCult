@@ -14,5 +14,5 @@ public interface UserService {
 
     User register(String email, String userName, String password, String name, String profilePhotoURL);
 
-    User getCurrentUser();
+    Optional<User> getCurrentUser();
 }
