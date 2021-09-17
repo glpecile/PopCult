@@ -87,12 +87,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
-        Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
+        //List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
+        PageContainer<Integer> toWatchMediaIds = watchService.getToWatchMediaId(userId, page - 1, itemsPerPage);
+        List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
+        //Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
         mav.addObject("title", "Watchlist");
         mav.addObject("mediaList", toWatchMedia);
-        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("mediaPages",toWatchMediaIds.getTotalPages());
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", toWatchMediaIds.getCurrentPage());
         mav.addObject(user);
         return mav;
     }
@@ -104,12 +108,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));
-        Integer mediaCount = watchService.getWatchedMediaCount(userId).orElse(0);
+//        List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));
+        PageContainer<Integer> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
+        //Integer mediaCount = watchService.getWatchedMediaCount(userId).orElse(0);
         mav.addObject("title", "Watched Media");
         mav.addObject("mediaList", watchedMedia);
-        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", watchedMediaIds.getTotalPages());
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", watchedMediaIds.getCurrentPage());
         mav.addObject(user);
         return mav;
     }

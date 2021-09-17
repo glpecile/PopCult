@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.StudioDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.staff.Studio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,8 +57,11 @@ public class StudioDaoJdbcImpl implements StudioDao {
     }
 
     @Override
-    public List<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT mediaId FROM mediaStudio WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaStudio WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize, totalCount);
     }
 
     @Override
