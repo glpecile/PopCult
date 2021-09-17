@@ -39,14 +39,31 @@ public class RegisterController {
                 form.getPassword(),
                 form.getName(),
                 null);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("sentEmail");
     }
 
     @RequestMapping(value = "/register/confirm")
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
         Token verificationToken = verificationTokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
         //TODO
-        userService.confirmRegister(verificationToken);
-        return new ModelAndView("redirect:/");
+        if(userService.confirmRegister(verificationToken)) {
+            return new ModelAndView("redirect:/login");
+
+        }
+        return new ModelAndView("redirect:/register/tokentimedout?token=" + token);
+    }
+
+    @RequestMapping(value = "/register/tokentimedout")
+    public ModelAndView tokenTimedOut(@RequestParam("token") final String token) {
+        ModelAndView mav = new ModelAndView("tokenTimedOut");
+        mav.addObject("token", token);
+        return mav;
+    }
+
+    @RequestMapping(value = "/register/resendemail")
+    public ModelAndView resendEmail(@RequestParam("token") final String token) {
+        ModelAndView mav = new ModelAndView("sentEmail");
+        userService.resendVerificationEmail(token);
+        return mav;
     }
 }
