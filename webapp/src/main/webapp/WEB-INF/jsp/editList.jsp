@@ -13,7 +13,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 offset-2 py-2">
+<div class="col-8 offset-2 py-4">
     <form:form modelAttribute="createListForm" action="${postPath}" method="post">
         <div class="row">
             <div class="col-md-6">
@@ -26,11 +26,11 @@
             <div class="col-md-6">
                 <form:label path="description" for="listDesc" class="form-label">Description</form:label>
                 <form:textarea path="description" type="text"
-                            class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
-                            value="${list.description}"/>
+                               class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
+                               value="${list.description}"/>
                 <form:errors path="description" cssClass="formError text-red-500" element="p"/>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 py-2">
                 <div class="form-check">
                     <c:choose>
                         <c:when test="${list.visible}">
@@ -43,7 +43,7 @@
                     Make list public for everyone.
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 py-2">
                 <div class="form-check">
                     <c:choose>
                         <c:when test="${list.collaborative}">
@@ -58,27 +58,28 @@
                 </div>
             </div>
         </div>
-        <div class="row justify-content-end">
-            <div class="col">
-                <form:form action="${deletePath}" method="DELETE">
-                    <button type="submit" value="delete" name="delete" class="btn btn-outline-dark btn-rounded">Delete
-                    </button>
-                </form:form>
-            </div>
-            <div class="col">
-                <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
-                    <button type="button" class="btn btn-danger btn-rounded">Discard</button>
-                </a>
-            </div>
-            <div class="col">
-                <button type="submit" value="save" name="save" class="btn btn-success btn-rounded">Save</button>
-            </div>
+        <div class="flex justify-between px-4">
+            <form:form action="${deletePath}" method="DELETE">
+                <button type="submit" value="delete" name="delete"
+                        class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                    Delete
+                </button>
+            </form:form>
+            <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
+                <button type="button"
+                        class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white">
+                    Discard
+                </button>
+            </a>
+            <button type="submit" value="save" name="save"
+                    class="btn btn-success btn btn-danger bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">Save
+            </button>
         </div>
     </form:form>
 
     <div class="row">
         <c:forEach var="media" items="${media}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-4">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
                     <jsp:param name="title" value="${media.title}"/>

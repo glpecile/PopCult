@@ -115,7 +115,7 @@ public class UserController {
         mav.addObject(user);
         List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
-        Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
+        Integer favCount = favoriteService.getFavoriteListsCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("currentPage", page);
         mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
