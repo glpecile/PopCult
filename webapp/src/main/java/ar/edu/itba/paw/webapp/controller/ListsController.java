@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -41,16 +42,19 @@ public class ListsController {
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
+        //final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
+        final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
         final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
         final List<ListCover> recentlyAddedCovers = generateCoverList(listsService.getNLastAddedList(lastAddedAmount));
-        final List<ListCover> allListsCovers = generateCoverList(allLists);
-        final Integer allListsCount = listsService.getListCount().orElse(0);
+        final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
+//        final Integer allListsCount = listsService.getListCount().orElse(0);
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
         mav.addObject("allLists", allListsCovers);
-        mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        //mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
+        mav.addObject("allListsPages", allLists.getTotalPages());
+//        mav.addObject("currentPage", page);
+        mav.addObject("currentPage", allLists.getCurrentPage());
         return mav;
     }
 

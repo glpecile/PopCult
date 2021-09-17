@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.FavoriteDao;
+import ar.edu.itba.paw.models.PageContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -72,8 +73,10 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
-    public List<Integer> getUserFavoriteMedia(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, INTEGER_ROW_MAPPER);
+    public PageContainer<Integer> getUserFavoriteMedia(int userId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, INTEGER_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override

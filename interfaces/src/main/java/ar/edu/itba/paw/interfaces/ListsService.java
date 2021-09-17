@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 
@@ -11,23 +12,23 @@ public interface ListsService {
 
     List<MediaList> getMediaListById(List<Integer> mediaListId);
 
-    List<MediaList> getAllLists(int page, int pageSize);
+    PageContainer<MediaList> getAllLists(int page, int pageSize);
 
     List<MediaList> getMediaListByUserId(int userId);
 
-    List<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
+    PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
     List<Integer> getMediaIdInList(int mediaListId);
 
-    List<Integer>getMediaIdInList(int mediaListId, int page, int pageSize);
+    PageContainer<Integer>getMediaIdInList(int mediaListId, int page, int pageSize);
 
-    List<MediaList> getLastAddedLists(int page, int pageSize);
+    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
     List<MediaList> getNLastAddedList(int amount);
 
-    List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
+    PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
     Optional<Integer> getListCount();
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<MediaList> getAllLists(int page, int pageSize) {
+    public PageContainer<MediaList> getAllLists(int page, int pageSize) {
         return listsDao.getAllLists(page, pageSize);
     }
 
@@ -35,7 +36,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
+    public PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
         return listsDao.getMediaListByUserId(userId, page, pageSize);
     }
 
@@ -50,12 +51,12 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
+    public PageContainer<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
         return listsDao.getMediaIdInList(mediaListId, page, pageSize);
     }
 
     @Override
-    public List<MediaList> getLastAddedLists(int page, int pageSize) {
+    public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
         return listsDao.getLastAddedLists(page, pageSize);
     }
 
@@ -65,7 +66,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
+    public PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
         return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
     }
 
