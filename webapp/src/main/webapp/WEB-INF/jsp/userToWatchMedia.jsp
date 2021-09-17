@@ -18,7 +18,7 @@
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>
-        <jsp:param name="path" value="toWatchMedia"/>
+        <jsp:param name="path" value="Watchlist"/>
     </jsp:include>
     <%-- current tab --%>
         <c:choose>

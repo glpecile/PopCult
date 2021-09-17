@@ -6,7 +6,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><c:out value="${title}"/> &#8226; PopCult</title>
+    <title>Watched Media &#8226; PopCult</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -17,7 +17,7 @@
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>
-        <jsp:param name="path" value="${title}"/>
+        <jsp:param name="path" value="WatchedMedia"/>
     </jsp:include>
     <%-- current tab --%>
         <div class="row">
