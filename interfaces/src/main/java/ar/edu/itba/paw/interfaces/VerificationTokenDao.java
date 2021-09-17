@@ -11,4 +11,6 @@ public interface VerificationTokenDao {
     Optional<Token> getToken(String token);
 
     void deleteToken(Token token);
+
+    void renewToken(String token, Date newExpiryDate);
 }

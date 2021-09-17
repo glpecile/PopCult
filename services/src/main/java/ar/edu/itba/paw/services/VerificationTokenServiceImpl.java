@@ -48,4 +48,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         Calendar calendar = Calendar.getInstance();
         return token.getExpiryDate().getTime() > calendar.getTime().getTime();
     }
+
+    @Override
+    public void renewToken(String token) {
+        verificationTokenDao.renewToken(token, calculateExpiryDate(EXPIRATION));
+    }
 }

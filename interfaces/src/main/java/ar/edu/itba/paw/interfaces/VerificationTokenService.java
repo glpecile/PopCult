@@ -14,4 +14,5 @@ public interface VerificationTokenService {
 
     boolean isValidToken(Token token);
 
+    void renewToken(String token);
 }

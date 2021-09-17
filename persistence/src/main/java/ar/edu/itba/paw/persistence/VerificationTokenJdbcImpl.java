@@ -57,5 +57,10 @@ public class VerificationTokenJdbcImpl implements VerificationTokenDao {
     public void deleteToken(Token token) {
         jdbcTemplate.update("DELETE FROM verificationToken WHERE token = ?", token.getToken());
     }
+
+    @Override
+    public void renewToken(String token, Date newExpiryDate) {
+        jdbcTemplate.update("UPDATE verificationtoken SET expirydate = ? WHERE token = ?", newExpiryDate, token);
+    }
 }
 
