@@ -54,22 +54,14 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("home");
-        //final List<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        //final List<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        //final List<Media> mediaList = mediaService.getMediaList(page - 1, itemsPerPage);
         final PageContainer<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(),0,itemsPerContainer);
         final PageContainer<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaList = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer mediaCount = mediaService.getMediaCount().orElse(0);
-//        mav.addObject("filmsList", filmsLatest);
-//        mav.addObject("seriesList", seriesLatest);
-//        mav.addObject("mediaList", mediaList);
-//        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("currentPage", mediaList.getCurrentPage()+1);
         mav.addObject("filmsList", filmsLatest.getElements());
         mav.addObject("seriesList", seriesLatest.getElements());
-        mav.addObject("mediaList", mediaList.getElements());
-        mav.addObject("mediaPages", mediaList.getTotalPages());
+        mav.addObject("mediaListContainer", mediaList);
         return mav;
     }
 
@@ -97,10 +89,10 @@ public class MediaController {
         mav.addObject("genresAmount", genreList.size());
         mav.addObject("relatedLists", relatedListsCover);
 //        mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
-        mav.addObject("popularListPages", mediaList.getTotalPages());
+        //mav.addObject("popularListPages", mediaList.getTotalPages());
 //        mav.addObject("currentPage", page);
-        mav.addObject("currentPage", mediaList.getCurrentPage() + 1);
-
+        //mav.addObject("currentPage", mediaList.getCurrentPage() + 1);
+        mav.addObject("mediaListContainer", mediaList);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));

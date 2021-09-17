@@ -136,9 +136,9 @@
             </c:forEach>
             <br>
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                <jsp:param name="mediaPages" value="${popularListPages}"/>
-                <jsp:param name="currentPage" value="${currentPage}"/>
-                <jsp:param name="url" value="/lists?"/>
+                <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
+                <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
+                <jsp:param name="url" value="/media/${mediaId}"/>
             </jsp:include>
         </c:if>
     </div>
