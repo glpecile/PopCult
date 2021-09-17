@@ -167,14 +167,14 @@ public class MediaController {
         //final List<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
         final PageContainer<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
-        final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
+        //final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.MOVIE.ordinal()).orElse(0);
 //        mav.addObject("latestFilms", latestFilms);
 //        mav.addObject("mediaList", mediaList);
 //        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
 //        mav.addObject("currentPage", page);
         mav.addObject("latestFilms", latestFilms.getElements());
         mav.addObject("mediaList", mediaList.getElements());
-        mav.addObject("mediaPages", mediaList.getTotalCount());
+        mav.addObject("mediaPages", mediaList.getTotalPages());
         mav.addObject("currentPage", mediaList.getCurrentPage()+1);
         return mav;
     }
