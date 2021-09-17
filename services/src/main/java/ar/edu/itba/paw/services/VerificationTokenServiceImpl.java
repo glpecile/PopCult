@@ -2,12 +2,14 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.VerificationTokenDao;
 import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.models.user.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,5 +31,21 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         calendar.setTime(new Timestamp(calendar.getTime().getTime()));
         calendar.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(calendar.getTime().getTime());
+    }
+
+    @Override
+    public Optional<Token> getToken(String token) {
+        return verificationTokenDao.getToken(token);
+    }
+
+    @Override
+    public void deleteToken(Token token) {
+        verificationTokenDao.deleteToken(token);
+    }
+
+    @Override
+    public boolean isValidToken(Token token) {
+        Calendar calendar = Calendar.getInstance();
+        return token.getExpiryDate().getTime() > calendar.getTime().getTime();
     }
 }
