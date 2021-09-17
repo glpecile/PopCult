@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -91,6 +92,7 @@ public class MediaController {
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
+            mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
             final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
             mav.addObject("userLists", userLists);
         });
@@ -120,15 +122,29 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatched")
     public ModelAndView addMediaToWatched(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         watchService.addWatchedMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatched")
     public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
-        User user = userService.getCurrentUser();
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         watchService.deleteWatchedMedia(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatchlist")
+    public ModelAndView addMediaToWatchlist(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        watchService.addMediaToWatch(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatchlist")
+    public ModelAndView deleteMediaFromWatchlist(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        watchService.deleteToWatchMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

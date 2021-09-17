@@ -35,7 +35,7 @@ public class StaffMemberController {
         mav.addObject("media", media);
         mav.addObject("currentPage", page);
         mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount/itemsPerPage));
-        mav.addObject("urlBase", "/staff/"+staffMemberId+"/");
+        mav.addObject("urlBase", "/staff/"+staffMemberId+"/?");
         return mav;
     }
     @RequestMapping("/staff/{staffMemberId}/{roleType}")
@@ -54,7 +54,7 @@ public class StaffMemberController {
         mav.addObject("media", media);
         mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("currentPage", page);
-        mav.addObject("urlBase", "/staff/"+staffMemberId+"/"+normalizerRole.getRoleType()+"/");
+        mav.addObject("urlBase", "/staff/"+staffMemberId+"/"+normalizerRole.getRoleType()+"/?");
         return mav;
     }
 

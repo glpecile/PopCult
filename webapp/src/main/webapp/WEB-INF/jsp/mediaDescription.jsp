@@ -50,6 +50,10 @@
                         <jsp:param name="isWatched" value="${isWatchedMedia}"/>
                     </jsp:include>
                 </div>
+                <jsp:include page="/WEB-INF/jsp/components/watchlist.jsp">
+                    <jsp:param name="URL" value="media/${mediaId}"/>
+                    <jsp:param name="watchlisted" value="${isToWatchMedia}"/>
+                </jsp:include>
             </div>
             <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>
@@ -134,7 +138,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${popularListPages}"/>
                 <jsp:param name="currentPage" value="${currentPage}"/>
-                <jsp:param name="urlBase" value="/lists"/>
+                <jsp:param name="url" value="/lists?"/>
             </jsp:include>
         </c:if>
     </div>

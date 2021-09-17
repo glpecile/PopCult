@@ -10,13 +10,13 @@
 
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.username}"/>
-</jsp:include>
+<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <%--    profile   --%>
-
+    <a href="${pageContext.request.contextPath}/settings">
+<button>Edit Profile</button>
+    </a>
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>
@@ -45,7 +45,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${listsPages}"/>
         <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="/lists"/>
+        <jsp:param name="url" value="/lists?"/>
     </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

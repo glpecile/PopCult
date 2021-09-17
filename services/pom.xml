@@ -45,7 +45,7 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
-        <!--    Mailing -->
+<!--    Mailing -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -61,6 +61,12 @@
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring4</artifactId>
+        </dependency>
+
+<!--    Logback Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>

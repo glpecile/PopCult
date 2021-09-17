@@ -92,4 +92,13 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM media WHERE type = ? ORDER BY releasedate DESC OFFSET ? LIMIT ?  ", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
     }
+
+    @Override
+    public List<Media> searchMediaByTitle(String title, int page, int pageSize){
+        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') ORDER BY title OFFSET ? LIMIT ?", new Object[]{title, page, pageSize},MEDIA_ROW_MAPPER);
+    }
+    @Override
+    public Optional<Integer> getCountSearchMediaByTitle(String title){
+        return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title},COUNT_ROW_MAPPER).stream().findFirst();
+    }
 }

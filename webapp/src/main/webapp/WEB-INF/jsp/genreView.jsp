@@ -50,7 +50,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaPages}"/>
         <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="/genre/"/>
+        <jsp:param name="url" value="/genre?"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
