@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -62,9 +63,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
                 .antMatchers("/register/**", "/login").anonymous()
-                .antMatchers("/createList", "/editList/**").authenticated()
-                .antMatchers(HttpMethod.POST).authenticated()
-                .antMatchers(HttpMethod.DELETE).authenticated()
+                .antMatchers("/createList", "/editList/**").hasRole("EDITOR")
+                .antMatchers(HttpMethod.POST).hasRole("EDITOR")
+                .antMatchers(HttpMethod.DELETE).hasRole("EDITOR")
                 .antMatchers("/**").permitAll()
                 .antMatchers("/resources/**").permitAll()
 //                .antMatchers("/**").authenticated() //TODO

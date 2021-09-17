@@ -29,8 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         if(user.isEnabled()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            authorities.add(new SimpleGrantedAuthority("ROLE EDITOR"));
-            authorities.add(new SimpleGrantedAuthority("ROLE READER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_READER"));
         }
 
         return new User(username, user.getPassword(), user.isEnabled(), ACCOUNT_NON_EXPIRED, CREDENTIALS_NON_EXPIRED, ACCOUNT_NON_LOCKED, authorities);
