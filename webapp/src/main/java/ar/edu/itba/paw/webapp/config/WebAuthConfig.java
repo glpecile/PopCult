@@ -67,7 +67,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST).hasRole("EDITOR")
                 .antMatchers(HttpMethod.DELETE).hasRole("EDITOR")
                 .antMatchers("/**").permitAll()
-                .antMatchers("/resources/**").permitAll()
 //                .antMatchers("/**").authenticated() //TODO
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
@@ -77,7 +76,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().
-                antMatchers(); //Apago SpringSecurity para los assets publicos
+                antMatchers("/resources/**"); //Apago SpringSecurity para los assets publicos
     }
 }
 
