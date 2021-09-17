@@ -104,8 +104,10 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
-    public List<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM favoritelists WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ID_MAPPER);
+    public PageContainer<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritelists WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ID_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritelists WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,0);
     }
 
     @Override

@@ -56,7 +56,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public List<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
+    public PageContainer<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
         return favoriteDao.getUserFavoriteLists(userId, page, pageSize);
     }
 

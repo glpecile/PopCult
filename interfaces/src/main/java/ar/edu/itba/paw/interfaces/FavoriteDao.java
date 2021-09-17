@@ -22,7 +22,7 @@ public interface FavoriteDao {
 
     boolean isFavoriteList(int mediaListId, int userId);
 
-    List<Integer> getUserFavoriteLists(int userId, int page, int pageSize);
+    PageContainer<Integer> getUserFavoriteLists(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteListsCount(int userId);
 }

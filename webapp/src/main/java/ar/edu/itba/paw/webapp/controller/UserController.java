@@ -128,13 +128,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
-        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
+//        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService, mediaService);
         Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);
-        mav.addObject("currentPage", page);
-        mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
-        mav.addObject("listsAmount", favCount);
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", userFavListsId.getCurrentPage());
+        //mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
+        mav.addObject("listsPages", userFavListsId.getTotalPages());
+        mav.addObject("listsAmount", favCount);// TODO fijarse como usar el PageContainer
         return mav;
     }
 
