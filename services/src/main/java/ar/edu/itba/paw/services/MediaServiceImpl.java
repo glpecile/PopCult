@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,5 +49,15 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
+    }
+
+    @Override
+    public List<Media> searchMediaByTitle(String title, int page, int pageSize) {
+        return mediaDao.searchMediaByTitle(title, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getCountSearchMediaByTitle(String title) {
+        return mediaDao.getCountSearchMediaByTitle(title);
     }
 }

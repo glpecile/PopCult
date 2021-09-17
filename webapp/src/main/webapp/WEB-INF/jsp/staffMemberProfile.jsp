@@ -2,22 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <html>
 <head>
-    <!-- BS5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
-    <!-- Tailwind -->
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <!-- BS5 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <!-- MDB -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+    <jsp:include page="/resources/externalResources.jsp"/>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${member.name}"/> &#8226; PopCult</title>
 
 </head>
@@ -28,18 +15,30 @@
     <div class="row">
         <div class="col-12 col-lg-4">
             <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg" alt="Media Image">
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
         <div class="col-12 col-lg-8">
             <h1 class="display-5 fw-bolder"><c:out value="${member.name}"/></h1>
+            <br>
             <p class="lead text-justify"><c:out value="${member.description}"/></p>
         </div>
     </div>
     <br>
     <div class="flex text-center">
         <div class="dropdown pr-4">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                Role
+                <c:choose>
+                    <c:when test="${roleType == 'actor'}">
+                        Actor
+                    </c:when>
+                    <c:when test="${roleType == 'director'}">
+                        Director
+                    </c:when>
+                    <c:otherwise>
+                        All
+                    </c:otherwise>
+                </c:choose>
             </button>
             <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">
                 <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
@@ -75,7 +74,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaPages}"/>
         <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="${urlBase}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
