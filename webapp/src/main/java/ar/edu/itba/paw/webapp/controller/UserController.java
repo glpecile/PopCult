@@ -94,16 +94,17 @@ public class UserController {
         List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
         //Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
         mav.addObject("title", "Watchlist");
-        List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
-        mav.addObject("suggestedMedia", suggestedMedia);
-        mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        //final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
+        mav.addObject("suggestedMedia", suggestedMedia.getElements());
+//        mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        mav.addObject("suggestedMediaPages", suggestedMedia.getTotalPages());
         mav.addObject("mediaList", toWatchMedia);
         //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("mediaPages",toWatchMediaIds.getTotalPages());
         //mav.addObject("currentPage", page);
         mav.addObject("currentPage", toWatchMediaIds.getCurrentPage()+1);
-        mav.addObject("mediaCount", mediaCount);
+        mav.addObject("mediaCount", toWatchMediaIds.getTotalCount());
         mav.addObject(user);
         return mav;
     }
