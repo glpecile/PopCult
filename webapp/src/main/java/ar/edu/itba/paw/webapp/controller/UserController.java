@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ListForm;
+import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,7 @@ public class UserController {
 
     @RequestMapping("/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        System.out.println("user profile");
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
@@ -124,18 +126,34 @@ public class UserController {
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form){
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", u);
         return mav;
     }
 
-    @RequestMapping(value = "/settings", method = {RequestMethod.POST})
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+        System.out.println("submit settings");
         if (errors.hasErrors())
             return editUserDetails(form);
-        return new ModelAndView("redirect:/"+form.getUsername());
+        return new ModelAndView("redirect:/" + form.getUsername());
     }
 
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
+    public ModelAndView changeUserPassword(@ModelAttribute("changePassword") final PasswordForm form) {
+        System.out.println("change password");
+        ModelAndView mav = new ModelAndView("changePassword");
+        User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", u);
+        return mav;
+    }
+
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "submit, user")
+    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
+        if (errors.hasErrors())
+            return changeUserPassword(form);
+        return new ModelAndView("redirect:/");
+    }
 }
