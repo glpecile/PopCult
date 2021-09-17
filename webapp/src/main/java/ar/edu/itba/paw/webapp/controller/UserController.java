@@ -6,15 +6,17 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.ListForm;
+import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import javax.validation.Valid;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -92,16 +94,22 @@ public class UserController {
         List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
         //Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
         mav.addObject("title", "Watchlist");
+        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        //final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
+        mav.addObject("suggestedMedia", suggestedMedia.getElements());
+//        mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        mav.addObject("suggestedMediaPages", suggestedMedia.getTotalPages());
         mav.addObject("mediaList", toWatchMedia);
         //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("mediaPages",toWatchMediaIds.getTotalPages());
         //mav.addObject("currentPage", page);
         mav.addObject("currentPage", toWatchMediaIds.getCurrentPage()+1);
+        mav.addObject("mediaCount", toWatchMediaIds.getTotalCount());
         mav.addObject(user);
         return mav;
     }
 
-    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd
+    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
     @RequestMapping("/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -141,5 +149,19 @@ public class UserController {
         return mav;
     }
 
+    @RequestMapping(value = "/settings", method = {RequestMethod.GET})
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form){
+        ModelAndView mav = new ModelAndView("userSettings");
+        User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", u);
+        return mav;
+    }
+
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST})
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return editUserDetails(form);
+        return new ModelAndView("redirect:/"+form.getUsername());
+    }
 
 }

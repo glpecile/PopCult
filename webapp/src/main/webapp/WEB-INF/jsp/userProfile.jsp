@@ -10,13 +10,15 @@
 
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.username}"/>
-</jsp:include>
+<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <%--    profile   --%>
-
+    <jsp:include page="/WEB-INF/jsp/components/profile.jsp">
+        <jsp:param name="name" value="${user.name}"/>
+        <jsp:param name="username" value="${username}"/>
+        <jsp:param name="profilePicture" value="https://cdn.discordapp.com/attachments/758850104517460008/885980983696973884/E-8U707WUAQVsK4.png"/>
+    </jsp:include>
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>

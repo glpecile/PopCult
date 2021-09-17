@@ -6,41 +6,43 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><c:out value="${title}"/> &#8226; PopCult</title>
+    <title>Watched Media &#8226; PopCult</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
-    <jsp:param name="user" value="${user.username}"/>
-</jsp:include>
+<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <%--    profile   --%>
-
+    <jsp:include page="/WEB-INF/jsp/components/profile.jsp">
+        <jsp:param name="name" value="${user.name}"/>
+        <jsp:param name="username" value="${username}"/>
+        <jsp:param name="profilePicture" value="https://cdn.discordapp.com/attachments/758850104517460008/885980983696973884/E-8U707WUAQVsK4.png"/>
+    </jsp:include>
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
         <jsp:param name="username" value="${user.username}"/>
-        <jsp:param name="path" value="${title}"/>
+        <jsp:param name="path" value="WatchedMedia"/>
     </jsp:include>
     <%-- current tab --%>
-        <div class="row">
-            <c:forEach var="media" items="${mediaList}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                        <jsp:param name="image" value="${media.image}"/>
-                        <jsp:param name="title" value="${media.title}"/>
-                        <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                        <jsp:param name="mediaId" value="${media.mediaId}"/>
-                    </jsp:include>
-                </div>
-            </c:forEach>
-        </div>
+    <div class="row">
+        <c:forEach var="media" items="${mediaList}">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                    <jsp:param name="image" value="${media.image}"/>
+                    <jsp:param name="title" value="${media.title}"/>
+                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                    <jsp:param name="mediaId" value="${media.mediaId}"/>
+                </jsp:include>
+            </div>
+        </c:forEach>
+    </div>
 
-        <br>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${mediaPages}"/>
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="url" value="/${user.username}/watchedMedia?"/>
-        </jsp:include>
+    <br>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${mediaPages}"/>
+        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="url" value="/${user.username}/watchedMedia?"/>
+    </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

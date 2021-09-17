@@ -3,7 +3,7 @@
 <html>
     <div class="bg-transparent py-4">
         <nav class="flex flex-col sm:flex-row">
-            <a href="${pageContext.request.contextPath}/${param.username}">
+            <a href=<c:url value="/${param.username}"/>>
                 <c:choose>
                     <c:when test="${param.path == 'myLists'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">My Lists</button>
@@ -13,7 +13,7 @@
                     </c:otherwise>
                 </c:choose>
             </a>
-            <a href="${pageContext.request.contextPath}/${param.username}/favoriteMedia">
+            <a href=<c:url value="/${param.username}/favoriteMedia"/>>
                 <c:choose>
                     <c:when test="${param.path == 'favMedia'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">Favorite Media</button>
@@ -23,7 +23,7 @@
                     </c:otherwise>
                 </c:choose>
             </a>
-            <a href="${pageContext.request.contextPath}/${param.username}/favoriteLists">
+            <a href=<c:url value="/${param.username}/favoriteLists"/>>
                 <c:choose>
                     <c:when test="${param.path == 'favLists'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">Favorite Lists</button>
@@ -33,9 +33,9 @@
                     </c:otherwise>
                 </c:choose>
             </a>
-            <a href="${pageContext.request.contextPath}/${param.username}/watchedMedia">
+            <a href=<c:url value="/${param.username}/watchedMedia"/>>
                 <c:choose>
-                    <c:when test="${param.path == 'Watched Media'}">
+                    <c:when test="${param.path == 'WatchedMedia'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">Watched Media</button>
                     </c:when>
                     <c:otherwise>
@@ -43,7 +43,7 @@
                     </c:otherwise>
                 </c:choose>
             </a>
-            <a href="${pageContext.request.contextPath}/${param.username}/toWatchMedia">
+            <a href=<c:url value="/${param.username}/favoriteMedia"/>>
                 <c:choose>
                     <c:when test="${param.path == 'Watchlist'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">To Watch Media</button>

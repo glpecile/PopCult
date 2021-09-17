@@ -104,6 +104,7 @@ public class MediaController {
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
+            mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
             final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
             mav.addObject("userLists", userLists);
         });
@@ -142,6 +143,20 @@ public class MediaController {
     public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         watchService.deleteWatchedMedia(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatchlist")
+    public ModelAndView addMediaToWatchlist(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        watchService.addMediaToWatch(mediaId, user.getUserId());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatchlist")
+    public ModelAndView deleteMediaFromWatchlist(@PathVariable("mediaId") final int mediaId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        watchService.deleteToWatchMedia(mediaId, user.getUserId());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

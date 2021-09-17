@@ -13,20 +13,21 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <div class="row justify-content-start">
+    <div class="flex justify-content-start content-center pt-4">
         <div class="col-md-auto">
             <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
         </div>
-        <div class="col col-lg-2 pt-2">
+        <%--            <p>Te actualizas????</p>--%>
+        <div class="pt-2">
             <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
                 <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
                 <jsp:param name="favorite" value="${isFavoriteList}"/>
             </jsp:include>
         </div>
     </div>
-    <p class="lead text-justify"><c:out value="${list.description}"/></p>
+    <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
 
-    <div class="row">
+    <div class="flex">
         <div class="col">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
@@ -49,8 +50,8 @@
                 </div>
             </c:otherwise>
         </c:choose>
-
     </div>
+
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

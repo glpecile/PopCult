@@ -22,6 +22,9 @@
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
         <javax-mail.version>1.4.7</javax-mail.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <org.slf4j.version>1.7.5</org.slf4j.version>
+        <logback.version>1.1.2</logback.version>
+        <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
     </properties>
 
     <modules>
@@ -125,6 +128,34 @@
                 <version>${thymeleaf.version}</version>
             </dependency>
 
+<!--        Logback Logger -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.logback-extensions</groupId>
+                <artifactId>logback-ext-spring</artifactId>
+                <version>${logback-ext-spring.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -136,22 +167,6 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.3.1</version>
                 </plugin>
-
-                <!--                <plugin>-->
-                <!--                    <groupId>org.eclipse.jetty</groupId>-->
-                <!--                    <artifactId>jetty-maven-plugin</artifactId>-->
-                <!--                    <version>9.4.43.v20210629</version>-->
-                <!--                    <configuration>-->
-                <!--                        <scanIntervalSeconds>10</scanIntervalSeconds>-->
-                <!--                        <contextPath>/webapp</contextPath>-->
-                <!--                        <connectors>-->
-                <!--                            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">-->
-                <!--                                <port>8080</port>-->
-                <!--                                <maxIdleTime>60000</maxIdleTime>-->
-                <!--                            </connector>-->
-                <!--                        </connectors>-->
-                <!--                    </configuration>-->
-                <!--                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>

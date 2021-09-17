@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.VerificationTokenDao;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,18 +28,25 @@ public class UserDaoJdbcImpl implements UserDao {
                     rs.getString("username"),
                     rs.getString("password"),
                     "name", //TODO
-                    "profilePhoto"); //TODO
+                    "profilePhoto",
+                    rs.getBoolean("enabled")); //TODO
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritelists(" +
-                "userId INT NOT NULL," +
-                "mediaListId INT NOT NULL," +
-                "FOREIGN KEY(mediaListId) REFERENCES medialist(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
+                "userId SERIAL PRIMARY KEY," +
+                "email TEXT NOT NULL," +
+                "username TEXT NOT NULL," +
+                "password TEXT NOT NULL," +
+                "name VARCHAR(100)," +
+                "profilephoto BYTEA," +
+                "enabled BOOLEAN NOT NULL," +
+                "UNIQUE(email)," +
+                "UNIQUE(username)" +
+                ")");
     }
 
     @Override
@@ -56,16 +65,19 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
+    public User register(String email, String userName, String password, String name, String profilePhotoURL, boolean enabled) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
         args.put("profilephoto", profilePhotoURL);
+        args.put("enabled", enabled);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL);
+        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL, enabled);
     }
 
-
+    public void confirmRegister(int userId, boolean enabled) {
+        jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
+    }
 }
