@@ -18,4 +18,6 @@ public interface UserService {
     Optional<User> getCurrentUser();
 
     boolean confirmRegister(Token token);
+
+    void resendVerificationEmail(String token);
 }

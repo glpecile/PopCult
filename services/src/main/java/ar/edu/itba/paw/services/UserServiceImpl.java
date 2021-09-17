@@ -56,13 +56,17 @@ public class UserServiceImpl implements UserService {
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());
 
+        sendVerificationEmail(email, username, token);
+
+        return user;
+    }
+
+    private void sendVerificationEmail(String email, String username, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", username); //TODO swap to full name
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
         emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
-
-        return user;
     }
 
     @Override
@@ -84,4 +88,13 @@ public class UserServiceImpl implements UserService {
         return isValidToken;
     }
 
+    @Override
+    public void resendVerificationEmail(String token) {
+        verificationTokenService.renewToken(token);
+        verificationTokenService.getToken(token).ifPresent(validToken -> {
+            getById(validToken.getUserId()).ifPresent(user -> {
+                sendVerificationEmail(user.getEmail(), user.getUsername(), validToken.getToken());
+            });
+        });
+    }
 }
