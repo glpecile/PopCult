@@ -26,7 +26,8 @@ public class UserDaoJdbcImpl implements UserDao {
                     rs.getString("username"),
                     rs.getString("password"),
                     "name", //TODO
-                    "profilePhoto"); //TODO
+                    "profilePhoto",
+                    rs.getBoolean("enabled")); //TODO
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
@@ -62,16 +63,15 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
+    public User register(String email, String userName, String password, String name, String profilePhotoURL, boolean enabled) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
         args.put("profilephoto", profilePhotoURL);
+        args.put("enabled", enabled);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL);
+        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL, enabled);
     }
-
-
 }
