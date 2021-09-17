@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface UserService {
     User register(String email, String username, String password, String name, String profilePhotoURL);
 
     Optional<User> getCurrentUser();
+
+    boolean confirmRegister(Token token);
 }

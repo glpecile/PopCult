@@ -61,7 +61,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
-                .antMatchers("/register", "/login").anonymous()
+                .antMatchers("/register/**", "/login").anonymous()
                 .antMatchers("/createList", "/editList/**").authenticated()
                 .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated()

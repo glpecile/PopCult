@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private MessageSource messageSource;
 
     private static final boolean NOT_ENABLED_USER = false;
+    private static final boolean ENABLED_USER = true;
 
     @Override
     public Optional<User> getById(int userId) {
@@ -70,6 +72,16 @@ public class UserServiceImpl implements UserService {
             return getByUsername(userDetails.getUsername());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean confirmRegister(Token token) {
+        boolean isValidToken = verificationTokenService.isValidToken(token);
+        if(isValidToken) {
+            userDao.confirmRegister(token.getUserId(), ENABLED_USER);
+            verificationTokenService.deleteToken(token);
+        }
+        return isValidToken;
     }
 
 }

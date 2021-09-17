@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.VerificationTokenDao;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,5 +75,9 @@ public class UserDaoJdbcImpl implements UserDao {
         args.put("enabled", enabled);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
         return new User(userId.intValue(), email, userName, password, name, profilePhotoURL, enabled);
+    }
+
+    public void confirmRegister(int userId, boolean enabled) {
+        jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
     }
 }
