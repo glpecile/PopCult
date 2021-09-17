@@ -20,7 +20,7 @@
             </c:when>
             <c:otherwise>
                 <a href="<c:url value="/media/${param.mediaId}"/>" class="stretched-link" title="<c:out
-        value="${param.title}"/>(<c:out value="${param.releaseDate}"/>)"></a>
+        value="${param.title}"/> (<c:out value="${param.releaseDate}"/>)"></a>
             </c:otherwise>
         </c:choose>
     </div>
