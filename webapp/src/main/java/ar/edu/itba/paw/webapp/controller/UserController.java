@@ -109,7 +109,7 @@ public class UserController {
         return mav;
     }
 
-    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd
+    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
     @RequestMapping("/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {

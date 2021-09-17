@@ -41,16 +41,11 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
                 "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
                 "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId SERIAL PRIMARY KEY," +
-                "email TEXT NOT NULL," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL," +
-                "name VARCHAR(100)," +
-                "profilephoto BYTEA," +
-                "UNIQUE(email)," +
-                "UNIQUE(username)" +
-                ")");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritelists(" +
+                "userId INT NOT NULL," +
+                "mediaListId INT NOT NULL," +
+                "FOREIGN KEY(mediaListId) REFERENCES medialist(mediaListId) ON DELETE CASCADE," +
+                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
