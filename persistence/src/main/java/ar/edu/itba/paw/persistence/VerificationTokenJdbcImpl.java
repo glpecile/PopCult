@@ -34,7 +34,7 @@ public class VerificationTokenJdbcImpl implements VerificationTokenDao {
         data.put("userid", userId);
         data.put("token", token);
         data.put("expiryDate", expiryDate);
-        jdbcInsert.executeAndReturnKey(data);
+        jdbcInsert.execute(data);
     }
 }
 
