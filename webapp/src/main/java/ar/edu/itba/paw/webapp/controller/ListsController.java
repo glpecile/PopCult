@@ -54,7 +54,7 @@ public class ListsController {
         //mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
         mav.addObject("allListsPages", allLists.getTotalPages());
 //        mav.addObject("currentPage", page);
-        mav.addObject("currentPage", allLists.getCurrentPage());
+        mav.addObject("currentPage", allLists.getCurrentPage()+1);
         return mav;
     }
 

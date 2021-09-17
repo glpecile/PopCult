@@ -62,7 +62,7 @@ public class StaffMemberController {
         mav.addObject("media", media);
 //        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
         mav.addObject("mediaPages", mediaIdsJob.getTotalPages());
-        mav.addObject("currentPage", page);
+        mav.addObject("currentPage", mediaIdsJob.getCurrentPage());
         mav.addObject("urlBase", "/staff/"+staffMemberId+"/"+normalizerRole.getRoleType()+"/?");
         return mav;
     }

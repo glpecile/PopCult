@@ -37,7 +37,7 @@ public class SearchController {
         //queries.put("page", Integer.toString(page));
         mav.addObject("searchResults", searchResults.getElements());
         //mav.addObject("currentPage", page);
-        mav.addObject("currentPage", searchResults.getCurrentPage());
+        mav.addObject("currentPage", searchResults.getCurrentPage()+1);
 //        mav.addObject("searchPages", (int) Math.ceil((double) searchResultsCount / itemsPerPage));
         mav.addObject("searchPages", searchResults.getTotalPages());
         mav.addObject("urlBase", createURL(queries));

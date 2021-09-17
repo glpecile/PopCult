@@ -65,7 +65,7 @@ public class MediaController {
 //        mav.addObject("seriesList", seriesLatest);
 //        mav.addObject("mediaList", mediaList);
 //        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        mav.addObject("currentPage", mediaList.getCurrentPage()+1);
         mav.addObject("filmsList", filmsLatest.getElements());
         mav.addObject("seriesList", seriesLatest.getElements());
         mav.addObject("mediaList", mediaList.getElements());
@@ -99,7 +99,7 @@ public class MediaController {
 //        mav.addObject("popularListPages", (int) Math.ceil((double) popularListsAmount / itemsPerPage));
         mav.addObject("popularListPages", mediaList.getTotalPages());
 //        mav.addObject("currentPage", page);
-        mav.addObject("currentPage", mediaList.getCurrentPage());
+        mav.addObject("currentPage", mediaList.getCurrentPage() + 1);
 
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
@@ -160,7 +160,7 @@ public class MediaController {
         mav.addObject("latestFilms", latestFilms.getElements());
         mav.addObject("mediaList", mediaList.getElements());
         mav.addObject("mediaPages", mediaList.getTotalCount());
-        mav.addObject("currentPage", mediaList.getCurrentPage());
+        mav.addObject("currentPage", mediaList.getCurrentPage()+1);
         return mav;
     }
 
@@ -175,7 +175,7 @@ public class MediaController {
         mav.addObject("latestSeries", latestSeries.getElements());
         mav.addObject("mediaList", mediaList.getElements());
         mav.addObject("mediaPages", mediaList.getTotalPages());
-        mav.addObject("currentPage", mediaList.getCurrentPage());
+        mav.addObject("currentPage", mediaList.getCurrentPage()+1);
         return mav;
     }
 }

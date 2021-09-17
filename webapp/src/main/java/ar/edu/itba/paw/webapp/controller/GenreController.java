@@ -49,10 +49,10 @@ public class GenreController {
         final List<ListCover> listCovers = getListCover(genreLists, listsService, mediaService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaList", mediaList);
-//        mav.addObject("mediaCount", mediaCount);
+//      mav.addObject("mediaCount", mediaCount);
         mav.addObject("mediaCount", mediaIdList.getTotalCount());
         mav.addObject("mediaPages", mediaIdList.getTotalPages());
-        mav.addObject("currentPage", mediaIdList.getCurrentPage());
+        mav.addObject("currentPage", mediaIdList.getCurrentPage()+1);
         mav.addObject("listAmount", listCovers.size());
         mav.addObject("genreLists", listCovers);
         return mav;

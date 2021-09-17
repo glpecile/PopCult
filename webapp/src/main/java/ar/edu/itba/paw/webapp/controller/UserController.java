@@ -52,7 +52,7 @@ public class UserController {
 //        mav.addObject("listsPages", (int) Math.ceil((double) listsAmount / listsPerPage));
         mav.addObject("listsPages", userLists.getTotalPages());
 //        mav.addObject("currentPage", page);
-        mav.addObject("currentPage", userLists.getTotalPages());
+        mav.addObject("currentPage", userLists.getCurrentPage()+1);
         return mav;
     }
 
@@ -96,7 +96,7 @@ public class UserController {
         //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("mediaPages",toWatchMediaIds.getTotalPages());
         //mav.addObject("currentPage", page);
-        mav.addObject("currentPage", toWatchMediaIds.getCurrentPage());
+        mav.addObject("currentPage", toWatchMediaIds.getCurrentPage()+1);
         mav.addObject(user);
         return mav;
     }
@@ -117,7 +117,7 @@ public class UserController {
         //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
         mav.addObject("mediaPages", watchedMediaIds.getTotalPages());
         //mav.addObject("currentPage", page);
-        mav.addObject("currentPage", watchedMediaIds.getCurrentPage());
+        mav.addObject("currentPage", watchedMediaIds.getCurrentPage()+1);
         mav.addObject(user);
         return mav;
     }
@@ -134,7 +134,7 @@ public class UserController {
         Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);
         //mav.addObject("currentPage", page);
-        mav.addObject("currentPage", userFavListsId.getCurrentPage());
+        mav.addObject("currentPage", userFavListsId.getCurrentPage()+1);
         //mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
         mav.addObject("listsPages", userFavListsId.getTotalPages());
         mav.addObject("listsAmount", favCount);// TODO fijarse como usar el PageContainer
