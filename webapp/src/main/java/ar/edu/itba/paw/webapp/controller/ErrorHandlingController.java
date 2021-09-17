@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Locale;
 
 @Controller
-public class ErrorController {
+public class ErrorHandlingController {
     @Autowired
     MessageSource messageSource;
 
