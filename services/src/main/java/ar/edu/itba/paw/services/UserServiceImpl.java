@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -10,11 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,7 +27,13 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
     private MessageSource messageSource;
+
+    private static final boolean NOT_ENABLED_USER = false;
+    private static final boolean ENABLED_USER = true;
 
     @Override
     public Optional<User> getById(int userId) {
@@ -46,15 +51,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
-        User user = userDao.register(email, userName, passwordEncoder.encode(password), name, profilePhotoURL);
+    public User register(String email, String username, String password, String name, String profilePhotoURL) {
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, profilePhotoURL, NOT_ENABLED_USER);
 
-        final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("username", userName); //TODO swap to full name
-        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
-        emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
+        String token = verificationTokenService.createVerificationToken(user.getUserId());
+
+        sendVerificationEmail(email, username, token);
 
         return user;
+    }
+
+    private void sendVerificationEmail(String email, String username, String token) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", username); //TODO swap to full name
+        mailMap.put("token", token);
+        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
+        emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
     }
 
     @Override
@@ -66,4 +78,23 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    @Override
+    public boolean confirmRegister(Token token) {
+        boolean isValidToken = verificationTokenService.isValidToken(token);
+        if(isValidToken) {
+            userDao.confirmRegister(token.getUserId(), ENABLED_USER);
+            verificationTokenService.deleteToken(token);
+        }
+        return isValidToken;
+    }
+
+    @Override
+    public void resendVerificationEmail(String token) {
+        verificationTokenService.renewToken(token);
+        verificationTokenService.getToken(token).ifPresent(validToken -> {
+            getById(validToken.getUserId()).ifPresent(user -> {
+                sendVerificationEmail(user.getEmail(), user.getUsername(), validToken.getToken());
+            });
+        });
+    }
 }

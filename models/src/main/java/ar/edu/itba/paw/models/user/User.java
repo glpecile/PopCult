@@ -8,15 +8,17 @@ public class User {
     private final String password;
     private final String name;
     private final String profilePhotoURL;
+    private final boolean enabled;
 
 
-    public User(int userId, String email, String username, String password, String name, String profilePhotoURL) {
+    public User(int userId, String email, String username, String password, String name, String profilePhotoURL, boolean enabled) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.password = password;
         this.name = name;
         this.profilePhotoURL = profilePhotoURL;
+        this.enabled = enabled;
     }
 
     public int getUserId() {
@@ -43,7 +45,7 @@ public class User {
         return profilePhotoURL;
     }
 
-    public static User getDummyUser() {
-        return new User(0, "", "anon", "", "", "");
+    public boolean isEnabled() {
+        return enabled;
     }
 }
