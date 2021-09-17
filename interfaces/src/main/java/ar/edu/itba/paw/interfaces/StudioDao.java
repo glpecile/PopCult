@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.staff.Studio;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface StudioDao {
 
     List<Studio> getStudioByMediaId(int mediaId);
 
-    List<Integer> getMediaByStudio(int studioId, int page, int pageSize);
+    PageContainer<Integer> getMediaByStudio(int studioId, int page, int pageSize);
 
     Optional<Integer> getMediaCountByStudio(int studioId);
 

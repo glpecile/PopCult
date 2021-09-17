@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.GenreDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -53,8 +54,11 @@ public class GenreDaoJdbcImpl implements GenreDao {
     }
 
     @Override
-    public List<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override

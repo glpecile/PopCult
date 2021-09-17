@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.StaffDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.RoleType;
@@ -81,25 +82,37 @@ public class StaffDaoJdbcImpl implements StaffDao {
     }
 
     @Override
-    public List<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN director " +
+    public PageContainer<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN director " +
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
-    public List<Integer> getMediaByActor(int staffMemberId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN crew " +
+    public PageContainer<Integer> getMediaByActor(int staffMemberId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN crew " +
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
+                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
-    public List<Integer> getMedia(int staffMemberId, int page, int pageSize) {
-        return jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
+    public PageContainer<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
                 "UNION" +
                 "(SELECT crew.mediaId FROM crew WHERE staffMemberId = ?)" +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, staffMemberId,pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
+                "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
+                "UNION" +
+                "(SELECT crew.mediaId FROM crew WHERE staffmemberid = ?)) AS aux", new Object[]{staffMemberId, staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
     @Override
     public List<Director> getDirectorsByMedia(int mediaId) {

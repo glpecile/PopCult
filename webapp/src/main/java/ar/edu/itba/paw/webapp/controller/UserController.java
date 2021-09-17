@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -42,14 +43,18 @@ public class UserController {
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
-        final List<ListCover> userListsCover = getListCover(userLists, listsService, mediaService);
+//        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService, mediaService);
         mav.addObject(user);
-        Integer listsAmount = listsService.getListCountFromUserId(user.getUserId()).orElse(0);
+        //Integer listsAmount = listsService.getListCountFromUserId(user.getUserId()).orElse(0);
         mav.addObject("lists", userListsCover);
-        mav.addObject("listsAmount", listsAmount);
-        mav.addObject("listsPages", (int) Math.ceil((double) listsAmount / listsPerPage));
-        mav.addObject("currentPage", page);
+//        mav.addObject("listsAmount", listsAmount);
+        mav.addObject("listsAmount", userLists.getTotalCount());
+//        mav.addObject("listsPages", (int) Math.ceil((double) listsAmount / listsPerPage));
+        mav.addObject("listsPages", userLists.getTotalPages());
+//        mav.addObject("currentPage", page);
+        mav.addObject("currentPage", userLists.getCurrentPage()+1);
         return mav;
     }
 
@@ -57,16 +62,24 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage));
-        List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+//      List<Media> userMedia = mediaService.getById(favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage));
+        PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
+        List<Media> userMedia = mediaService.getById(favoriteMedia.getElements());
+        //List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
         Integer mediaCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("mediaList", userMedia);
-        mav.addObject("favoriteAmount", mediaCount);
-        mav.addObject("suggestedMedia", suggestedMedia);
-        mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
-        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+//        mav.addObject("favoriteAmount", mediaCount);
+        mav.addObject("favoriteAmount", favoriteMedia.getTotalCount());
+        //mav.addObject("suggestedMedia", suggestedMedia);
+        mav.addObject("suggestedMedia", suggestedMedia.getElements());
+        //mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
+        mav.addObject("suggestedMediaPages", suggestedMedia.getTotalPages());
+        //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", favoriteMedia.getTotalPages());
+//        mav.addObject("currentPage", page);
+        mav.addObject("currentPage", favoriteMedia.getCurrentPage()+1);
         mav.addObject(user);
         return mav;
     }
@@ -76,17 +89,21 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
-        Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
+        //List<Media> toWatchMedia = mediaService.getById(watchService.getToWatchMediaId(userId, page - 1, itemsPerPage));
+        PageContainer<Integer> toWatchMediaIds = watchService.getToWatchMediaId(userId, page - 1, itemsPerPage);
+        List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
+        //Integer mediaCount = watchService.getToWatchMediaCount(userId).orElse(0);
+        mav.addObject("title", "Watchlist");
         List<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Integer suggestedMediaCount = mediaService.getMediaCount().orElse(0);
         mav.addObject("suggestedMedia", suggestedMedia);
         mav.addObject("suggestedMediaPages", (int) Math.ceil((double) suggestedMediaCount / itemsPerPage));
         mav.addObject("mediaList", toWatchMedia);
-        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("mediaPages",toWatchMediaIds.getTotalPages());
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", toWatchMediaIds.getCurrentPage()+1);
         mav.addObject("mediaCount", mediaCount);
-
         mav.addObject(user);
         return mav;
     }
@@ -98,11 +115,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));
-        Integer mediaCount = watchService.getWatchedMediaCount(userId).orElse(0);
+//        List<Media> watchedMedia = mediaService.getById(watchService.getWatchedMediaId(userId, page - 1, itemsPerPage));
+        PageContainer<Integer> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
+        //Integer mediaCount = watchService.getWatchedMediaCount(userId).orElse(0);
+        mav.addObject("title", "Watched Media");
         mav.addObject("mediaList", watchedMedia);
-        mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        //mav.addObject("mediaPages", (int) Math.ceil((double) mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", watchedMediaIds.getTotalPages());
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", watchedMediaIds.getCurrentPage()+1);
         mav.addObject(user);
         return mav;
     }
@@ -113,13 +135,16 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
-        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId), listsService, mediaService);
-        Integer favCount = favoriteService.getFavoriteListsCount(user.getUserId()).orElse(0);
+//        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService, mediaService);
+        Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         mav.addObject("favoriteLists", favoriteCovers);
-        mav.addObject("currentPage", page);
-        mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
-        mav.addObject("listsAmount", favCount);
+        //mav.addObject("currentPage", page);
+        mav.addObject("currentPage", userFavListsId.getCurrentPage()+1);
+        //mav.addObject("listsPages", (int) Math.ceil((double) favCount / itemsPerPage));
+        mav.addObject("listsPages", userFavListsId.getTotalPages());
+        mav.addObject("listsAmount", favCount);// TODO fijarse como usar el PageContainer
         return mav;
     }
 

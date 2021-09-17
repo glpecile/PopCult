@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.WatchDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,8 +69,10 @@ public class WatchDaoJdbcImpl implements WatchDao {
     }
 
     @Override
-    public List<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NOT NULL ORDER BY watchDate OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NOT NULL ORDER BY watchDate OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NOT NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
@@ -79,8 +82,10 @@ public class WatchDaoJdbcImpl implements WatchDao {
     }
 
     @Override
-    public List<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override

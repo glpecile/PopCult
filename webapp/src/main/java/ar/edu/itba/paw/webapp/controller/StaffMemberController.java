@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.StaffService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
@@ -28,13 +29,16 @@ public class StaffMemberController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page){
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
-        final List<Integer> mediaIds = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
-        final List<Media> media = mediaService.getById(mediaIds);
-        final int mediaCount = staffService.getMediaCount(staffMemberId).orElse(0);
+//        final List<Integer> mediaIds = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
+        final PageContainer<Integer> mediaIds = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
+//        final List<Media> media = mediaService.getById(mediaIds);
+        final List<Media> media = mediaService.getById(mediaIds.getElements());
+        //final int mediaCount = staffService.getMediaCount(staffMemberId).orElse(0);
         mav.addObject("member", member);
         mav.addObject("media", media);
         mav.addObject("currentPage", page);
-        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount/itemsPerPage));
+//        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount/itemsPerPage));
+        mav.addObject("mediaPages", mediaIds.getTotalPages());
         mav.addObject("urlBase", "/staff/"+staffMemberId+"/?");
         return mav;
     }
@@ -46,14 +50,19 @@ public class StaffMemberController {
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizerRole = RoleType.valueOf(roleType.toUpperCase());
-        final List<Integer> mediaIdsJob = staffService.getMediaByRoleType(staffMemberId, page-1, itemsPerPage, normalizerRole.ordinal());
-        final List<Media> media = mediaService.getById(mediaIdsJob);
-        final int mediaCount = staffService.getMediaCountByRoleType(staffMemberId,normalizerRole.ordinal()).orElse(0);
+        //final List<Integer> mediaIdsJob = staffService.
+              //  getMediaByRoleType(staffMemberId, page-1, itemsPerPage, normalizerRole.ordinal());
+        final PageContainer<Integer> mediaIdsJob = staffService.
+                getMediaByRoleType(staffMemberId, page-1, itemsPerPage, normalizerRole.ordinal());
+        //final List<Media> media = mediaService.getById(mediaIdsJob);
+        final List<Media> media = mediaService.getById(mediaIdsJob.getElements());
+        //final int mediaCount = staffService.getMediaCountByRoleType(staffMemberId,normalizerRole.ordinal()).orElse(0);
         mav.addObject("roleType", roleType);
         mav.addObject("member", member);
         mav.addObject("media", media);
-        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+//        mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
+        mav.addObject("mediaPages", mediaIdsJob.getTotalPages());
+        mav.addObject("currentPage", mediaIdsJob.getCurrentPage());
         mav.addObject("urlBase", "/staff/"+staffMemberId+"/"+normalizerRole.getRoleType()+"/?");
         return mav;
     }
