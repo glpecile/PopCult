@@ -10,7 +10,7 @@
                 <h2 class="text-3xl"><c:out value="${param.name}"/></h2>
             </div>
             <div class="col-auto">
-                <a class="object-center" href=<c:url value="${pageContext.request.contextPath}/settings"/>>
+                <a class="object-center" href=<c:url value="/settings"/>>
                     <button title="Edit user data"><i class="fas fa-user-edit text-secondary py-2"></i></button>
                     <%--fa-2x TODO si encontramos la forma de alinear el icono sin padding--%>
                 </a>
