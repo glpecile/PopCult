@@ -46,21 +46,21 @@ public class ListsServiceImpl implements ListsService {
         return listsDao.getDiscoveryMediaLists(pageSize);
     }
 
-    @Override
-    public List<Integer> getMediaIdInListIds(int mediaListId) {
-        return listsDao.getMediaIdInListIds(mediaListId);
-    }
+//    @Override
+//    public List<Integer> getMediaIdInListIds(int mediaListId) {
+//        return listsDao.getMediaIdInListIds(mediaListId);
+//    }
 
     @Override
     public List<Media> getMediaIdInList(int mediaListId) {
         return listsDao.getMediaIdInList(mediaListId);
     }
 
-    @Override
-    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
-        return listsDao.getMediaIdInListIds(mediaListId, page, pageSize);
-
-    }
+//    @Override
+//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
+//        return listsDao.getMediaIdInListIds(mediaListId, page, pageSize);
+//
+//    }
 
     @Override
     public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){

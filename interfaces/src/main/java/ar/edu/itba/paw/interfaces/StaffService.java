@@ -26,10 +26,10 @@ public interface StaffService {
 
     PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize);
 
-    default PageContainer<Integer> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType){
+    default PageContainer<Media> getMediaByRoleType(int staffMemberId, int page, int pageSize, int roleType){
         if(roleType == RoleType.ACTOR.ordinal())
-            return getMediaByActorIds(staffMemberId,page,pageSize);
-        return getMediaByDirectorIds(staffMemberId,page,pageSize);
+            return getMediaByActor(staffMemberId,page,pageSize);
+        return getMediaByDirector(staffMemberId,page,pageSize);
     }
 
     @Deprecated

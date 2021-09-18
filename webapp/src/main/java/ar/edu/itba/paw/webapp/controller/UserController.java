@@ -41,97 +41,94 @@ public class UserController {
     private static final int itemsPerPage = 4;
 
 
-    @RequestMapping("/{username}")
+    @RequestMapping("/user/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         System.out.println("user profile");
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 //        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
-        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService, mediaService);
-        final Map<String,String> map = new HashMap<>();
+        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject(user);
         mav.addObject("lists", userListsCover);
         mav.addObject("userListsContainer", userLists);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
-        return mav;
-    }
- 
-    @RequestMapping("/{username}/favoriteMedia")
-    public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
-        ModelAndView mav = new ModelAndView("userFavoriteMedia");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMediaIds(user.getUserId(), page - 1, itemsPerPage);
-        List<Media> userMedia = mediaService.getById(favoriteMedia.getElements());
-        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Map<String,String> map = new HashMap<>();
-        map.put("username", username);
-        mav.addObject("mediaList", userMedia);
-        mav.addObject(user);
-        mav.addObject("favoriteMediaContainer", favoriteMedia);
-        mav.addObject("suggestedMediaContainer", suggestedMedia);
-        String urlBase = UriComponentsBuilder.newInstance().path("{username}/favoriteMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
 
-    @RequestMapping("/{username}/toWatchMedia")
+    @RequestMapping("/user/{username}/favoriteMedia")
+    public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userFavoriteMedia");
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        final Map<String, String> map = new HashMap<>();
+        map.put("username", username);
+        mav.addObject(user);
+        mav.addObject("favoriteMediaContainer", favoriteMedia);
+        mav.addObject("suggestedMediaContainer", suggestedMedia);
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteMedia").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
+        return mav;
+    }
+
+    @RequestMapping("/user/{username}/toWatchMedia")
     public ModelAndView userToWatchMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Integer> toWatchMediaIds = watchService.getToWatchMediaIdIds(userId, page - 1, itemsPerPage);
-        List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
+        PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(userId, page - 1, itemsPerPage);
+        // List<Media> toWatchMedia = toWatchMediaIds.getElements();
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("title", "Watchlist");
-        mav.addObject("mediaList", toWatchMedia);
+        // mav.addObject("mediaList", toWatchMedia);
         mav.addObject(user);
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/toWatchMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/toWatchMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
 
     //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
-    @RequestMapping("/{username}/watchedMedia")
+    @RequestMapping("/user/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Integer> watchedMediaIds = watchService.getWatchedMediaIdIds(userId, page - 1, itemsPerPage);
-        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
-        final Map<String,String> map = new HashMap<>();
-        map.put("username",username);
+        PageContainer<Media> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+//        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
+        final Map<String, String> map = new HashMap<>();
+        map.put("username", username);
         mav.addObject("title", "Watched Media");
-        mav.addObject("mediaList", watchedMedia);
+//        mav.addObject("mediaList", watchedMedia);
         mav.addObject(user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/watchedMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/watchedMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
 
 
-    @RequestMapping("/{username}/favoriteLists")
+    @RequestMapping("/user/{username}/favoriteLists")
     public ModelAndView userFavoriteLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
 //        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService, mediaService);
-        Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
+        PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
         final Map<String,String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("favoriteLists", favoriteCovers);
-        mav.addObject("userFavListsIdContainer", userFavListsId);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/favoriteLists").buildAndExpand(map).toUriString();
+        mav.addObject("userFavListsContainer", userFavLists);
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -149,7 +146,7 @@ public class UserController {
         System.out.println("submit settings");
         if (errors.hasErrors())
             return editUserDetails(form);
-        return new ModelAndView("redirect:/" + form.getUsername());
+        return new ModelAndView("redirect:/user/" + form.getUsername());
     }
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
@@ -165,6 +162,6 @@ public class UserController {
     public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
         if (errors.hasErrors())
             return changeUserPassword(form);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/user/"+user.getUsername());
     }
 }

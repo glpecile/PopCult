@@ -8,7 +8,7 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Update your Settings &#8226; PopCult</title>
-    <c:url value="/${user.username}" var="postPath"/>
+    <c:url value="/user/${user.username}" var="postPath"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
