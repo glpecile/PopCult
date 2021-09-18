@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.StudioDao;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,8 @@ public class StudioDaoJdbcImpl implements StudioDao {
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     @Override
     public Optional<Studio> getById(int studioId) {
@@ -52,8 +55,16 @@ public class StudioDaoJdbcImpl implements StudioDao {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize) {
         List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaStudio WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize, totalCount);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT mediaId FROM mediaStudio NATURAL JOIN media WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize, totalCount);

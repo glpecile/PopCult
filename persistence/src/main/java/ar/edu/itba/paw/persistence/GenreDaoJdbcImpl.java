@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.GenreDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +25,8 @@ public class GenreDaoJdbcImpl implements GenreDao {
     private static final RowMapper<String> STRING_NAME_ROW_MAPPER = RowMappers.STRING_NAME_ROW_MAPPER;
 
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
@@ -51,8 +54,17 @@ public class GenreDaoJdbcImpl implements GenreDao {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
         List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre NATURAL JOIN media WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize},
+                MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);

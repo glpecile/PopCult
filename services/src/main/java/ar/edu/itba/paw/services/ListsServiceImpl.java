@@ -52,7 +52,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Override
     public PageContainer<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
-        return listsDao.getMediaIdInList(mediaListId, page, pageSize);
+        return listsDao.getMediaIdInListIds(mediaListId, page, pageSize);
     }
 
     @Override
