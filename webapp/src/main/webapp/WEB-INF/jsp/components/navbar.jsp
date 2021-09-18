@@ -33,7 +33,7 @@
                         <sec:authentication property="principal.username"/>
                     </c:set>
                     <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                        <a class="nav-link active text-lg" aria-current="page" href="<c:url value="/${username}"/>">${username}</a>
+                        <a class="nav-link active text-lg" aria-current="page" href="<c:url value="/user/${username}"/>">${username}</a>
                     </li>
                 </sec:authorize>
             </ul>

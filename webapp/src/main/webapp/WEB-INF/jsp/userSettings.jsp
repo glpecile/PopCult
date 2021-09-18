@@ -8,7 +8,7 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Update your Settings &#8226; PopCult</title>
-    <c:url value="/settings" var="postPath"/>
+    <c:url value="/user/{username}/settings" var="postPath"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -49,13 +49,13 @@
     <%--change password--%>
     <div class="col-md-8">
         <a href=
-           <c:url value="/changePassword"/>>
+           <c:url value="/user/${user.username}/settings/changePassword"/>>
             <button class="btn btn-dark my-2">Change Password</button>
         </a>
     </div>
     <div class="col-6 col-lg-2">
         <%--discard changes--%>
-        <a href=<c:url value="/${user.username}"/>>
+        <a href=<c:url value="/user/${user.username}"/>>
             <button class="btn btn-light my-2">Discard Changes</button>
         </a>
     </div>

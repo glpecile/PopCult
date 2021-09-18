@@ -41,7 +41,7 @@ public class UserController {
     private static final int itemsPerPage = 4;
 
 
-    @RequestMapping("/{username}")
+    @RequestMapping("/user/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         System.out.println("user profile");
         ModelAndView mav = new ModelAndView("userProfile");
@@ -49,7 +49,7 @@ public class UserController {
 //        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject(user);
         mav.addObject("lists", userListsCover);
@@ -58,15 +58,15 @@ public class UserController {
         mav.addObject("urlBase", urlBase);
         return mav;
     }
- 
-    @RequestMapping("/{username}/favoriteMedia")
+
+    @RequestMapping("/user/{username}/favoriteMedia")
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMediaIds(user.getUserId(), page - 1, itemsPerPage);
         List<Media> userMedia = mediaService.getById(favoriteMedia.getElements());
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("mediaList", userMedia);
         mav.addObject(user);
@@ -77,18 +77,18 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping("/{username}/toWatchMedia")
+    @RequestMapping("/user/{username}/toWatchMedia")
     public ModelAndView userToWatchMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
         PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(userId, page - 1, itemsPerPage);
-       // List<Media> toWatchMedia = toWatchMediaIds.getElements();
+        // List<Media> toWatchMedia = toWatchMediaIds.getElements();
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("title", "Watchlist");
-       // mav.addObject("mediaList", toWatchMedia);
+        // mav.addObject("mediaList", toWatchMedia);
         mav.addObject(user);
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
@@ -99,15 +99,15 @@ public class UserController {
 
     //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
-    @RequestMapping("/{username}/watchedMedia")
+    @RequestMapping("/user/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
         PageContainer<Media> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
 //        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
-        final Map<String,String> map = new HashMap<>();
-        map.put("username",username);
+        final Map<String, String> map = new HashMap<>();
+        map.put("username", username);
         mav.addObject("title", "Watched Media");
 //        mav.addObject("mediaList", watchedMedia);
         mav.addObject(user);
@@ -118,7 +118,7 @@ public class UserController {
     }
 
 
-    @RequestMapping("/{username}/favoriteLists")
+    @RequestMapping("/user/{username}/favoriteLists")
     public ModelAndView userFavoriteLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -127,7 +127,7 @@ public class UserController {
         PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService);
         Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("userFavListsIdContainer", userFavListsId);
@@ -136,24 +136,24 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form) {
+    @RequestMapping(value = "/user/{username}/settings", method = {RequestMethod.GET})
+    public ModelAndView editUserDetails(@PathVariable("username") final String username, @ModelAttribute("userSettings") final UserForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", u);
         return mav;
     }
 
-    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+    @RequestMapping(value = "/user/{username}/settings", method = {RequestMethod.POST}, params = "submit")
+    public ModelAndView postUserSettings(@PathVariable("username") final String username, @Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
         System.out.println("submit settings");
         if (errors.hasErrors())
-            return editUserDetails(form);
+            return editUserDetails(username, form);
         return new ModelAndView("redirect:/" + form.getUsername());
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
-    public ModelAndView changeUserPassword(@ModelAttribute("changePassword") final PasswordForm form) {
+    @RequestMapping(value = "/user/{username}/settings/changePassword", method = {RequestMethod.GET})
+    public ModelAndView changeUserPassword(@PathVariable("username") final String username, @ModelAttribute("changePassword") final PasswordForm form) {
         System.out.println("change password");
         ModelAndView mav = new ModelAndView("changePassword");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
@@ -161,10 +161,10 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "submit, user")
-    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
+    @RequestMapping(value = "/user/{username}/settings/changePassword", method = {RequestMethod.POST}, params = "submit, user")
+    public ModelAndView postUserPassword(@PathVariable("username") final String username, @Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
         if (errors.hasErrors())
-            return changeUserPassword(form);
+            return changeUserPassword(username, form);
         return new ModelAndView("redirect:/");
     }
 }
