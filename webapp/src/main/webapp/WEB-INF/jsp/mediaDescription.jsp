@@ -14,46 +14,51 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
-            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
-            <%-- dropdown lists list--%>
-            <div class="dropdown flex justify-center py-2">
-                <button class="btn btn-secondary dropdown-toggle btn-rounded" type="button" id="addMediaToList"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    Add to a list
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="Add Media to List">
-                    <c:forEach var="list" items="${userLists}">
-                        <form action="<c:url value="/media/${mediaId}" />" method="POST">
-                            <button class="dropdown-item" type="submit"><c:out value="${list.name}"/></button>
-                            <input type="hidden" id="mediaListId" name="mediaListId"
-                                   value="<c:out value = "${list.mediaListId}"/>">
-                        </form>
-                    </c:forEach>
-                </ul>
+            <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
+            <!--  TODO make component -->
+            <div class="grid grid-rows-3 shadow-md rounded-lg divide-y divide-fuchsia-300 my-2">
+                <%-- Icon row --%>
+                <div class="flex justify-around pt-2">
+                    <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="favorite" value="${isFavoriteMedia}"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/components/watchedMedia.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="isWatched" value="${isWatchedMedia}"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/components/watchlist.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="watchlisted" value="${isToWatchMedia}"/>
+                    </jsp:include>
+                </div>
+                <%-- Share --%>
+                <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+                <%-- Dropdown lists list --%>
+                <div class="dropdown flex justify-center py-2">
+                    <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button" id="addMediaToList"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Add to a list
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="Add Media to List">
+                        <c:forEach var="list" items="${userLists}">
+                            <form action="<c:url value="/media/${mediaId}"/>" method="POST">
+                                <button class="dropdown-item" type="submit"><c:out value="${list.name}"/></button>
+                                <input type="hidden" id="mediaListId" name="mediaListId"
+                                       value="<c:out value = "${list.mediaListId}"/>">
+                            </form>
+                        </c:forEach>
+                    </ul>
+                </div>
             </div>
+            <!-- End component -->
         </div>
+
         <div class="col-12 col-lg-8">
             <div class="row justify-content-start">
                 <div class="col-md-auto">
                     <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
                 </div>
-                <div class="col-md-auto pt-2">
-                    <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
-                        <jsp:param name="URL" value="media/${mediaId}"/>
-                        <jsp:param name="favorite" value="${isFavoriteMedia}"/>
-                    </jsp:include>
-                </div>
-                <div class="col col-lg-2 pt-2">
-                    <jsp:include page="/WEB-INF/jsp/components/watchedMedia.jsp">
-                        <jsp:param name="URL" value="media/${mediaId}"/>
-                        <jsp:param name="isWatched" value="${isWatchedMedia}"/>
-                    </jsp:include>
-                </div>
-                <jsp:include page="/WEB-INF/jsp/components/watchlist.jsp">
-                    <jsp:param name="URL" value="media/${mediaId}"/>
-                    <jsp:param name="watchlisted" value="${isToWatchMedia}"/>
-                </jsp:include>
             </div>
             <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>

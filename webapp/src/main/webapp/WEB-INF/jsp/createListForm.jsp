@@ -38,12 +38,12 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-check">
+                <div class="form-check p-0">
                     <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"/>
                     Enable others to suggest new movies to add.
                 </div>
             </div>
-            <div class="col-12 py-2">
+            <div class="flex justify-end py-2">
                 <button class="btn btn-secondary" type="submit">Save</button>
             </div>
         </form:form>
