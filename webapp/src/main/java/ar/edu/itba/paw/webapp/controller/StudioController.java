@@ -31,13 +31,9 @@ public class StudioController {
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-//        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudioIds(studioId, page - 1, itemsPerPage);
         final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
-//        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         mav.addObject("studio", studio);
         mav.addObject("mediaPageContainer", mediaPageContainer);
-//        mav.addObject("mediaList", mediaList);
-//        mav.addObject("mediaIdListContainer", mediaIdList);
         final Map<String, Integer> map = new HashMap<>();
         map.put("studioId", studioId);
         String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();

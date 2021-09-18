@@ -44,16 +44,12 @@ public class GenreController {
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
         final String genreName = Genre.valueOf(normalizedGenre).getGenre();
-//        final PageContainer<Integer> mediaIdList = genreService.getMediaByGenreIds(genreOrdinal, page - 1, itemsPerPage);
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
-//        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
         final List<ListCover> listCovers = getListCover(genreLists, listsService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaPageContainer", mediaPageContainer);
-//        mav.addObject("mediaList", mediaList);
         mav.addObject("genreLists", listCovers);
-//        mav.addObject("mediaIdListContainer", mediaIdList);
         final Map<String, String> map = new HashMap<>();
         map.put("genreName", genreName);
         String urlBase = UriComponentsBuilder.newInstance().path("/genre/{genreName}").buildAndExpand(map).toUriString();
