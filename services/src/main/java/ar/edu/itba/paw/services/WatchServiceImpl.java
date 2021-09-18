@@ -48,7 +48,7 @@ public class WatchServiceImpl implements WatchService {
 
     @Override
     public PageContainer<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
-        return watchDao.getWatchedMediaId(userId, page, pageSize);
+        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class WatchServiceImpl implements WatchService {
 
     @Override
     public PageContainer<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
-        return watchDao.getToWatchMediaId(userId, page, pageSize);
+        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
     }
 
     @Override

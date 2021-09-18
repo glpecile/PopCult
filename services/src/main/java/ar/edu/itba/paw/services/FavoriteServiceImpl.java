@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.PageContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +31,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<Integer> getUserFavoriteMedia(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteMedia(userId, page, pageSize);
+        return favoriteDao.getUserFavoriteMediaIds(userId, page, pageSize);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteLists(userId, page, pageSize);
+        return favoriteDao.getUserFavoriteListsIds(userId, page, pageSize);
     }
 
     @Override

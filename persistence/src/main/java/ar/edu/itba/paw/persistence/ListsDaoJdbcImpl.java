@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,6 +28,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
+
 
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
@@ -112,8 +116,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public PageContainer<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
+    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
         List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){
+        List<Media> elements = jdbcTemplate.query("SELECT mediaId FROM listelement NATURAL JOIN media WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
