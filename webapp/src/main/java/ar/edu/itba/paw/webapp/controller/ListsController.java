@@ -54,15 +54,14 @@ public class ListsController {
     }
 
     private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {
-        return getListCover(MediaListLists, listsService, mediaService);
+        return getListCover(MediaListLists, listsService);
     }
 
     @RequestMapping("/lists/{listId}")
     public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInListIds(listId);
-        final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
 
@@ -92,8 +91,7 @@ public class ListsController {
     public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInListIds(listId);
-        final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);;
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         return mav;

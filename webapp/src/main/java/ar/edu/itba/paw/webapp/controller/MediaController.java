@@ -74,7 +74,7 @@ public class MediaController {
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
-        final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService, mediaService);
+        final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);

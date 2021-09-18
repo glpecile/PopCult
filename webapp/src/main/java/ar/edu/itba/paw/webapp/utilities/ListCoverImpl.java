@@ -13,16 +13,14 @@ import java.util.List;
 public class ListCoverImpl {
     private static final int coverMoviesAmount = 4;
 
-    public static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService, MediaService mediaService) {
+    public static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService) {
         List<ListCover> listCovers = new ArrayList<>();
         List<Media> mediaList;
-//        List<Integer> id;
         PageContainer<Integer> id;
         ListCover cover;
         int size;
         for (MediaList list : discoveryLists) {
-            id = listsService.getMediaIdInListIds(list.getMediaListId(), 0, coverMoviesAmount);
-            mediaList = mediaService.getById(id.getElements());
+            mediaList = listsService.getMediaIdInList(list.getMediaListId(), 0, coverMoviesAmount).getElements();
             size = mediaList.size();
             cover = new ListCover(list.getMediaListId(), list.getName(), list.getDescription());
             if (size > 0) cover.setImage1(mediaList.get(0).getImage());

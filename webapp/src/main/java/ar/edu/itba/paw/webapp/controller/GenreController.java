@@ -44,7 +44,7 @@ public class GenreController {
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
 //        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
-        final List<ListCover> listCovers = getListCover(genreLists, listsService, mediaService);
+        final List<ListCover> listCovers = getListCover(genreLists, listsService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaPageContainer", mediaPageContainer);
 //        mav.addObject("mediaList", mediaList);

@@ -48,7 +48,7 @@ public class UserController {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 //        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
-        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService, mediaService);
+        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
         final Map<String,String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject(user);
@@ -125,7 +125,7 @@ public class UserController {
         mav.addObject(user);
 //        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService, mediaService);
+        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService);
         Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
         final Map<String,String> map = new HashMap<>();
         map.put("username", username);
