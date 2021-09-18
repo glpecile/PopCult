@@ -40,7 +40,7 @@ public class GenreController {
         final ModelAndView mav = new ModelAndView("genreView");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
-        final PageContainer<Integer> mediaIdList = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
+        final PageContainer<Integer> mediaIdList = genreService.getMediaByGenreIds(genreOrdinal, page - 1, itemsPerPage);
         final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
         final List<ListCover> listCovers = getListCover(genreLists, listsService, mediaService);

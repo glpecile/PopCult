@@ -111,7 +111,12 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public List<Integer> getMediaIdInList(int mediaListId) {
+    public List<Media> getMediaIdInList(int mediaListId) {
+        return jdbcTemplate.query("SELECT mediaId FROM listelement NATURAL JOIN media WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Integer> getMediaIdInListIds(int mediaListId) {
         return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
     }
 
@@ -234,7 +239,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         data.put("visibility", toCopy.isVisible());
         data.put("collaborative", toCopy.isCollaborative());
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
-        addToMediaList((int) key.getKey(), getMediaIdInList(toCopyListId));
+        addToMediaList((int) key.getKey(), getMediaIdInListIds(toCopyListId));
         Map<String, Object> forkData = new HashMap<>();
         /*
         forkData.put("mediaListId", (int) key.getKey());

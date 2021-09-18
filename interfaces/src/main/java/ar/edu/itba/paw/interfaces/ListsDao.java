@@ -20,7 +20,9 @@ public interface ListsDao {
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-    List<Integer> getMediaIdInList(int mediaListId);//TODO BORRAR
+    List<Integer> getMediaIdInListIds(int mediaListId);//TODO BORRAR
+
+    List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
 
     @Deprecated
     PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize);

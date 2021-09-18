@@ -6,9 +6,7 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.ListForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +63,7 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMediaIds(user.getUserId(), page - 1, itemsPerPage);
         List<Media> userMedia = mediaService.getById(favoriteMedia.getElements());
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Map<String,String> map = new HashMap<>();
@@ -84,7 +82,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Integer> toWatchMediaIds = watchService.getToWatchMediaId(userId, page - 1, itemsPerPage);
+        PageContainer<Integer> toWatchMediaIds = watchService.getToWatchMediaIdIds(userId, page - 1, itemsPerPage);
         List<Media> toWatchMedia = mediaService.getById(toWatchMediaIds.getElements());
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Map<String,String> map = new HashMap<>();
@@ -106,7 +104,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Integer> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+        PageContainer<Integer> watchedMediaIds = watchService.getWatchedMediaIdIds(userId, page - 1, itemsPerPage);
         List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
         final Map<String,String> map = new HashMap<>();
         map.put("username",username);

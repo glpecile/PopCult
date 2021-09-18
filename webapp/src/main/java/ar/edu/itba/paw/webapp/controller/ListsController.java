@@ -61,7 +61,7 @@ public class ListsController {
     public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
+        final List<Integer> mediaInList = listsService.getMediaIdInListIds(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
@@ -92,7 +92,7 @@ public class ListsController {
     public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
+        final List<Integer> mediaInList = listsService.getMediaIdInListIds(listId);
         final List<Media> mediaFromList = mediaService.getById(mediaInList);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);

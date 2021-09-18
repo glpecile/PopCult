@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.GenreDao;
 import ar.edu.itba.paw.interfaces.GenreService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,13 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByGenre(int genreId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
         return genreDao.getMediaByGenreIds(genreId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
+        return genreDao.getMediaByGenre(genreId, page, pageSize);
     }
 
     @Override

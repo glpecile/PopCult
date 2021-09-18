@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.StaffDao;
 import ar.edu.itba.paw.interfaces.StaffService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.StaffMember;
@@ -29,19 +30,34 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByDirector(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByDirectorIds(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByDirectorIds(staffMemberId, page, pageSize);
     }
 
     @Override
-    public PageContainer<Integer> getMediaByActor(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
+        return staffDao.getMediaByDirector(staffMemberId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Integer> getMediaByActorIds(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByActorIds(staffMemberId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize) {
+        return staffDao.getMediaByActor(staffMemberId,page,pageSize);
     }
 
 
     @Override
-    public PageContainer<Integer> getMedia(int staffMemberId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaIds(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaIds(staffMemberId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMedia(int staffMemberId, int page, int pageSize) {
+        return staffDao.getMedia(staffMemberId,page,pageSize);
     }
 
     @Override
