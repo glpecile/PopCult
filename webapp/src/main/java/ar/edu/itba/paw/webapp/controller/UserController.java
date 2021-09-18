@@ -54,7 +54,7 @@ public class UserController {
         mav.addObject("currentPage", page);
         return mav;
     }
-
+ 
     @RequestMapping("/{username}/favoriteMedia")
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
