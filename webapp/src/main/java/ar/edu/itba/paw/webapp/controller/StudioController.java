@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -31,15 +29,17 @@ public class StudioController {
     @RequestMapping("/studio/{studioId}")
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("studioView");
+        final ModelAndView mav = new ModelAndView("studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudioIds(studioId, page - 1, itemsPerPage);
-        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
-        final Map<String,Integer> map = new HashMap<>();
-        map.put("studioId", studioId);
+//        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudioIds(studioId, page - 1, itemsPerPage);
+        final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
+//        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         mav.addObject("studio", studio);
-        mav.addObject("mediaList", mediaList);
-        mav.addObject("mediaIdListContainer", mediaIdList);
+        mav.addObject("mediaPageContainer", mediaPageContainer);
+//        mav.addObject("mediaList", mediaList);
+//        mav.addObject("mediaIdListContainer", mediaIdList);
+        final Map<String, Integer> map = new HashMap<>();
+        map.put("studioId", studioId);
         String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
