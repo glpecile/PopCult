@@ -17,11 +17,9 @@ public class WatchDaoJdbcImpl implements WatchDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert toWatchMediaJdbcInsert;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
     @Autowired
     public WatchDaoJdbcImpl(final DataSource ds) {

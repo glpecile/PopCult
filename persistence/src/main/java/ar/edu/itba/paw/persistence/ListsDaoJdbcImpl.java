@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Time;
 import java.util.*;
 
 @Repository
@@ -24,21 +22,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private static final int discoveryUserId = 1;
 
 
-    private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
-            (rs, rowNum) -> new MediaList(
-                    rs.getInt("mediaListId"),
-                    rs.getInt("userId"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getDate("creationDate"),
-                    rs.getBoolean("visibility"),
-                    rs.getBoolean("collaborative"));
+    private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER = RowMappers.MEDIA_LIST_ROW_MAPPER;
 
-    private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
@@ -120,12 +108,12 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<Integer> getMediaIdInList(int mediaListId) {
-        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
     }
 
     @Override
     public PageContainer<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, INTEGER_ROW_MAPPER);
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);

@@ -18,16 +18,11 @@ public class StudioDaoJdbcImpl implements StudioDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert studioJdbcInsert;
     private final SimpleJdbcInsert mediaStudioJdbcInsert;
-    private static final RowMapper<Studio> STUDIO_ROW_MAPPER = (rs, rowNum) -> new Studio(
-            rs.getInt("studioId"),
-            rs.getString("name"),
-            rs.getString("image"));
+    private static final RowMapper<Studio> STUDIO_ROW_MAPPER = RowMappers.STUDIO_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Override
     public Optional<Studio> getById(int studioId) {
