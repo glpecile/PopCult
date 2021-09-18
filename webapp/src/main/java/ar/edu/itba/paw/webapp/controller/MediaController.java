@@ -11,7 +11,6 @@ import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -54,14 +55,15 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("home");
-        final PageContainer<Media> filmsLatest = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(),0,itemsPerContainer);
-        final PageContainer<Media> seriesLatest = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaList = mediaService.getMediaList(page - 1, itemsPerPage);
-        final Integer mediaCount = mediaService.getMediaCount().orElse(0);
-        mav.addObject("currentPage", mediaList.getCurrentPage()+1);
-        mav.addObject("filmsList", filmsLatest.getElements());
-        mav.addObject("seriesList", seriesLatest.getElements());
-        mav.addObject("mediaListContainer", mediaList);
+        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
+        mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
+        mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
+        mav.addObject("mediaListContainer", mediaListContainer);
+        final Map<String, String> map = new HashMap<>();
+        String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
         return mav;
     }
 
@@ -149,10 +151,13 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
-        final PageContainer<Media> latestFilms = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaList = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
-        mav.addObject("latestFilmsContainer", latestFilms);
-        mav.addObject("mediaListContainer",mediaList);
+        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
+        mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
+        mav.addObject("mediaListContainer", mediaListContainer);
+        final Map<String, String> map = new HashMap<>();
+        String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
         return mav;
     }
 
@@ -160,10 +165,13 @@ public class MediaController {
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("series");
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
-        final PageContainer<Media> latestSeries = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaList = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
-        mav.addObject("mediaListContainer", mediaList);
-        mav.addObject("latestSeriesContainer", latestSeries);
+        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
+        mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
+        mav.addObject("mediaListContainer", mediaListContainer);
+        final Map<String, String> map = new HashMap<>();
+        String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
         return mav;
     }
 }
