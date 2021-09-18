@@ -74,7 +74,7 @@
             <c:if test="${param.mediaPages > 1 && param.currentPage < param.mediaPages - 1}">
                 <li class="page-item">
                     <a class="page-link" href="<c:url value="${param.url}">
-                        <c:param name="page" value="${param.mediaPage}"/>
+                        <c:param name="page" value="${param.mediaPages}"/>
                     </c:url>">
                         <c:out value="${param.mediaPages}"/>
                     </a>
