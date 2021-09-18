@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.FavoriteDao;
 import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,8 +62,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public PageContainer<Integer> getUserFavoriteLists(int userId, int page, int pageSize) {
+    public PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize) {
         return favoriteDao.getUserFavoriteListsIds(userId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<MediaList> getUserFavoriteLists(int userId, int page, int pageSize) {
+        return favoriteDao.getUserFavoriteLists(userId,page,pageSize);
     }
 
     @Override

@@ -86,9 +86,9 @@ public class StaffDaoJdbcImpl implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN director NATURAL JOIN media " +
-                "WHERE staffMemberId = ? " +
-                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+                                                List<Media> elements = jdbcTemplate.query("SELECT * FROM director NATURAL JOIN media " +
+                                                        "WHERE staffMemberId = ? " +
+                                                        "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
                         "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
@@ -97,7 +97,7 @@ public class StaffDaoJdbcImpl implements StaffDao {
 
     @Override
     public PageContainer<Integer> getMediaByActorIds(int staffMemberId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN crew " +
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaid FROM staffMember NATURAL JOIN crew " +
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
@@ -107,7 +107,7 @@ public class StaffDaoJdbcImpl implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN crew NATURAL JOIN media " +
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM crew NATURAL JOIN media " +
                 "WHERE staffMemberId = ? " +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
@@ -130,9 +130,9 @@ public class StaffDaoJdbcImpl implements StaffDao {
 
     @Override
     public PageContainer<Media> getMedia(int staffMemberId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
+        List<Media> elements = jdbcTemplate.query("(SELECT DISTINCT(mediaid),type,title,description,image,length,releasedate,seasons,country  FROM director NATURAL JOIN media WHERE staffMemberId = ?)" +
                 "UNION" +
-                "(SELECT crew.mediaId FROM crew NATURAL JOIN media WHERE staffMemberId = ?)" +
+                "(SELECT DISTINCT(mediaid),type,title,description,image,length,releasedate,seasons,country FROM crew NATURAL JOIN media WHERE staffMemberId = ?)" +
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
                 "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
