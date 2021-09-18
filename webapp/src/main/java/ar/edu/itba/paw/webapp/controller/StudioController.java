@@ -33,7 +33,7 @@ public class StudioController {
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("studioView");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
+        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudioIds(studioId, page - 1, itemsPerPage);
         final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
         final Map<String,Integer> map = new HashMap<>();
         map.put("studioId", studioId);
