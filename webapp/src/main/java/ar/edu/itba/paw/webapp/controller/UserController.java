@@ -136,24 +136,24 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/user/{username}/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@PathVariable("username") final String username, @ModelAttribute("userSettings") final UserForm form) {
+    @RequestMapping(value = "/settings", method = {RequestMethod.GET})
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", u);
         return mav;
     }
 
-    @RequestMapping(value = "/user/{username}/settings", method = {RequestMethod.POST}, params = "submit")
-    public ModelAndView postUserSettings(@PathVariable("username") final String username, @Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
         System.out.println("submit settings");
         if (errors.hasErrors())
-            return editUserDetails(username, form);
-        return new ModelAndView("redirect:/" + form.getUsername());
+            return editUserDetails(form);
+        return new ModelAndView("redirect:/user/" + form.getUsername());
     }
 
-    @RequestMapping(value = "/user/{username}/settings/changePassword", method = {RequestMethod.GET})
-    public ModelAndView changeUserPassword(@PathVariable("username") final String username, @ModelAttribute("changePassword") final PasswordForm form) {
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
+    public ModelAndView changeUserPassword(@ModelAttribute("changePassword") final PasswordForm form) {
         System.out.println("change password");
         ModelAndView mav = new ModelAndView("changePassword");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
@@ -161,10 +161,10 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/user/{username}/settings/changePassword", method = {RequestMethod.POST}, params = "submit, user")
-    public ModelAndView postUserPassword(@PathVariable("username") final String username, @Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "submit, user")
+    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
         if (errors.hasErrors())
-            return changeUserPassword(username, form);
-        return new ModelAndView("redirect:/");
+            return changeUserPassword(form);
+        return new ModelAndView("redirect:/user/"+user.getUsername());
     }
 }

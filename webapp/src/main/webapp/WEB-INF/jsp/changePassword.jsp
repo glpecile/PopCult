@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-6 col-lg-2">
                     <%--discard changes--%>
-                <a href=<c:url value="/user/${user.username}/settings"/> >
+                <a href=<c:url value="/settings"/> >
                     <button class="btn btn-light my-2">Discard Changes</button>
                 </a>
             </div>
