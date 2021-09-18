@@ -18,16 +18,16 @@ public interface WatchDao {
 
     boolean isToWatch(int mediaId, int userId);
 
-    @Deprecated
-    PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize);
+//    @Deprecated
+//    PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize);
 
     PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize);
 
 
     Optional<Integer> getWatchedMediaCount(int userId);
 
-    @Deprecated
-    PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize);
+//    @Deprecated
+//    PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize);
 
     PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize);
 

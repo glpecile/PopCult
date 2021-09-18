@@ -46,10 +46,10 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.isToWatch(mediaId, userId);
     }
 
-    @Override
-    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
-        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
-    }
+//    @Override
+//    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
+//    }
 
     @Override
     public PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize) {
@@ -61,10 +61,10 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.getWatchedMediaCount(userId);
     }
 
-    @Override
-    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
-        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
-    }
+//    @Override
+//    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
+//    }
 
     @Override
     public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
