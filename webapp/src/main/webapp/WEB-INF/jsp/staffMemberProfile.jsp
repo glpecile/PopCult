@@ -60,7 +60,7 @@
     <br>
 
     <div class="row">
-        <c:forEach var="media" items="${media}">
+        <c:forEach var="media" items="${mediaContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -72,8 +72,8 @@
         </c:forEach>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaIdsContainer.totalPages}"/>
-        <jsp:param name="currentPage" value="${mediaIdsContainer.currentPage + 1}"/>
+        <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
         <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>

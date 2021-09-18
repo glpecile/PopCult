@@ -79,7 +79,7 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
     @Override
     public PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM favoritemedia NATURAL JOIN media userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM favoritemedia NATURAL JOIN media WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
