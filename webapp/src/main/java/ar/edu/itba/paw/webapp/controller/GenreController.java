@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -40,6 +43,7 @@ public class GenreController {
         final ModelAndView mav = new ModelAndView("genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
+        final String genreName = Genre.valueOf(normalizedGenre).getGenre();
 //        final PageContainer<Integer> mediaIdList = genreService.getMediaByGenreIds(genreOrdinal, page - 1, itemsPerPage);
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
 //        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
@@ -50,6 +54,10 @@ public class GenreController {
 //        mav.addObject("mediaList", mediaList);
         mav.addObject("genreLists", listCovers);
 //        mav.addObject("mediaIdListContainer", mediaIdList);
+        final Map<String, String> map = new HashMap<>();
+        map.put("genreName", genreName);
+        String urlBase = UriComponentsBuilder.newInstance().path("/genre/{genreName}").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
         return mav;
     }
 }
