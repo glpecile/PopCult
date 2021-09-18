@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +12,10 @@ public interface FavoriteService {
     void deleteMediaFromFav(int mediaId, int userId);
 
     boolean isFavorite(int mediaId, int userId);
+    @Deprecated
+    PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize);
 
-    PageContainer<Integer> getUserFavoriteMedia(int userId, int page, int pageSize);
+    PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteMediaCount(int userId);
 
