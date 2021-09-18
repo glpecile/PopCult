@@ -5,7 +5,7 @@
         <c:when test="${param.watchlisted}">
             <button class="btn bg-transparent shadow-none" type="submit" id="deleteWatchlist" name="deleteWatchlist"
                     title="Remove from Watchlist">
-                <i class="far fa-calendar-minus text-purple-500 hover:text-purple-900 fa-2x"></i>
+                <i class="fas fa-calendar-minus text-purple-500 hover:text-purple-900 fa-2x"></i>
             </button>
         </c:when>
         <c:otherwise>

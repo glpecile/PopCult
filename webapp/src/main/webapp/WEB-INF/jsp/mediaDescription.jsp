@@ -1,6 +1,6 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -15,8 +15,8 @@
     <div class="row">
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
-            <!--  TODO make component -->
-            <div class="grid grid-rows-3 shadow-md rounded-lg divide-y divide-fuchsia-300 my-2">
+            <!-- Button Grid. Possible TODO: Make component. -->
+            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-4">
                 <%-- Icon row --%>
                 <div class="flex justify-around pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -35,21 +35,25 @@
                 <%-- Share --%>
                 <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
                 <%-- Dropdown lists list --%>
-                <div class="dropdown flex justify-center py-2">
-                    <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button" id="addMediaToList"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        Add to a list
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="Add Media to List">
-                        <c:forEach var="list" items="${userLists}">
-                            <form action="<c:url value="/media/${mediaId}"/>" method="POST">
-                                <button class="dropdown-item" type="submit"><c:out value="${list.name}"/></button>
-                                <input type="hidden" id="mediaListId" name="mediaListId"
-                                       value="<c:out value = "${list.mediaListId}"/>">
-                            </form>
-                        </c:forEach>
-                    </ul>
-                </div>
+                <sec:authorize access="isAuthenticated()">
+                    <div class="dropdown flex justify-center py-2 shadow-md">
+                        <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button"
+                                id="addMediaToList"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Add to a list
+                        </button>
+                        <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
+                            <c:forEach var="list" items="${userLists}">
+                                <form action="<c:url value="/media/${mediaId}"/>" method="POST">
+                                    <button class="dropdown-item py-0" type="submit"><c:out value="${list.name}"/></button>
+                                    <input type="hidden" id="mediaListId" name="mediaListId"
+                                           value="<c:out value = "${list.mediaListId}"/>">
+                                </form>
+                            </c:forEach>
+                            <a class="dropdown-item py-0" href="<c:url value="/createList"/>">+ Create a new list</a>
+                        </ul>
+                    </div>
+                </sec:authorize>
             </div>
             <!-- End component -->
         </div>
