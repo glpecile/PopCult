@@ -20,14 +20,11 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     private final SimpleJdbcInsert favoriteMediaJdbcInsert;
     private final SimpleJdbcInsert favoriteListsJdbcInsert;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
-    private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_LIST_ID_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaListId");
+    private static final RowMapper<Integer> MEDIA_LIST_ID_MAPPER = RowMappers.MEDIA_LIST_ID_MAPPER;
 
     @Autowired
     public FavoriteDaoJdbcImpl(final DataSource ds) {
@@ -69,7 +66,7 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
 
     @Override
     public PageContainer<Integer> getUserFavoriteMedia(int userId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, INTEGER_ROW_MAPPER);
+        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }

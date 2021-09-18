@@ -24,24 +24,13 @@ public class StaffDaoJdbcImpl implements StaffDao {
     private final SimpleJdbcInsert directorjdbcInsert;
     private final SimpleJdbcInsert castjdbcInsert;
 
-    private static final RowMapper<StaffMember> STAFF_MEMBER_ROW_MAPPER =
-            (rs, rowNum) -> new StaffMember(rs.getInt("staffMemberId"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getString("image"));
+    private static final RowMapper<StaffMember> STAFF_MEMBER_ROW_MAPPER = RowMappers.STAFF_MEMBER_ROW_MAPPER;
 
-    private static final RowMapper<Actor> ACTOR_ROW_MAPPER =
-            (rs, rowNum) -> new Actor(new StaffMember(rs.getInt("staffMemberId"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getString("image")),
-                    rs.getString("characterName"));
+    private static final RowMapper<Actor> ACTOR_ROW_MAPPER = RowMappers.ACTOR_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public StaffDaoJdbcImpl(final DataSource ds) {

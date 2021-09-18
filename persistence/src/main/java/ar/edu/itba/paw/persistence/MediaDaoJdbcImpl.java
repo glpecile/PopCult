@@ -20,20 +20,9 @@ public class MediaDaoJdbcImpl implements MediaDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final RowMapper<Media> MEDIA_ROW_MAPPER =
-            (rs, rowNum) -> new Media(
-                    rs.getInt("mediaId"),
-                    rs.getInt("type"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("image"),
-                    rs.getInt("length"),
-                    rs.getDate("releaseDate"),
-                    rs.getInt("seasons"),
-                    rs.getInt("country"));
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public MediaDaoJdbcImpl(final DataSource ds) {
