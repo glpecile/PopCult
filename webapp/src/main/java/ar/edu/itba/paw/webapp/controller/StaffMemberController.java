@@ -36,7 +36,7 @@ public class StaffMemberController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page){
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
-        final PageContainer<Integer> mediaIds = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
+        final PageContainer<Integer> mediaIds = staffService.getMediaIds(staffMemberId, page-1, itemsPerPage);
         final List<Media> media = mediaService.getById(mediaIds.getElements());
         mav.addObject("member", member);
         mav.addObject("media", media);
