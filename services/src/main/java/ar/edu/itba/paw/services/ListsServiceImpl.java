@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +47,24 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public List<Integer> getMediaIdInList(int mediaListId) {
+    public List<Integer> getMediaIdInListIds(int mediaListId) {
+        return listsDao.getMediaIdInListIds(mediaListId);
+    }
+
+    @Override
+    public List<Media> getMediaIdInList(int mediaListId) {
         return listsDao.getMediaIdInList(mediaListId);
     }
 
     @Override
-    public PageContainer<Integer> getMediaIdInList(int mediaListId, int page, int pageSize){
+    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
         return listsDao.getMediaIdInListIds(mediaListId, page, pageSize);
+
+    }
+
+    @Override
+    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){
+        return listsDao.getMediaIdInList(mediaListId, page, pageSize);
     }
 
     @Override
