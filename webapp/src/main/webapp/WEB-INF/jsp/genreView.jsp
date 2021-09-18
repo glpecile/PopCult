@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -13,7 +14,7 @@
 <div class="col-8 offset-2">
     <br>
     <div class="row">
-        <c:if test="${listAmount > 0}">
+        <c:if test="${fn:length(genreLists) > 0}">
             <h4 class="font-bold text-2xl py-2">Lists that contain this genre</h4>
             <c:forEach var="cover" items="${genreLists}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
@@ -31,7 +32,7 @@
     </div>
     <br>
     <div class="row">
-        <h4 class="font-bold text-2xl py-2">There are <c:out value="${mediaCount}"/> <c:out value="${genreName}"/> Films
+        <h4 class="font-bold text-2xl py-2">There are <c:out value="${mediaIdListContainer.totalCount}"/> <c:out value="${genreName}"/> Films
             & Series</h4>
         <c:forEach var="media" items="${mediaList}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
@@ -48,12 +49,11 @@
     <br>
 
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="mediaPages" value="${mediaIdListContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaIdListContainer.currentPage + 1}"/>
         <jsp:param name="url" value="/genre/${genreName}?"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
-</body>
 </body>
 </html>

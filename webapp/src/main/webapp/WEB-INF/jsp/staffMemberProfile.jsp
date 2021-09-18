@@ -72,8 +72,8 @@
         </c:forEach>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="mediaPages" value="${mediaIdsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaIdsContainer.currentPage + 1}"/>
         <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>

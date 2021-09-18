@@ -21,7 +21,7 @@
     <!-- Every Film and Series -->
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Search Results</h2>
-        <c:forEach var="media" items="${searchResults}">
+        <c:forEach var="media" items="${searchResultsContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -34,8 +34,8 @@
     </div>
     <br>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${searchPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
+        <jsp:param name="mediaPages" value="${searchResultsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${searchResultsContainer.currentPage + 1}"/>
         <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>

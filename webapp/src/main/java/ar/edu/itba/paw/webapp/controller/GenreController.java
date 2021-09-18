@@ -40,21 +40,14 @@ public class GenreController {
         final ModelAndView mav = new ModelAndView("genreView");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
-//        final List<Integer> mediaIdList = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
         final PageContainer<Integer> mediaIdList = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
-//        final List<Media> mediaList = mediaService.getById(mediaIdList);
         final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
-//        final Integer mediaCount = genreService.getMediaCountByGenre(genreOrdinal).orElse(0);
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
         final List<ListCover> listCovers = getListCover(genreLists, listsService, mediaService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaList", mediaList);
-//      mav.addObject("mediaCount", mediaCount);
-        mav.addObject("mediaCount", mediaIdList.getTotalCount());
-        mav.addObject("mediaPages", mediaIdList.getTotalPages());
-        mav.addObject("currentPage", mediaIdList.getCurrentPage()+1);
-        mav.addObject("listAmount", listCovers.size());
         mav.addObject("genreLists", listCovers);
+        mav.addObject("mediaIdListContainer", mediaIdList);
         return mav;
     }
 }

@@ -43,7 +43,7 @@
                     </c:otherwise>
                 </c:choose>
             </a>
-            <a href=<c:url value="/${param.username}/favoriteMedia"/>>
+            <a href=<c:url value="/${param.username}/toWatchMedia"/>>
                 <c:choose>
                     <c:when test="${param.path == 'Watchlist'}">
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">To Watch Media</button>

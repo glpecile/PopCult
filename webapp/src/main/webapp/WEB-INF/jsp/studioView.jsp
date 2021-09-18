@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <h4 class="lead py-4">There are <c:out value="${mediaCount}"/> productions by this studio.</h4>
+    <h4 class="lead py-4">There are <c:out value="${mediaIdListContainer.totalCount}"/> productions by this studio.</h4>
 
     <div class="row">
         <c:forEach var="media" items="${mediaList}">
@@ -41,9 +41,9 @@
     <br>
 
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="url" value="/genre/?"/>
+        <jsp:param name="mediaPages" value="${mediaIdListContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaIdListContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

@@ -17,7 +17,6 @@
         <div class="col-md-auto">
             <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
         </div>
-        <%--            <p>Te actualizas????</p>--%>
         <div class="pt-2">
             <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
                 <jsp:param name="URL" value="/lists/${list.mediaListId}"/>

@@ -26,7 +26,7 @@
     </jsp:include>
     <%-- current tab --%>
     <c:choose>
-        <c:when test="${mediaCount > 0}">
+        <c:when test="${toWatchMediaIdsContainer.totalCount > 0}">
             <div class="row">
                 <c:forEach var="media" items="${mediaList}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
@@ -42,16 +42,16 @@
 
                 <br>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                    <jsp:param name="mediaPages" value="${mediaPages}"/>
-                    <jsp:param name="currentPage" value="${currentPage}"/>
-                    <jsp:param name="url" value="/"/>
+                    <jsp:param name="mediaPages" value="${toWatchMediaIdsContainer.totalPages}"/>
+                    <jsp:param name="currentPage" value="${toWatchMediaIdsContainer.currentPage + 1}"/>
+                    <jsp:param name="url" value="${urlBase}"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
                 <div class="row">
                     <h3 class="text-center">You don't seem to have any media in your watchlist!</h3>
                     <h4 class="text-center py-2">Why dont you check this recommendations out?</h4>
-                    <c:forEach var="media" items="${suggestedMedia}">
+                    <c:forEach var="media" items="${suggestedMediaContainer.elements}">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                 <jsp:param name="image" value="${media.image}"/>
@@ -64,9 +64,9 @@
                 </div>
                 <br>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                    <jsp:param name="mediaPages" value="${suggestedMediaPages}"/>
-                    <jsp:param name="currentPage" value="${currentPage}"/>
-                    <jsp:param name="url" value="/${user.username}/toWatchMedia?"/>
+                    <jsp:param name="mediaPages" value="${suggestedMediaContainer.totalPages}"/>
+                    <jsp:param name="currentPage" value="${suggestedMediaContainer.currentPage + 1}"/>
+                    <jsp:param name="url" value="${urlBase}"/>
                 </jsp:include>
             </c:otherwise>
         </c:choose>
