@@ -36,15 +36,13 @@ public class StaffMemberController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page){
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
-        final PageContainer<Integer> mediaIds = staffService.getMediaIds(staffMemberId, page-1, itemsPerPage);
-        final List<Media> media = mediaService.getById(mediaIds.getElements());
+        final PageContainer<Media> media = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
         mav.addObject("member", member);
-        mav.addObject("media", media);
+        mav.addObject("mediaContainer", media);
         Map<String,Integer> map = new HashMap<>();
         map.put("staffMemberId",staffMemberId);
         String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
-        mav.addObject("mediaIdsContainer", mediaIds);
         return mav;
     }
     @RequestMapping("/staff/{staffMemberId}/{roleType}")
@@ -55,19 +53,16 @@ public class StaffMemberController {
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizerRole = RoleType.valueOf(roleType.toUpperCase());
-        final PageContainer<Integer> mediaIdsJob = staffService.
+        final PageContainer<Media> media = staffService.
                 getMediaByRoleType(staffMemberId, page-1, itemsPerPage, normalizerRole.ordinal());
-        final List<Media> media = mediaService.getById(mediaIdsJob.getElements());
         mav.addObject("roleType", roleType);
         mav.addObject("member", member);
-        mav.addObject("media", media);
+        mav.addObject("mediaContainer", media);
         Map<String,String> map = new HashMap<>();
         map.put("staffMemberId",Integer.toString(staffMemberId));
         map.put("roleType", normalizerRole.getRoleType());
         String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}/{roleType}").buildAndExpand(map).toUriString();
-        LOGGER.info("urlBase={}",urlBase);
         mav.addObject("urlBase", urlBase);
-        mav.addObject("mediaIdsContainer", mediaIdsJob);
         return mav;
     }
 

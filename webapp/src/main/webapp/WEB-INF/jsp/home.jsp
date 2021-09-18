@@ -22,7 +22,7 @@
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:set var="i" value="1"/>
-            <c:forEach var="film" items="${filmsList}">
+            <c:forEach var="film" items="${latestFilmsList}">
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                     <c:set var="i" value="${i + 1}"/>
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -57,7 +57,7 @@
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:set var="j" value="7"/>
-            <c:forEach var="serie" items="${seriesList}">
+            <c:forEach var="serie" items="${latestSeriesList}">
                 <%--                <div class="w-96 h-64 px-4 flex-shrink-0" data-slider-target="image">--%>
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
                     <c:set var="j" value="${j + 1}"/>
@@ -107,7 +107,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
         <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-        <jsp:param name="url" value="/"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

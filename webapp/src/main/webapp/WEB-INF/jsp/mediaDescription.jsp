@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -70,7 +71,7 @@
 
             <br>
 
-            <c:if test="${genresAmount > 0}">
+            <c:if test="${fn:length(genreList) > 0}">
                 <h5 class="font-bold text-2xl py-2">Genre</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="genre" items="${genreList}">
@@ -83,7 +84,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${studiosAmount > 0}">
+            <c:if test="${fn:length(studioList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="studio" items="${studioList}">
@@ -96,7 +97,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${directorsAmount > 0}">
+            <c:if test="${fn:length(directorList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Director</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="director" items="${directorList}">
@@ -109,7 +110,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${actorsAmount > 0}">
+            <c:if test="${fn:length(actorList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Cast</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="actor" items="${actorList}">
@@ -125,7 +126,7 @@
         </div>
     </div>
     <div class="row">
-        <c:if test="${relatedListsAmount > 0}">
+        <c:if test="${fn:length(relatedLists) > 0}">
             <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
             <c:forEach var="cover" items="${relatedLists}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
@@ -143,7 +144,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/media/${mediaId}"/>
+                <jsp:param name="url" value="${urlBase}"/>
             </jsp:include>
         </c:if>
     </div>

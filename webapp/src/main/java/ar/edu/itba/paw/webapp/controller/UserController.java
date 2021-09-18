@@ -54,7 +54,7 @@ public class UserController {
         mav.addObject(user);
         mav.addObject("lists", userListsCover);
         mav.addObject("userListsContainer", userLists);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -63,16 +63,14 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Integer> favoriteMedia = favoriteService.getUserFavoriteMediaIds(user.getUserId(), page - 1, itemsPerPage);
-        List<Media> userMedia = mediaService.getById(favoriteMedia.getElements());
+        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
         PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
         final Map<String, String> map = new HashMap<>();
         map.put("username", username);
-        mav.addObject("mediaList", userMedia);
         mav.addObject(user);
         mav.addObject("favoriteMediaContainer", favoriteMedia);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
-        String urlBase = UriComponentsBuilder.newInstance().path("{username}/favoriteMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -92,7 +90,7 @@ public class UserController {
         mav.addObject(user);
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/toWatchMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/toWatchMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -112,7 +110,7 @@ public class UserController {
 //        mav.addObject("mediaList", watchedMedia);
         mav.addObject(user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/watchedMedia").buildAndExpand(map).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/watchedMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -124,14 +122,13 @@ public class UserController {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
 //        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        PageContainer<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(listsService.getMediaListById(userFavListsId.getElements()), listsService);
-        Integer favCount = favoriteService.getFavoriteMediaCount(user.getUserId()).orElse(0);
-        final Map<String, String> map = new HashMap<>();
+        PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
+        final Map<String,String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("favoriteLists", favoriteCovers);
-        mav.addObject("userFavListsIdContainer", userFavListsId);
-        String urlBase = UriComponentsBuilder.newInstance().path("/{username}/favoriteLists").buildAndExpand(map).toUriString();
+        mav.addObject("userFavListsContainer", userFavLists);
+        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }

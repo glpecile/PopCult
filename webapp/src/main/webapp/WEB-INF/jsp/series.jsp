@@ -28,7 +28,7 @@
             <div class="flex flex-col" data-controller="slider">
                 <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                     <c:set var="i" value="1"/>
-                    <c:forEach var="latestSerie" items="${latestSeriesContainer.elements}">
+                    <c:forEach var="latestSerie" items="${latestSeriesList}">
                         <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                             <c:set var="i" value="${i + 1}"/>
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -77,7 +77,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/media/series"/>
+                <jsp:param name="url" value="${urlBase}"/>
             </jsp:include>
         </div>
     </c:otherwise>
