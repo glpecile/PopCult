@@ -77,18 +77,17 @@ public class MediaController {
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
+        final Map<String,String> map = new HashMap<>();
+        map.put("mediaId",Integer.toString(mediaId));
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
-        mav.addObject("relatedListsAmount", relatedListsCover.size());
-        mav.addObject("actorsAmount", actorList.size());
-        mav.addObject("directorsAmount", directorList.size());
-        mav.addObject("studiosAmount", studioList.size());
-        mav.addObject("genresAmount", genreList.size());
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("mediaListContainer", mediaList);
+        String urlBase = UriComponentsBuilder.newInstance().path("/media/{mediaId}").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase",urlBase);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
