@@ -55,23 +55,22 @@ public class SearchController {
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
         final ModelAndView mav = new ModelAndView("search");
-        final PageContainer<Media> searchResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
-        mav.addObject("searchResultsContainer", searchResults);
-
-        final Map<String, String> queries = new HashMap<>();
-        queries.put("term", searchForm.getTerm());
-        String urlBase = UriComponentsBuilder.newInstance().path("/search").query("term={term}").buildAndExpand(queries).toUriString();
-        //final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(content,page-1,itemsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
-        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(content,page-1,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal());
-        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(content,page-1,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal());
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(content,page-1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
+
         LOGGER.info("Films={}", searchFilmsResults.getElements());
         LOGGER.info("Movies={}", searchSeriesResults.getElements());
+
         mav.addObject("searchFilmsContainer", searchFilmsResults);
         mav.addObject("searchSeriesContainer", searchSeriesResults);
         mav.addObject("listCovers", listCovers);
+
+        final Map<String, String> queries = new HashMap<>();
+        queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
+        String urlBase = UriComponentsBuilder.newInstance().path("/search").query("term={term}").buildAndExpand(queries).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
