@@ -3,11 +3,11 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.SearchDAO;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +39,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort) {
         return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType);
+    }
+
+    @Override
+    public PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort) {
+        return searchDAO.searchListMediaByName(name,page,pageSize, sort);
     }
 
 }

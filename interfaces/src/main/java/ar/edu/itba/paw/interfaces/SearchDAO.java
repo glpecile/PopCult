@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface SearchDAO {
@@ -17,5 +17,5 @@ public interface SearchDAO {
 
     PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort);
 
-
+    PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort);
 }

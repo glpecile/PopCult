@@ -18,7 +18,7 @@
 
 <div class="col-8 offset-2">
     <br>
-    <!-- Every Film and Series -->
+    <!-- Search Results of every Media -->
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Search Results</h2>
         <c:forEach var="media" items="${searchResultsContainer.elements}">

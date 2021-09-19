@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.search.SortType;
 
@@ -17,5 +18,7 @@ public interface SearchService {
     Optional<Integer> getCountSearchMediaByTitle(String title);
 
     PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort);
+
+    PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort);
 
 }
