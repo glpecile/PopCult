@@ -38,7 +38,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort) {
-        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType);
+        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort);
     }
 
     @Override

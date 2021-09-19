@@ -60,8 +60,6 @@ public class SearchController {
         final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal());
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
 
-        LOGGER.info("Films={}", searchFilmsResults.getElements());
-        LOGGER.info("Movies={}", searchSeriesResults.getElements());
 
         mav.addObject("searchFilmsContainer", searchFilmsResults);
         mav.addObject("searchSeriesContainer", searchSeriesResults);

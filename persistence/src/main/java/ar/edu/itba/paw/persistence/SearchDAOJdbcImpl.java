@@ -56,9 +56,8 @@ public class SearchDAOJdbcImpl implements SearchDAO {
 
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort) {
-        //String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-//        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType,page, pageSize},MEDIA_ROW_MAPPER);
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ?  OFFSET ? LIMIT ?", new Object[]{title, mediaType,page, pageSize},MEDIA_ROW_MAPPER);
+        String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType,page, pageSize},MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? ", new Object[]{title,mediaType},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
