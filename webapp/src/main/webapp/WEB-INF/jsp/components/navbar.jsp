@@ -14,6 +14,8 @@
         </button>
         <div class="no-scrollbar collapse navbar-collapse flex space-x-4 sm:justify-center" id="navbarScroll">
             <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll overflow-hidden" style="--bs-scroll-height: 100px;">
+                <jsp:include page="/WEB-INF/jsp/components/searchInput.jsp"/>
+
                 <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active text-lg" aria-current="page" href="<c:url value="/media/films"/>">Films</a>
                 </li>
