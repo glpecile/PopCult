@@ -18,19 +18,13 @@ public class UserDaoJdbcImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final RowMapper<User> ROW_MAPPER =
-            (rs, rowNum) -> new User(
-                    rs.getInt("userId"),
-                    rs.getString("email"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    "name", //TODO
-                    "profilePhoto"); //TODO
+    private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
+
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
                 "userId SERIAL PRIMARY KEY," +
                 "email TEXT NOT NULL," +
@@ -38,6 +32,7 @@ public class UserDaoJdbcImpl implements UserDao {
                 "password TEXT NOT NULL," +
                 "name VARCHAR(100)," +
                 "profilephoto BYTEA," +
+                "enabled BOOLEAN NOT NULL," +
                 "UNIQUE(email)," +
                 "UNIQUE(username)" +
                 ")");
@@ -45,23 +40,33 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public Optional<User> getById(int userId) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{userId}, ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{userId}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> getByEmail(String email) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{email}, ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{email}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL) {
+    public Optional<User> getByUsername(String username) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{username}, USER_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public User register(String email, String userName, String password, String name, String profilePhotoURL, boolean enabled) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
         args.put("profilephoto", profilePhotoURL);
+        args.put("enabled", enabled);
         final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL);
+        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL, enabled);
+    }
+
+    public void confirmRegister(int userId, boolean enabled) {
+        jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
     }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Time;
 import java.util.*;
 
 @Repository
@@ -23,21 +23,14 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private static final int discoveryUserId = 1;
 
 
-    private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
-            (rs, rowNum) -> new MediaList(
-                    rs.getInt("mediaListId"),
-                    rs.getInt("userId"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getDate("creationDate"),
-                    rs.getBoolean("visibility"),
-                    rs.getBoolean("collaborative"));
+    private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER = RowMappers.MEDIA_LIST_ROW_MAPPER;
 
-    private static final RowMapper<Integer> INTEGER_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
+
 
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
@@ -82,8 +75,21 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public List<MediaList> getAllLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM mediaList OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    public List<MediaList> getMediaListById(List<Integer> mediaListId) {
+        if(mediaListId.size() == 0)
+            return new ArrayList<>();
+        String inSql = String.join(",", Collections.nCopies(mediaListId.size(), "?"));
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM mediaList WHERE mediaListId IN (%s)", inSql),
+                mediaListId.toArray(), MEDIA_LIST_ROW_MAPPER);
+    }
+
+    @Override
+    public PageContainer<MediaList> getAllLists(int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM mediaList WHERE visibility = ? OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
@@ -92,18 +98,50 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
     public List<MediaList> getDiscoveryMediaLists(int pageSize) {
         return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY name LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
-    public List<Integer> getMediaIdInList(int mediaListId) {
-        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, INTEGER_ROW_MAPPER);
+    public List<Media> getMediaIdInList(int mediaListId) {
+        return jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ROW_MAPPER);
+    }
+
+//    @Override
+//    public List<Integer> getMediaIdInListIds(int mediaListId) {
+//        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
+//    }
+
+//    @Override
+//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
+//        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
+//        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
+//                .stream().findFirst().orElse(0);
+//        return new PageContainer<>(elements,page,pageSize,totalCount);
+//    }
+
+    @Override
+    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
-    public List<MediaList> getLastAddedLists(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM medialist ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+    public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE visibility = ? ORDER BY creationDate DESC OFFSET ? LIMIT ?", new Object[]{true, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
@@ -112,14 +150,23 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM listElement NATURAL JOIN" +
+    public PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM listElement NATURAL JOIN" +
                 " mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
     @Override
     public Optional<Integer> getListCount() {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist", COUNT_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<Integer> getListCountFromUserId(int userId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst();
     }
 
@@ -172,7 +219,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public void deleteList(int mediaListId) {
-        jdbcTemplate.update("DELETE FROM listelement WHERE mediaListId = ?", mediaListId);
         jdbcTemplate.update("DELETE FROM medialist WHERE medialistid = ?", mediaListId);
     }
 
@@ -187,13 +233,18 @@ public class ListsDaoJdbcImpl implements ListsDao {
         MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
         Date localDate = new Date();
         data.put("userid", userId);
-        data.put("name", toCopy.getName());
+        data.put("name", "Copy from " + toCopy.getName());
         data.put("description", toCopy.getDescription());
         data.put("creationDate", localDate);
         data.put("visibility", toCopy.isVisible());
         data.put("collaborative", toCopy.isCollaborative());
         KeyHolder key = mediaListjdbcInsert.executeAndReturnKeyHolder(data);
-        addToMediaList((int) key.getKey(), getMediaIdInList(toCopyListId));
+        List<Media> mediaList = getMediaIdInList(toCopyListId);
+        List<Integer> mediaIdList = new ArrayList<>();
+        for (Media media : mediaList){
+            mediaIdList.add(media.getMediaId());
+        }
+        addToMediaList((int) key.getKey(), mediaIdList);
         Map<String, Object> forkData = new HashMap<>();
         /*
         forkData.put("mediaListId", (int) key.getKey());

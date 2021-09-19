@@ -19,12 +19,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     UserService userService;
 
+    private static final boolean ACCOUNT_NON_EXPIRED = true;
+    private static final boolean CREDENTIALS_NON_EXPIRED = true;
+    private static final boolean ACCOUNT_NON_LOCKED = true;
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        final ar.edu.itba.paw.models.user.User user = userService.getByEmail(email).orElseThrow(UserNotFoundException::new);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final ar.edu.itba.paw.models.user.User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE EDITOR"));
-        authorities.add(new SimpleGrantedAuthority("ROLE READER"));
-        return new User(email,user.getPassword(),authorities);
+        if(user.isEnabled()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_READER"));
+        }
+
+        return new User(username, user.getPassword(), user.isEnabled(), ACCOUNT_NON_EXPIRED, CREDENTIALS_NON_EXPIRED, ACCOUNT_NON_LOCKED, authorities);
     }
 }

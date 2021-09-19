@@ -13,34 +13,44 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
-    <p class="lead text-justify"><c:out value="${list.description}"/></p>
-
-    <div class="row">
-        <div class="col">
-            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+    <div class="flex justify-content-start content-center pt-4">
+        <div class="col-md-auto">
+            <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
         </div>
-        <c:choose>
-            <c:when test="${list.userId == currentUser.userId}">
-                <div class="col flex justify-center py-2">
+        <div class="pt-2.5">
+            <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
+                <jsp:param name="favorite" value="${isFavoriteList}"/>
+            </jsp:include>
+        </div>
+    </div>
+    <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
+    <!-- Media icons -->
+    <div class="flex flex-wrap justify-start">
+        <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+        <div class="flex justify-center py-2">
+            <c:choose>
+                <c:when test="${list.userId == currentUser.userId}">
                     <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
-                        <button type="button" class="btn btn-secondary btn-rounded">
+                        <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
                             Edit list
                         </button>
                     </a>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="col flex justify-center py-2">
-                    <form:form action="${forkPath}" method="POST">
-                        <button type="submit" class="btn btn-secondary btn-rounded">Fork this list</button>
+                </c:when>
+                <c:otherwise>
+                    <form:form cssClass="m-0" action="${forkPath}" method="POST">
+                        <button type="submit" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
+                            Fork this list
+                        </button>
                         <input id="currentUserId" type="hidden" name="currentUserId" value="${currentUser.userId}">
                     </form:form>
-                </div>
-            </c:otherwise>
-        </c:choose>
-
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
+
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

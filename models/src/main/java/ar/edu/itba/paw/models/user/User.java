@@ -4,19 +4,21 @@ package ar.edu.itba.paw.models.user;
 public class User {
     private final int userId;
     private final String email;
-    private final String userName;
+    private final String username;
     private final String password;
     private final String name;
     private final String profilePhotoURL;
+    private final boolean enabled;
 
 
-    public User(int userId, String email, String userName, String password, String name, String profilePhotoURL) {
+    public User(int userId, String email, String username, String password, String name, String profilePhotoURL, boolean enabled) {
         this.userId = userId;
         this.email = email;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.name = name;
         this.profilePhotoURL = profilePhotoURL;
+        this.enabled = enabled;
     }
 
     public int getUserId() {
@@ -27,8 +29,8 @@ public class User {
         return email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
@@ -41,5 +43,9 @@ public class User {
 
     public String getProfilePhotoURL() {
         return profilePhotoURL;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

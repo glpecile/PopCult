@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 
 import java.util.List;
@@ -10,7 +12,10 @@ public interface StudioService {
 
     List<Studio> getStudioByMediaId(int mediaId);
 
-    List<Integer> getMediaByStudio(int studioId, int page, int pageSize);
+    @Deprecated
+    PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize);
+
+    PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize);
 
     Optional<Integer> getMediaCountByStudio(int studioId);
 

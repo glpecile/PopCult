@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -9,7 +11,13 @@ public interface UserService {
 
     Optional<User> getByEmail(String email);
 
-    User register(String email, String userName, String password, String name, String profilePhotoURL);
+    Optional<User> getByUsername(String username);
+
+    User register(String email, String username, String password, String name, String profilePhotoURL);
 
     Optional<User> getCurrentUser();
+
+    boolean confirmRegister(Token token);
+
+    void resendVerificationEmail(String token);
 }
