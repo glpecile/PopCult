@@ -28,7 +28,7 @@
     </jsp:include>
     <%-- current tab --%>
     <div class="row">
-        <c:if test="${listsAmount == 0}">
+        <c:if test="${userFavListsContainer.totalCount == 0}">
             <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
         </c:if>
         <c:forEach var="cover" items="${favoriteLists}">
@@ -47,9 +47,9 @@
 </div>
 <br>
 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-    <jsp:param name="mediaPages" value="${listsPages}"/>
-    <jsp:param name="currentPage" value="${currentPage}"/>
-    <jsp:param name="url" value="/${user.username}/favoriteLists?"/>
+    <jsp:param name="mediaPages" value="${userFavListsContainer.totalPages}"/>
+    <jsp:param name="currentPage" value="${userFavListsContainer.currentPage + 1}"/>
+    <jsp:param name="url" value="${urlBase}"/>
 </jsp:include>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

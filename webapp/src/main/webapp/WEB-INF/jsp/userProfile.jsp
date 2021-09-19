@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -27,7 +28,7 @@
     <%-- current tab --%>
     <div class="row">
         <%--        <h2 class="font-bold text-2xl py-2">My lists</h2>--%>
-        <c:if test="${listsAmount == 0}">
+        <c:if test="${fn:length(lists) == 0}">
             <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
         </c:if>
         <c:forEach var="cover" items="${lists}">
@@ -45,9 +46,9 @@
     </div>
     <br>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${listsPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="url" value="/lists?"/>
+        <jsp:param name="mediaPages" value="${userListsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${userListsContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

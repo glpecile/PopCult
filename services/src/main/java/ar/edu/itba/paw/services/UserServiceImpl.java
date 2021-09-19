@@ -29,11 +29,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     private static final boolean NOT_ENABLED_USER = false;
     private static final boolean ENABLED_USER = true;
+
+    @Autowired
+    public UserServiceImpl(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     public Optional<User> getById(int userId) {

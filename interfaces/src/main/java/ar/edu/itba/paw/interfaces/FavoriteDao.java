@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +13,10 @@ public interface FavoriteDao {
     void deleteMediaFromFav(int mediaId, int userId);
 
     boolean isFavorite(int mediaId, int userId);
+    @Deprecated
+    PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize);
 
-    List<Integer> getUserFavoriteMedia(int userId, int page, int pageSize);
+    PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteMediaCount(int userId);
 
@@ -20,7 +26,10 @@ public interface FavoriteDao {
 
     boolean isFavoriteList(int mediaListId, int userId);
 
-    List<Integer> getUserFavoriteLists(int userId, int page, int pageSize);
+    @Deprecated
+    PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize);
+
+    PageContainer<MediaList> getUserFavoriteLists(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteListsCount(int userId);
 }

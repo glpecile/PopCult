@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.WatchDao;
 import ar.edu.itba.paw.interfaces.WatchService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,13 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.isToWatch(mediaId, userId);
     }
 
+//    @Override
+//    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
+//    }
+
     @Override
-    public List<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
+    public PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize) {
         return watchDao.getWatchedMediaId(userId, page, pageSize);
     }
 
@@ -55,9 +61,15 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.getWatchedMediaCount(userId);
     }
 
+//    @Override
+//    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
+//    }
+
     @Override
-    public List<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
+    public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
         return watchDao.getToWatchMediaId(userId, page, pageSize);
+
     }
 
     @Override

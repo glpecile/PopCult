@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -41,29 +42,26 @@ public class ListsController {
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final List<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
+        final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
         final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
         final List<ListCover> recentlyAddedCovers = generateCoverList(listsService.getNLastAddedList(lastAddedAmount));
-        final List<ListCover> allListsCovers = generateCoverList(allLists);
-        final Integer allListsCount = listsService.getListCount().orElse(0);
+        final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("recentlyAdded", recentlyAddedCovers);
         mav.addObject("allLists", allListsCovers);
-        mav.addObject("allListsPages", (int) Math.ceil((double) allListsCount / itemsPerPage));
-        mav.addObject("currentPage", page);
+        mav.addObject("allListContainer", allLists);
         return mav;
     }
 
     private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {
-        return getListCover(MediaListLists, listsService, mediaService);
+        return getListCover(MediaListLists, listsService);
     }
 
     @RequestMapping("/lists/{listId}")
     public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
-        final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
 
@@ -93,8 +91,7 @@ public class ListsController {
     public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Integer> mediaInList = listsService.getMediaIdInList(listId);
-        final List<Media> mediaFromList = mediaService.getById(mediaInList);
+        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);;
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         return mav;

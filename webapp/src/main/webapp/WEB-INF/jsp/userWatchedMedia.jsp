@@ -25,7 +25,7 @@
     </jsp:include>
     <%-- current tab --%>
     <div class="row">
-        <c:forEach var="media" items="${mediaList}">
+        <c:forEach var="media" items="${watchedMediaIdsContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -39,9 +39,9 @@
 
     <br>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="url" value="/${user.username}/watchedMedia?"/>
+        <jsp:param name="mediaPages" value="${watchedMediaIdsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${watchedMediaIdsContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

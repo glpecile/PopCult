@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.WatchDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,11 +17,12 @@ public class WatchDaoJdbcImpl implements WatchDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert toWatchMediaJdbcInsert;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("mediaId");
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
+
 
     @Autowired
     public WatchDaoJdbcImpl(final DataSource ds) {
@@ -67,9 +69,18 @@ public class WatchDaoJdbcImpl implements WatchDao {
                 .stream().findFirst().orElse(0) > 0;
     }
 
+//    @Override
+//    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
+//        List<Integer> elements = jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NOT NULL ORDER BY watchDate OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+//        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NOT NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+//        return new PageContainer<>(elements, page, pageSize, totalCount);
+//    }
+
     @Override
-    public List<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NOT NULL ORDER BY watchDate OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM towatchmedia NATURAL JOIN media WHERE watchDate IS NOT NULL ORDER BY watchDate OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NOT NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
     @Override
@@ -78,9 +89,18 @@ public class WatchDaoJdbcImpl implements WatchDao {
 
     }
 
+//    @Override
+//    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
+//        List<Integer> elements = jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+//        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+//        return new PageContainer<>(elements, page, pageSize, totalCount);
+//    }
+
     @Override
-    public List<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM towatchmedia WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
+    public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM towatchmedia NATURAL JOIN media WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override

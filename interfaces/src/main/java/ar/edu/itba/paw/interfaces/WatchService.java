@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 
 import java.util.Date;
@@ -19,11 +20,17 @@ public interface WatchService {
 
     boolean isToWatch(int mediaId, int userId);
 
-    List<Integer> getWatchedMediaId(int userId, int page, int pageSize);
+//    @Deprecated
+//    PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize);
+
+    PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize);
 
     Optional<Integer> getWatchedMediaCount(int userId);
 
-    List<Integer> getToWatchMediaId(int userId, int page, int pageSize);
+//    @Deprecated
+//    PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize);
+
+    PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize);
 
     Optional<Integer> getToWatchMediaCount(int userId);
 }

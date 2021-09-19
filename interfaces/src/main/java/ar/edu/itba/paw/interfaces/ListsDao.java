@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 
@@ -11,23 +12,29 @@ public interface ListsDao {
 
     List<MediaList> getMediaListById(List<Integer> mediaListId);
 
-    List<MediaList> getAllLists(int page, int pageSize);
+    PageContainer<MediaList> getAllLists(int page, int pageSize);
 
     List<MediaList> getMediaListByUserId(int userId);//TODO BORRAR
 
-    List<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
+    PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-    List<Integer> getMediaIdInList(int mediaListId);//TODO BORRAR
+//    @Deprecated
+//    List<Integer> getMediaIdInListIds(int mediaListId);//TODO BORRAR
 
-    List<Integer> getMediaIdInList(int mediaListId, int page, int pageSize);
+    List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
 
-    List<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
+//    @Deprecated
+//    PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize);
+
+    PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
+
+    PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
 
     List<MediaList> getNLastAddedList(int amount);//TODO BORRAR. reemplaza la de arriba
 
-    List<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
+    PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
     Optional<Integer> getListCount();
 

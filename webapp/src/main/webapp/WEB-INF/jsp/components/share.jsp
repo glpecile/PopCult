@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <share>
     <div class="flex justify-center py-2">
-        <button type="button" class="btn btn-secondary btn-rounded" data-bs-toggle="modal" data-bs-target="#shareModal">
-            <i class="fas fa-share-alt pr-2"></i>Share
+        <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded" data-bs-toggle="modal" data-bs-target="#shareModal">
+            <i class="fas fa-share-alt pr-2 text-purple-500 hover:text-purple-900"></i>Share
         </button>
     </div>
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
