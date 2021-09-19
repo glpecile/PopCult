@@ -6,7 +6,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Start a new list &#8226; PopCult</title>
+    <title>Create a new list &#8226; PopCult</title>
 </head>
 <body>
 <div class="flex flex-col h-screen bg-gray-50">
@@ -14,7 +14,7 @@
     <c:url value="/createList" var="postPath"/>
     <div class="flex-grow col-8 offset-2">
         <form:form modelAttribute="createListForm" action="${postPath}" method="post" class="row g-3 p-2 my-8 bg-white shadow-lg">
-            <h2 class="font-bold text-2xl">New List</h2>
+            <h2 class="font-bold text-2xl">Step 1: Create a new list</h2>
             <div class="col-md-6">
                 <div>
                     <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="flex justify-end py-2">
-                <button class="btn btn-secondary" type="submit">Save</button>
+                <button class="row btn btn-secondary" type="submit">Create list and continue to Step 2</button>
             </div>
         </form:form>
     </div>

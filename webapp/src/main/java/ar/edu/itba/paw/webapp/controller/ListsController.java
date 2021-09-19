@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -38,6 +39,7 @@ public class ListsController {
     private static final int itemsPerPage = 4;
     private static final int discoveryListsAmount = 4;
     private static final int lastAddedAmount = 4;
+    private static final int defaultValue = 1;
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -84,14 +86,43 @@ public class ListsController {
             return createListForm(form);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user.getUserId(), form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
-        return new ModelAndView("redirect:/lists/" + mediaList.getMediaListId());
+        return addMediaToList(defaultValue, mediaList.getMediaListId());
+    }
+
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET})
+    public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId) {
+        final ModelAndView mav = new ModelAndView("addMediaToList");
+        PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaListId, page - 1, itemsPerPage);
+        mav.addObject("listsContainer", pageContainer);
+        mav.addObject("mediaListId", mediaListId);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "mediaId")
+    public ModelAndView deleteFromList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
+        final ModelAndView mav = new ModelAndView("addMediaToList");
+        listsService.deleteMediaFromList(mediaListId, mediaId);
+        return addMediaToList(page, mediaListId);
+    }
+
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "add")
+    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("selectedMedia") Integer selectedMedia) {
+        final ModelAndView mav = new ModelAndView("addMediaToList");
+        listsService.addToMediaList(mediaListId, selectedMedia);
+        return addMediaToList(page, mediaListId);
+    }
+
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
+    public ModelAndView cancelAddMediaToList(@RequestParam("mediaListId") Integer mediaListId) {
+        listsService.deleteList(mediaListId);
+        return new ModelAndView("redirect:/lists");
     }
 
     @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.GET})
     public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);;
+        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         return mav;
