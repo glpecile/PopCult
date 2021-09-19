@@ -13,7 +13,14 @@
 <br>
 <div class="col-8 offset-2">
     <div class="row">
+        <div class="col-sm-8">
         <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
+        </div>
+        <div class="col-sm-4 pt-2">
+            <a href="${pageContext.request.contextPath}/createList">
+                <button class="btn btn-secondary btn-rounded ">Create new list</button>
+            </a>
+        </div>
         <c:forEach var="cover" items="${recentlyAdded}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -62,9 +69,9 @@
 </div>
 <br>
 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-    <jsp:param name="mediaPages" value="${allListsPages}"/>
-    <jsp:param name="currentPage" value="${currentPage}"/>
-    <jsp:param name="urlBase" value="/lists"/>
+    <jsp:param name="mediaPages" value="${allListContainer.totalPages}"/>
+    <jsp:param name="currentPage" value="${allListContainer.currentPage + 1}"/>
+    <jsp:param name="url" value="/lists"/>
 </jsp:include>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

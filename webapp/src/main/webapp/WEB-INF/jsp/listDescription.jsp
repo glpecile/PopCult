@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -7,13 +8,49 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${list.name}"/> &#8226; PopCult</title>
+    <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
-    <p class="lead text-justify"><c:out value="${list.description}"/></p>
-    <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+    <div class="flex justify-content-start content-center pt-4">
+        <div class="col-md-auto">
+            <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+        </div>
+        <div class="pt-2">
+            <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
+                <jsp:param name="favorite" value="${isFavoriteList}"/>
+            </jsp:include>
+        </div>
+    </div>
+    <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
+
+    <div class="flex">
+        <div class="col">
+            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+        </div>
+        <c:choose>
+            <c:when test="${list.userId == currentUser.userId}">
+                <div class="col flex justify-center py-2">
+                    <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
+                        <button type="button" class="btn btn-secondary btn-rounded">
+                            Edit list
+                        </button>
+                    </a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="col flex justify-center py-2">
+                    <form:form action="${forkPath}" method="POST">
+                        <button type="submit" class="btn btn-secondary btn-rounded">Fork this list</button>
+                        <input id="currentUserId" type="hidden" name="currentUserId" value="${currentUser.userId}">
+                    </form:form>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

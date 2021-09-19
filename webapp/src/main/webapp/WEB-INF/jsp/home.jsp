@@ -16,14 +16,13 @@
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 
-<div class="col-8 offset-2">
-    <br>
+<div class="col-8 offset-2 py-2">
     <!-- Slider for films -->
     <h2 class="font-bold text-2xl pt-2">Recently Added Films</h2>
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:set var="i" value="1"/>
-            <c:forEach var="film" items="${filmsList}">
+            <c:forEach var="film" items="${latestFilmsList}">
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                     <c:set var="i" value="${i + 1}"/>
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -58,7 +57,7 @@
     <div class="flex flex-col" data-controller="slider">
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:set var="j" value="7"/>
-            <c:forEach var="serie" items="${seriesList}">
+            <c:forEach var="serie" items="${latestSeriesList}">
                 <%--                <div class="w-96 h-64 px-4 flex-shrink-0" data-slider-target="image">--%>
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
                     <c:set var="j" value="${j + 1}"/>
@@ -92,7 +91,7 @@
     <!-- Every Film and Series -->
     <div class="row">
         <h2 class="font-bold text-2xl py-2">Explore some Films and Series</h2>
-        <c:forEach var="media" items="${mediaList}">
+        <c:forEach var="media" items="${mediaListContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -106,9 +105,9 @@
 
     <br>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="/"/>
+        <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

@@ -13,15 +13,15 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>services</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <dependencies>
+<!--    Springframework dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
 
+<!--    Modules dependencies-->
         <dependency>
             <groupId>ar.edu.itba.paw</groupId>
             <artifactId>models</artifactId>
@@ -37,6 +37,36 @@
             <artifactId>persistence</artifactId>
             <version>${parent.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+<!--    Validation & SpringSecurity dependencies-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+
+<!--    Mailing -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring4</artifactId>
+        </dependency>
+
+<!--    Logback Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
