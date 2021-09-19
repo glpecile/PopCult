@@ -17,7 +17,7 @@
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
             <!-- Button Grid. Possible TODO: Make component. -->
-            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-4">
+            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3">
                 <%-- Icon row --%>
                 <div class="flex justify-around pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -133,7 +133,7 @@
         <c:if test="${fn:length(relatedLists) > 0}">
             <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
             <c:forEach var="cover" items="${relatedLists}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3">
                     <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                         <jsp:param name="title" value="${cover.name}"/>
                         <jsp:param name="listId" value="${cover.listId}"/>
@@ -144,7 +144,6 @@
                     </jsp:include>
                 </div>
             </c:forEach>
-            <br>
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
