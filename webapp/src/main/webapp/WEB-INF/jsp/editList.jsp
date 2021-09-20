@@ -85,7 +85,7 @@
                     <jsp:param name="title" value="${media.title}"/>
                     <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                     <jsp:param name="mediaId" value="${media.mediaId}"/>
-                    <jsp:param name="editListId" value="${list.mediaListId}"/>
+                    <jsp:param name="deleteFromListId" value="${list.mediaListId}"/>
                     <jsp:param name="deletePath" value="/editList/${list.mediaListId}"/>
                 </jsp:include>
             </div>

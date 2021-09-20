@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="flex justify-end py-2">
-                <button class="row btn btn-secondary" type="submit">Create list and continue to Step 2</button>
+                <button class="row btn btn-secondary py-2" type="submit">Create list and continue to Step 2</button>
             </div>
         </form:form>
     </div>

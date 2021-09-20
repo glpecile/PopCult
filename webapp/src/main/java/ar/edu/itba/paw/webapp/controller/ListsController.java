@@ -1,24 +1,25 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.FavoriteService;
-import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ListForm;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class ListsController {
     private ListsService listsService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private SearchService searchService;
 
     private static final int itemsPerPage = 4;
     private static final int discoveryListsAmount = 4;
@@ -63,7 +66,7 @@ public class ListsController {
     public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final User u =  listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
+        final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
@@ -87,28 +90,47 @@ public class ListsController {
             return createListForm(form);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user.getUserId(), form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
-        return addMediaToList(defaultValue, mediaList.getMediaListId());
+        return addMediaToList(defaultValue, mediaList.getMediaListId(), null, null, null);
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET})
-    public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId) {
+    public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults) {
         final ModelAndView mav = new ModelAndView("addMediaToList");
         PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaListId, page - 1, itemsPerPage);
-        mav.addObject("listsContainer", pageContainer);
+        mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);
+        mav.addObject("searchTerm", searchTerm);
+        mav.addObject("searchFilmsContainer",searchFilmsResults);
+        mav.addObject("searchSeriesContainer",searchSeriesResults);
         return mav;
     }
 
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "mediaId")
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
     public ModelAndView deleteFromList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
         listsService.deleteMediaFromList(mediaListId, mediaId);
-        return addMediaToList(page, mediaListId);
+        return addMediaToList(page, mediaListId, null, null, null);
+    }
+
+    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET}, params = "search")
+    public ModelAndView searchMediaToAddToList(@RequestParam(value = "page", defaultValue = "1") final int page,
+                                               @RequestParam("mediaListId") Integer mediaListId, HttpServletRequest request,
+                                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                                               final BindingResult errors,
+                                               @RequestParam(value = "sort", defaultValue = "title") final String sortType) {
+
+        if (errors.hasErrors()) {
+//            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        return addMediaToList(page, mediaListId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "add")
-    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("selectedMedia") Integer selectedMedia) {
+    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer selectedMedia) {
         listsService.addToMediaList(mediaListId, selectedMedia);
-        return addMediaToList(page, mediaListId);
+        return addMediaToList(page, mediaListId, null, null, null);
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
