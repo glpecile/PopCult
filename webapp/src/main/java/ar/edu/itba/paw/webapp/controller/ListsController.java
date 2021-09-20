@@ -118,8 +118,8 @@ public class ListsController {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
-        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
-        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
         return addMediaToList(page, mediaListId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
     }
 
@@ -184,8 +184,8 @@ public class ListsController {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
-        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
-        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitleNotInList(listId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitleNotInList(listId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
         return editAddMediaToList(page, listId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
     }
 
