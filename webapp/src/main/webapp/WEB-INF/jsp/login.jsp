@@ -34,6 +34,9 @@
                         <input class="shadow-sm" type="checkbox" name="rememberme">
                         <spring:message code="login.remember_me"/>
                     </label>
+                    <div class="py-1 text-semibold text-danger w-full">
+                        ${error}
+                    </div>
                     <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="login.login"/></button>
                     <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/register"/>"><spring:message
                             code="register.cta"/></a>
