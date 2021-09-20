@@ -23,7 +23,14 @@
     <br>
     <!-- Search Results of every Film -->
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">Search Films Results</h2>
+        <c:url value="/search/films" var="filmsUrl">
+            <c:param name="sort" value="${param.sort}"/>
+            <c:param name="term" value="${param.term}"/>
+            <c:param name="genre" value="${param.genre}"/>
+        </c:url>
+        <a href="${filmsUrl}">
+            <h2 class="font-bold text-2xl py-2">Search Films Results</h2>
+        </a>
         <c:forEach var="media" items="${searchFilmsContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -38,7 +45,14 @@
     <br>
     <!-- Search Results of every Series -->
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">Search Series Results</h2>
+        <c:url value="/search/films" var="seriesUrl">
+            <c:param name="sort" value="${param.sort}"/>
+            <c:param name="term" value="${param.term}"/>
+            <c:param name="genre" value="${param.genre}"/>
+        </c:url>
+        <a href="${seriesUrl}">
+            <h2 class="font-bold text-2xl py-2">Search Series Results</h2>
+        </a>
         <c:forEach var="media" items="${searchSeriesContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -53,7 +67,14 @@
     <br>
     <!-- Search Results of every List -->
     <div class="row">
-        <h2 class="font-bold text-2xl py-2">Search Lists Results</h2>
+        <c:url value="/search/films" var="listsUrl">
+            <c:param name="sort" value="${param.sort}"/>
+            <c:param name="term" value="${param.term}"/>
+            <c:param name="genre" value="${param.genre}"/>
+        </c:url>
+        <a href="${listsUrl}">
+            <h2 class="font-bold text-2xl py-2">Search Lists Results</h2>
+        </a>
         <c:forEach var="cover" items="${listCoversContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">

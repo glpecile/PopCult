@@ -25,9 +25,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -44,6 +46,8 @@ public class SearchController {
 
     private static final int minimumMediaMatches = 2; //minimum amount of media on a list that must match for it to be showed
 
+    private static final int firstPage = 0;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET})
@@ -51,8 +55,7 @@ public class SearchController {
                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                final BindingResult errors,
                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
-                               @RequestParam(value = "genre", defaultValue = "all") final String genre,
-                               @RequestParam(value = "page", defaultValue = "1") final int page) {
+                               @RequestParam(value = "genre", defaultValue = "all") final String genre) {
         LOGGER.info("Search term: {}", searchForm.getTerm());
         if(errors.hasErrors()) {
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
@@ -61,9 +64,9 @@ public class SearchController {
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
         final ModelAndView mav = new ModelAndView("search");
-        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
-        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(),firstPage,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),firstPage,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
+        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),firstPage,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
 
@@ -80,7 +83,7 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/search/films", method = {RequestMethod.GET})
-    public ModelAndView search(HttpServletRequest request,
+    public ModelAndView searchFilms(HttpServletRequest request,
                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                final BindingResult errors,
                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
@@ -93,15 +96,20 @@ public class SearchController {
         }
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
-        final ModelAndView mav = new ModelAndView("search");
+        final ModelAndView mav = new ModelAndView("searchFilms");
         final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
         mav.addObject("searchFilmsContainer", searchFilmsResults);
         mav.addObject("term", searchForm.getTerm());
+        List<String> sortTypes = Arrays.stream(SortType.values()).map(SortType::getName).collect(Collectors.toList());
+        System.out.println(sortTypes);
+        mav.addObject("sortTypes", sortTypes);
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).collect(Collectors.toList()));
         final Map<String, String> queries = new HashMap<>();
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
         queries.put("genre", genre);
-        String urlBase = UriComponentsBuilder.newInstance().path("/search").query("term={term}").buildAndExpand(queries).toUriString();
+        queries.put("page",Integer.toString(page));
+        String urlBase = UriComponentsBuilder.newInstance().path("/search").query("term={term}&sort={sort}&genre={genre}&page={page}").buildAndExpand(queries).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
