@@ -43,7 +43,13 @@
                     Enable others to suggest new movies to add.
                 </div>
             </div>
-            <div class="flex justify-end py-2">
+            <div class="flex justify-between px-4">
+                <a href=<c:url value="/lists"/>>
+                    <button type="button"
+                            class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        Discard changes
+                    </button>
+                </a>
                 <button class="row btn btn-secondary py-2" type="submit">Create list and continue to Step 2</button>
             </div>
         </form:form>

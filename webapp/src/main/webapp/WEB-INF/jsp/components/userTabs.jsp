@@ -6,7 +6,7 @@
             <a href=<c:url value="/user/${param.username}"/>>
                 <c:choose>
                     <c:when test="${param.path == 'myLists'}">
-                        <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">My Lists</button>
+                        <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500"><c:out value="${param.username}"/>'s Lists</button>
                     </c:when>
                     <c:otherwise>
                         <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none"><c:out value="${param.username}"/>'s Lists</button>

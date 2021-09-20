@@ -78,7 +78,7 @@ public class ListsController {
         return mav;
     }
 
-
+    //CREATE A NEW LIST - PART 1
     @RequestMapping(value = "/createList", method = {RequestMethod.GET})
     public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
         return new ModelAndView("createListForm");
@@ -93,16 +93,11 @@ public class ListsController {
         return addMediaToList(defaultValue, mediaList.getMediaListId(), null, null, null);
     }
 
+    //CREATE A NEW LIST - PART 2
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET})
     public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults) {
-        final ModelAndView mav = new ModelAndView("addMediaToList");
-        PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaListId, page - 1, itemsPerPage);
-        mav.addObject("mediaContainer", pageContainer);
-        mav.addObject("mediaListId", mediaListId);
-        mav.addObject("searchTerm", searchTerm);
-        mav.addObject("searchFilmsContainer",searchFilmsResults);
-        mav.addObject("searchSeriesContainer",searchSeriesResults);
-        return mav;
+        final ModelAndView mav = new ModelAndView("createListAddMedia");
+        return addMediaObjects(page, mediaListId, searchTerm, searchFilmsResults, searchSeriesResults, mav);
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
@@ -133,12 +128,14 @@ public class ListsController {
         return addMediaToList(page, mediaListId, null, null, null);
     }
 
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
-    public ModelAndView cancelAddMediaToList(@RequestParam("mediaListId") Integer mediaListId) {
-        listsService.deleteList(mediaListId);
-        return new ModelAndView("redirect:/lists");
-    }
+//    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
+//    public ModelAndView cancelAddMediaToList(@RequestParam("mediaListId") Integer mediaListId) {
+//        listsService.deleteList(mediaListId);
+//        return new ModelAndView("redirect:/lists");
+//    }
+    //END CREATE A NEW LIST
 
+    //EDIT A LIST - PART 1
     @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.GET})
     public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
         final ModelAndView mav = new ModelAndView("editList");
@@ -147,12 +144,6 @@ public class ListsController {
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         return mav;
-    }
-
-    @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "mediaId")
-    public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId) {
-        listsService.deleteMediaFromList(listId, mediaId);
-        return new ModelAndView("redirect:/editList/" + listId);
     }
 
     @RequestMapping(value = "/editList/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
@@ -167,8 +158,43 @@ public class ListsController {
             return editList(listId, form);
         listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         //update stuff
-        return listDescription(listId);
+        return editAddMediaToList(defaultValue, listId, null, null, null);
     }
+
+    //EDIT A LIST - PART 2
+    @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.GET})
+    public ModelAndView editAddMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @PathVariable("listId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults) {
+        final ModelAndView mav = new ModelAndView("editListMedia");
+        return addMediaObjects(page, mediaListId, searchTerm, searchFilmsResults, searchSeriesResults, mav);
+    }
+
+    @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.GET}, params = "search")
+    public ModelAndView editSearchMediaToAddToList(@RequestParam(value = "page", defaultValue = "1") final int page,
+                                                   @PathVariable("listId") final int listId, HttpServletRequest request,
+                                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                                               final BindingResult errors,
+                                               @RequestParam(value = "sort", defaultValue = "title") final String sortType) {
+
+        if (errors.hasErrors()) {
+//            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
+        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
+        return editAddMediaToList(page, listId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
+    }
+    @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "deleteMedia")
+    public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") int page) {
+        listsService.deleteMediaFromList(listId, mediaId);
+        return editAddMediaToList(page, listId, null, null, null);
+    }
+
+    @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.POST}, params = "add")
+    public ModelAndView editInsertToList(@RequestParam(value = "page", defaultValue = "1") final int page,  @PathVariable("listId") final int listId, @RequestParam("mediaId") Integer selectedMedia) {
+        listsService.addToMediaList(listId, selectedMedia);
+        return addMediaToList(page, listId, null, null, null);
+    }
+    //END EDIT LIST
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST})
     public ModelAndView createListCopy(@PathVariable("listId") final int listId, @RequestParam("currentUserId") final int currentUserId) {
@@ -188,5 +214,15 @@ public class ListsController {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.deleteListFromFav(listId, user.getUserId());
         return listDescription(listId);
+    }
+
+    private ModelAndView addMediaObjects(@RequestParam(value = "page", defaultValue = "1") int page, @PathVariable("listId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults, ModelAndView mav) {
+        PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaListId, page - 1, itemsPerPage);
+        mav.addObject("mediaContainer", pageContainer);
+        mav.addObject("mediaListId", mediaListId);
+        mav.addObject("searchTerm", searchTerm);
+        mav.addObject("searchFilmsContainer", searchFilmsResults);
+        mav.addObject("searchSeriesContainer", searchSeriesResults);
+        return mav;
     }
 }

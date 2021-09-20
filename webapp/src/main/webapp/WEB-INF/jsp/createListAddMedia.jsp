@@ -8,7 +8,8 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Add media to a new list &#8226; PopCult</title>
-    <c:url value="/createList/addMedia" var="deletePath"/>
+    <c:url value="/editList/${mediaListId}" var="deletePath"/>
+    <c:url value="/createList/addMedia" var="searchUrl"/>
 
 </head>
 <body>
@@ -44,7 +45,6 @@
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
             <%--            search input--%>
-            <c:url value="/createList/addMedia" var="searchUrl"/>
             <form class="space-y-4" action="${searchUrl}" method="get" enctype="application/x-www-form-urlencoded">
                 <div class="flex flex-col">
                     <label class="py-2 text-semibold w-full flex">
@@ -99,13 +99,13 @@
                     <input type="hidden" id="mediaListId" name="mediaListId" value="${mediaListId}">
                     <button type="submit" value="delete" name="delete"
                             class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                        Discard changes
+                        Delete list
                     </button>
                 </form:form>
                 <a href=<c:url value="/lists/${mediaListId}"/>>
                     <button type="button"
                             class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
-                        Save and finish
+                       Finish
                     </button>
                 </a>
             </div>

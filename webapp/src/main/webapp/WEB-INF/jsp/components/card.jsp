@@ -11,7 +11,7 @@
             <c:when test="${param.deleteFromListId != null}">
                 <div class="flex justify-center py-2 ">
                     <form:form cssClass="m-0" action="${deletePath}" method="DELETE">
-                        <button type="submit"
+                        <button type="submit" name="deleteMedia"
                                 class="bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded">
                             <i class="fa fa-trash pr-2" aria-hidden="true"></i>Delete Media
                         </button>
