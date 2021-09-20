@@ -13,10 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,5 +167,11 @@ public class UserController {
         if (errors.hasErrors())
             return changeUserPassword(form);
         return new ModelAndView("redirect:/user/"+user.getUsername());
+    }
+
+    @RequestMapping(value="/uploadImage", method = {RequestMethod.POST})
+    public ModelAndView uploadProfilePicture(@RequestParam("file") MultipartFile file, @RequestParam("username")final String username){
+        System.out.println(file.getContentType());
+        return new ModelAndView("redirect:/user/"+username);
     }
 }
