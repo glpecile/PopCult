@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.WatchedMedia;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface WatchService {
 //    @Deprecated
 //    PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize);
 
-    PageContainer<Media> getWatchedMediaId(int userId, int page, int pageSize);
+    PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize);
 
     Optional<Integer> getWatchedMediaCount(int userId);
 

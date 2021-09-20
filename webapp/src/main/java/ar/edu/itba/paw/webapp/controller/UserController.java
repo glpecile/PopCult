@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
@@ -101,7 +102,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Media> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+        PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
 //        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
         final Map<String, String> map = new HashMap<>();
         map.put("username", username);

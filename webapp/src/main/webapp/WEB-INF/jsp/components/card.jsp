@@ -7,6 +7,9 @@
 <div class="card shadow rounded-lg transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-110 shadow-inner">
     <div class="card-body">
         <img class="card-img-top rounded-lg" src="<c:out value="${param.image}"/>" alt="media_image">
+        <c:if test="${param.lastWatched != null}">
+            <p class="pt-2">Watched on <c:out value="${param.lastWatched}"/> </p>
+        </c:if>
         <c:choose>
             <c:when test="${param.deleteFromListId != null}">
                 <div class="flex justify-center py-2 ">
