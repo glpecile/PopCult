@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -101,7 +102,11 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
     public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
-        listsService.addToMediaList(mediaListId, mediaId);
+        try {
+            listsService.addToMediaList(mediaListId, mediaId);
+        } catch (MediaAlreadyInListException e) {
+            return new ModelAndView("redirect:/media/" + mediaId).addObject("alreadyInList", true);//TODO mostrar el mensaje
+        }
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

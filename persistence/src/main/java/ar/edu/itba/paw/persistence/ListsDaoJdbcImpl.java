@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -204,7 +206,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
-        listElementjdbcInsert.execute(data);
+        try{
+            listElementjdbcInsert.execute(data);
+        } catch (DuplicateKeyException e) {
+            throw new MediaAlreadyInListException();
+        }
     }
 
     @Override

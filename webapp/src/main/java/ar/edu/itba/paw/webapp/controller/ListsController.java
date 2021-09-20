@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -123,8 +124,12 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "add")
-    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer selectedMedia) {
-        listsService.addToMediaList(mediaListId, selectedMedia);
+    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") int mediaListId, @RequestParam("mediaId") Integer selectedMedia) {
+        try {
+            listsService.addToMediaList(mediaListId, selectedMedia);
+        } catch (MediaAlreadyInListException e) {
+            return addMediaToList(page, mediaListId, null, null, null).addObject("alreadyInList", true);//TODO add in jsp message.
+        }
         return addMediaToList(page, mediaListId, null, null, null);
     }
 
@@ -171,9 +176,9 @@ public class ListsController {
     @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.GET}, params = "search")
     public ModelAndView editSearchMediaToAddToList(@RequestParam(value = "page", defaultValue = "1") final int page,
                                                    @PathVariable("listId") final int listId, HttpServletRequest request,
-                                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
-                                               final BindingResult errors,
-                                               @RequestParam(value = "sort", defaultValue = "title") final String sortType) {
+                                                   @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                                                   final BindingResult errors,
+                                                   @RequestParam(value = "sort", defaultValue = "title") final String sortType) {
 
         if (errors.hasErrors()) {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
@@ -183,6 +188,7 @@ public class ListsController {
         final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
         return editAddMediaToList(page, listId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
     }
+
     @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "deleteMedia")
     public ModelAndView deleteMediaFromList(@PathVariable("listId") final int listId, @RequestParam("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") int page) {
         listsService.deleteMediaFromList(listId, mediaId);
@@ -190,9 +196,14 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/editList/addMedia/{listId}", method = {RequestMethod.POST}, params = "add")
-    public ModelAndView editInsertToList(@RequestParam(value = "page", defaultValue = "1") final int page,  @PathVariable("listId") final int listId, @RequestParam("mediaId") Integer selectedMedia) {
-        listsService.addToMediaList(listId, selectedMedia);
-        return addMediaToList(page, listId, null, null, null);
+    public ModelAndView editInsertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @PathVariable("listId") final int mediaListId,
+                                         @RequestParam("mediaId") final int selectedMedia) {
+        try {
+            listsService.addToMediaList(mediaListId, selectedMedia);
+        } catch (MediaAlreadyInListException e) {
+            return addMediaToList(page, mediaListId, null, null, null).addObject("alreadyInList", true);
+        }
+        return addMediaToList(page, mediaListId, null, null, null);
     }
     //END EDIT LIST
 
