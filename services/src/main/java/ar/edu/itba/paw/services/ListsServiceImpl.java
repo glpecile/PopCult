@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,5 +136,10 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public Optional<MediaList> createMediaListCopy(int userId, int toCopy) {
         return listsDao.createMediaListCopy(userId, toCopy);
+    }
+
+    @Override
+    public Optional<User> getListOwner(int listId) {
+        return listsDao.getListOwner(listId);
     }
 }

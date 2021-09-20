@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,4 +57,6 @@ public interface ListsService {
     void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative);
 
     Optional<MediaList> createMediaListCopy(int userId, int toCopy);
+
+    Optional<User> getListOwner(int listId);
 }

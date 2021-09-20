@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,10 +63,11 @@ public class ListsController {
     public ModelAndView listDescription(@PathVariable("listId") final int listId) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User u =  listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
-
+        mav.addObject("user", u);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
