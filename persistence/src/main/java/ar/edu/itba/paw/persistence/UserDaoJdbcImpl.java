@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -62,8 +65,20 @@ public class UserDaoJdbcImpl implements UserDao {
         args.put("name", name);
         args.put("profilephoto", profilePhotoURL);
         args.put("enabled", enabled);
-        final Number userId = jdbcInsert.executeAndReturnKey(args);
-        return new User(userId.intValue(), email, userName, password, name, profilePhotoURL, enabled);
+
+        int userId = 0;
+        try {
+            userId = jdbcInsert.executeAndReturnKey(args).intValue();
+        } catch (DuplicateKeyException e) {
+            if(e.getMessage().contains("users_email_key")) {
+                throw new EmailAlreadyExistsException();
+            }
+            if(e.getMessage().contains("users_username_key")) {
+                throw new UsernameAlreadyExistsException();
+            }
+        }
+        return new User(userId, email, userName, password, name, profilePhotoURL, enabled);
+
     }
 
     public void confirmRegister(int userId, boolean enabled) {
