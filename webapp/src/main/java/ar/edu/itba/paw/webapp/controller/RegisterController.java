@@ -3,7 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.interfaces.VerificationTokenService;
 import ar.edu.itba.paw.models.user.Token;
-import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exceptions.VerificationTokenNotFoundException;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,20 @@ public class RegisterController {
         if (errors.hasErrors()) {
             return registerForm(form);
         }
-        final User user = userService.register(form.getEmail(),
-                form.getUsername(),
-                form.getPassword(),
-                form.getName(),
-                null);
+        try {
+            userService.register(form.getEmail(),
+                    form.getUsername(),
+                    form.getPassword(),
+                    form.getName(),
+                    null);
+        } catch (UsernameAlreadyExistsException e) {
+            errors.rejectValue("username", "validation.username.alreadyExists");
+            return registerForm(form);
+        } catch (EmailAlreadyExistsException e) {
+            errors.rejectValue("email", "validation.email.alreadyExists");
+            return registerForm(form);
+        }
+
         return new ModelAndView("sentEmail");
     }
 
@@ -46,8 +56,8 @@ public class RegisterController {
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
         Token verificationToken = verificationTokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
         //TODO
-        if(userService.confirmRegister(verificationToken)) {
-            return new ModelAndView("redirect:/login");
+        if (userService.confirmRegister(verificationToken)) {
+            return new ModelAndView("login").addObject("successfulConfirmation", true);
 
         }
         return new ModelAndView("redirect:/register/tokentimedout?token=" + token);
