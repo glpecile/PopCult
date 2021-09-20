@@ -21,6 +21,12 @@
         <%-- Sign In form --%>
         <div class="container w-full max-w-xs mx-auto mt-8 px-4 font-sans rounded-lg shadow-lg bg-white p-2 my-8">
             <form class="space-y-4" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
+                <c:if test="${successfulConfirmation}">
+                    <label class="py-2 text-semibold text-success w-full">
+                        <spring:message code="login.successfulConfirmation"/>
+                    </label>
+                </c:if>
+
                 <div class="flex flex-col justify-center items-center">
                     <label class="py-2 text-semibold w-full">
                         <spring:message code="login.username"/>

@@ -57,7 +57,7 @@ public class RegisterController {
         Token verificationToken = verificationTokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
         //TODO
         if (userService.confirmRegister(verificationToken)) {
-            return new ModelAndView("redirect:/login");
+            return new ModelAndView("login").addObject("successfulConfirmation", true);
 
         }
         return new ModelAndView("redirect:/register/tokentimedout?token=" + token);
