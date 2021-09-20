@@ -133,7 +133,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public MediaList createMediaListCopy(int userId, int toCopy) {
+    public Optional<MediaList> createMediaListCopy(int userId, int toCopy) {
         return listsDao.createMediaListCopy(userId, toCopy);
     }
 }

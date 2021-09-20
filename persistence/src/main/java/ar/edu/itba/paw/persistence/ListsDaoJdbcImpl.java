@@ -228,9 +228,10 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public MediaList createMediaListCopy(int userId, int toCopyListId) {
+    public Optional<MediaList> createMediaListCopy(int userId, int toCopyListId) {
         Map<String, Object> data = new HashMap<>();
-        MediaList toCopy = getMediaListById(toCopyListId).orElseThrow(RuntimeException::new);
+        List<MediaList> fork = new ArrayList<>();
+        getMediaListById(toCopyListId).ifPresent((toCopy) -> {
         Date localDate = new Date();
         data.put("userid", userId);
         data.put("name", "Copy from " + toCopy.getName());
@@ -252,6 +253,10 @@ public class ListsDaoJdbcImpl implements ListsDao {
         forkData.put("forkerId", userId);
         forkedListsjdbcInsert.execute(forkData)
         */
-        return new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative());
+        fork.add( new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative()));
+        });
+        if (fork.isEmpty())
+            return Optional.empty();
+        return Optional.of(fork.get(0));
     }
 }

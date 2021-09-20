@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -100,14 +99,12 @@ public class ListsController {
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "mediaId")
     public ModelAndView deleteFromList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
-        final ModelAndView mav = new ModelAndView("addMediaToList");
         listsService.deleteMediaFromList(mediaListId, mediaId);
         return addMediaToList(page, mediaListId);
     }
 
     @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "add")
     public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("selectedMedia") Integer selectedMedia) {
-        final ModelAndView mav = new ModelAndView("addMediaToList");
         listsService.addToMediaList(mediaListId, selectedMedia);
         return addMediaToList(page, mediaListId);
     }
@@ -151,7 +148,7 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST})
     public ModelAndView createListCopy(@PathVariable("listId") final int listId, @RequestParam("currentUserId") final int currentUserId) {
-        final MediaList newList = listsService.createMediaListCopy(currentUserId, listId);
+        final MediaList newList = listsService.createMediaListCopy(currentUserId, listId).orElseThrow(ListNotFoundException::new);
         return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
     }
 
