@@ -18,7 +18,8 @@ public class ExceptionHandlingController {
             MediaNotFoundException.class,
             StaffNotFoundException.class,
             StudioNotFoundException.class,
-            UserNotFoundException.class})
+            UserNotFoundException.class,
+            IllegalArgumentException.class})
     ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
@@ -41,4 +42,5 @@ public class ExceptionHandlingController {
         mav.addObject("description", messageSource.getMessage("exception.noUserLogged", null, Locale.getDefault()));
         return mav;
     }
+
 }

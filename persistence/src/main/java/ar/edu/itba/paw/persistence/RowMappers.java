@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import ar.edu.itba.paw.models.staff.Studio;
@@ -98,6 +99,22 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("token"),
                     rs.getDate("expiryDate"));
+
+    /**
+     * Watched Media RowMappers.
+     */
+    public static final RowMapper<WatchedMedia> WATCHED_MEDIA_ROW_MAPPER =
+            (rs, rowNum) -> new WatchedMedia(
+                    rs.getInt("mediaId"),
+                    rs.getInt("type"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getString("image"),
+                    rs.getInt("length"),
+                    rs.getDate("releaseDate"),
+                    rs.getInt("seasons"),
+                    rs.getInt("country"),
+                    rs.getDate("watchdate"));
 }
 
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
@@ -43,7 +44,6 @@ public class UserController {
 
     @RequestMapping("/user/{username}")
     public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
-        System.out.println("user profile");
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 //        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
@@ -102,7 +102,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         int userId = user.getUserId();
-        PageContainer<Media> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
+        PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(userId, page - 1, itemsPerPage);
 //        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
         final Map<String, String> map = new HashMap<>();
         map.put("username", username);
@@ -143,7 +143,6 @@ public class UserController {
 
     @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
-        System.out.println("submit settings");
         if (errors.hasErrors())
             return editUserDetails(form);
         return new ModelAndView("redirect:/user/" + form.getUsername());
@@ -151,7 +150,6 @@ public class UserController {
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
     public ModelAndView changeUserPassword(@ModelAttribute("changePassword") final PasswordForm form) {
-        System.out.println("change password");
         ModelAndView mav = new ModelAndView("changePassword");
         User u = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", u);
