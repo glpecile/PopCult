@@ -173,7 +173,7 @@ public class UserController {
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
-    //TODO refactor with form / call to userService, not imageService
+    //TODO refactor with form
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
     public ModelAndView uploadProfilePicture(@RequestParam("username") final String username, @RequestParam("file") MultipartFile file) throws IOException {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
