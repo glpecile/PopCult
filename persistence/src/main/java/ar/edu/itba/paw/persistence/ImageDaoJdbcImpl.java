@@ -37,7 +37,7 @@ public class ImageDaoJdbcImpl implements ImageDao {
 
     @Override
     public Optional<Image> getUserProfilePicture(int userId) {
-        return jdbcTemplate.query("SELECT * FROM image WHERE userid = ?", new Object[]{userId}, IMAGE_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM image NATURAL JOIN users WHERE userid = ?", new Object[]{userId}, IMAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ImageDaoJdbcImpl implements ImageDao {
         data.put("imageContentLength", imageContentLength);
         data.put("imageContentType", imageContentType);
         KeyHolder key = jdbcInsert.executeAndReturnKeyHolder(data);
-        //TODO link with users
+        jdbcTemplate.update("UPDATE users SET imageid = ? WHERE userid = ? ", key.getKey(), userId);
         return Optional.of(new Image((int) key.getKey(), photoBlob, imageContentLength, imageContentType));
 
 
