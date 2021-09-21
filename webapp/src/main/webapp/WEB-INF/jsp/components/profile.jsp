@@ -51,7 +51,7 @@
                         <div class="modal-body">
                             <c:url value="/uploadImage" var="uploadPath"/>
                             <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}" enctype="multipart/form-data">
-                                <div class="row">
+                                <div class="row px-2 pb-2">
                                         <%--                                    <input type="file" name="file"/>--%>
                                         <%--                                    <input type="hidden" name="username" value="<c:out value="${param.username}"/>">--%>
                                     <form:input path="image" cssClass="form-control" type="file" accept="image/*"/>
