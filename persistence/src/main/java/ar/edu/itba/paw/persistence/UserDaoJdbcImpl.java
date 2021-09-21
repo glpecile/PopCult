@@ -98,4 +98,9 @@ public class UserDaoJdbcImpl implements UserDao {
     public void updateUserProfileImage(int userId, int imageId) {
         jdbcTemplate.update("UPDATE users SET imageid = ? WHERE userid = ? ", imageId, userId);
     }
+
+    @Override
+    public void updateUserData(int userId, String email, String username, String name) {
+        jdbcTemplate.update("UPDATE users SET name = ?, email = ?, username = ? WHERE userid = ?", name, email, username, userId);
+    }
 }

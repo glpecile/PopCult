@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ImageForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
+import ar.edu.itba.paw.webapp.form.UserDataForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -158,17 +159,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form) {
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserDataForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         return mav;
     }
 
-    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
         if (errors.hasErrors())
             return editUserDetails(form);
+        System.out.println(userId + form.getUsername() + form.getName() + form.getEmail());
+        userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
         return new ModelAndView("redirect:/user/" + form.getUsername());
     }
 
@@ -188,7 +191,7 @@ public class UserController {
 
         try {
             userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword()).orElseThrow(UserNotFoundException::new);
-        } catch(InvalidCurrentPasswordException e) {
+        } catch (InvalidCurrentPasswordException e) {
             errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
             return changeUserPassword(form);
         }

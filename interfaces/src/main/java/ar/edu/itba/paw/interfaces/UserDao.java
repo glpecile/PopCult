@@ -20,4 +20,6 @@ public interface UserDao {
     void confirmRegister(int userId, boolean enabled);
 
     void updateUserProfileImage(int userId, int imageId);
+
+    void updateUserData(int userId, String email, String username, String name);
 }

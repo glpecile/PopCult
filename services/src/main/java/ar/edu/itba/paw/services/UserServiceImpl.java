@@ -128,5 +128,10 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Override
+    public void updateUserData(int userId, String email, String username, String name) {
+        userDao.updateUserData(userId, email, username, name);
+    }
+
 
 }
