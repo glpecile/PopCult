@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ImageDao;
 import ar.edu.itba.paw.models.image.Image;
-import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,7 +40,7 @@ public class ImageDaoJdbcImpl implements ImageDao {
     }
 
     @Override
-    public Optional<Image> uploadImage(byte[] photoBlob, Integer imageContentLength, String imageContentType) {
+    public Optional<Image> uploadImage(byte[] photoBlob, long imageContentLength, String imageContentType) {
         final Map<String, Object> data = new HashMap<>();
         data.put("photoBlob", photoBlob);
         data.put("imageContentLength", imageContentLength);

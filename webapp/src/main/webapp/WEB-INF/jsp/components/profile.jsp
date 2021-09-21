@@ -50,10 +50,12 @@
                         </div>
                         <div class="modal-body">
                             <c:url value="/uploadImage" var="uploadPath"/>
-                            <form:form method="POST" action="${uploadPath}" enctype="multipart/form-data">
+                            <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}" enctype="multipart/form-data">
                                 <div class="row">
-                                    <input type="file" name="file"/>
-                                    <input type="hidden" name="username" value="<c:out value="${param.username}"/>">
+                                        <%--                                    <input type="file" name="file"/>--%>
+                                        <%--                                    <input type="hidden" name="username" value="<c:out value="${param.username}"/>">--%>
+                                    <form:input path="image" cssClass="form-control" type="file" accept="image/*"/>
+                                    <form:errors path="image" cssClass="form-control" element="p"/>
                                 </div>
                                 <div class="row">
                                     <div class="col-8"></div>

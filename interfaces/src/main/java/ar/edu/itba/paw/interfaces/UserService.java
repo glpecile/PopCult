@@ -23,5 +23,5 @@ public interface UserService {
 
     Optional<Image> getUserProfileImage(int imageId);
 
-    void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType);
+    void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType);
 }

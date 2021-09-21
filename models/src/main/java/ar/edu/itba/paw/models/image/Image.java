@@ -3,10 +3,10 @@ package ar.edu.itba.paw.models.image;
 public class Image {
     private final int imageId;
     private final byte[] imageBlob;
-    private final Integer imageContentLength;
+    private final long imageContentLength;
     private final String imageContentType;
 
-    public Image(int imageId, byte[] imageBlob, Integer imageContentLength, String imageContentType) {
+    public Image(int imageId, byte[] imageBlob, long imageContentLength, String imageContentType) {
         this.imageId = imageId;
         this.imageBlob = imageBlob;
         this.imageContentLength = imageContentLength;
@@ -21,7 +21,7 @@ public class Image {
         return imageBlob;
     }
 
-    public Integer getImageContentLength() {
+    public long getImageContentLength() {
         return imageContentLength;
     }
 

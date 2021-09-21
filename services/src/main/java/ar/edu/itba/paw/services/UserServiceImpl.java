@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType) {
+    public void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType) {
         imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
             userDao.updateUserProfileImage(userId, image.getImageId());
         });
