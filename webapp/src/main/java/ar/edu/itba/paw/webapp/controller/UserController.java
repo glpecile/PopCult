@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -202,5 +203,11 @@ public class UserController {
     public @ResponseBody
     byte[] getProfilePicture(@PathVariable("imageId") final int imageId) {
         return userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+    }
+
+    @RequestMapping(value = "/editWatchedDate", method = {RequestMethod.POST}, params = "watchedDate")
+    public ModelAndView editWatchedDate(@RequestParam("username") final String username, @RequestParam("watchedDate") String watchedDate) {
+        System.out.println(watchedDate);
+        return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
 }
