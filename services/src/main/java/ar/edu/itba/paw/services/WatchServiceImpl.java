@@ -38,6 +38,11 @@ public class WatchServiceImpl implements WatchService {
     }
 
     @Override
+    public void updateWatchedMediaDate(int mediaId, int userId, Date date) {
+        watchDao.updateWatchedMediaDate(mediaId, userId, date);
+    }
+
+    @Override
     public boolean isWatched(int mediaId, int userId) {
         return watchDao.isWatched(mediaId, userId);
     }

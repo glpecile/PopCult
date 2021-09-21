@@ -9,22 +9,23 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.ImageForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -51,7 +52,9 @@ public class UserController {
 
 
     @RequestMapping("/user/{username}")
-    public ModelAndView userProfile(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,
+                                    @PathVariable("username") final String username,
+                                    @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 //        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
@@ -74,7 +77,9 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/favoriteMedia")
-    public ModelAndView userFavoriteMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userFavoriteMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
+                                          @PathVariable("username") final String username,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
@@ -91,7 +96,9 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/toWatchMedia")
-    public ModelAndView userToWatchMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userToWatchMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
+                                         @PathVariable("username") final String username,
+                                         @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user.getUserId(), page - 1, itemsPerPage);
@@ -110,10 +117,11 @@ public class UserController {
         return mav;
     }
 
-    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
     @RequestMapping("/user/{username}/watchedMedia")
-    public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userWatchedMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
+                                         @PathVariable("username") final String username,
+                                         @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(user.getUserId(), page - 1, itemsPerPage);
@@ -131,7 +139,9 @@ public class UserController {
 
 
     @RequestMapping("/user/{username}/favoriteLists")
-    public ModelAndView userFavoriteLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userFavoriteLists(@ModelAttribute("imageForm") final ImageForm imageForm,
+                                          @PathVariable("username") final String username,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
@@ -178,20 +188,15 @@ public class UserController {
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
-    //TODO refactor with form
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
-    public ModelAndView uploadProfilePicture(@RequestParam("username") final String username, @RequestParam("file") MultipartFile file) throws IOException {
+    public ModelAndView uploadProfilePicture(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+                                             final BindingResult error) throws IOException {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        if (!file.isEmpty()) {
-            try {
-                byte[] photoBlob = IOUtils.toByteArray(file.getInputStream());
-                Integer imageContentLength = Long.valueOf(file.getSize()).intValue();
-                String imageContentType = file.getContentType();
-                userService.uploadUserProfileImage(user.getUserId(), photoBlob, imageContentLength, imageContentType);
-            } catch (Exception e) {
-                return new ModelAndView("redirect:/user" + user.getUsername()).addObject("errorMsg", "You failed to upload" + "->" + e.getMessage());
-            }
+        if (error.hasErrors()) {
+            return userProfile(imageForm, user.getUsername(), 1);
         }
+
+        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes(), imageForm.getImage().getSize(), imageForm.getImage().getContentType());
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
@@ -199,5 +204,12 @@ public class UserController {
     public @ResponseBody
     byte[] getProfilePicture(@PathVariable("imageId") final int imageId) {
         return userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+    }
+
+    @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
+    public ModelAndView editWatchedDate(@PathVariable("username") final String username, @RequestParam("watchedDate") String watchedDate, @RequestParam("userId") int userId, @RequestParam("mediaId") int mediaId) throws ParseException {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        watchService.updateWatchedMediaDate(mediaId, userId, f.parse(watchedDate));
+        return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
 }
