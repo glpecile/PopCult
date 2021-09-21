@@ -7,18 +7,18 @@ public class User {
     private final String username;
     private final String password;
     private final String name;
-    private final String profilePhotoURL;
     private final boolean enabled;
+    private final int imageId;
 
 
-    public User(int userId, String email, String username, String password, String name, String profilePhotoURL, boolean enabled) {
+    public User(int userId, String email, String username, String password, String name, boolean enabled, int imageId) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.password = password;
         this.name = name;
-        this.profilePhotoURL = profilePhotoURL;
         this.enabled = enabled;
+        this.imageId = imageId;
     }
 
     public int getUserId() {
@@ -41,11 +41,11 @@ public class User {
         return name;
     }
 
-    public String getProfilePhotoURL() {
-        return profilePhotoURL;
-    }
-
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public int getImageId() {
+        return imageId;
     }
 }

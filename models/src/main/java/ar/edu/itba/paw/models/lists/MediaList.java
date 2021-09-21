@@ -5,17 +5,17 @@ import java.util.Date;
 public class MediaList {
     private final int mediaListId;
     private final int userId;
-    private final String name;
+    private final String listName;
     private final String description;
     private final Date creationDate;
     private final boolean visible;
     private final boolean collaborative;
 
 
-    public MediaList(int mediaListId, int userId, String name, String description, Date creationDate, boolean visible, boolean collaborative) {
+    public MediaList(int mediaListId, int userId, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
         this.userId = userId;
-        this.name = name;
+        this.listName = listName;
         this.description = description;
         this.creationDate = creationDate;
         this.visible = visible;
@@ -26,8 +26,8 @@ public class MediaList {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    public String getListName() {
+        return listName;
     }
 
     public String getDescription() {

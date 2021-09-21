@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private ImageService imageService;
+
     @Autowired
     private UserDao userDao;
 
@@ -55,8 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, String profilePhotoURL) {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, profilePhotoURL, NOT_ENABLED_USER);
+    public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER);
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());
 
@@ -101,4 +104,18 @@ public class UserServiceImpl implements UserService {
             });
         });
     }
+
+    @Override
+    public Optional<Image> getUserProfileImage(int imageId) {
+        return imageService.getImage(imageId);
+    }
+
+    @Override
+    public void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType) {
+        imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
+            userDao.updateUserProfileImage(userId, image.getImageId());
+        });
+    }
+
+
 }

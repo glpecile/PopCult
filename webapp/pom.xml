@@ -16,13 +16,13 @@
     <name>webapp Maven Webapp</name>
 
     <dependencies>
-<!--    Springframework dependencies-->
+        <!--    Springframework dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
-<!--    javax.servlet dependencies-->
+        <!--    javax.servlet dependencies-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -32,7 +32,7 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
-<!--    JDBC & Postgres dependencies-->
+        <!--    JDBC & Postgres dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
@@ -42,7 +42,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-<!--    Modules dependencies-->
+        <!--    Modules dependencies-->
         <dependency>
             <groupId>ar.edu.itba.paw</groupId>
             <artifactId>interfaces</artifactId>
@@ -55,7 +55,7 @@
             <scope>runtime</scope>
         </dependency>
 
-<!--    Validation & SpringSecurity dependencies-->
+        <!--    Validation & SpringSecurity dependencies-->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -81,7 +81,7 @@
             <artifactId>spring-security-taglibs</artifactId>
         </dependency>
 
-<!--    Mailing -->
+        <!--    Mailing -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -99,7 +99,7 @@
             <artifactId>thymeleaf-spring4</artifactId>
         </dependency>
 
-<!--    Logback Logger -->
+        <!--    Logback Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -122,6 +122,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--CommonsMultipartResolver - File Uploading-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

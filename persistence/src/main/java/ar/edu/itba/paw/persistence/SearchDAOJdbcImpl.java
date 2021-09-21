@@ -68,10 +68,10 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     @Override
     public PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort) {
         String orderBy = "ORDER BY " + SortType.values()[sort].nameMediaList;
-        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE medialist.listname ILIKE CONCAT('%', ?, '%') "
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE listname ILIKE CONCAT('%', ?, '%') "
                 + orderBy + " OFFSET ? LIMIT ?", new Object[]{name,
                 page, pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE medialist.listname ILIKE CONCAT('%', ?, '%')", new Object[]{name}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE listname ILIKE CONCAT('%', ?, '%')", new Object[]{name}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 

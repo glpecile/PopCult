@@ -7,7 +7,9 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Register &#8226; PopCult</title></head>
+    <title>Register &#8226; PopCult</title>
+</head>
+
 <body>
 <c:url value="/register" var="postPath"/>
 <div class="flex flex-col h-full bg-gradient-to-r from-yellow-500 to-purple-900">
@@ -48,6 +50,7 @@
                     <form:input type="text" cssClass="form-control" path="name"/>
                     <form:errors path="name" cssClass="formError text-red-500" element="p"/>
                 </div>
+
                 <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="register.default"/></button>
             </div>
         </form:form>

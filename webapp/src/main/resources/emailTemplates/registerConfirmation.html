@@ -5,7 +5,9 @@
 </head>
 <body>
 <div>
-    <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
+    <a th:href="@{http://localhost:8080/webapp_war/}">
+        <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
+    </a>
     <div>
         <h2 th:text="#{email.greeting}"></h2>
         <p th:text="#{email.welcome (${username})}"></p>
