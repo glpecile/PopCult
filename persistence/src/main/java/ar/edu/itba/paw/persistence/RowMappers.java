@@ -49,7 +49,7 @@ public class RowMappers {
             (rs, rowNum) -> new MediaList(
                     rs.getInt("mediaListId"),
                     rs.getInt("userId"),
-                    rs.getString("name"),
+                    rs.getString("listname"),
                     rs.getString("description"),
                     rs.getDate("creationDate"),
                     rs.getBoolean("visibility"),
