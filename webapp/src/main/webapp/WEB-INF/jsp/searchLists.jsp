@@ -18,10 +18,10 @@
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
     <div class="row">
-        <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchListsContainer.totalCount}"/> results for <c:out value="${term}"/></h1>
+        <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchListsContainer.totalCount}"/> result(s) for <c:out value="${term}"/></h1>
     </div>
     <br>
-    <div class="row">
+    <div class="flex text-center">
         <div class="dropdown pr-4">
             <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                     aria-expanded="false">
