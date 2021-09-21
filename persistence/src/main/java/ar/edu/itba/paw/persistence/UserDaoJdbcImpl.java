@@ -23,6 +23,8 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -79,6 +81,12 @@ public class UserDaoJdbcImpl implements UserDao {
         }
         return new User(userId, email, userName, password, name, enabled, 0);
 
+    }
+
+    @Override
+    public Optional<User> changePassword(int userId, String password) {
+        jdbcTemplate.update("UPDATE users SET password = ? WHERE userId = ?", password, userId);
+        return getById(userId);
     }
 
     @Override
