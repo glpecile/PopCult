@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Actor;
@@ -88,8 +89,8 @@ public class RowMappers {
                     rs.getString("username"),
                     rs.getString("password"),
                     "name", //TODO
-                    "profilePhoto",
-                    rs.getBoolean("enabled"));
+                    rs.getBoolean("enabled"),
+                    rs.getInt("imageId"));
     /**
      * Token RowMappers.
      */
@@ -98,6 +99,16 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("token"),
                     rs.getDate("expiryDate"));
+
+    /**
+     * User RowMappers.
+     */
+    public static final RowMapper<Image> IMAGE_ROW_MAPPER =
+            (rs, rowNum) -> new Image(
+                    rs.getInt("imageId"),
+                    rs.getBytes("photoBlob"),
+                    rs.getInt("imageContentLength"),
+                    rs.getString("imageContentType"));
 }
 
 

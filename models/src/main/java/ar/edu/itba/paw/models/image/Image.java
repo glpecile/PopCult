@@ -17,7 +17,7 @@ public class Image {
         return imageId;
     }
 
-    public byte[] getphotoBlob() {
+    public byte[] getPhotoBlob() {
         return photoBlob;
     }
 

@@ -13,7 +13,7 @@ public interface UserService {
 
     Optional<User> getByUsername(String username);
 
-    User register(String email, String username, String password, String name, String profilePhotoURL);
+    User register(String email, String username, String password, String name);
 
     Optional<User> getCurrentUser();
 
