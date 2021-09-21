@@ -38,7 +38,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class UserController {
-    
+
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -71,6 +71,11 @@ public class UserController {
         mav.addObject("userListsContainer", userLists);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        //
+        final List<ListCover> userPublicListCover = getListCover(userLists.getElements(), listsService);
+        PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        mav.addObject("userPublicListCover", userPublicListCover);
+        mav.addObject("userPublicLists", userPublicLists);
         return mav;
     }
 
