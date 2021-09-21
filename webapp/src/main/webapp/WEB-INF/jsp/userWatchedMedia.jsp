@@ -16,7 +16,7 @@
     <jsp:include page="/WEB-INF/jsp/components/profile.jsp">
         <jsp:param name="name" value="${user.name}"/>
         <jsp:param name="username" value="${username}"/>
-        <jsp:param name="profilePicture" value="https://cdn.discordapp.com/attachments/758850104517460008/885980983696973884/E-8U707WUAQVsK4.png"/>
+        <jsp:param name="imageId" value="${user.imageId}"/>
     </jsp:include>
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
