@@ -19,6 +19,8 @@ public interface ListsService {
 
     PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
 
+    PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize);
+
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 //    @Deprecated
 //    List<Integer> getMediaIdInListIds(int mediaListId);//TODO BORRAR
@@ -36,11 +38,11 @@ public interface ListsService {
 
     PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
-    Optional<Integer> getListCount();
-
-    Optional<Integer> getListCountFromUserId(int userId);
-
-    Optional<Integer> getListCountFromMedia(int mediaId);
+//    Optional<Integer> getListCount();
+//
+//    Optional<Integer> getListCountFromUserId(int userId);
+//
+//    Optional<Integer> getListCountFromMedia(int mediaId);
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
