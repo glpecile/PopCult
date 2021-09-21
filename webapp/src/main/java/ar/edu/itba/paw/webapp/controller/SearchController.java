@@ -100,8 +100,8 @@ public class SearchController {
         final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
         mav.addObject("searchSeriesContainer", searchSeriesResults);
         mav.addObject("term", searchForm.getTerm());
-        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).collect(Collectors.toList()));
-        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).collect(Collectors.toList()));
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
         final Map<String, String> queries = new HashMap<>();
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
