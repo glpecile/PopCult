@@ -45,7 +45,7 @@
     <br>
     <!-- Search Results of every Series -->
     <div class="row">
-        <c:url value="/search/films" var="seriesUrl">
+        <c:url value="/search/series" var="seriesUrl">
             <c:param name="sort" value="${param.sort}"/>
             <c:param name="term" value="${param.term}"/>
             <c:param name="genre" value="${param.genre}"/>
@@ -67,7 +67,7 @@
     <br>
     <!-- Search Results of every List -->
     <div class="row">
-        <c:url value="/search/films" var="listsUrl">
+        <c:url value="/search/lists" var="listsUrl">
             <c:param name="sort" value="${param.sort}"/>
             <c:param name="term" value="${param.term}"/>
             <c:param name="genre" value="${param.genre}"/>
