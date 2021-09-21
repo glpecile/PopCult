@@ -10,7 +10,7 @@
     <title><c:out value="${list.listName}"/> &#8226; PopCult</title>
     <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
     <div class="flex justify-content-start content-center pt-4">

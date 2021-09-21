@@ -12,7 +12,7 @@
     <c:url value="/editList/addMedia/${mediaListId}" var="searchUrl"/>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
