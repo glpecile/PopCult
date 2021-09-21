@@ -50,7 +50,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
                 "mediaListId SERIAL PRIMARY KEY," +
                 "userId INT NOT NULL," +
-                "name TEXT NOT NULL," +
+                "listname TEXT NOT NULL," +
                 "description TEXT NOT NULL," +
                 "creationDate DATE," +
                 "visibility BOOLEAN," +
@@ -110,8 +110,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
+    public PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? AND visibility = ? OFFSET ? LIMIT ?", new Object[]{userId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ? AND visibility = ?", new Object[]{userId, true}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements, page, pageSize, totalCount);
+    }
+
+    @Override
     public List<MediaList> getDiscoveryMediaLists(int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY name LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM medialist WHERE userid = ? ORDER BY listname LIMIT ?", new Object[]{discoveryUserId, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -150,41 +158,41 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public List<MediaList> getNLastAddedList(int amount) {
-        return jdbcTemplate.query("SELECT * from medialist ORDER BY creationDate DESC LIMIT ?", new Object[]{amount}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * from medialist WHERE visibility = ? ORDER BY creationDate DESC LIMIT ?", new Object[]{true, amount}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
     public PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        List<MediaList> elements = jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM listElement NATURAL JOIN" +
-                " mediaList WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
+        List<MediaList> elements = jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative FROM listElement NATURAL JOIN" +
+                " mediaList WHERE mediaId = ? AND visibility = ? OFFSET ? LIMIT ?", new Object[]{mediaId, true, pageSize * page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement NATURAL JOIN medialist WHERE mediaId = ? AND visibility = ?", new Object[]{mediaId, true}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
-    @Override
-    public Optional<Integer> getListCount() {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
-                .stream().findFirst();
-    }
-
-    @Override
-    public Optional<Integer> getListCountFromUserId(int userId) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
-                .stream().findFirst();
-    }
-
-    @Override
-    public Optional<Integer> getListCountFromMedia(int mediaId) {
-        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
-                .stream().findFirst();
-    }
+//    @Override
+//    public Optional<Integer> getListCount() {
+//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
+//                .stream().findFirst();
+//    }
+//
+//    @Override
+//    public Optional<Integer> getListCountFromUserId(int userId) {
+//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
+//                .stream().findFirst();
+//    }
+//
+//    @Override
+//    public Optional<Integer> getListCountFromMedia(int mediaId) {
+//        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
+//                .stream().findFirst();
+//    }
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
-        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, name, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
-                "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = ? AND visibility = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
+                "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, true, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
     @Override
@@ -192,7 +200,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         Map<String, Object> data = new HashMap<>();
         Date localDate = new Date();
         data.put("userid", userId);
-        data.put("name", title);
+        data.put("listname", title);
         data.put("description", description);
         data.put("creationDate", localDate);
         data.put("visibility", visibility);
@@ -232,7 +240,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
-        jdbcTemplate.update("UPDATE medialist SET name = ?, description = ?, visibility = ?, collaborative = ? WHERE medialistid = ?", title, description, visibility, collaborative, mediaListId);
+        jdbcTemplate.update("UPDATE medialist SET listname = ?, description = ?, visibility = ?, collaborative = ? WHERE medialistid = ?", title, description, visibility, collaborative, mediaListId);
     }
 
     @Override
@@ -242,7 +250,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         getMediaListById(toCopyListId).ifPresent((toCopy) -> {
             Date localDate = new Date();
             data.put("userid", userId);
-            data.put("name", "Copy from " + toCopy.getName());
+            data.put("listname", "Copy from " + toCopy.getListName());
             data.put("description", toCopy.getDescription());
             data.put("creationDate", localDate);
             data.put("visibility", toCopy.isVisible());
@@ -261,7 +269,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         forkData.put("forkerId", userId);
         forkedListsjdbcInsert.execute(forkData)
         */
-            fork.add(new MediaList((int) key.getKey(), userId, toCopy.getName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative()));
+            fork.add(new MediaList((int) key.getKey(), userId, toCopy.getListName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative()));
         });
         if (fork.isEmpty())
             return Optional.empty();

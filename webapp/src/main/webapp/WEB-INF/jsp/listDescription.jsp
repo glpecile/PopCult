@@ -7,7 +7,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><c:out value="${list.name}"/> &#8226; PopCult</title>
+    <title><c:out value="${list.listName}"/> &#8226; PopCult</title>
     <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 </head>
 <body>
@@ -15,7 +15,7 @@
 <div class="col-8 offset-2">
     <div class="flex justify-content-start content-center pt-4">
         <div class="col-md-auto">
-            <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+            <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
             <h4 class="py-2"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">by: <c:out value="${user.username}"/> </a></h4>
         </div>
         <div class="pt-2.5">

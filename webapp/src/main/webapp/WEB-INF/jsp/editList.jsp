@@ -7,7 +7,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Edit List <c:out value="${list.name}"/> &#8226; PopCult</title>
+    <title>Edit List <c:out value="${list.listName}"/> &#8226; PopCult</title>
     <c:url value="/editList/${list.mediaListId}" var="deletePath"/>
     <c:url value="/editList/${list.mediaListId}" var="postPath"/>
 </head>
@@ -21,7 +21,7 @@
                 <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
                 <form:input path="listTitle" type="text"
                             class="form-control focus:outline-none focus:ring focus:border-purple-300"
-                            id="listName" value="${list.name}"/>
+                            id="listName" value="${list.listName}"/>
                 <form:errors path="listTitle" cssClass="formError text-red-500" element="p"/>
             </div>
             <div class="col-md-6">

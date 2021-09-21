@@ -15,9 +15,11 @@ public interface ListsDao {
 
     PageContainer<MediaList> getAllLists(int page, int pageSize);
 
-    List<MediaList> getMediaListByUserId(int userId);//TODO BORRAR
+    List<MediaList> getMediaListByUserId(int userId);//TODO BORRAR -> no, se usa para el dropdown para agregar una media a una lista desde media descr
 
     PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
+
+    PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
@@ -37,11 +39,11 @@ public interface ListsDao {
 
     PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
-    Optional<Integer> getListCount();
-
-    Optional<Integer> getListCountFromUserId(int userId);
-
-    Optional<Integer> getListCountFromMedia(int mediaId);
+//    Optional<Integer> getListCount();
+//
+//    Optional<Integer> getListCountFromUserId(int userId);
+//
+//    Optional<Integer> getListCountFromMedia(int mediaId);
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches); //TODO paginar
 

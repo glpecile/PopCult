@@ -6,7 +6,7 @@ import java.util.List;
 public enum SortType {
     //Pueden agregarse otro tipos de criterios de sort como cantidad de favoritos, forks en las listas, vistas
     DATE("date","releasedate", "creationdate", 6, 5),
-    TITLE("title","title", "name", 3, 3);
+    TITLE("title","title", "listname", 3, 3);
 
     public final String name;
     public final String nameMedia;

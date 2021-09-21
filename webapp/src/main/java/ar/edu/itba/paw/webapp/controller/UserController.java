@@ -65,6 +65,11 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        //
+        final List<ListCover> userPublicListCover = getListCover(userLists.getElements(), listsService);
+        PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        mav.addObject("userPublicListCover", userPublicListCover);
+        mav.addObject("userPublicLists", userPublicLists);
         return mav;
     }
 
