@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.GenreDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +14,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class GenreDaoJdbcImpl implements GenreDao {
@@ -19,9 +22,13 @@ public class GenreDaoJdbcImpl implements GenreDao {
     private final SimpleJdbcInsert genrejdbcInsert;
     private final SimpleJdbcInsert mediaGenrejdbcInsert;
 
-    private static final RowMapper<String> STRING_ROW_MAPPER =
-            (rs, rowNum) -> new String(
-                    rs.getString("name"));
+    private static final RowMapper<String> STRING_NAME_ROW_MAPPER = RowMappers.STRING_NAME_ROW_MAPPER;
+
+    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
+
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
+
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public GenreDaoJdbcImpl(final DataSource ds) {
@@ -34,16 +41,39 @@ public class GenreDaoJdbcImpl implements GenreDao {
                 "name TEXT NOT NULL)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaGenre(" +
-                "mediaId SERIAL NOT NULL," +
-                "genreId SERIAL NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaid)," +
-                "FOREIGN KEY(genreId) REFERENCES genre(genreId))");
+                "mediaId INT NOT NULL," +
+                "genreId INT NOT NULL," +
+                "FOREIGN KEY(mediaId) REFERENCES media(mediaid) ON DELETE CASCADE ," +
+                "FOREIGN KEY(genreId) REFERENCES genre(genreId) ON DELETE CASCADE )");
 
     }
 
     @Override
     public List<String> getGenreByMediaId(int mediaId) {
-        return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_NAME_ROW_MAPPER);
+    }
+
+    @Override
+    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
+        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaGenre NATURAL JOIN media WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize},
+                MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
+    public Optional<Integer> getMediaCountByGenre(int genreId) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
     }
 
     public void loadGenres() {

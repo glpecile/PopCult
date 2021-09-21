@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,20 +20,9 @@ public class MediaDaoJdbcImpl implements MediaDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final RowMapper<Media> MEDIA_ROW_MAPPER =
-            (rs, rowNum) -> new Media(
-                    rs.getInt("mediaId"),
-                    rs.getInt("type"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("image"),
-                    rs.getInt("length"),
-                    rs.getDate("releaseDate"),
-                    rs.getInt("seasons"),
-                    rs.getInt("country"));
+    private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER =
-            (rs, rowNum) -> rs.getInt("count");
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public MediaDaoJdbcImpl(final DataSource ds) {
@@ -68,13 +58,21 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public List<Media> getMediaList(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM media OFFSET ? LIMIT ? ", new Object[] {pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+    public PageContainer<Media> getMediaList(int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media OFFSET ? LIMIT ? ",
+                new Object[] {pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+        int mediaCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media",
+                COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,mediaCount);
     }
 
     @Override
-    public List<Media> getMediaList(int mediaType, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+    public PageContainer<Media> getMediaList(int mediaType, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?",
+                new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+        int mediaCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?",
+                        new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,mediaCount);
     }
 
     @Override
@@ -82,9 +80,28 @@ public class MediaDaoJdbcImpl implements MediaDao {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER)
                 .stream().findFirst();
     }
+    @Override
+    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
+        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER)
+                .stream().findFirst();
+    }
 
     @Override
-    public List<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE type = ? ORDER BY releasedate DESC OFFSET ? LIMIT ?  ", new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+    public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE type = ? " +
+                "ORDER BY releasedate DESC OFFSET ? LIMIT ?  ",
+                new Object[] {mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+        int mediaCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?",
+                        new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize, mediaCount);
+    }
+
+    @Override
+    public List<Media> searchMediaByTitle(String title, int page, int pageSize){
+        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') ORDER BY title OFFSET ? LIMIT ?", new Object[]{title, page, pageSize},MEDIA_ROW_MAPPER);
+    }
+    @Override
+    public Optional<Integer> getCountSearchMediaByTitle(String title){
+        return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title},COUNT_ROW_MAPPER).stream().findFirst();
     }
 }
