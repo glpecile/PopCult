@@ -16,6 +16,7 @@
     <div class="flex justify-content-start content-center pt-4">
         <div class="col-md-auto">
             <h2 class="display-5 fw-bolder"><c:out value="${list.name}"/></h2>
+            <h4 class="py-2"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">by: <c:out value="${user.username}"/> </a></h4>
         </div>
         <div class="pt-2.5">
             <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">

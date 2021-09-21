@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UnregisteredUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final ar.edu.itba.paw.models.user.User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final ar.edu.itba.paw.models.user.User user = userService.getByUsername(username).orElseThrow(UnregisteredUserException::new);
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         if(user.isEnabled()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));

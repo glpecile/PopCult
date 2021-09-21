@@ -46,4 +46,9 @@ public class SearchServiceImpl implements SearchService {
         return searchDAO.searchListMediaByName(name,page,pageSize, sort);
     }
 
+    @Override
+    public PageContainer<Media> searchMediaByTitleNotInList(int listId, String title, int page, int pageSize, int mediaType, int sort) {
+        return searchDAO.searchMediaByTitleNotInList(listId, title, page, pageSize, mediaType, sort);
+    }
+
 }

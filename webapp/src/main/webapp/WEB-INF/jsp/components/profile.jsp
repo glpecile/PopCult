@@ -17,5 +17,13 @@
             </div>
         </div>
         <h4>Or as we like to call you: <c:out value="${param.username}"/></h4>
+        <div class="flex justify-end">
+            <a href=<c:url value="/logout"/>>
+                <button type="button"
+                        class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white">
+                    Logout
+                </button>
+            </a>
+        </div>
     </div>
 </div>

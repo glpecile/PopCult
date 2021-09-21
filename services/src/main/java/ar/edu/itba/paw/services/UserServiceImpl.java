@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, String profilePhotoURL) {
+    public User register(String email, String username, String password, String name, String profilePhotoURL) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, profilePhotoURL, NOT_ENABLED_USER);
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());

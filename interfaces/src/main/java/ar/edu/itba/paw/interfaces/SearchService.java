@@ -21,4 +21,7 @@ public interface SearchService {
 
     PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort);
 
+    PageContainer<Media> searchMediaByTitleNotInList(int listId, String title, int page, int pageSize, int mediaType, int sort);
+
+
 }
