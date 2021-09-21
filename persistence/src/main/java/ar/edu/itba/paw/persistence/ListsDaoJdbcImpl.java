@@ -191,7 +191,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
         return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = ? AND visibility = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = ? AND visibility = ? GROUP BY mediaList.medialistid, medialist.listname, description, " +
                 "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, true, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
