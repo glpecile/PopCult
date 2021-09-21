@@ -14,11 +14,11 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-sm-8">
-        <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
+            <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
         </div>
-        <div class="col-sm-4 pt-2 justify-content-end">
+        <div class="col-sm-4 pt-2 flex justify-end">
             <a href="${pageContext.request.contextPath}/createList">
-                <button class="btn btn-secondary btn-rounded ">Create new list</button>
+                <button class="btn btn-secondary btn-rounded ">+ Create new list</button>
             </a>
         </div>
         <c:forEach var="cover" items="${recentlyAdded}">

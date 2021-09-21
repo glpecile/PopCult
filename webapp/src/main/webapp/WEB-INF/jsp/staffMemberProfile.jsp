@@ -14,7 +14,7 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg" alt="Media Image">
+            <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" alt="Media Image">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
         <div class="col-12 col-lg-8">
