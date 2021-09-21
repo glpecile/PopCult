@@ -13,6 +13,11 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<sec:authorize access="isAuthenticated()">
+    <c:set var="currentUsername">
+        <sec:authentication property="principal.username"/>
+    </c:set>
+</sec:authorize>
 <br>
 <div class="col-8 offset-2">
     <%--    profile   --%>
@@ -30,16 +35,12 @@
     <%-- current tab --%>
     <div class="row">
         <%--        <h2 class="font-bold text-2xl py-2">My lists</h2>--%>
-        <c:if test="${fn:length(lists) == 0}">
-            <h3 class="text-center">It seems there are no favorite lists to show! :c</h3>
-        </c:if>
-        <sec:authorize access="isAuthenticated()">
-            <c:set var="currentUsername">
-                <sec:authentication property="principal.username"/>
-            </c:set>
-        </sec:authorize>
+
         <c:choose>
         <c:when test="${currentUsername == user.username}">
+            <c:if test="${fn:length(lists) == 0}">
+                <h3 class="text-center">You don't seem to have any lists to show! :c</h3>
+            </c:if>
         <c:forEach var="cover" items="${lists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -61,6 +62,9 @@
     </jsp:include>
     </c:when>
     <c:otherwise>
+        <c:if test="${fn:length(lists) == 0}">
+            <h3 class="text-center">It seems this user has no lists to show! :c</h3>
+        </c:if>
     <c:forEach var="cover" items="${userPublicListCover}">
         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
             <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">

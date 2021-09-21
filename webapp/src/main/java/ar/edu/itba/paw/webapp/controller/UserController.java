@@ -115,7 +115,6 @@ public class UserController {
         return mav;
     }
 
-    //TODO la idea de estos metodos es pasarle el form de user y que de ahi pueda obtener datos como el userId sin tener que llamar a la bd cada vez que se recarga la vista
 
     @RequestMapping("/user/{username}/watchedMedia")
     public ModelAndView userWatchedMedia(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -126,7 +125,7 @@ public class UserController {
 //        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
         final Map<String, String> map = new HashMap<>();
         map.put("username", username);
-        mav.addObject("title", "Watched Media");
+//        mav.addObject("title", "Watched Media");
 //        mav.addObject("mediaList", watchedMedia);
         mav.addObject(user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);

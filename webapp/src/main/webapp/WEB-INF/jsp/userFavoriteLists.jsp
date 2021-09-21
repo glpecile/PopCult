@@ -29,7 +29,7 @@
     <%-- current tab --%>
     <div class="row">
         <c:if test="${userFavListsContainer.totalCount == 0}">
-            <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
+            <h3 class="text-center">It seems there are no favorite lists to show! :c</h3>
         </c:if>
         <c:forEach var="cover" items="${favoriteLists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

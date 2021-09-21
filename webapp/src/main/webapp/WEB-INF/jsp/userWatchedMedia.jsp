@@ -25,6 +25,9 @@
     </jsp:include>
     <%-- current tab --%>
     <div class="row">
+        <c:if test="${watchedMediaIdsContainer.totalCount == 0}">
+            <h3 class="text-center">It seems there is no watched media to show! :c</h3>
+        </c:if>
         <c:forEach var="media" items="${watchedMediaIdsContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
