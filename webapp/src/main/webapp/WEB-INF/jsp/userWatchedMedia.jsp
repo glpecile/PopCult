@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Watched Media &#8226; PopCult</title>
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
@@ -50,7 +50,6 @@
             </div>
         </c:forEach>
     </div>
-
     <br>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${watchedMediaIdsContainer.totalPages}"/>

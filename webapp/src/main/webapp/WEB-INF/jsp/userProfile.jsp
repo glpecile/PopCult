@@ -11,7 +11,7 @@
     <title>Profile &#8226; PopCult</title>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <sec:authorize access="isAuthenticated()">
     <c:set var="currentUsername">
@@ -33,8 +33,6 @@
     </jsp:include>
     <%-- current tab --%>
     <div class="row">
-        <%--        <h2 class="font-bold text-2xl py-2">My lists</h2>--%>
-
         <c:choose>
         <c:when test="${currentUsername == user.username}">
             <c:if test="${fn:length(lists) == 0}">

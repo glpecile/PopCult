@@ -9,7 +9,7 @@
     <title>Favorite Lists &#8226; PopCult</title>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
     <jsp:param name="user" value="${user.username}"/>
 </jsp:include>
