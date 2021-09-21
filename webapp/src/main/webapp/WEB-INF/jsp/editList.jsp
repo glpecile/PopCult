@@ -11,7 +11,7 @@
     <c:url value="/editList/${list.mediaListId}" var="deletePath"/>
     <c:url value="/editList/${list.mediaListId}" var="postPath"/>
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2 py-4">
     <form:form modelAttribute="createListForm" action="${postPath}" method="post">

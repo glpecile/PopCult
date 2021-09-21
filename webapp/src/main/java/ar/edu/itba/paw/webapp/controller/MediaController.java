@@ -52,6 +52,7 @@ public class MediaController {
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
+    private static final int lastAddedAmount = 6;
 
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -59,9 +60,11 @@ public class MediaController {
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
+        final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
+        mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
