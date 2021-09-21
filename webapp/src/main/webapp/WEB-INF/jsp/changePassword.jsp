@@ -43,7 +43,7 @@
             <div class="col-6 col-lg-2">
                     <%--discard changes--%>
                 <a href=<c:url value="/settings"/> >
-                    <button class="btn btn-light my-2">Discard Changes</button>
+                    <button class="btn btn-light my-2" type="button">Discard Changes</button>
                 </a>
             </div>
             <div class="col-6 col-lg-2">
@@ -52,6 +52,7 @@
             </div>
         </div>
     </form:form>
+
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
