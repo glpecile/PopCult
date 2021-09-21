@@ -15,6 +15,8 @@ public interface UserService {
 
     User register(String email, String username, String password, String name);
 
+    Optional<User> changePassword(int userId, String currentPassword, String newPassword);
+
     Optional<User> getCurrentUser();
 
     boolean confirmRegister(Token token);
