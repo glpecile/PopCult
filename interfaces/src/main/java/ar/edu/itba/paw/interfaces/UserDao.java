@@ -16,4 +16,6 @@ public interface UserDao {
     User register(String email, String userName, String password, String name, boolean enabled);
 
     void confirmRegister(int userId, boolean enabled);
+
+    void updateUserProfileImage(int userId, int imageId);
 }

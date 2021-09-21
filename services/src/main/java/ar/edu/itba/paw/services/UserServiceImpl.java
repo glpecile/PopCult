@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -104,4 +104,18 @@ public class UserServiceImpl implements UserService {
             });
         });
     }
+
+    @Override
+    public Optional<Image> getUserProfileImage(int imageId) {
+        return imageService.getImage(imageId);
+    }
+
+    @Override
+    public void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType) {
+        imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
+            userDao.updateUserProfileImage(userId, image.getImageId());
+        });
+    }
+
+
 }

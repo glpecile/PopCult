@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <div class="grid grid-cols-3 gap-4">
     <div class="flex justify-center">
-        <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image" src="${param.profilePicture}">
+        <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image" src="<c:url value="/user/image/${param.imageId}"/>">
         <button type="button" class="z-10 btn btn-link text-gray-400 hover:text-gray-900 btn-rounded"
                 data-bs-toggle="modal"
                 data-bs-target="#uploadModal">
