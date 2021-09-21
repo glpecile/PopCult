@@ -118,7 +118,7 @@ public class RowMappers {
                     rs.getDate("watchdate"));
 
     /**
-     * User RowMappers.
+     * Image RowMappers.
      */
     public static final RowMapper<Image> IMAGE_ROW_MAPPER =
             (rs, rowNum) -> new Image(
