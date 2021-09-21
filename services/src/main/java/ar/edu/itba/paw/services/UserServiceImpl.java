@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.Token;
@@ -19,6 +16,10 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private ImageService imageService;
+
     @Autowired
     private UserDao userDao;
 

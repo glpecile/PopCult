@@ -38,6 +38,9 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class UserController {
+    
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -48,8 +51,7 @@ public class UserController {
     private FavoriteService favoriteService;
     @Autowired
     private WatchService watchService;
-    @Autowired
-    private ImageService imageService;
+
 
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;

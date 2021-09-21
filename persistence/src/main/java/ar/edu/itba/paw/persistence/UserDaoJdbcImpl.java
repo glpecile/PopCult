@@ -35,10 +35,10 @@ public class UserDaoJdbcImpl implements UserDao {
                 "password TEXT NOT NULL," +
                 "name VARCHAR(100)," +
                 "enabled BOOLEAN NOT NULL," +
-                "imageId INT DEFAULT 1," +
+                "imageId INT," +
                 "UNIQUE(email)," +
                 "UNIQUE(username)," +
-                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET DEFAULT)");
+                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
     }
 
     @Override
