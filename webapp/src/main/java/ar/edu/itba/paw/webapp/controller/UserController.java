@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -21,10 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -181,10 +180,19 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "submit, user")
-    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
+    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return changeUserPassword(form);
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+
+        try {
+            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword()).orElseThrow(UserNotFoundException::new);
+        } catch(InvalidCurrentPasswordException e) {
+            errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
+            return changeUserPassword(form);
+        }
+
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 

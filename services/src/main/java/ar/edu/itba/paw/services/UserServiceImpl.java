@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
@@ -74,6 +75,16 @@ public class UserServiceImpl implements UserService {
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
         emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
+    }
+
+    @Override
+    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) {
+        userDao.getById(userId).ifPresent(user -> {
+            if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new InvalidCurrentPasswordException();
+            }
+        });
+        return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
     }
 
     @Override
