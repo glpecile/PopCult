@@ -7,7 +7,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Edit List <c:out value="${list.name}"/> &#8226; PopCult</title>
+    <title>Edit List <c:out value="${list.listName}"/> &#8226; PopCult</title>
     <c:url value="/editList/${list.mediaListId}" var="deletePath"/>
     <c:url value="/editList/${list.mediaListId}" var="postPath"/>
 </head>
@@ -17,15 +17,16 @@
     <form:form modelAttribute="createListForm" action="${postPath}" method="post">
         <div class="row">
             <div class="col-md-6">
+                <h2 class="font-bold text-2xl">Edit your list information</h2>
                 <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
                 <form:input path="listTitle" type="text"
                             class="form-control focus:outline-none focus:ring focus:border-purple-300"
-                            id="listName" value="${list.name}"/>
+                            id="listName" value="${list.listName}"/>
                 <form:errors path="listTitle" cssClass="formError text-red-500" element="p"/>
             </div>
             <div class="col-md-6">
                 <form:label path="description" for="listDesc" class="form-label">Description</form:label>
-                <form:textarea path="description" type="text"
+                <form:input path="description" type="text"
                                class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
                                value="${list.description}"/>
                 <form:errors path="description" cssClass="formError text-red-500" element="p"/>
@@ -62,34 +63,35 @@
             <form:form action="${deletePath}" method="DELETE">
                 <button type="submit" value="delete" name="delete"
                         class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                    Delete
+                    Delete this list
                 </button>
             </form:form>
             <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
                 <button type="button"
                         class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white">
-                    Discard
+                    Discard changes
                 </button>
             </a>
             <button type="submit" value="save" name="save"
-                    class="btn btn-success btn btn-danger bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">Save
+                    class="btn btn-success btn btn-danger bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">Save and edit your list media
             </button>
         </div>
     </form:form>
 
-    <div class="row">
-        <c:forEach var="media" items="${media}">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-4">
-                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                    <jsp:param name="image" value="${media.image}"/>
-                    <jsp:param name="title" value="${media.title}"/>
-                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                    <jsp:param name="mediaId" value="${media.mediaId}"/>
-                    <jsp:param name="editListId" value="${list.mediaListId}"/>
-                </jsp:include>
-            </div>
-        </c:forEach>
-    </div>
+<%--    <div class="row">--%>
+<%--        <c:forEach var="media" items="${media}">--%>
+<%--            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-4">--%>
+<%--                <jsp:include page="/WEB-INF/jsp/components/card.jsp">--%>
+<%--                    <jsp:param name="image" value="${media.image}"/>--%>
+<%--                    <jsp:param name="title" value="${media.title}"/>--%>
+<%--                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>--%>
+<%--                    <jsp:param name="mediaId" value="${media.mediaId}"/>--%>
+<%--                    <jsp:param name="deleteFromListId" value="${list.mediaListId}"/>--%>
+<%--                    <jsp:param name="deletePath" value="/editList/${list.mediaListId}"/>--%>
+<%--                </jsp:include>--%>
+<%--            </div>--%>
+<%--        </c:forEach>--%>
+<%--    </div>--%>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

@@ -24,8 +24,9 @@ public class ExceptionHandlingController {
             MediaNotFoundException.class,
             StaffNotFoundException.class,
             StudioNotFoundException.class,
-            UserNotFoundException.class})
-    public ModelAndView notFoundException() {
+            UserNotFoundException.class,
+            IllegalArgumentException.class})
+    ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
         mav.addObject("description", messageSource.getMessage("exception.notFound", null, Locale.getDefault()));

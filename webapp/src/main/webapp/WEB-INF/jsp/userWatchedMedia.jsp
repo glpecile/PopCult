@@ -32,6 +32,7 @@
                     <jsp:param name="title" value="${media.title}"/>
                     <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                     <jsp:param name="mediaId" value="${media.mediaId}"/>
+                    <jsp:param name="lastWatched" value="${media.lastWatched}"/>
                 </jsp:include>
             </div>
         </c:forEach>

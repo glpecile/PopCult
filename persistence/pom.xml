@@ -15,13 +15,13 @@
     <name>persistence</name>
 
     <dependencies>
-<!--    Springframework dependencies-->
+        <!--    Springframework dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
 
-<!--    JDBC & Postgres dependencies-->
+        <!--    JDBC & Postgres dependencies-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
@@ -31,7 +31,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-<!--    Modules dependencies-->
+        <!--    Modules dependencies-->
         <dependency>
             <groupId>ar.edu.itba.paw</groupId>
             <artifactId>models</artifactId>
@@ -43,7 +43,7 @@
             <version>${parent.version}</version>
         </dependency>
 
-<!--    Logback Logger -->
+        <!--    Logback Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

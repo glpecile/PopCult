@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,11 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
         return listsDao.getMediaListByUserId(userId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize) {
+        return listsDao.getPublicMediaListByUserId(userId, page, pageSize);
     }
 
     @Override
@@ -82,20 +88,20 @@ public class ListsServiceImpl implements ListsService {
         return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
     }
 
-    @Override
-    public Optional<Integer> getListCount() {
-        return listsDao.getListCount();
-    }
-
-    @Override
-    public Optional<Integer> getListCountFromUserId(int userId) {
-        return listsDao.getListCountFromUserId(userId);
-    }
-
-    @Override
-    public Optional<Integer> getListCountFromMedia(int mediaId) {
-        return listsDao.getListCountFromMedia(mediaId);
-    }
+//    @Override
+//    public Optional<Integer> getListCount() {
+//        return listsDao.getListCount();
+//    }
+//
+//    @Override
+//    public Optional<Integer> getListCountFromUserId(int userId) {
+//        return listsDao.getListCountFromUserId(userId);
+//    }
+//
+//    @Override
+//    public Optional<Integer> getListCountFromMedia(int mediaId) {
+//        return listsDao.getListCountFromMedia(mediaId);
+//    }
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
@@ -133,7 +139,12 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public MediaList createMediaListCopy(int userId, int toCopy) {
+    public Optional<MediaList> createMediaListCopy(int userId, int toCopy) {
         return listsDao.createMediaListCopy(userId, toCopy);
+    }
+
+    @Override
+    public Optional<User> getListOwner(int listId) {
+        return listsDao.getListOwner(listId);
     }
 }
