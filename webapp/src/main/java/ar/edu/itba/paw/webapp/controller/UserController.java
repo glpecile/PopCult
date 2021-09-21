@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class UserController {
 
 
     @RequestMapping("/user/{username}")
-    public ModelAndView userProfile(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,
                                     @PathVariable("username") final String username,
                                     @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
@@ -76,7 +75,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/favoriteMedia")
-    public ModelAndView userFavoriteMedia(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView userFavoriteMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                           @PathVariable("username") final String username,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
@@ -95,7 +94,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/toWatchMedia")
-    public ModelAndView userToWatchMedia(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView userToWatchMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                          @PathVariable("username") final String username,
                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
@@ -118,7 +117,7 @@ public class UserController {
 
 
     @RequestMapping("/user/{username}/watchedMedia")
-    public ModelAndView userWatchedMedia(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView userWatchedMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                          @PathVariable("username") final String username,
                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userWatchedMedia");
@@ -138,7 +137,7 @@ public class UserController {
 
 
     @RequestMapping("/user/{username}/favoriteLists")
-    public ModelAndView userFavoriteLists(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView userFavoriteLists(@ModelAttribute("imageForm") final ImageForm imageForm,
                                           @PathVariable("username") final String username,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userFavoriteLists");
@@ -187,11 +186,9 @@ public class UserController {
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
-    //TODO refactor with form
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
     public ModelAndView uploadProfilePicture(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
-                                             final BindingResult error,
-                                             final HttpServletRequest request) throws IOException {
+                                             final BindingResult error) throws IOException {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (error.hasErrors()) {
             return userProfile(imageForm, user.getUsername(), 1);

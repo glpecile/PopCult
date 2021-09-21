@@ -5,13 +5,16 @@ import ar.edu.itba.paw.webapp.form.constraints.ImageValidatorConstraint;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Documented
-@Constraint(validatedBy = ImageValidatorConstraint.class)
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
+@Retention(RUNTIME)
+@Constraint(validatedBy = ImageValidatorConstraint.class)
+@Documented
 public @interface Image {
 
     String message() default "Invalid image";
