@@ -30,12 +30,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <c:url value="/editWatchedDate" var="editDatePath"/>
+                    <c:url value="/user/${param.listOwner}/watchedMedia" var="editDatePath"/>
                     <form:form method="POST" action="${editDatePath}">
                         <label for="watchedDate">Watched on: </label>
                         <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${localDate}">
                         <span class="validity"></span>
                         <input type="hidden" name="username" value="<c:out value="${param.listOwner}"/>">
+                        <input type="hidden" name="mediaId" value="<c:out value="${param.id}"/>">
+                        <input type="hidden" name="userId" value="<c:out value="${param.listOwnerId}"/>">
                         <div class="row">
                             <div class="col-8"></div>
                             <div class="col col-4">

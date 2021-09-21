@@ -61,6 +61,11 @@ public class WatchDaoJdbcImpl implements WatchDao {
     }
 
     @Override
+    public void updateWatchedMediaDate(int mediaId, int userId, Date date) {
+        jdbcTemplate.update("UPDATE towatchmedia SET watchdate = ? WHERE mediaid = ? AND userid = ?", date, mediaId, userId);
+    }
+
+    @Override
     public boolean isWatched(int mediaId, int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE mediaId = ? AND userid = ? AND watchDate IS NOT NULL", new Object[]{mediaId, userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0) > 0;

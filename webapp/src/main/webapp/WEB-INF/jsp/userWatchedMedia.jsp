@@ -44,6 +44,7 @@
                         <jsp:param name="listOwner" value="${username}"/>
                         <jsp:param name="mediaTitle" value="${media.title}"/>
                         <jsp:param name="id" value="${media.mediaId}"/>
+                        <jsp:param name="listOwnerId" value="${user.userId}"/>
                     </jsp:include>
                 </div>
             </div>

@@ -21,10 +21,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -205,9 +206,10 @@ public class UserController {
         return userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
     }
 
-    @RequestMapping(value = "/editWatchedDate", method = {RequestMethod.POST}, params = "watchedDate")
-    public ModelAndView editWatchedDate(@RequestParam("username") final String username, @RequestParam("watchedDate") String watchedDate) {
-        System.out.println(watchedDate);
+    @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
+    public ModelAndView editWatchedDate(@PathVariable("username") final String username, @RequestParam("watchedDate") String watchedDate, @RequestParam("userId") int userId, @RequestParam("mediaId") int mediaId) throws ParseException {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        watchService.updateWatchedMediaDate(mediaId, userId, f.parse(watchedDate));
         return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
 }
