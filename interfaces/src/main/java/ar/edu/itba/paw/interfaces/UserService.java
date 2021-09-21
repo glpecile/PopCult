@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -20,4 +20,8 @@ public interface UserService {
     boolean confirmRegister(Token token);
 
     void resendVerificationEmail(String token);
+
+    Optional<Image> getUserProfileImage(int imageId);
+
+    void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType);
 }

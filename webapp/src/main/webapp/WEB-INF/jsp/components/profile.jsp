@@ -11,7 +11,7 @@
         <c:when test="${currentUsername == param.username}">
             <div class="flex justify-center">
                 <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image"
-                     src="${param.profilePicture}">
+                     src="<c:url value="/user/image/${param.imageId}"/>">
                 <button type="button" class="z-10 btn btn-link text-gray-400 hover:text-gray-900 btn-rounded"
                         data-bs-toggle="modal"
                         data-bs-target="#uploadModal">
@@ -71,7 +71,7 @@
         <c:otherwise>
             <div class="flex justify-center">
                 <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image"
-                     src="${param.profilePicture}">
+                     src="<c:url value="/user/image/${param.imageId}"/>">
                 <div class="col-span-2">
                     <h2 class="text-3xl pl-2 pb-2"><c:out value="${param.name}"/></h2>
                     <h4 class=" pl-2 ">Also known as: <c:out value="${param.username}"/></h4>

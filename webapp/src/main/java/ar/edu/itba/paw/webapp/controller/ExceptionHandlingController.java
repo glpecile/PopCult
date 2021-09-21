@@ -25,7 +25,8 @@ public class ExceptionHandlingController {
             StaffNotFoundException.class,
             StudioNotFoundException.class,
             UserNotFoundException.class,
-            IllegalArgumentException.class})
+            ImageNotFoundException.class,
+            IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
     ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
