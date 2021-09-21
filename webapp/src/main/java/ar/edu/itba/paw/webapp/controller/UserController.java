@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -10,14 +11,24 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +48,8 @@ public class UserController {
     private FavoriteService favoriteService;
     @Autowired
     private WatchService watchService;
+    @Autowired
+    private ImageService imageService;
 
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
@@ -124,7 +137,7 @@ public class UserController {
 //        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
-        final Map<String,String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("username", username);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("userFavListsContainer", userFavLists);
@@ -160,6 +173,31 @@ public class UserController {
     public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
         if (errors.hasErrors())
             return changeUserPassword(form);
-        return new ModelAndView("redirect:/user/"+user.getUsername());
+        return new ModelAndView("redirect:/user/" + user.getUsername());
+    }
+
+    @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})
+    public ModelAndView uploadProfilePicture(@RequestParam("username") final String username, @RequestParam("file") MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            try {
+                byte[] photoBlob = IOUtils.toByteArray(file.getInputStream());
+                Integer imageContentLength = Long.valueOf(file.getSize()).intValue();
+                String imageContentType = file.getContentType();
+                userService.getByUsername(username).ifPresent((user -> {
+                    imageService.uploadUserProfilePicture(user.getUserId(), photoBlob, imageContentLength, imageContentType);
+                }));
+            } catch (Exception e) {
+                return new ModelAndView("redirect:/user" + username).addObject("errorMsg", "You failed to upload" + "->" + e.getMessage());
+            }
+        }
+        return new ModelAndView("redirect:/user/" + username);
+    }
+
+    @RequestMapping(value = "/getProfileImage")
+    public ModelAndView getProfilePicture(@RequestParam("username") final String username) {
+        userService.getByUsername(username).ifPresent((user -> {
+            Image image = imageService.getUserProfilePicture(user.getUserId()).orElseThrow(RuntimeException::new);
+        }));
+        return new ModelAndView("redirect:/user/" + username);
     }
 }

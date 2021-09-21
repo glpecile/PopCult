@@ -39,8 +39,7 @@ public class RegisterController {
             userService.register(form.getEmail(),
                     form.getUsername(),
                     form.getPassword(),
-                    form.getName(),
-                    null);
+                    form.getName());
         } catch (UsernameAlreadyExistsException e) {
             errors.rejectValue("username", "validation.username.alreadyExists");
             return registerForm(form);

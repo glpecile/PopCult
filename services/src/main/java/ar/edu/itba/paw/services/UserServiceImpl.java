@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, String profilePhotoURL) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, profilePhotoURL, NOT_ENABLED_USER);
+    public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER);
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());
 

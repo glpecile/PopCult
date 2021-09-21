@@ -121,7 +121,12 @@
             <artifactId>logback-ext-spring</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        <!--CommonsMultipartResolver - File Uploading-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
     <build>
