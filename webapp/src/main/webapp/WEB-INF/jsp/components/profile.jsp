@@ -67,10 +67,10 @@
             </div>
         </c:when>
         <c:otherwise>
-            <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image"
+            <img class="rounded-full h-40 w-40 flex items-center" alt="profile_image"
                  src="<c:url value="/user/image/${param.imageId}"/>">
-            <h2 class="text-3xl"><c:out value="${param.name}"/></h2>
-            <h4>Also known as: <c:out value="${param.username}"/></h4>
+            <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
+            <h4>Also known as: <b><c:out value="${param.username}"/></b></h4>
         </c:otherwise>
     </c:choose>
 </div>
