@@ -86,7 +86,7 @@ public class WatchDaoJdbcImpl implements WatchDao {
 
     @Override
     public PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize) {
-        List<WatchedMedia> elements = jdbcTemplate.query("SELECT * FROM towatchmedia NATURAL JOIN media WHERE watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, WATCHED_MEDIA_ROW_MAPPER);
+        List<WatchedMedia> elements = jdbcTemplate.query("SELECT * FROM towatchmedia NATURAL JOIN media WHERE userId = ? AND watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET ? LIMIT ?", new Object[]{userId , page * pageSize, pageSize}, WATCHED_MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NOT NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
@@ -108,7 +108,7 @@ public class WatchDaoJdbcImpl implements WatchDao {
     public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM towatchmedia NATURAL JOIN media WHERE watchDate IS NULL OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM towatchmedia WHERE userId = ? AND watchDate IS NULL", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(elements,page,pageSize,totalCount);
+        return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
     @Override
