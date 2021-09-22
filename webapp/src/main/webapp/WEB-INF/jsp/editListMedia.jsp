@@ -40,7 +40,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/createList/addMedia"/>
+                <jsp:param name="url" value="/editList/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
