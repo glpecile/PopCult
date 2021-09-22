@@ -16,7 +16,7 @@
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
-        <div class="row g-3 p-2 my-8 bg-white shadow-lg">
+        <div class="row g-3 p-2 my-8 bg-white rounded-lg shadow-lg">
             <h2 class="font-bold text-2xl">Manage list content</h2>
             <c:if test="${mediaContainer.totalCount != 0}">
                 <h4 class="py-2">Currently in this list</h4>
@@ -113,5 +113,6 @@
             </div>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
