@@ -5,7 +5,7 @@
     <appender name="error-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <maxHistory>5</maxHistory>
-            <fileNamePattern>logs/errors-2020b-2.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/errors-2021b-2.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>${pattern:-}</pattern>
@@ -15,7 +15,7 @@
     <appender name="paw-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <maxHistory>5</maxHistory>
-            <fileNamePattern>logs/paw-2020b-2.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/paw-2021b-2.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>${pattern:-}</pattern>
