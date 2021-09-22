@@ -116,7 +116,8 @@ public class ListsController {
 
         if (errors.hasErrors()) {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
-            return new ModelAndView("redirect: " + request.getHeader("referer"));
+            // return new ModelAndView("redirect: " + request.getHeader("referer"));
+            return addMediaToList(page, mediaListId, null, null, null);
         }
         final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
         final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), page - 1, itemsPerPage, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal());
