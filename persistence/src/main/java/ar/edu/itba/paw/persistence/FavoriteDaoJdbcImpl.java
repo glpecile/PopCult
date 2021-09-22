@@ -123,6 +123,13 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
+    public PageContainer<MediaList> getUserPublicFavoriteLists(int userId, int page, int pageSize) {
+        List<MediaList> elements = jdbcTemplate.query("SELECT * FROM favoritelists NATURAL JOIN medialist WHERE userId = ? AND visibility = ? OFFSET ? LIMIT ?", new Object[]{userId, true, page * pageSize, pageSize}, MEDIA_LIST_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritelists NATURAL JOIN medialist WHERE userId = ? AND visibility = ?", new Object[]{userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(elements,page,pageSize,totalCount);
+    }
+
+    @Override
     public Optional<Integer> getFavoriteListsCount(int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritelists WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst();
     }
