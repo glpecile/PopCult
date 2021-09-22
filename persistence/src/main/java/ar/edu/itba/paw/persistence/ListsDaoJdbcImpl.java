@@ -281,4 +281,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public Optional<User> getListOwner(int listId) {
         return jdbcTemplate.query("SELECT DISTINCT * FROM medialist NATURAL JOIN users WHERE medialistid = ? ", new Object[]{listId}, USER_ROW_MAPPER).stream().findFirst();
     }
+
+    @Override
+    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
+        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{page*pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist", COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
+    }
 }

@@ -14,14 +14,14 @@
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-sm-8">
-            <h2 class="font-bold text-2xl py-2">Recently added lists</h2>
+            <h2 class="font-bold text-2xl py-2">Popular lists right now</h2>
         </div>
         <div class="col-sm-4 pt-2 flex justify-end">
             <a href="${pageContext.request.contextPath}/createList">
                 <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">+ Create new list</button>
             </a>
         </div>
-        <c:forEach var="cover" items="${recentlyAdded}">
+        <c:forEach var="cover" items="${mostLikedLists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                 <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                     <jsp:param name="title" value="${cover.name}"/>

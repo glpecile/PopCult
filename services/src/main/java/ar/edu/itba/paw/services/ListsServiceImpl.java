@@ -147,4 +147,9 @@ public class ListsServiceImpl implements ListsService {
     public Optional<User> getListOwner(int listId) {
         return listsDao.getListOwner(listId);
     }
+
+    @Override
+    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
+        return listsDao.getMostLikedLists(page, pageSize);
+    }
 }
