@@ -7,17 +7,17 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Add media to list &#8226; PopCult</title>
+    <title>Add media to a new list &#8226; PopCult</title>
     <c:url value="/editList/${mediaListId}" var="deletePath"/>
-    <c:url value="/editList/addMedia/${mediaListId}" var="searchUrl"/>
+    <c:url value="/addMedia/${mediaListId}" var="searchUrl"/>
 
 </head>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
-        <div class="row g-3 p-2 my-8 bg-white rounded-lg shadow-lg">
-            <h2 class="font-bold text-2xl">Manage list content</h2>
+        <div class="row g-3 p-2 my-8 bg-white shadow-lg">
+            <h2 class="font-bold text-2xl">Step 2: Manage list content</h2>
             <c:if test="${mediaContainer.totalCount != 0}">
                 <h4 class="py-2">Currently in this list</h4>
             </c:if>
@@ -30,7 +30,7 @@
                             <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                             <jsp:param name="mediaId" value="${media.mediaId}"/>
                             <jsp:param name="deleteFromListId" value="${mediaListId}"/>
-                            <jsp:param name="deletePath" value="/createList/addMedia"/>
+                            <jsp:param name="deletePath" value="/addMedia/${mediaListId}"/>
                         </jsp:include>
                     </div>
                 </c:forEach>
@@ -40,7 +40,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/editList/addMedia/${mediaListId}"/>
+                <jsp:param name="url" value="/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
@@ -73,7 +73,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/editList/addMedia/${mediaListId}"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -90,7 +90,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/editList/addMedia/${mediaListId}"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -99,9 +99,10 @@
             </c:if>
             <div class="flex justify-between px-4">
                 <form:form action="${deletePath}" method="DELETE">
+                    <input type="hidden" id="mediaListId" name="mediaListId" value="${mediaListId}">
                     <button type="submit" value="delete" name="delete"
                             class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                        Delete this list
+                        Delete list
                     </button>
                 </form:form>
                 <a href=<c:url value="/lists/${mediaListId}"/>>
@@ -113,6 +114,5 @@
             </div>
         </div>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

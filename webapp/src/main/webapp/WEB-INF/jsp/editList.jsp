@@ -18,7 +18,7 @@
         <form:form cssClass="rounded-lg shadow-lg p-4 bg-white" modelAttribute="createListForm" action="${postPath}" method="post">
             <div class="flex flex-col gap-2.5">
                 <div class="col-md-6">
-                    <h2 class="font-bold text-2xl">Edit your list information</h2>
+                    <h2 class="font-bold text-2xl">Step 1: Edit your list information</h2>
                     <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
                     <form:input path="listTitle" type="text"
                                 class="form-control focus:outline-none focus:ring focus:border-purple-300"
