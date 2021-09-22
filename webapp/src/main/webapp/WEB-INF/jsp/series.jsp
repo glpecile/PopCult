@@ -24,11 +24,11 @@
     <c:otherwise>
         <div class="col-8 offset-2">
             <br>
-            <h4 class="font-bold text-2xl pt-2">Recently Added Series</h4>
+            <h4 class="font-bold text-2xl pt-2">Popular Series Right Now</h4>
             <div class="flex flex-col" data-controller="slider">
                 <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                     <c:set var="i" value="1"/>
-                    <c:forEach var="latestSerie" items="${latestSeriesList}">
+                    <c:forEach var="latestSerie" items="${mostLikedSeries}">
                         <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                             <c:set var="i" value="${i + 1}"/>
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">

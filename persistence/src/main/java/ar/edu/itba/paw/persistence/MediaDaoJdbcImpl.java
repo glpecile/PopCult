@@ -114,4 +114,11 @@ public class MediaDaoJdbcImpl implements MediaDao {
         return new PageContainer<>(mediaList, page, pageSize, mediaListCount);
 
     }
+
+    @Override
+    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
+        List<Media> likedMoviesList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
+        int moviesCunt = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(likedMoviesList, page, pageSize, moviesCunt);
+    }
 }

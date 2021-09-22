@@ -27,4 +27,6 @@ public interface MediaDao {
     Optional<Integer> getCountSearchMediaByTitle(String title);
 
     PageContainer<Media> getMostLikedMedia(int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
 }
