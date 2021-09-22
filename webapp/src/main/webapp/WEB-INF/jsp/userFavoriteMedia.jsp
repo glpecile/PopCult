@@ -56,11 +56,11 @@
         </c:when>
         <c:otherwise>
             <div>
-                <h3 class="text-center">It seems there is no favorite media to show! :c</h3>
+                <h3 class="text-center text-gray-400">It seems there is no favorite media to show! :c</h3>
             </div>
             <c:if test="${currentUsername == user.username}">
                 <div class="row">
-                    <h4 class="text-center py-2">Why dont you check this recommendations out?</h4>
+                    <h4 class="text-center py-2 text-gray-400">Why dont you check this recommendations out?</h4>
                     <c:forEach var="media" items="${suggestedMediaContainer.elements}">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">

@@ -16,7 +16,9 @@
     <div class="flex justify-content-start content-center pt-4">
         <div class="col-md-auto">
             <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-            <h4 class="py-2"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">by: <c:out value="${user.username}"/> </a></h4>
+            <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
+                by: <b><c:out value="${user.username}"/></b>
+            </a></h4>
         </div>
         <div class="pt-2.5">
             <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -50,7 +52,7 @@
             </c:choose>
         </div>
     </div>
-
+    <!-- Films and Series in the list -->
     <div class="row">
         <c:forEach var="media" items="${media}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

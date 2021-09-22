@@ -17,7 +17,7 @@
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
             <!-- Button Grid. Possible TODO: Make component. -->
-            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3">
+            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
                 <%-- Icon row --%>
                 <div class="flex justify-around pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
