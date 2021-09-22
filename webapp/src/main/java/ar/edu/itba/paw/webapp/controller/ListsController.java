@@ -95,21 +95,21 @@ public class ListsController {
     }
 
     //CREATE A NEW LIST - PART 2
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET})
-    public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults) {
+    @RequestMapping(value = "/addMedia/{listId}", method = {RequestMethod.GET})
+    public ModelAndView addMediaToList(@RequestParam(value = "page", defaultValue = "1") final int page, @PathVariable("listId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults) {
         final ModelAndView mav = new ModelAndView("createListAddMedia");
         return addMediaObjects(page, mediaListId, searchTerm, searchFilmsResults, searchSeriesResults, mav);
     }
 
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteFromList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
+    @RequestMapping(value = "/addMedia/{listId}", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteFromList(@RequestParam(value = "page", defaultValue = "1") final int page, @PathVariable("listId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
         listsService.deleteMediaFromList(mediaListId, mediaId);
         return addMediaToList(page, mediaListId, null, null, null);
     }
 
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.GET}, params = "search")
+    @RequestMapping(value = "/addMedia/{listId}", method = {RequestMethod.GET}, params = "search")
     public ModelAndView searchMediaToAddToList(@RequestParam(value = "page", defaultValue = "1") final int page,
-                                               @RequestParam("mediaListId") Integer mediaListId, HttpServletRequest request,
+                                               @PathVariable("listId") Integer mediaListId, HttpServletRequest request,
                                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                                final BindingResult errors,
                                                @RequestParam(value = "sort", defaultValue = "title") final String sortType) {
@@ -123,8 +123,8 @@ public class ListsController {
         return addMediaToList(page, mediaListId, searchForm.getTerm(), searchFilmsResults, searchSeriesResults);
     }
 
-    @RequestMapping(value = "/createList/addMedia", method = {RequestMethod.POST}, params = "add")
-    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @RequestParam("mediaListId") int mediaListId, @RequestParam("mediaId") Integer selectedMedia) {
+    @RequestMapping(value = "/addMedia/{listId}", method = {RequestMethod.POST}, params = "add")
+    public ModelAndView insertToList(@RequestParam(value = "page", defaultValue = "1") final int page, @PathVariable("listId") Integer mediaListId, @RequestParam("mediaId") Integer selectedMedia) {
         try {
             listsService.addToMediaList(mediaListId, selectedMedia);
         } catch (MediaAlreadyInListException e) {
