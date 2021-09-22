@@ -161,9 +161,10 @@ public class ListsController {
     }
     //END EDIT LIST
 
-    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST})
-    public ModelAndView createListCopy(@PathVariable("listId") final int listId, @RequestParam("currentUserId") final int currentUserId) {
-        final MediaList newList = listsService.createMediaListCopy(currentUserId, listId).orElseThrow(ListNotFoundException::new);
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "fork")
+    public ModelAndView createListCopy(@PathVariable("listId") final int listId) {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        final MediaList newList = listsService.createMediaListCopy(user.getUserId(), listId).orElseThrow(ListNotFoundException::new);
         return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
     }
 
