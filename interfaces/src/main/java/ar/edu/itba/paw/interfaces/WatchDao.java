@@ -15,6 +15,8 @@ public interface WatchDao {
 
     void deleteToWatchMedia(int mediaId, int userId);
 
+    void updateWatchedMediaDate (int mediaId, int userId, Date date);
+
     boolean isWatched(int mediaId, int userId);
 
     boolean isToWatch(int mediaId, int userId);
@@ -30,7 +32,6 @@ public interface WatchDao {
 //    PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize);
 
     PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize);
-
 
     Optional<Integer> getToWatchMediaCount(int userId);
 }

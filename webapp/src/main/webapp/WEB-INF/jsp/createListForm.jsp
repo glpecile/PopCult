@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Create a new list &#8226; PopCult</title>
 </head>
-<body>
+<body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <c:url value="/createList" var="postPath"/>

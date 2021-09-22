@@ -23,6 +23,8 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -34,11 +36,11 @@ public class UserDaoJdbcImpl implements UserDao {
                 "username TEXT NOT NULL," +
                 "password TEXT NOT NULL," +
                 "name VARCHAR(100)," +
-                "profilephoto BYTEA," +
                 "enabled BOOLEAN NOT NULL," +
+                "imageId INT," +
                 "UNIQUE(email)," +
-                "UNIQUE(username)" +
-                ")");
+                "UNIQUE(username)," +
+                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
     }
 
     @Override
@@ -57,31 +59,48 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, String profilePhotoURL, boolean enabled) {
+    public User register(String email, String userName, String password, String name, boolean enabled) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
-        args.put("profilephoto", profilePhotoURL);
+//        args.put("profilephoto", profilePhotoURL);
         args.put("enabled", enabled);
 
         int userId = 0;
         try {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
         } catch (DuplicateKeyException e) {
-            if(e.getMessage().contains("users_email_key")) {
+            if (e.getMessage().contains("users_email_key")) {
                 throw new EmailAlreadyExistsException();
             }
-            if(e.getMessage().contains("users_username_key")) {
+            if (e.getMessage().contains("users_username_key")) {
                 throw new UsernameAlreadyExistsException();
             }
         }
-        return new User(userId, email, userName, password, name, profilePhotoURL, enabled);
+        return new User(userId, email, userName, password, name, enabled, 0);
 
     }
 
+    @Override
+    public Optional<User> changePassword(int userId, String password) {
+        jdbcTemplate.update("UPDATE users SET password = ? WHERE userId = ?", password, userId);
+        return getById(userId);
+    }
+
+    @Override
     public void confirmRegister(int userId, boolean enabled) {
         jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
+    }
+
+    @Override
+    public void updateUserProfileImage(int userId, int imageId) {
+        jdbcTemplate.update("UPDATE users SET imageid = ? WHERE userid = ? ", imageId, userId);
+    }
+
+    @Override
+    public void updateUserData(int userId, String email, String username, String name) {
+        jdbcTemplate.update("UPDATE users SET name = ?, email = ?, username = ? WHERE userid = ?", name, email, username, userId);
     }
 }

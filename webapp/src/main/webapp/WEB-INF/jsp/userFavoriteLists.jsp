@@ -9,7 +9,7 @@
     <title>Favorite Lists &#8226; PopCult</title>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp">
     <jsp:param name="user" value="${user.username}"/>
 </jsp:include>
@@ -19,7 +19,7 @@
     <jsp:include page="/WEB-INF/jsp/components/profile.jsp">
         <jsp:param name="name" value="${user.name}"/>
         <jsp:param name="username" value="${username}"/>
-        <jsp:param name="profilePicture" value="https://cdn.discordapp.com/attachments/758850104517460008/885980983696973884/E-8U707WUAQVsK4.png"/>
+        <jsp:param name="imageId" value="${user.imageId}"/>
     </jsp:include>
     <%--    tabs     --%>
     <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
@@ -29,7 +29,7 @@
     <%-- current tab --%>
     <div class="row">
         <c:if test="${userFavListsContainer.totalCount == 0}">
-            <h3 class="text-center">You don't seem to have any favorite lists to show! :c</h3>
+            <h3 class="text-center">It seems there are no favorite lists to show! :c</h3>
         </c:if>
         <c:forEach var="cover" items="${favoriteLists}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">

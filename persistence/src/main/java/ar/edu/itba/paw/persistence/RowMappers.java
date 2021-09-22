@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
@@ -48,7 +49,7 @@ public class RowMappers {
             (rs, rowNum) -> new MediaList(
                     rs.getInt("mediaListId"),
                     rs.getInt("userId"),
-                    rs.getString("name"),
+                    rs.getString("listname"),
                     rs.getString("description"),
                     rs.getDate("creationDate"),
                     rs.getBoolean("visibility"),
@@ -88,9 +89,9 @@ public class RowMappers {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    "name", //TODO
-                    "profilePhoto",
-                    rs.getBoolean("enabled"));
+                    rs.getString("name"), //TODO
+                    rs.getBoolean("enabled"),
+                    rs.getInt("imageId"));
     /**
      * Token RowMappers.
      */
@@ -115,6 +116,16 @@ public class RowMappers {
                     rs.getInt("seasons"),
                     rs.getInt("country"),
                     rs.getDate("watchdate"));
+
+    /**
+     * Image RowMappers.
+     */
+    public static final RowMapper<Image> IMAGE_ROW_MAPPER =
+            (rs, rowNum) -> new Image(
+                    rs.getInt("imageId"),
+                    rs.getBytes("photoBlob"),
+                    rs.getInt("imageContentLength"),
+                    rs.getString("imageContentType"));
 }
 
 

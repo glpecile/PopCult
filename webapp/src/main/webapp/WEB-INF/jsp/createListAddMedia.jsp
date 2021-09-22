@@ -9,10 +9,10 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Add media to a new list &#8226; PopCult</title>
     <c:url value="/editList/${mediaListId}" var="deletePath"/>
-    <c:url value="/createList/addMedia" var="searchUrl"/>
+    <c:url value="/addMedia/${mediaListId}" var="searchUrl"/>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
@@ -40,25 +40,28 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/createList/addMedia"/>
+                <jsp:param name="url" value="/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
             <%--            search input--%>
             <form class="space-y-4" action="${searchUrl}" method="get" enctype="application/x-www-form-urlencoded">
-                <div class="flex flex-col">
+                <div class="flex flex-col relative">
                     <label class="py-2 text-semibold w-full flex">
                         <input type="hidden" name="mediaListId" value="${mediaListId}">
-                        <input class="form-control shadow-sm" type="text" name="term"
+                        <input class="form-control text-base rounded-full h-8 shadow-sm pl-3 pr-8" type="text"
+                               name="term"
                                placeholder="<spring:message code="search.placeholder"/>"/>
-                        <button class="btn btn-secondary btn-rounded my-2 w-auto" name="search" id="search"
-                                type="submit"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
+                                name="search" id="search" type="submit">
+                            <i class="fas fa-search text-gray-500 text-center rounded-full mb-2"></i>
+                        </button>
                     </label>
                 </div>
             </form>
             <c:if test="${searchTerm != null}">
                 <br>
-                <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/> </h2>
+                <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/></h2>
                 <!-- Search Results of every Film -->
                 <div class="row">
                     <h2 class="font-bold text-2xl py-2">Search Films Results</h2>
@@ -70,7 +73,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/createList/addMedia"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -87,7 +90,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/createList/addMedia"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -105,7 +108,7 @@
                 <a href=<c:url value="/lists/${mediaListId}"/>>
                     <button type="button"
                             class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
-                       Finish
+                        Finish
                     </button>
                 </a>
             </div>
