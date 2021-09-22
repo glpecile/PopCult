@@ -62,7 +62,7 @@ public class WatchDaoJdbcImpl implements WatchDao {
 
     @Override
     public void updateWatchedMediaDate(int mediaId, int userId, Date date) {
-        jdbcTemplate.update("UPDATE towatchmedia SET watchdate = ? WHERE mediaid = ? AND userid = ?", date, mediaId, userId);
+        jdbcTemplate.update("UPDATE towatchmedia SET watchdate = ? WHERE mediaid = ? AND userid = ? AND watchdate IS NOT NULL", date, mediaId, userId);
     }
 
     @Override

@@ -41,11 +41,10 @@
                 </c:when>
                 <c:otherwise>
                     <form:form cssClass="m-0" action="${forkPath}" method="POST">
-                        <button type="submit" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                        <button type="submit" id="fork" name="fork" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                             <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
                             Fork this list
                         </button>
-                        <input id="currentUserId" type="hidden" name="currentUserId" value="${currentUser.userId}">
                     </form:form>
                 </c:otherwise>
             </c:choose>
