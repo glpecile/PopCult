@@ -15,7 +15,9 @@
                 </c:when>
                 <c:otherwise>
                     <li class="page-item ">
-                        <a class="page-link" href="<c:url value="${param.url}?page=${param.currentPage - 1}"/>">
+                        <a class="page-link" href="<c:url value="${param.url}">
+                        <c:param name="page" value="${param.currentPage -1}"/>
+                    </c:url>">
                             &laquo;
                         </a>
                     </li>
@@ -25,7 +27,9 @@
             <%--First page--%>
             <c:if test="${param.currentPage > 2}">
                 <li class="page-item">
-                    <a class="page-link" href="<c:url value="${param.url}?page=1"/>">1</a>
+                    <a class="page-link" href="<c:url value="${param.url}">
+                        <c:param name="page" value="1"/>
+                    </c:url>">1</a>
                 </li>
             </c:if>
             <c:if test="${param.currentPage > 3}">
@@ -40,14 +44,18 @@
                     <c:choose>
                         <c:when test="${param.currentPage == i}">
                             <li class="page-item active">
-                                <a class="page-link" href="<c:url value="${param.url}?page=${i}"/>">
+                                <a class="page-link" href="<c:url value="${param.url}">
+                                    <c:param name="page" value="${i}"/>
+                                </c:url>">
                                     <c:out value="${i}"/>
                                 </a>
                             </li>
                         </c:when>
                         <c:otherwise>
                             <li class="page-item">
-                                <a class="page-link" href="<c:url value="${param.url}?page=${i}"/>">
+                                <a class="page-link" href="<c:url value="${param.url}">
+                                    <c:param name="page" value="${i}"/>
+                                </c:url>">
                                     <c:out value="${i}"/>
                                 </a>
                             </li>
@@ -65,7 +73,9 @@
             </c:if>
             <c:if test="${param.mediaPages > 1 && param.currentPage < param.mediaPages - 1}">
                 <li class="page-item">
-                    <a class="page-link" href="<c:url value="${param.url}?page=${param.mediaPages}"/>">
+                    <a class="page-link" href="<c:url value="${param.url}">
+                        <c:param name="page" value="${param.mediaPages}"/>
+                    </c:url>">
                         <c:out value="${param.mediaPages}"/>
                     </a>
                 </li>
@@ -82,7 +92,9 @@
                 </c:when>
                 <c:otherwise>
                     <li class="page-item ">
-                        <a class="page-link" href="<c:url value="${param.url}?page=${param.currentPage + 1}"/>">
+                        <a class="page-link" href="<c:url value="${param.url}">
+                        <c:param name="page" value="${param.currentPage + 1}"/>
+                    </c:url>">
                             &raquo;
                         </a>
                     </li>

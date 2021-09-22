@@ -1,6 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -8,18 +9,62 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${media.title}"/> &#8226; PopCult</title>
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img class="img-fluid img-thumbnail card-img-top rounded-lg" src="${media.image}" alt="Media Image"/>
-            <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+            <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
+            <!-- Button Grid. Possible TODO: Make component. -->
+            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
+                <%-- Icon row --%>
+                <div class="flex justify-around pt-2">
+                    <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="favorite" value="${isFavoriteMedia}"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/components/watchedMedia.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="isWatched" value="${isWatchedMedia}"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/components/watchlist.jsp">
+                        <jsp:param name="URL" value="media/${mediaId}"/>
+                        <jsp:param name="watchlisted" value="${isToWatchMedia}"/>
+                    </jsp:include>
+                </div>
+                <%-- Share --%>
+                <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+                <%-- Dropdown lists list --%>
+                <sec:authorize access="isAuthenticated()">
+                    <div class="dropdown flex justify-center py-2 shadow-md">
+                        <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button"
+                                id="addMediaToList"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Add to a list
+                        </button>
+                        <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
+                            <c:forEach var="list" items="${userLists}">
+                                <form action="<c:url value="/media/${mediaId}"/>" method="POST">
+                                    <button class="dropdown-item py-0" type="submit"><c:out value="${list.listName}"/></button>
+                                    <input type="hidden" id="mediaListId" name="mediaListId"
+                                           value="<c:out value = "${list.mediaListId}"/>">
+                                </form>
+                            </c:forEach>
+                            <a class="dropdown-item py-0" href="<c:url value="/createList"/>">+ Create a new list</a>
+                        </ul>
+                    </div>
+                </sec:authorize>
+            </div>
+            <!-- End component -->
         </div>
 
         <div class="col-12 col-lg-8">
-            <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
+            <div class="row justify-content-start">
+                <div class="col-md-auto">
+                    <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
+                </div>
+            </div>
             <div class="text-xl py-2">
                 <span><c:out value="${media.releaseYear}"/></span>
                 <span class="mx-3 mt-3">&#8226;</span>
@@ -30,7 +75,7 @@
 
             <br>
 
-            <c:if test="${genresAmount > 0}">
+            <c:if test="${fn:length(genreList) > 0}">
                 <h5 class="font-bold text-2xl py-2">Genre</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="genre" items="${genreList}">
@@ -43,7 +88,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${studiosAmount > 0}">
+            <c:if test="${fn:length(studioList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="studio" items="${studioList}">
@@ -56,7 +101,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${directorsAmount > 0}">
+            <c:if test="${fn:length(directorList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Director</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="director" items="${directorList}">
@@ -69,7 +114,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${actorsAmount > 0}">
+            <c:if test="${fn:length(actorList) > 0}">
                 <h5 class="font-bold text-2xl py-2"><br>Cast</h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="actor" items="${actorList}">
@@ -85,10 +130,10 @@
         </div>
     </div>
     <div class="row">
-        <c:if test="${relatedListsAmount > 0}">
+        <c:if test="${fn:length(relatedLists) > 0}">
             <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
             <c:forEach var="cover" items="${relatedLists}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3">
                     <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                         <jsp:param name="title" value="${cover.name}"/>
                         <jsp:param name="listId" value="${cover.listId}"/>
@@ -99,11 +144,10 @@
                     </jsp:include>
                 </div>
             </c:forEach>
-            <br>
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                <jsp:param name="mediaPages" value="${popularListPages}"/>
-                <jsp:param name="currentPage" value="${currentPage}"/>
-                <jsp:param name="urlBase" value="/lists"/>
+                <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
+                <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
+                <jsp:param name="url" value="${urlBase}"/>
             </jsp:include>
         </c:if>
     </div>

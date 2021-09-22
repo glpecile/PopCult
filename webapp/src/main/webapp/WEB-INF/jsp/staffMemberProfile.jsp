@@ -8,13 +8,13 @@
     <title><c:out value="${member.name}"/> &#8226; PopCult</title>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg" alt="Media Image">
+            <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" alt="Media Image">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
         </div>
         <div class="col-12 col-lg-8">
@@ -60,7 +60,7 @@
     <br>
 
     <div class="row">
-        <c:forEach var="media" items="${media}">
+        <c:forEach var="media" items="${mediaContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -72,9 +72,9 @@
         </c:forEach>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="urlBase" value="${urlBase}"/>
+        <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

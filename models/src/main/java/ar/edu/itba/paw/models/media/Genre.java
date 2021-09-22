@@ -24,7 +24,8 @@ public enum Genre {
     TALK("Talk"),
     THRILLER("Thriller"),
     WAR("War"),
-    WESTERN("Western");
+    WESTERN("Western"),
+    ALL("All");
     private final String genre;
 
     Genre(String genre) {

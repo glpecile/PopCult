@@ -8,6 +8,9 @@
             <div class="col px-0 mx-0 rounded-lg"><img class="img-fluid" src="<c:out value="${param.image3}"/>" alt=""></div>
             <div class="col px-0 mx-0 rounded-lg"><img class="img-fluid" src="<c:out value="${param.image4}"/>" alt=""></div>
         </div>
+        <%--        <div>--%>
+        <%--            <h2 class="font-bold pt-2"><c:out value="${param.title}"/></h2>--%>
+        <%--        </div>--%>
         <a href="<c:url value="/lists/${param.listId}"/>" class="stretched-link" title="<c:out value="${param.title}"/>"></a>
     </div>
 </div>
