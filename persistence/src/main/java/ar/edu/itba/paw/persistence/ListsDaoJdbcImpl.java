@@ -61,7 +61,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 "mediaId INT NOT NULL," +
                 "mediaListId INT NOT NULL, " +
                 "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
+                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
+                "UNIQUE(mediaId, mediaListId))");
 
 //        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
 //                "mediaListId INT NOT NULL, " +
