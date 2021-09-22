@@ -215,7 +215,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
-        try{
+        try {
             listElementjdbcInsert.execute(data);
         } catch (DuplicateKeyException e) {
             throw new MediaAlreadyInListException();
@@ -284,8 +284,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{page*pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist", COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE visibility = ?", new Object[]{true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
     }
 }
