@@ -55,28 +55,28 @@
         </c:when>
         <c:otherwise>
             <div>
-                <h3 class="text-center">It seems this watchlist is empty!</h3>
+                <h3 class="text-center text-gray-400">It seems this watchlist is empty!</h3>
             </div>
             <c:if test="${currentUsername == user.username}">
-            <div class="row">
-                <h4 class="text-center py-2">Why dont you check this recommendations out?</h4>
-                <c:forEach var="media" items="${suggestedMediaContainer.elements}">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                        <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                            <jsp:param name="image" value="${media.image}"/>
-                            <jsp:param name="title" value="${media.title}"/>
-                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                            <jsp:param name="mediaId" value="${media.mediaId}"/>
-                        </jsp:include>
-                    </div>
-                </c:forEach>
-            </div>
-            <br>
-            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                <jsp:param name="mediaPages" value="${suggestedMediaContainer.totalPages}"/>
-                <jsp:param name="currentPage" value="${suggestedMediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
-            </jsp:include>
+                <div class="row">
+                    <h4 class="text-center text-gray-400 py-2">Why dont you check this recommendations out?</h4>
+                    <c:forEach var="media" items="${suggestedMediaContainer.elements}">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                                <jsp:param name="image" value="${media.image}"/>
+                                <jsp:param name="title" value="${media.title}"/>
+                                <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                                <jsp:param name="mediaId" value="${media.mediaId}"/>
+                            </jsp:include>
+                        </div>
+                    </c:forEach>
+                </div>
+                <br>
+                <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                    <jsp:param name="mediaPages" value="${suggestedMediaContainer.totalPages}"/>
+                    <jsp:param name="currentPage" value="${suggestedMediaContainer.currentPage + 1}"/>
+                    <jsp:param name="url" value="${urlBase}"/>
+                </jsp:include>
             </c:if>
         </c:otherwise>
     </c:choose>

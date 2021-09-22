@@ -22,15 +22,14 @@
             </div>
             <!-- Username and edit -->
             <div class="flex justify-center items-center space-x-3">
-                <h2 class="text-3xl"><c:out value="${param.name}"/></h2>
+                <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
                 <a class="object-center" href=<c:url value="/settings"/>>
                     <button title="Edit user data">
                         <i class="fas fa-user-edit text-purple-500 hover:text-purple-900 my-2"></i>
-                            <%--fa-2x TODO si encontramos la forma de alinear el icono sin padding--%>
                     </button>
                 </a>
             </div>
-            <h4>Or as we like to call you: <c:out value="${param.username}"/></h4>
+            <h4>Or as we like to call you: <b><c:out value="${param.username}"/></b></h4>
             <a href=<c:url value="/logout"/>>
                 <button type="button"
                         class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
@@ -68,10 +67,10 @@
             </div>
         </c:when>
         <c:otherwise>
-            <img class="z-0 rounded-full h-40 w-40 flex items-center" alt="profile_image"
+            <img class="rounded-full h-40 w-40 flex items-center" alt="profile_image"
                  src="<c:url value="/user/image/${param.imageId}"/>">
-            <h2 class="text-3xl"><c:out value="${param.name}"/></h2>
-            <h4>Also known as: <c:out value="${param.username}"/></h4>
+            <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
+            <h4>Also known as: <b><c:out value="${param.username}"/></b></h4>
         </c:otherwise>
     </c:choose>
 </div>

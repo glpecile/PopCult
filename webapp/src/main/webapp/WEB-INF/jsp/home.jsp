@@ -16,7 +16,6 @@
 
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-
 <div class="col-8 offset-2 py-2">
     <!-- Welcome back message -->
     <div class="flex flex-col justify-center items-center py-4 mx-auto">
@@ -24,7 +23,7 @@
             <h1 class="text-center text-3xl">
                 A site for film and series lovers...
             </h1>
-            <a class="btn btn-secondary rounded-full shadow-lg my-4 w-1/4"
+            <a class="btn btn-secondary rounded-full shadow-md hover:shadow-lg my-4 w-1/4"
                href="<c:url value="/register"/>">
                 Get started - sign up!
             </a>
