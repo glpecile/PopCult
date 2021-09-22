@@ -61,4 +61,9 @@ public class MediaServiceImpl implements MediaService {
     public Optional<Integer> getCountSearchMediaByTitle(String title) {
         return mediaDao.getCountSearchMediaByTitle(title);
     }
+
+    @Override
+    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
+        return mediaDao.getMostLikedMedia(page, pageSize);
+    }
 }
