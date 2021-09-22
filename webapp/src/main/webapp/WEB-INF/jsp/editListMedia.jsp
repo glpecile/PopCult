@@ -40,25 +40,28 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/createList/addMedia"/>
+                <jsp:param name="url" value="/editList/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
             <%--            search input--%>
             <form class="space-y-4" action="${searchUrl}" method="get" enctype="application/x-www-form-urlencoded">
-                <div class="flex flex-col">
+                <div class="flex flex-col relative">
                     <label class="py-2 text-semibold w-full flex">
                         <input type="hidden" name="mediaListId" value="${mediaListId}">
-                        <input class="form-control shadow-sm" type="text" name="term"
+                        <input class="form-control text-base rounded-full h-8 shadow-sm pl-3 pr-8" type="text"
+                               name="term"
                                placeholder="<spring:message code="search.placeholder"/>"/>
-                        <button class="btn btn-secondary btn-rounded my-2 w-auto" name="search" id="search"
-                                type="submit"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
+                                name="search" id="search" type="submit">
+                            <i class="fas fa-search text-gray-500 text-center rounded-full mb-2"></i>
+                        </button>
                     </label>
                 </div>
             </form>
             <c:if test="${searchTerm != null}">
                 <br>
-                <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/> </h2>
+                <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/></h2>
                 <!-- Search Results of every Film -->
                 <div class="row">
                     <h2 class="font-bold text-2xl py-2">Search Films Results</h2>

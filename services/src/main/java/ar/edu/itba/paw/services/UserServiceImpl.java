@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
@@ -77,6 +78,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) {
+        userDao.getById(userId).ifPresent(user -> {
+            if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new InvalidCurrentPasswordException();
+            }
+        });
+        return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
+    }
+
+    @Override
     public Optional<User> getCurrentUser() {
         if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -115,6 +126,11 @@ public class UserServiceImpl implements UserService {
         imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
             userDao.updateUserProfileImage(userId, image.getImageId());
         });
+    }
+
+    @Override
+    public void updateUserData(int userId, String email, String username, String name) {
+        userDao.updateUserData(userId, email, username, name);
     }
 
 

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,7 +54,7 @@ public class ExceptionHandlingController {
         return mav;
     }
 
-    @ExceptionHandler({UnregisteredUserException.class})
+    @ExceptionHandler({UnregisteredUserException.class, BadCredentialsException.class})
     public ModelAndView unregisteredUserException() {
         LOGGER.info("Handling UnregisteredUserException");
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.incorrect", null, Locale.getDefault()));

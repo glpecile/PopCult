@@ -68,6 +68,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .key(FileCopyUtils.copyToString(new InputStreamReader(rememberMeKeyResource.getInputStream())))
                 .and().logout()
                 .deleteCookies("JSESSIONID")
+                .deleteCookies("remember-me")
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()

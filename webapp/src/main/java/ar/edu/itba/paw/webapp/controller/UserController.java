@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -11,6 +12,7 @@ import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ImageForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
+import ar.edu.itba.paw.webapp.form.UserDataForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,10 +23,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -159,17 +159,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserForm form) {
+    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserDataForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         return mav;
     }
 
-    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "submit")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserForm form, final BindingResult errors) {
+    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
         if (errors.hasErrors())
             return editUserDetails(form);
+        System.out.println(userId + form.getUsername() + form.getName() + form.getEmail());
+        userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
         return new ModelAndView("redirect:/user/" + form.getUsername());
     }
 
@@ -181,10 +183,19 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "submit, user")
-    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors, @RequestParam("user") final User user) {
+    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
+    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return changeUserPassword(form);
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+
+        try {
+            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword()).orElseThrow(UserNotFoundException::new);
+        } catch (InvalidCurrentPasswordException e) {
+            errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
+            return changeUserPassword(form);
+        }
+
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 

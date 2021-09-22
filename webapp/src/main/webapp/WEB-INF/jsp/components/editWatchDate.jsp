@@ -13,7 +13,8 @@
 <div>
     <c:if test="${currentUsername == param.listOwner}">
         <div class="flex justify-center py-2 ">
-            <button class="bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded"
+            <button
+                    class="bg-gray-300 hover:bg-purple-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded"
                     data-bs-toggle="modal"
                     data-bs-target="#editDate${param.id}Modal">
                 Watched on <c:out value="${param.lastWatched}"/><i class="fas fa-pencil-alt pl-2"
