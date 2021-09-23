@@ -31,5 +31,7 @@ public interface FavoriteService {
 
     PageContainer<MediaList> getUserFavoriteLists(int userId, int page, int pageSize);
 
+    PageContainer<MediaList> getUserPublicFavoriteLists(int userId, int page, int pageSize);
+
     Optional<Integer> getFavoriteListsCount(int userId);
 }

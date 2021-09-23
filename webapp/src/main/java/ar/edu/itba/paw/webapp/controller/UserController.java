@@ -68,8 +68,8 @@ public class UserController {
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         //
-        final List<ListCover> userPublicListCover = getListCover(userLists.getElements(), listsService);
         PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicListCover);
         mav.addObject("userPublicLists", userPublicLists);
         return mav;
@@ -154,6 +154,11 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+
+        PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user.getUserId(), page - 1, listsPerPage);
+        final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
+        mav.addObject("userPublicListCover", userPublicFavListCover);
+        mav.addObject("userPublicLists", userPublicFavLists);
         return mav;
     }
 

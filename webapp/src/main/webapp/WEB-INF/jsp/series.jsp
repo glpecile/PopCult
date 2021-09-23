@@ -14,7 +14,7 @@
     <title>Series Discovery &#8226; PopCult</title>
 </head>
 
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <c:choose>
     <c:when test="${fn:length(mediaListContainer.elements) == 0}">
