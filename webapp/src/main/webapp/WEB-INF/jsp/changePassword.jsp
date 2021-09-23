@@ -24,19 +24,20 @@
                 <div class="py-1 text-semibold w-full">
                     <form:label path="currentPassword" cssClass="form-label">Current Password: </form:label>
                     <form:input path="currentPassword" type="password" cssClass="form-control"/>
-                    <form:errors path="currentPassword" cssClass="formError text-red-500" element="p"/>
+                    <form:errors path="currentPassword" cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
 
                 <div class="py-1 text-semibold w-full">
                     <form:label path="newPassword" cssClass="form-label">New Password: </form:label>
                     <form:input path="newPassword" type="password" cssClass="form-control"/>
-                    <form:errors path="newPassword" cssClass="formError text-red-500" element="p"/>
+                    <form:errors path="newPassword" cssClass="formError text-sm text-red-500" element="p"/>
+                    <form:errors cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
 
                 <div class="py-1 text-semibold w-full">
                     <form:label path="repeatPassword" cssClass="form-label">Repeat Password: </form:label>
                     <form:input path="repeatPassword" type="password" cssClass="form-control"/>
-                    <form:errors path="repeatPassword" cssClass="formError text-red-500" element="p"/>
+                    <form:errors path="repeatPassword" cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
             </div>
             <br>

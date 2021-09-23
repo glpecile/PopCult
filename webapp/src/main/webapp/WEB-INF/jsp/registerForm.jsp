@@ -33,6 +33,7 @@
                         <form:label path="password" cssClass="form-label">Password: </form:label>
                         <form:input type="password" cssClass="form-control" path="password"/>
                         <form:errors path="password" cssClass="formError text-sm text-red-500" element="p"/>
+                        <form:errors cssClass="formError text-sm text-red-500" element="p"/>
                     </div>
                     <div class="py-1 px-2.5 text-semibold w-full">
                         <form:label path="repeatPassword" cssClass="form-label">Repeat Password: </form:label>
