@@ -36,7 +36,8 @@
                 <c:choose>
                     <c:when test="${list.userId == currentUser.userId}">
                         <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
-                            <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <button type="button"
+                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
                                 Edit list
                             </button>
@@ -44,7 +45,8 @@
                     </c:when>
                     <c:otherwise>
                         <form:form cssClass="m-0" action="${forkPath}" method="POST">
-                            <button type="submit" id="fork" name="fork" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <button type="submit" id="fork" name="fork"
+                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
                                 Fork this list
                             </button>
@@ -54,7 +56,7 @@
             </div>
         </div>
         <!-- Films and Series in the list -->
-        <div class="row">
+        <div class="row pb-4">
             <c:forEach var="media" items="${media}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -66,7 +68,18 @@
                 </div>
             </c:forEach>
         </div>
+        <c:if test="${listCommentsContainer.pageSize!= 0}">
+        <div class="row bg-white shadow-lg">
+            <h2 class="font-bold text-2xl">Comment section: </h2>
+            <c:forEach var="comment" items="${listCommentsContainer.elements}">
+                <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
+                    <jsp:param name="username" value="${comment.username}"/>
+                    <jsp:param name="comment" value="${comment.commentBody}"/>
+                </jsp:include>
+            </c:forEach>
+        </div>
     </div>
+    </c:if>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
