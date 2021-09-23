@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -126,6 +127,16 @@ public class RowMappers {
                     rs.getBytes("photoBlob"),
                     rs.getInt("imageContentLength"),
                     rs.getString("imageContentType"));
+
+    /**
+     * Comment RowMappers.
+     */
+    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
+            (rs, rowNum) -> new Comment(
+                    rs.getInt("commentId"),
+                    rs.getInt("userId"),
+                    rs.getString("username"),
+                    rs.getString("description"));
 }
 
 
