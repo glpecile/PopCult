@@ -40,7 +40,7 @@ public class SearchController {
     @Autowired
     private ListsService listsService;
 
-    private static final int itemsPerPage = 12;
+    private static final int itemsPerPage = 4;
 
     private static final int listsPerPage = 12;
 

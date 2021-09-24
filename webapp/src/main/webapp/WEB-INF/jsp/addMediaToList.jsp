@@ -13,6 +13,11 @@
 
 </head>
 <body class="bg-gray-50">
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
@@ -40,7 +45,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/addMedia/${mediaListId}"/>
+                <jsp:param name="url" value="${nextUrl}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>

@@ -16,6 +16,11 @@
 
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <div class="col-8 offset-2">
     <div class="row">
         <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchListsContainer.totalCount}"/> result(s) for <c:out value="${term}"/></h1>
@@ -65,7 +70,7 @@
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${searchListsContainer.totalPages}"/>
         <jsp:param name="currentPage" value="${searchListsContainer.currentPage + 1}"/>
-        <jsp:param name="url" value="${urlBase}"/>
+        <jsp:param name="url" value="${nextUrl}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

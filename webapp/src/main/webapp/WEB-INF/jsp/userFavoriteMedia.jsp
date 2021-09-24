@@ -12,6 +12,11 @@
 
 </head>
 <body class="bg-gray-50">
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <sec:authorize access="isAuthenticated()">
@@ -52,7 +57,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${favoriteMediaContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${favoriteMediaContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="${nextUrl}"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
@@ -77,7 +82,7 @@
                     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                         <jsp:param name="mediaPages" value="${suggestedMediaContainer.totalPages}"/>
                         <jsp:param name="currentPage" value="${suggestedMediaContainer.currentPage + 1}"/>
-                        <jsp:param name="url" value="${urlBase}"/>
+                        <jsp:param name="url" value="${nextUrl}"/>
                     </jsp:include>
                 </c:if>
             </c:otherwise>

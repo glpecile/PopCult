@@ -11,6 +11,11 @@
 </head>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <br>
 <div class="col-8 offset-2">
     <div class="row">
@@ -147,7 +152,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
+                <jsp:param name="url" value="${nextUrl}"/>
             </jsp:include>
         </c:if>
     </div>

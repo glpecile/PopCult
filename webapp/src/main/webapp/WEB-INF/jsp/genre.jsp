@@ -11,6 +11,11 @@
 </head>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <div class="col-8 flex-col offset-2 flex h-screen">
     <div class="flex-grow">
         <div class="row m-0">
@@ -49,7 +54,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaPageContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaPageContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
+                <jsp:param name="url" value="${nextUrl}"/>
             </jsp:include>
         </div>
     </div>

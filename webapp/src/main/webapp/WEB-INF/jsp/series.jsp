@@ -16,6 +16,11 @@
 
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+<c:url value="" var="nextUrl">
+    <c:forEach var="p" items="${param}">
+        <c:param name="${p.key}" value="${p.value}"/>
+    </c:forEach>
+</c:url>
 <c:choose>
     <c:when test="${fn:length(mediaListContainer.elements) == 0}">
         <br>
@@ -77,7 +82,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
+                <jsp:param name="url" value="${nextUrl}"/>
             </jsp:include>
         </div>
     </c:otherwise>
