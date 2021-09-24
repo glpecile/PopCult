@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${studio.name}"/> &#8226; PopCult</title>
 </head>
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
@@ -23,10 +23,10 @@
         </div>
     </div>
 
-    <h4 class="lead py-4">There are <c:out value="${mediaCount}"/> productions by this studio.</h4>
+    <h4 class="lead py-4">There are <c:out value="${mediaPageContainer.totalCount}"/> productions by this studio.</h4>
 
     <div class="row">
-        <c:forEach var="media" items="${mediaList}">
+        <c:forEach var="media" items="${mediaPageContainer.elements}">
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                     <jsp:param name="image" value="${media.image}"/>
@@ -41,9 +41,9 @@
     <br>
 
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${mediaPages}"/>
-        <jsp:param name="currentPage" value="${currentPage}"/>
-        <jsp:param name="url" value="/genre/?"/>
+        <jsp:param name="mediaPages" value="${mediaPageContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaPageContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
     </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

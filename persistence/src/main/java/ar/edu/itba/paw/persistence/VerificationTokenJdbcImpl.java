@@ -19,11 +19,7 @@ public class VerificationTokenJdbcImpl implements VerificationTokenDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
 
-    private static final RowMapper<Token> TOKEN_ROW_MAPPER =
-            (rs, rowNum) -> new Token(
-                    rs.getInt("userId"),
-                    rs.getString("token"),
-                    rs.getDate("expiryDate"));
+    private static final RowMapper<Token> TOKEN_ROW_MAPPER = RowMappers.TOKEN_ROW_MAPPER;
 
     @Autowired
     public VerificationTokenJdbcImpl(final DataSource ds) {

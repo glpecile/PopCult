@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private ImageService imageService;
+
     @Autowired
     private UserDao userDao;
 
@@ -29,11 +33,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     private static final boolean NOT_ENABLED_USER = false;
     private static final boolean ENABLED_USER = true;
+
+    @Autowired
+    public UserServiceImpl(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     public Optional<User> getById(int userId) {
@@ -51,8 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, String profilePhotoURL) {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, profilePhotoURL, NOT_ENABLED_USER);
+    public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER);
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());
 
@@ -67,6 +75,16 @@ public class UserServiceImpl implements UserService {
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
         emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
+    }
+
+    @Override
+    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) {
+        userDao.getById(userId).ifPresent(user -> {
+            if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new InvalidCurrentPasswordException();
+            }
+        });
+        return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
     }
 
     @Override
@@ -97,4 +115,23 @@ public class UserServiceImpl implements UserService {
             });
         });
     }
+
+    @Override
+    public Optional<Image> getUserProfileImage(int imageId) {
+        return imageService.getImage(imageId);
+    }
+
+    @Override
+    public void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType) {
+        imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
+            userDao.updateUserProfileImage(userId, image.getImageId());
+        });
+    }
+
+    @Override
+    public void updateUserData(int userId, String email, String username, String name) {
+        userDao.updateUserData(userId, email, username, name);
+    }
+
+
 }

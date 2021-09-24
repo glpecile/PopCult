@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.annotations.PasswordMatches;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@PasswordMatches()
 public class UserForm {
-    @Email
+    @Email()
     @Size(min = 6, max = 100)
     private String email;
 

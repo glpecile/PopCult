@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
-
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class StudioController {
@@ -28,21 +29,15 @@ public class StudioController {
     @RequestMapping("/studio/{studioId}")
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("studioView");
+        final ModelAndView mav = new ModelAndView("studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-        //final List<Integer> mediaIdList = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
-        final PageContainer<Integer> mediaIdList = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
-        final List<Media> mediaList = mediaService.getById(mediaIdList.getElements());
-        //final Integer mediaCount = studioService.getMediaCountByStudio(studioId).orElse(0);
+        final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
         mav.addObject("studio", studio);
-        mav.addObject("mediaList", mediaList);
-        //mav.addObject("mediaCount", mediaCount);
-        mav.addObject("mediaCount", mediaIdList.getTotalCount());
-        //mav.addObject("mediaPages", (int)Math.ceil((double)mediaCount / itemsPerPage));
-        mav.addObject("mediaPages", mediaIdList.getTotalPages());
-        //mav.addObject("currentPage", page);
-        mav.addObject("currentPage", mediaIdList.getCurrentPage()+1);
-
+        mav.addObject("mediaPageContainer", mediaPageContainer);
+        final Map<String, Integer> map = new HashMap<>();
+        map.put("studioId", studioId);
+        String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();
+        mav.addObject("urlBase", urlBase);
         return mav;
     }
 }

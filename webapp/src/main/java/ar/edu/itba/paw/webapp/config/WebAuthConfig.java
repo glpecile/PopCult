@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.EditListVoter;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,9 +21,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
@@ -28,12 +39,33 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
 
+    @Autowired
+    private EditListVoter editListVoter;
+
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        SimpleUrlAuthenticationFailureHandler simpleUrlAuthenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/loginFailed");
+        simpleUrlAuthenticationFailureHandler.setUseForward(true);
+        return simpleUrlAuthenticationFailureHandler;
+    }
+
+    @Bean
+    public AccessDecisionManager accessDecisionManager() {
+        List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
+                new WebExpressionVoter(),
+                new RoleVoter(),
+                new AuthenticatedVoter(),
+                editListVoter
+        );
+        return new UnanimousBased(decisionVoters);
     }
 
     @Override
@@ -49,6 +81,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .defaultSuccessUrl("/", false)
                 .loginPage("/login")
+                .failureHandler(authenticationFailureHandler())
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .and().rememberMe()
@@ -58,16 +91,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .key(FileCopyUtils.copyToString(new InputStreamReader(rememberMeKeyResource.getInputStream())))
                 .and().logout()
                 .deleteCookies("JSESSIONID")
+                .deleteCookies("remember-me")
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
                 .antMatchers("/register/**", "/login").anonymous()
-                .antMatchers("/createList", "/editList/**").authenticated()
-                .antMatchers(HttpMethod.POST).authenticated()
-                .antMatchers(HttpMethod.DELETE).authenticated()
+                .antMatchers("/createList").hasRole("EDITOR")
+                .antMatchers("/editList/**").hasRole("EDITOR").accessDecisionManager(accessDecisionManager())
+                .antMatchers(HttpMethod.POST).hasRole("EDITOR")
+                .antMatchers(HttpMethod.DELETE).hasRole("EDITOR")
                 .antMatchers("/**").permitAll()
-                .antMatchers("/resources/**").permitAll()
-//                .antMatchers("/**").authenticated() //TODO
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
                 .and().csrf().disable();
@@ -76,7 +109,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().
-                antMatchers(); //Apago SpringSecurity para los assets publicos
+                antMatchers("/resources/**"); //Apago SpringSecurity para los assets publicos
     }
 }
 

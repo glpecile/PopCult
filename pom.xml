@@ -20,11 +20,12 @@
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
         <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
-        <javax-mail.version>1.4.7</javax-mail.version>
+        <javax-mail.version>1.6.2</javax-mail.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <org.slf4j.version>1.7.5</org.slf4j.version>
         <logback.version>1.1.2</logback.version>
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
+        <commons-fileupload.version>1.4</commons-fileupload.version>
     </properties>
 
     <modules>
@@ -37,7 +38,7 @@
 
     <dependencyManagement>
         <dependencies>
-<!--        Springframework dependencies-->
+            <!--        Springframework dependencies-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
@@ -49,7 +50,7 @@
                 <version>${org.springframework.version}</version>
             </dependency>
 
-<!--        javax.servlet dependencies-->
+            <!--        javax.servlet dependencies-->
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
@@ -62,7 +63,7 @@
                 <version>${jstl.version}</version>
             </dependency>
 
-<!--        JDBC & Postgres dependencies-->
+            <!--        JDBC & Postgres dependencies-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
@@ -74,7 +75,7 @@
                 <version>${org.postgresql.version}</version>
             </dependency>
 
-<!--        Validation & SpringSecurity dependencies-->
+            <!--        Validation & SpringSecurity dependencies-->
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
@@ -113,8 +114,8 @@
                 <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
                 <version>${javax-mail.version}</version>
             </dependency>
             <dependency>
@@ -128,7 +129,7 @@
                 <version>${thymeleaf.version}</version>
             </dependency>
 
-<!--        Logback Logger -->
+            <!--        Logback Logger -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -155,7 +156,12 @@
                 <version>${logback-ext-spring.version}</version>
                 <scope>runtime</scope>
             </dependency>
-
+            <!--CommonsMultipartResolver - File Uploading-->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

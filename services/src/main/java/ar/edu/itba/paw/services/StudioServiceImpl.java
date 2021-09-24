@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.StudioDao;
 import ar.edu.itba.paw.interfaces.StudioService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,12 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByStudio(int studioId, int page, int pageSize) {
+    public PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize) {
+        return studioDao.getMediaByStudioIds(studioId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize) {
         return studioDao.getMediaByStudio(studioId, page, pageSize);
     }
 

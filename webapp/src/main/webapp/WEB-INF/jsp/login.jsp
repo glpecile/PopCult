@@ -6,10 +6,10 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Log-in &#8226; PopCult</title></head>
-<body>
+<body class="bg-gradient-to-r from-yellow-500 to-purple-900">
 <%-- Variables --%>
 <c:url value="/login" var="loginUrl"/>
-<div class="flex flex-col h-screen bg-gradient-to-r from-yellow-500 to-purple-900">
+<div class="min-h-screen flex flex-col">
     <div class="flex-grow space-y-2">
         <%-- Logo and card title --%>
         <a class="flex justify-center items-center pt-16" href="<c:url value="/"/>">
@@ -21,6 +21,12 @@
         <%-- Sign In form --%>
         <div class="container w-full max-w-xs mx-auto mt-8 px-4 font-sans rounded-lg shadow-lg bg-white p-2 my-8">
             <form class="space-y-4" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
+                <c:if test="${successfulConfirmation}">
+                    <label class="py-2 text-semibold text-success w-full">
+                        <spring:message code="login.successfulConfirmation"/>
+                    </label>
+                </c:if>
+
                 <div class="flex flex-col justify-center items-center">
                     <label class="py-2 text-semibold w-full">
                         <spring:message code="login.username"/>
@@ -34,6 +40,9 @@
                         <input class="shadow-sm" type="checkbox" name="rememberme">
                         <spring:message code="login.remember_me"/>
                     </label>
+                    <div class="py-1 text-semibold text-danger w-full">
+                        ${error}
+                    </div>
                     <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="login.login"/></button>
                     <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/register"/>"><spring:message
                             code="register.cta"/></a>
@@ -41,8 +50,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Nav -->
     <div class="text-white">
         <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
     </div>

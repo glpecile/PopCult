@@ -6,15 +6,15 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Start a new list &#8226; PopCult</title>
+    <title>Create a new list &#8226; PopCult</title>
 </head>
-<body>
+<body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <c:url value="/createList" var="postPath"/>
     <div class="flex-grow col-8 offset-2">
         <form:form modelAttribute="createListForm" action="${postPath}" method="post" class="row g-3 p-2 my-8 bg-white shadow-lg">
-            <h2 class="font-bold text-2xl">New List</h2>
+            <h2 class="font-bold text-2xl">Step 1: Create a new list</h2>
             <div class="col-md-6">
                 <div>
                     <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
@@ -38,13 +38,19 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-check">
+                <div class="form-check p-0">
                     <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"/>
                     Enable others to suggest new movies to add.
                 </div>
             </div>
-            <div class="col-12 py-2">
-                <button class="btn btn-secondary" type="submit">Save</button>
+            <div class="flex justify-between px-4">
+                <a href=<c:url value="/lists"/>>
+                    <button type="button"
+                            class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        Discard changes
+                    </button>
+                </a>
+                <button class="row btn btn-secondary py-2" type="submit">Create list and continue to Step 2</button>
             </div>
         </form:form>
     </div>

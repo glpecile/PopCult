@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.WatchDao;
 import ar.edu.itba.paw.interfaces.WatchService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.WatchedMedia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,11 @@ public class WatchServiceImpl implements WatchService {
     }
 
     @Override
+    public void updateWatchedMediaDate(int mediaId, int userId, Date date) {
+        watchDao.updateWatchedMediaDate(mediaId, userId, date);
+    }
+
+    @Override
     public boolean isWatched(int mediaId, int userId) {
         return watchDao.isWatched(mediaId, userId);
     }
@@ -46,23 +52,34 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.isToWatch(mediaId, userId);
     }
 
+//    @Override
+//    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
+//    }
+
     @Override
-    public PageContainer<Integer> getWatchedMediaId(int userId, int page, int pageSize) {
+    public PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize) {
         return watchDao.getWatchedMediaId(userId, page, pageSize);
     }
 
-    @Override
-    public Optional<Integer> getWatchedMediaCount(int userId) {
-        return watchDao.getWatchedMediaCount(userId);
-    }
+//    @Override
+//    public Optional<Integer> getWatchedMediaCount(int userId) {
+//        return watchDao.getWatchedMediaCount(userId);
+//    }
+
+//    @Override
+//    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
+//        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
+//    }
 
     @Override
-    public PageContainer<Integer> getToWatchMediaId(int userId, int page, int pageSize) {
+    public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
         return watchDao.getToWatchMediaId(userId, page, pageSize);
+
     }
 
-    @Override
-    public Optional<Integer> getToWatchMediaCount(int userId) {
-        return watchDao.getToWatchMediaCount(userId);
-    }
+//    @Override
+//    public Optional<Integer> getToWatchMediaCount(int userId) {
+//        return watchDao.getToWatchMediaCount(userId);
+//    }
 }

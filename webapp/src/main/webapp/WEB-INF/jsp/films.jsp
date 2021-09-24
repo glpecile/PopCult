@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,21 +15,21 @@
     <title>Film Discovery &#8226; PopCult</title>
 </head>
 
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <c:choose>
-    <c:when test="${mediaList.size() == 0}">
+    <c:when test="${fn:length(mediaListContainer.elements) == 0}">
         <br>
         <h3 class="text-center"> Sorry, we don't have films to show you right now.</h3>
     </c:when>
     <c:otherwise>
         <div class="col-8 offset-2">
             <br>
-            <h4 class="font-bold text-2xl pt-2">Recently Added Films</h4>
+            <h4 class="font-bold text-2xl pt-2">Popular Films Right Now</h4>
             <div class="flex flex-col" data-controller="slider">
                 <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                     <c:set var="i" value="1"/>
-                    <c:forEach var="latestFilm" items="${latestFilms}">
+                    <c:forEach var="latestFilm" items="${mostLikedFilms}">
                         <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                             <c:set var="i" value="${i + 1}"/>
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -59,7 +61,7 @@
 
             <div class="row">
                 <h4 class="font-bold text-2xl pt-2">Explore some Films</h4>
-                <c:forEach var="media" items="${mediaList}">
+                <c:forEach var="media" items="${mediaListContainer.elements}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                         <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                             <jsp:param name="image" value="${media.image}"/>
@@ -74,9 +76,9 @@
             <br>
 
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                <jsp:param name="mediaPages" value="${mediaPages}"/>
-                <jsp:param name="currentPage" value="${currentPage}"/>
-                <jsp:param name="url" value="/media/films"/>
+                <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
+                <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
+                <jsp:param name="url" value="${urlBase}"/>
             </jsp:include>
         </div>
     </c:otherwise>
