@@ -20,25 +20,16 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg">
-            <div class="col-8 offset-2 flex-grow">
-                <div class="flex justify-content-start content-center pt-4">
-                    <div class="col-md-auto">
-                        <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                    </div>
-                    <div class="pt-2.5">
-                        <button class="btn btn-secondary bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
-                                data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
-                            <i class="fas fa-pencil-alt text-gray-500 my-2"></i> Edit Details
-                        </button>
-                    </div>
-                </div>
+            <div class="flex justify-between">
+                <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
+                <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
+                        data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
+                    <i class="fas fa-pencil-alt text-gray-500 my-2 group-hover:text-white"></i> Edit Details
+                </button>
             </div>
-
-            <%--                <h2 class="font-bold text-2xl">Manage this list content</h2>--%>
-
             <%--List current content--%>
             <c:if test="${mediaContainer.totalCount != 0}">
-                <h4 class="py-2">Currently in this list</h4>
+                <h4 class="py-0.5">Currently in this list</h4>
             </c:if>
             <div class="flex flex-col space-y-2.5">
                 <c:forEach var="media" items="${mediaContainer.elements}">
@@ -61,7 +52,7 @@
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
-            <%--            search input--%>
+            <!-- Search input -->
             <form class="space-y-4" action="${searchUrl}" method="get" enctype="application/x-www-form-urlencoded">
                 <div class="flex flex-col relative">
                     <label class="py-2 text-semibold w-full flex">
@@ -97,7 +88,7 @@
                 </div>
                 <br>
             </c:if>
-            <div class="flex justify-between px-4">
+            <div class="flex justify-between px-4 mb-2">
                 <jsp:include page="/WEB-INF/jsp/components/delete.jsp">
                     <jsp:param name="mediaListId" value="${mediaListId}"/>
                     <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
@@ -106,8 +97,8 @@
                 </jsp:include>
                 <a href=${listPath}>
                     <button type="button"
-                            class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
-                        Done
+                            class="btn btn-warning btn btn-danger bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-save group-hover:text-white pr-2"></i>Done
                     </button>
                 </a>
             </div>
@@ -127,7 +118,6 @@
                     <div class="modal-body">
                         <div class="flex flex-col gap-2.5">
                             <div class="col-md-6">
-                                <h2 class="font-bold text-2xl">Edit your list information</h2>
                                 <form:label path="listTitle" for="listName"
                                             class="form-label">Name of the list</form:label>
                                 <form:input path="listTitle" type="text"
@@ -173,21 +163,16 @@
                                                                for="invalidCheck2"/>
                                             </c:otherwise>
                                         </c:choose>
-
                                         Enable others to suggest new movies to add.
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-light bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white"
-                                data-dismiss="modal">Discard Changes
-                        </button>
+                    <div class="modal-footer flex space-x-2 pb-0">
                         <button type="submit" value="save" name="save"
                                 class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
-                            Save changes
+                            <i class="fas fa-save group-hover:text-white pr-2"></i>Save changes
                         </button>
                     </div>
                 </form:form>

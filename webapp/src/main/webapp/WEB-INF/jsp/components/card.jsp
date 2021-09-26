@@ -25,7 +25,7 @@
                     <form:form cssClass="m-0" action="${addPath}" method="POST">
                         <button type="submit" name="add"
                                 class="bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded">
-                            <i class="fa fa-trash pr-2" aria-hidden="true"></i>Add Media
+                            + Add Media
                         </button>
                         <input id="mediaListId" type="hidden" name="mediaListId" value="${param.addToListId}">
                         <input id="mediaId" type="hidden" name="mediaId" value="${param.mediaId}">

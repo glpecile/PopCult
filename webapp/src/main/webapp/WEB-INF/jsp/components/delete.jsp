@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <div>
-    <button class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
+    <button class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
             data-bs-toggle="modal" data-bs-target="#deleteModal">
-        Delete
+        <i class="fa fa-trash group-hover:text-white pr-2" aria-hidden="true"></i>Delete
     </button>
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
          aria-hidden="true">
