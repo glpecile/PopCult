@@ -1,7 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -18,7 +18,7 @@
             <div class="col-md-auto">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
-                    by: <b><c:out value="${user.username}"/></b>
+                    by: <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
                 </a></h4>
             </div>
             <div class="pt-2.5">
@@ -68,18 +68,20 @@
                 </div>
             </c:forEach>
         </div>
-        <c:if test="${listCommentsContainer.pageSize!= 0}">
-        <div class="row bg-white shadow-lg">
-            <h2 class="font-bold text-2xl">Comment section: </h2>
-            <c:forEach var="comment" items="${listCommentsContainer.elements}">
-                <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                    <jsp:param name="username" value="${comment.username}"/>
-                    <jsp:param name="comment" value="${comment.commentBody}"/>
-                </jsp:include>
-            </c:forEach>
-        </div>
+        <c:if test="${listCommentsContainer.totalCount != 0}">
+            <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
+                <h2 class="font-bold text-2xl p-2.5 pb-0">
+                    <spring:message code="comments.section"/>
+                </h2>
+                <c:forEach var="comment" items="${listCommentsContainer.elements}">
+                    <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
+                        <jsp:param name="username" value="${comment.username}"/>
+                        <jsp:param name="comment" value="${comment.commentBody}"/>
+                    </jsp:include>
+                </c:forEach>
+            </div>
+        </c:if>
     </div>
-    </c:if>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
