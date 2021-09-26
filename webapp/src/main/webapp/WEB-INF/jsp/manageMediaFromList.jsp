@@ -14,25 +14,42 @@
 <c:url value="/lists/edit/${mediaListId}/search" var="searchUrl"/>
 <c:url value="/lists/${mediaListId}" var="listPath"/>
 <c:url value="/list/edit/${mediaListId}" var="editListDetails"/>
+<c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg">
-            <h2 class="font-bold text-2xl">Manage this list content</h2>
+            <div class="col-8 offset-2 flex-grow">
+                <div class="flex justify-content-start content-center pt-4">
+                    <div class="col-md-auto">
+                        <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
+                    </div>
+                    <div class="pt-2.5">
+                        <button class="btn btn-secondary bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
+                                data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
+                            <i class="fas fa-pencil-alt text-gray-500 my-2"></i> Edit Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <%--                <h2 class="font-bold text-2xl">Manage this list content</h2>--%>
+
+            <%--List current content--%>
             <c:if test="${mediaContainer.totalCount != 0}">
                 <h4 class="py-2">Currently in this list</h4>
             </c:if>
-            <div  class="flex flex-col space-y-2.5">
+            <div class="flex flex-col space-y-2.5">
                 <c:forEach var="media" items="${mediaContainer.elements}">
-                        <jsp:include page="/WEB-INF/jsp/components/compactCard.jsp">
-                            <jsp:param name="image" value="${media.image}"/>
-                            <jsp:param name="title" value="${media.title}"/>
-                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                            <jsp:param name="mediaId" value="${media.mediaId}"/>
-                            <jsp:param name="deleteFromListId" value="${mediaListId}"/>
-                            <jsp:param name="deletePath" value="/lists/edit/${mediaListId}/deleteMedia"/>
-                        </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/components/compactCard.jsp">
+                        <jsp:param name="image" value="${media.image}"/>
+                        <jsp:param name="title" value="${media.title}"/>
+                        <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                        <jsp:param name="mediaId" value="${media.mediaId}"/>
+                        <jsp:param name="deleteFromListId" value="${mediaListId}"/>
+                        <jsp:param name="deletePath" value="/lists/edit/${mediaListId}/deleteMedia"/>
+                    </jsp:include>
                 </c:forEach>
             </div>
 
@@ -62,27 +79,10 @@
             <c:if test="${searchTerm != null}">
                 <br>
                 <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/></h2>
-                <!-- Search Results of every Film -->
+                <!-- Search Results of every Media -->
                 <div class="row">
-                    <h2 class="font-bold text-2xl py-2">Search Films Results</h2>
-                    <c:forEach var="media" items="${searchFilmsContainer.elements}">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                                <jsp:param name="image" value="${media.image}"/>
-                                <jsp:param name="title" value="${media.title}"/>
-                                <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                                <jsp:param name="mediaId" value="${media.mediaId}"/>
-                                <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/lists/edit/${mediaListId}/addMedia"/>
-                            </jsp:include>
-                        </div>
-                    </c:forEach>
-                </div>
-                <br>
-                <!-- Search Results of every Series -->
-                <div class="row">
-                    <h2 class="font-bold text-2xl py-2">Search Series Results</h2>
-                    <c:forEach var="media" items="${searchSeriesContainer.elements}">
+                    <h2 class="font-bold text-2xl py-2">Search Results</h2>
+                    <c:forEach var="media" items="${searchResults}">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                 <jsp:param name="image" value="${media.image}"/>
@@ -110,6 +110,86 @@
                         Done
                     </button>
                 </a>
+            </div>
+        </div>
+    </div>
+    <%-- Edit List Details Modals--%>
+    <div class="modal fade" id="editListDetailsModal" tabindex="-1" aria-labelledby="editListDetailsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="editListDetailsModalLabel">Edit list details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form:form modelAttribute="editListDetails" action="${editListPath}" method="POST">
+                    <div class="modal-body">
+                        <div class="flex flex-col gap-2.5">
+                            <div class="col-md-6">
+                                <h2 class="font-bold text-2xl">Edit your list information</h2>
+                                <form:label path="listTitle" for="listName"
+                                            class="form-label">Name of the list</form:label>
+                                <form:input path="listTitle" type="text"
+                                            class="form-control focus:outline-none focus:ring focus:border-purple-300"
+                                            id="listName" value="${list.listName}"/>
+                                <form:errors path="listTitle" cssClass="formError text-red-500" element="p"/>
+                            </div>
+                            <div class="col-md-12">
+                                <form:label path="description" for="listDesc"
+                                            class="form-label">Description</form:label>
+                                <form:input path="description" type="text"
+                                            class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
+                                            value="${list.description}"/>
+                                <form:errors path="description" cssClass="formError text-red-500" element="p"/>
+                            </div>
+                            <div class="flex justify-between">
+                                <div class="col-md-6 py-2">
+                                    <div class="form-check">
+                                        <c:choose>
+                                            <c:when test="${list.visible}">
+                                                <form:checkbox path="visible" class="form-check-label"
+                                                               for="invalidCheck2"
+                                                               checked="true"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form:checkbox path="visible" class="form-check-label"
+                                                               for="invalidCheck2"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        Make list public for everyone.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-2">
+                                    <div class="form-check">
+                                        <c:choose>
+                                            <c:when test="${list.collaborative}">
+                                                <form:checkbox path="collaborative" class="form-check-label"
+                                                               for="invalidCheck3"
+                                                               checked="true"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form:checkbox path="collaborative" class="form-check-label"
+                                                               for="invalidCheck2"/>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        Enable others to suggest new movies to add.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-light bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white"
+                                data-dismiss="modal">Discard Changes
+                        </button>
+                        <button type="submit" value="save" name="save"
+                                class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
+                            Save changes
+                        </button>
+                    </div>
+                </form:form>
             </div>
         </div>
     </div>
