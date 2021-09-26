@@ -32,13 +32,6 @@
                     </form:form>
                 </div>
             </c:when>
-<%--            <c:when test="${param.lastWatched != null}">--%>
-<%--                    <jsp:include page="/WEB-INF/jsp/components/editWatchDate.jsp">--%>
-<%--                        <jsp:param name="lastWatched" value="${param.lastWatched}"/>--%>
-<%--                        <jsp:param name="listOwner" value="${param.listOwner}"/>--%>
-<%--                        <jsp:param name="mediaTitle" value="${param.title}"/>--%>
-<%--                    </jsp:include>--%>
-<%--            </c:when>--%>
             <c:otherwise>
                 <a href="<c:url value="/media/${param.mediaId}"/>" class="stretched-link" title="<c:out
         value="${param.title}"/> (<c:out value="${param.releaseDate}"/>)"></a>
