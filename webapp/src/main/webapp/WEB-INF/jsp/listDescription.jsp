@@ -68,19 +68,39 @@
                 </div>
             </c:forEach>
         </div>
-        <c:if test="${listCommentsContainer.totalCount != 0}">
-            <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
-                <h2 class="font-bold text-2xl p-2.5 pb-0">
+        <!-- Comments Section -->
+        <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
+            <div class="flex justify-between p-2.5 pb-0">
+                <h2 class="font-bold text-2xl">
                     <spring:message code="comments.section"/>
                 </h2>
-                <c:forEach var="comment" items="${listCommentsContainer.elements}">
-                    <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                        <jsp:param name="username" value="${comment.username}"/>
-                        <jsp:param name="comment" value="${comment.commentBody}"/>
-                    </jsp:include>
-                </c:forEach>
+                <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
+                    ${listCommentsContainer.totalCount}
+                </div>
             </div>
-        </c:if>
+            <label class="p-2 text-semibold w-full flex flex-col">
+                    <textarea rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8" name="comment"
+                              placeholder="<spring:message code="comments.placeholder"/>"></textarea>
+                <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24" type="submit">
+                    <spring:message code="comments.submit"/>
+                </button>
+            </label>
+            <c:choose>
+                <c:when test="${listCommentsContainer.totalCount != 0}">
+                    <c:forEach var="comment" items="${listCommentsContainer.elements}">
+                        <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
+                            <jsp:param name="username" value="${comment.username}"/>
+                            <jsp:param name="comment" value="${comment.commentBody}"/>
+                        </jsp:include>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <p class="text-center text-gray-400 m-1.5">
+                        <spring:message code="comments.empty"/>
+                    </p>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
