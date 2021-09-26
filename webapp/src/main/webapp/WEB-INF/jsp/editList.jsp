@@ -9,8 +9,8 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Edit List <c:out value="${list.listName}"/> &#8226; PopCult</title>
 </head>
-<c:url value="/lists/delete/${list.mediaListId}" var="deletePath"/>
-<c:url value="/lists/update/${list.mediaListId}" var="editListPath"/>
+<c:url value="/lists/edit/${list.mediaListId}/delete" var="deletePath"/>
+<c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
 <c:url value="lists/${list.mediaListId}" var="listPath"/>
 <body class="bg-gray-50">
 <div class="h-full flex flex-col">
