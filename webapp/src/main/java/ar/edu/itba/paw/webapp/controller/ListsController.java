@@ -135,16 +135,6 @@ public class ListsController {
         return manageMediaFromList(page, mediaListId, null, null, form);
     }
 
-//    @RequestMapping(value = "/lists/edit/{listId}", method = {RequestMethod.GET})
-//    public ModelAndView editList(@PathVariable("listId") final int listId, @ModelAttribute("createListForm") final ListForm form) {
-//        final ModelAndView mav = new ModelAndView("editList");
-//        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-//        final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
-//        mav.addObject("list", mediaList);
-//        mav.addObject("media", mediaFromList);
-//        return mav;
-//    }
-
     @RequestMapping(value = "/lists/edit/{listId}/delete", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
     public ModelAndView deleteList(@PathVariable("listId") final int listId) {
         listsService.deleteList(listId);
@@ -152,12 +142,12 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/update", method = {RequestMethod.POST}, params = "save")
-    public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("editListDetails") final ListForm form, final BindingResult errors) {
+    public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("editListDetails") final ListForm form, final BindingResult errors, @RequestParam(value = "page", defaultValue = "1") final int page) {
         if (errors.hasErrors())
             return new ModelAndView("redirect:/lists");
         listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         //update stuff
-        return new ModelAndView("redirect:/lists/" + listId);
+        return manageMediaFromList(page, listId, null, null, form);
     }
     //END EDIT LIST
 

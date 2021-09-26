@@ -113,6 +113,7 @@
             </div>
         </div>
     </div>
+
     <%-- Edit List Details Modals--%>
     <div class="modal fade" id="editListDetailsModal" tabindex="-1" aria-labelledby="editListDetailsModalLabel"
          aria-hidden="true">
