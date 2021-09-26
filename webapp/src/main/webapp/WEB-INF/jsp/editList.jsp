@@ -8,14 +8,16 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Edit List <c:out value="${list.listName}"/> &#8226; PopCult</title>
-    <c:url value="/editList/${list.mediaListId}" var="deletePath"/>
-    <c:url value="/editList/${list.mediaListId}" var="postPath"/>
 </head>
+<c:url value="/lists/${list.mediaListId}/delete" var="deletePath"/>
+<c:url value="/lists/${list.mediaListId}/update" var="editListPath"/>
+<c:url value="lists/${list.mediaListId}" var="listPath"/>
 <body class="bg-gray-50">
 <div class="h-full flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 py-4 flex justify-center items-start flex-grow">
-        <form:form cssClass="rounded-lg shadow-lg p-4 bg-white" modelAttribute="createListForm" action="${postPath}" method="post">
+        <form:form cssClass="rounded-lg shadow-lg p-4 bg-white" modelAttribute="createListForm" action="${editListPath}"
+                   method="post">
             <div class="flex flex-col gap-2.5">
                 <div class="col-md-6">
                     <h2 class="font-bold text-2xl">Step 1: Edit your list information</h2>
@@ -37,7 +39,8 @@
                         <div class="form-check">
                             <c:choose>
                                 <c:when test="${list.visible}">
-                                    <form:checkbox path="visible" class="form-check-label" for="invalidCheck2" checked="true"/>
+                                    <form:checkbox path="visible" class="form-check-label" for="invalidCheck2"
+                                                   checked="true"/>
                                 </c:when>
                                 <c:otherwise>
                                     <form:checkbox path="visible" class="form-check-label" for="invalidCheck2"/>
@@ -50,7 +53,8 @@
                         <div class="form-check">
                             <c:choose>
                                 <c:when test="${list.collaborative}">
-                                    <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3" checked="true"/>
+                                    <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck3"
+                                                   checked="true"/>
                                 </c:when>
                                 <c:otherwise>
                                     <form:checkbox path="collaborative" class="form-check-label" for="invalidCheck2"/>
@@ -69,14 +73,15 @@
                         Delete this list
                     </button>
                 </form:form>
-                <a href="${pageContext.request.contextPath}/lists/${list.mediaListId}">
+                <a href="${listPath}">
                     <button type="button"
                             class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white">
                         Discard changes
                     </button>
                 </a>
                 <button type="submit" value="save" name="save"
-                        class="btn btn-success btn btn-danger bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">Save
+                        class="btn btn-success btn btn-danger bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
+                    Save
                     and edit your list media
                 </button>
             </div>

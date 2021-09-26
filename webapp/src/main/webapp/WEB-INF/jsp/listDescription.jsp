@@ -8,8 +8,9 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${list.listName}"/> &#8226; PopCult</title>
-    <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 </head>
+<c:url value="/lists/${list.mediaListId}" var="forkPath"/>
+<c:url value="/lists/${list.mediaListId}/manageMedia" var="editListMediaPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -35,7 +36,7 @@
             <div class="flex justify-center py-2">
                 <c:choose>
                     <c:when test="${list.userId == currentUser.userId}">
-                        <a href="${pageContext.request.contextPath}/editList/${list.mediaListId}">
+                        <a href="${editListMediaPath}">
                             <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
                                 Edit list
