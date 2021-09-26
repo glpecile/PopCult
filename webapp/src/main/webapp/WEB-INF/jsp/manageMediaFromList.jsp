@@ -23,9 +23,8 @@
             <c:if test="${mediaContainer.totalCount != 0}">
                 <h4 class="py-2">Currently in this list</h4>
             </c:if>
-            <div class="row">
+            <div  class="flex flex-col space-y-2.5">
                 <c:forEach var="media" items="${mediaContainer.elements}">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                         <jsp:include page="/WEB-INF/jsp/components/compactCard.jsp">
                             <jsp:param name="image" value="${media.image}"/>
                             <jsp:param name="title" value="${media.title}"/>
@@ -34,7 +33,6 @@
                             <jsp:param name="deleteFromListId" value="${mediaListId}"/>
                             <jsp:param name="deletePath" value="/lists/edit/${mediaListId}/deleteMedia"/>
                         </jsp:include>
-                    </div>
                 </c:forEach>
             </div>
 
@@ -100,13 +98,12 @@
                 <br>
             </c:if>
             <div class="flex justify-between px-4">
-                <form:form action="${deleteListPath}" method="DELETE">
-                    <input type="hidden" id="mediaListId" name="mediaListId" value="${mediaListId}">
-                    <button type="submit" value="delete" name="delete"
-                            class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                        Delete list
-                    </button>
-                </form:form>
+                <jsp:include page="/WEB-INF/jsp/components/delete.jsp">
+                    <jsp:param name="mediaListId" value="${mediaListId}"/>
+                    <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
+                    <jsp:param name="title" value="Delete this list"/>
+                    <jsp:param name="message" value="Are you sure you want to delete this list?"/>
+                </jsp:include>
                 <a href=${listPath}>
                     <button type="button"
                             class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
