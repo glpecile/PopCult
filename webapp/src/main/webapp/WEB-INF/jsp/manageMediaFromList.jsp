@@ -9,11 +9,11 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Manage list content &#8226; PopCult</title>
 </head>
-<c:url value="/lists/${mediaListId}/delete" var="deleteListPath"/>
-<c:url value="/lists/${mediaListId}/deleteMedia" var="deleteMediaPath"/>
-<c:url value="/lists/${mediaListId}/search" var="searchUrl"/>
+<c:url value="/lists/delete/${mediaListId}" var="deleteListPath"/>
+<c:url value="/lists/deleteMedia/${mediaListId}" var="deleteMediaPath"/>
+<c:url value="/lists/search/${mediaListId}" var="searchUrl"/>
 <c:url value="/lists/${mediaListId}" var="listPath"/>
-<c:url value="/list/${mediaListId}/edit" var="editListDetails"/>
+<c:url value="/list/edit/${mediaListId}" var="editListDetails"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -32,7 +32,7 @@
                             <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                             <jsp:param name="mediaId" value="${media.mediaId}"/>
                             <jsp:param name="deleteFromListId" value="${mediaListId}"/>
-                            <jsp:param name="deletePath" value="/lists/${mediaListId}/deleteMedia"/>
+                            <jsp:param name="deletePath" value="/lists/deleteMedia/${mediaListId}"/>
                         </jsp:include>
                     </div>
                 </c:forEach>
@@ -75,7 +75,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/lists/${mediaListId}/addMedia"/>
+                                <jsp:param name="addPath" value="/lists/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -92,7 +92,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/addMedia/${mediaListId}/addMedia"/>
+                                <jsp:param name="addPath" value="/lists/addMedia//${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
