@@ -9,7 +9,9 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><c:out value="${media.title}"/> &#8226; PopCult</title>
 </head>
-<body>
+<c:url value="/lists/new" var="createListPath"/>
+<c:url value="/media/${mediaId}" var="mediaPath"/>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
@@ -17,7 +19,7 @@
         <div class="col-12 col-lg-4">
             <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
             <!-- Button Grid. Possible TODO: Make component. -->
-            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3">
+            <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
                 <%-- Icon row --%>
                 <div class="flex justify-around pt-2">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -45,13 +47,13 @@
                         </button>
                         <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
                             <c:forEach var="list" items="${userLists}">
-                                <form action="<c:url value="/media/${mediaId}"/>" method="POST">
+                                <form action="${mediaPath}" method="POST">
                                     <button class="dropdown-item py-0" type="submit"><c:out value="${list.listName}"/></button>
                                     <input type="hidden" id="mediaListId" name="mediaListId"
                                            value="<c:out value = "${list.mediaListId}"/>">
                                 </form>
                             </c:forEach>
-                            <a class="dropdown-item py-0" href="<c:url value="/createList"/>">+ Create a new list</a>
+                            <a class="dropdown-item py-0" href=${createListPath}>+ Create a new list</a>
                         </ul>
                     </div>
                 </sec:authorize>

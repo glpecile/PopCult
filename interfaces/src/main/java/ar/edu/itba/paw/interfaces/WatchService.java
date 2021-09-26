@@ -28,12 +28,12 @@ public interface WatchService {
 
     PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize);
 
-    Optional<Integer> getWatchedMediaCount(int userId);
+//    Optional<Integer> getWatchedMediaCount(int userId);
 
 //    @Deprecated
 //    PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize);
 
     PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize);
 
-    Optional<Integer> getToWatchMediaCount(int userId);
+//    Optional<Integer> getToWatchMediaCount(int userId);
 }

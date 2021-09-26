@@ -52,6 +52,7 @@ public class MediaController {
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
+    private static final int lastAddedAmount = 6;
 
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -59,9 +60,11 @@ public class MediaController {
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
+        final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
+        mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
@@ -155,9 +158,9 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
-        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedFilms = mediaService.getMostLikedMedia(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
-        mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
+        mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
@@ -169,9 +172,9 @@ public class MediaController {
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("series");
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
-        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedSeries = mediaService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
-        mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
+        mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();

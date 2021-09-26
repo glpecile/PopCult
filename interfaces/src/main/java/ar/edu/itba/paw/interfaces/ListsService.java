@@ -61,4 +61,7 @@ public interface ListsService {
     Optional<MediaList> createMediaListCopy(int userId, int toCopy);
 
     Optional<User> getListOwner(int listId);
+
+    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
+
 }

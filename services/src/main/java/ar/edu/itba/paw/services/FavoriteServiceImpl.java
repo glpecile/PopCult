@@ -72,6 +72,11 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    public PageContainer<MediaList> getUserPublicFavoriteLists(int userId, int page, int pageSize) {
+        return favoriteDao.getUserPublicFavoriteLists(userId, page, pageSize);
+    }
+
+    @Override
     public Optional<Integer> getFavoriteListsCount(int userId) {
         return favoriteDao.getFavoriteListsCount(userId);
     }
