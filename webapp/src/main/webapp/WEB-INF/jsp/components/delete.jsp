@@ -11,24 +11,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="editDateModalLabel"><c:out value="${param.title}"/> </h5>
+                    <h5 class="modal-title font-bold text-2xl" id="editDateModalLabel"><c:out
+                            value="${param.title}"/></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <p><c:out value="${param.message}"/></p>
+                </div>
+                <div class="modal-footer">
                     <c:url value="${param.deleteListPath}" var="deleteListPath"/>
                     <form:form action="${deleteListPath}" method="DELETE">
-                        <c:out value="${param.message}"/>
                         <input type="hidden" id="mediaListId" name="mediaListId" value="${param.mediaListId}">
-                        <div class="row">
-                            <div class="col-8"></div>
-                            <div class="col col-4">
-                                <button class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
-                                        type="submit" value="delete" name="delete">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-
+                        <button type="button" class="btn btn-light bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white" data-dismiss="modal">Close</button>
+                        <button class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
+                                type="submit" value="delete" name="delete">
+                            Delete
+                        </button>
                     </form:form>
                 </div>
             </div>
