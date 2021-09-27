@@ -38,8 +38,8 @@
                 <c:choose>
                     <c:when test="${list.userId == currentUser.userId}">
                         <a href="${editListMediaPath}">
-                            <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                                <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
+                            <button type="button" class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                                <i class="far fa-edit pr-2 text-purple-500 group-hover:text-purple-900"></i>
                                 Edit list
                             </button>
                         </a>
@@ -47,8 +47,8 @@
                     <c:otherwise>
                         <form:form cssClass="m-0" action="${forkPath}" method="POST">
                             <button type="submit" id="fork" name="fork"
-                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                                <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
+                                    class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                                <i class="far fa-copy pr-2 text-purple-500 group-hover:text-purple-900"></i>
                                 Fork this list
                             </button>
                         </form:form>
@@ -83,7 +83,7 @@
             <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
                 <label class="p-2 text-semibold w-full flex flex-col">
                     <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
-                              name="body" placeholder="${commentPlaceholder}"  type="text"/>
+                                   name="body" placeholder="${commentPlaceholder}" type="text"/>
                     <form:errors path="body" cssClass="formError text-red-500" element="p"/>
                     <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
                     <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"

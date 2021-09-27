@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="flex flex-col gap-4 justify-center items-center">
     <sec:authorize access="isAuthenticated()">
         <c:set var="currentUsername">
@@ -29,11 +30,14 @@
                     </button>
                 </a>
             </div>
-            <h4>Or as we like to call you: <b><c:out value="${param.username}"/></b></h4>
+            <h4>
+                <!-- Or as we like to call you: Username -->
+                <spring:message code="profile.description"/><b><c:out value="${param.username}"/></b>
+            </h4>
             <a href=<c:url value="/logout"/>>
                 <button type="button"
-                        class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                    Logout
+                        class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">
+                    <i class="fas fa-sign-out-alt text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.signOut"/>
                 </button>
             </a>
             <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
@@ -41,24 +45,23 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title font-bold text-2xl" id="uploadModalLabel">File Upload</h5>
+                            <h5 class="modal-title font-bold text-2xl" id="uploadModalLabel">
+                                <spring:message code="profile.ppHeader"/>
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <c:url value="/uploadImage" var="uploadPath"/>
                             <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}" enctype="multipart/form-data">
                                 <div class="row px-2 pb-2">
-                                        <%--                                    <input type="file" name="file"/>--%>
-                                        <%--                                    <input type="hidden" name="username" value="<c:out value="${param.username}"/>">--%>
                                     <form:input path="image" cssClass="form-control" type="file" accept="image/*"/>
                                     <form:errors path="image" cssClass="form-control" element="p"/>
                                 </div>
-                                <div class="row">
-                                    <div class="col-8"></div>
-                                    <div class="col col-4">
-                                        <button class="col-auto btn btn-secondary btn-rounded" type="submit">Upload file
-                                        </button>
-                                    </div>
+                                <div class="flex justify-end pt-8">
+                                    <button type="submit"
+                                            class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
+                                        <i class="fas fa-save group-hover:text-white pr-2"></i><spring:message code="profile.ppSave"/>
+                                    </button>
                                 </div>
                             </form:form>
                         </div>
@@ -70,7 +73,9 @@
             <img class="rounded-full h-40 w-40 flex items-center" alt="profile_image"
                  src="<c:url value="/user/image/${param.imageId}"/>">
             <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
-            <h4>Also known as: <b><c:out value="${param.username}"/></b></h4>
+            <h4>
+                <spring:message code="profile.otherDescription"/><b><c:out value="${param.username}"/></b>
+            </h4>
         </c:otherwise>
     </c:choose>
 </div>

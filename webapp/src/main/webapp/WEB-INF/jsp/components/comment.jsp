@@ -10,7 +10,7 @@
             <form:form action="${deletePath}" method="DELETE">
                 <input type="hidden" name="commentId" value="<c:out value="${param.commentId}"/>">
                 <button type="submit">
-                    <i class="fas fa-times text-right text-gray-800 justify-end hover:text-red-400 cursor-pointer"
+                    <i class="fas fa-times text-right text-gray-400 justify-end hover:text-red-400 cursor-pointer"
                        title="Delete comment"></i>
                 </button>
             </form:form>

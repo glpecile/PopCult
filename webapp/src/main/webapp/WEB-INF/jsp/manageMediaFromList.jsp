@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Manage list content &#8226; PopCult</title>
 </head>
+<!-- Variables -->
 <c:url value="/lists/edit/${mediaListId}/delete" var="deleteListPath"/>
 <c:url value="/lists/edit/${mediaListId}/deleteMedia" var="deleteMediaPath"/>
 <c:url value="/lists/edit/${mediaListId}/search" var="searchUrl"/>
@@ -21,9 +22,9 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
-            <div class="flex justify-between">
+            <div class="flex justify-between m-0">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
+                <button class="btn btn-link my-3.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                         data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
                     <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i> Edit Details
                 </button>
@@ -39,7 +40,7 @@
             <c:if test="${mediaContainer.totalCount == 0}">
                 <div class="flex flex-col">
                     <h4 class="text-center py-0.5">It seems this list is empty!</h4>
-                    <h4 class="text-center py-0.5">You can search for media to add with the <i class="fas fa-plus"></i>Add Media button!</h4>
+                    <h4 class="text-center py-0.5">You can search for media to add with the + Add Media button!</h4>
                 </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
@@ -61,7 +62,7 @@
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
                 <jsp:param name="url" value="/lists/edit/${mediaListId}/manageMedia"/>
             </jsp:include>
-            <div class="flex justify-between px-4 mb-2">
+            <div class="flex justify-between mb-2">
                 <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
                     <jsp:param name="mediaListId" value="${mediaListId}"/>
                     <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
@@ -70,7 +71,7 @@
                 </jsp:include>
                 <a href=${listPath}>
                     <button type="button"
-                            class="btn btn-warning btn btn-danger bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
+                            class="btn btn-warning btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
                         <i class="fas fa-save group-hover:text-white pr-2"></i>Done
                     </button>
                 </a>
