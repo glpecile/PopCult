@@ -10,6 +10,7 @@
     <title><c:out value="${list.listName}"/> &#8226; PopCult</title>
     <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 </head>
+<c:url value="/lists/${listId}/comment" var="commentPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -78,13 +79,19 @@
                     ${listCommentsContainer.totalCount}
                 </div>
             </div>
-            <label class="p-2 text-semibold w-full flex flex-col">
-                    <textarea rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8" name="comment"
-                              placeholder="<spring:message code="comments.placeholder"/>"></textarea>
-                <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24" type="submit">
-                    <spring:message code="comments.submit"/>
-                </button>
-            </label>
+            <spring:message code="comments.placeholder" var="commentPlaceholder"/>
+            <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
+                <label class="p-2 text-semibold w-full flex flex-col">
+                    <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
+                              name="body" placeholder="${commentPlaceholder}"  type="text"/>
+                    <form:errors path="body" cssClass="formError text-red-500" element="p"/>
+                    <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
+                    <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"
+                            type="submit">
+                        <spring:message code="comments.submit"/>
+                    </button>
+                </label>
+            </form:form>
             <c:choose>
                 <c:when test="${listCommentsContainer.totalCount != 0}">
                     <c:forEach var="comment" items="${listCommentsContainer.elements}">

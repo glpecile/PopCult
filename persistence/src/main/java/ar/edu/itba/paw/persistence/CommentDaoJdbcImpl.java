@@ -55,7 +55,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("mediaId", mediaId);
-        data.put("comment", comment);
+        data.put("description", comment);
         KeyHolder keyHolder = jdbcInsertMediaComment.executeAndReturnKeyHolder(data);
         return new Comment((int) keyHolder.getKey(), userId,"", comment);
     }
@@ -65,7 +65,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("listId", listId);
-        data.put("comment", comment);
+        data.put("description", comment);
         KeyHolder keyHolder = jdbcInsertListComment.executeAndReturnKeyHolder(data);
         return new Comment((int) keyHolder.getKey(), userId,"", comment);
     }
