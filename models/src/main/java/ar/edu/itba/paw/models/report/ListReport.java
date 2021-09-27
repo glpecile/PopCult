@@ -7,15 +7,13 @@ public class ListReport extends Report {
     private final int userId;
     private final String listName;
     private final String description;
-    private final Date creationDate;
 
-    public ListReport(String report, Date date, int mediaListId, int userId, String listName, String description, Date creationDate) {
-        super(report, date);
+    public ListReport(int reportId, String report, Date date, int mediaListId, int userId, String listName, String description) {
+        super(reportId, report, date);
         this.mediaListId = mediaListId;
         this.userId = userId;
         this.listName = listName;
         this.description = description;
-        this.creationDate = creationDate;
     }
 
     public int getMediaListId() {
@@ -32,9 +30,5 @@ public class ListReport extends Report {
 
     public String getDescription() {
         return description;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
     }
 }
