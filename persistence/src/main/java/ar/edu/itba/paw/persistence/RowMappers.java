@@ -5,6 +5,9 @@ import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.report.ListCommentReport;
+import ar.edu.itba.paw.models.report.ListReport;
+import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import ar.edu.itba.paw.models.staff.Studio;
@@ -138,6 +141,43 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("username"),
                     rs.getString("description"));
+
+
+    /**
+     * Reports RowMappers
+     */
+    public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new ListReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("listId"),
+                    rs.getInt("userId"),
+                    rs.getString("listName"),
+                    rs.getString("description")
+            );
+
+    public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new ListCommentReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("commentId"),
+                    rs.getInt("listId"),
+                    rs.getInt("userId"),
+                    rs.getString("description")
+            );
+
+    public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new MediaCommentReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("commentId"),
+                    rs.getInt("mediaId"),
+                    rs.getInt("userId"),
+                    rs.getString("description")
+            );
 }
 
 
