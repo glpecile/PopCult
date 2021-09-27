@@ -37,10 +37,9 @@
                 </button>
             </div>
             <c:if test="${mediaContainer.totalCount == 0}">
-<%--                TODO alinear al centro--%>
-                <div class="flex justify-content-center">
-                    <h4 class="py-0.5">It seems this list is empty!</h4>
-                    <h4 class="py-0.5">You can search for media to add with the <i class="fas fa-plus"></i>Add Media button!</h4>
+                <div class="flex flex-col">
+                    <h4 class="text-center py-0.5">It seems this list is empty!</h4>
+                    <h4 class="text-center py-0.5">You can search for media to add with the <i class="fas fa-plus"></i>Add Media button!</h4>
                 </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
