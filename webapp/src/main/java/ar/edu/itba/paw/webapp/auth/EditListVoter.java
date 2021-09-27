@@ -33,23 +33,21 @@ public class EditListVoter implements AccessDecisionVoter<FilterInvocation> {
     public int vote(Authentication authentication, FilterInvocation filterInvocation, Collection<ConfigAttribute> attributes) {
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
-        if(filterInvocation.getRequestUrl().toLowerCase().contains("/editlist/")) {
-            StringBuilder stringBuilder = new StringBuilder(filterInvocation.getRequestUrl());
-            stringBuilder.delete(0, stringBuilder.lastIndexOf("/") + 1);
-            if(stringBuilder.toString().contains("?")) {
-                stringBuilder.delete(stringBuilder.indexOf("?"), stringBuilder.length());
-            }
-            if(!stringBuilder.toString().isEmpty()) {
-                int mediaListId = Integer.parseInt(stringBuilder.toString());
+        if (filterInvocation.getRequestUrl().toLowerCase().contains("/lists/edit/")) {
+            try {
+                int mediaListId = Integer.parseInt(filterInvocation.getRequestUrl().replaceFirst("/lists/edit/", "").replaceFirst("/.*", ""));
+
                 userService.getCurrentUser().ifPresent(user -> {
-                    listsService.getMediaListById(mediaListId).ifPresent(mediaList ->  {
-                        if(user.getUserId() == mediaList.getUserId()) {
+                    listsService.getMediaListById(mediaListId).ifPresent(mediaList -> {
+                        if (user.getUserId() == mediaList.getUserId()) {
                             vote.set(ACCESS_GRANTED);
                         } else {
                             vote.set(ACCESS_DENIED);
                         }
                     });
                 });
+            } catch (NumberFormatException e) {
+                vote.set(ACCESS_ABSTAIN);
             }
         }
         return vote.get();
