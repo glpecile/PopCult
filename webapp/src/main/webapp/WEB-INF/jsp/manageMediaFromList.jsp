@@ -78,6 +78,7 @@
             </div>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
     <%-- Edit List Details Modal--%>
     <div class="modal fade" id="editListDetailsModal" tabindex="-1" aria-labelledby="editListDetailsModalLabel"
          aria-hidden="true">
