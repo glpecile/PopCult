@@ -18,6 +18,18 @@
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2 py-2">
+
+    <!-- Basic use case for compact card -->
+<%--    <div class="flex flex-col space-y-2.5">--%>
+<%--        <c:forEach var="film" items="${latestFilmsList}">--%>
+<%--            <jsp:include page="/WEB-INF/jsp/components/compactCard.jsp">--%>
+<%--                <jsp:param name="image" value="${film.image}"/>--%>
+<%--                <jsp:param name="title" value="${film.title}"/>--%>
+<%--                <jsp:param name="releaseDate" value="${film.releaseYear}"/>--%>
+<%--            </jsp:include>--%>
+<%--        </c:forEach>--%>
+<%--    </div>--%>
+
     <!-- Welcome back message -->
     <div class="flex flex-col justify-center items-center py-4 mx-auto">
         <sec:authorize access="!isAuthenticated()">
@@ -55,7 +67,6 @@
             <c:forEach var="cover" items="${recentlyAddedLists}">
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${k}">
                     <c:set var="k" value="${k + 1}"/>
-                        <%--            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3">--%>
                     <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
                         <jsp:param name="title" value="${cover.name}"/>
                         <jsp:param name="listId" value="${cover.listId}"/>
@@ -134,7 +145,6 @@
         <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
             <c:set var="j" value="13"/>
             <c:forEach var="serie" items="${latestSeriesList}">
-                <%--                <div class="w-96 h-64 px-4 flex-shrink-0" data-slider-target="image">--%>
                 <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
                     <c:set var="j" value="${j + 1}"/>
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">

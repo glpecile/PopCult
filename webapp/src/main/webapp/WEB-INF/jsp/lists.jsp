@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Discover new Multimedia Content &#8226; PopCult</title>
 </head>
+<c:url value="/lists/new" var="createListPath"/>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
@@ -17,7 +18,7 @@
             <h2 class="font-bold text-2xl py-2">Popular lists right now</h2>
         </div>
         <div class="col-sm-4 pt-2 flex justify-end">
-            <a href="${pageContext.request.contextPath}/createList">
+            <a href=${createListPath}>
                 <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">+ Create new list</button>
             </a>
         </div>
