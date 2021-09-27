@@ -23,11 +23,10 @@
         </h1>
         <c:forEach var="request" items="${requestContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/request.jsp">
-                <jsp:param name="acceptPath" value="/lists"/>
-                <jsp:param name="rejectPath" value="/lists"/>
                 <jsp:param name="username" value="${request.collaboratorUsername}"/>
                 <jsp:param name="listname" value="${request.listname}"/>
                 <jsp:param name="listId" value="${request.listId}"/>
+                <jsp:param name="collabId" value="${request.collabId}"/>
             </jsp:include>
         </c:forEach>
     </div>

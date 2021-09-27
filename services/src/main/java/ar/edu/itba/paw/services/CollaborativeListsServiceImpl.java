@@ -23,4 +23,14 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     public PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize) {
         return collaborativeListsDao.getRequestsByUserId(userId, page, pageSize);
     }
+
+    @Override
+    public void acceptRequest(int collabId) {
+        collaborativeListsDao.acceptRequest(collabId);
+    }
+
+    @Override
+    public void rejectRequest(int collabId) {
+        collaborativeListsDao.rejectRequest(collabId);
+    }
 }

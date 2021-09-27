@@ -74,4 +74,15 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
         int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ?", new Object[]{userId, false}, COUNT_ROW_MAPPER ).stream().findFirst().orElse(0);
         return new PageContainer<>(requestList, page, pageSize, count);
     }
+
+    @Override
+    public void acceptRequest(int collabId) {
+        jdbcTemplate.update("UPDATE collaborative SET accepted = ? WHERE collabId = ?", true, collabId);
+    }
+
+    @Override
+    public void rejectRequest(int collabId) {
+        jdbcTemplate.update("DELETE FROM collaborative WHERE collabid = ?", collabId);
+
+    }
 }

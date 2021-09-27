@@ -235,10 +235,21 @@ public class UserController {
     public ModelAndView userCollabRequests(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userRequests");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user.getUserId(), page-1, itemsPerPage * 4);
+        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user.getUserId(), page - 1, itemsPerPage * 4);
         mav.addObject("username", username);
         mav.addObject("requestContainer", requestContainer);
         return mav;
+    }
 
+    @RequestMapping("/user/{username}/requests/accept")
+    public ModelAndView acceptCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        collaborativeListService.acceptRequest(collabId);
+        return new ModelAndView("redirect:/user/" + username + "/requests");
+    }
+
+    @RequestMapping("/user/{username}/requests/reject")
+    public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        collaborativeListService.rejectRequest(collabId);
+        return new ModelAndView("redirect:/user/" + username + "/requests");
     }
 }

@@ -9,4 +9,8 @@ public interface CollaborativeListsDao {
     Request makeNewRequest(int listId, int userId);
 
     PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize);
+
+    void acceptRequest(int collabId);
+
+    void rejectRequest(int collabId);
 }
