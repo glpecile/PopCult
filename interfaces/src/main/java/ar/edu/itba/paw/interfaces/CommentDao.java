@@ -15,4 +15,6 @@ public interface CommentDao {
 
     PageContainer<Comment> getListComments(int listId, int page, int pageSize);
 
+    void deleteCommentFromList(int commentId);
+
 }

@@ -98,6 +98,10 @@
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
                             <jsp:param name="username" value="${comment.username}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
+                            <jsp:param name="commenterId" value="${comment.userId}"/>
+                            <jsp:param name="currentUserId" value="${currentUser.userId}"/>
+                            <jsp:param name="commentId" value="${comment.commentId}"/>
+                            <jsp:param name="deletePath" value="/lists/${listId}/deleteComment"/>
                         </jsp:include>
                     </c:forEach>
                 </c:when>

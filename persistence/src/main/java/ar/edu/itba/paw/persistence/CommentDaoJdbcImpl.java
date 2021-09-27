@@ -83,4 +83,9 @@ public class CommentDaoJdbcImpl implements CommentDao {
         int commentsAmount = jdbcTemplate.query("SELECT COUNT(*) FROM listcomment NATURAL JOIN users WHERE listId = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(listComments, page, pageSize, commentsAmount);
     }
+
+    @Override
+    public void deleteCommentFromList(int commentId) {
+        jdbcTemplate.update("DELETE FROM listcomment WHERE commentid = ?", commentId);
+    }
 }

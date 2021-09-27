@@ -33,4 +33,9 @@ public class CommentServiceImpl implements CommentService {
     public PageContainer<Comment> getListComments(int listId, int page, int pageSize) {
         return commentDao.getListComments(listId, page, pageSize);
     }
+
+    @Override
+    public void deleteCommentFromList(int commentId) {
+        commentDao.deleteCommentFromList(commentId);
+    }
 }

@@ -86,10 +86,15 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/comment", method = {RequestMethod.POST})
-    public ModelAndView commentList(@PathVariable("listId") final int listId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+    public ModelAndView addComment(@PathVariable("listId") final int listId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
         if (errors.hasErrors())
             return listDescription(listId, form);
         commentService.addCommentToList(userId, listId, form.getBody());
+        return new ModelAndView("redirect:/lists/" + listId);
+    }
+    @RequestMapping(value="lists/{listId}/deleteComment")
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId){
+        commentService.deleteCommentFromList(commentId);
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
