@@ -22,7 +22,6 @@
                     <c:url value="${param.deleteListPath}" var="deleteListPath"/>
                     <form:form action="${deleteListPath}" method="DELETE">
                         <input type="hidden" id="mediaListId" name="mediaListId" value="${param.mediaListId}">
-                        <button type="button" class="btn btn-light bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold hover:text-white" data-dismiss="modal">Close</button>
                         <button class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
                                 type="submit" value="delete" name="delete">
                             Delete

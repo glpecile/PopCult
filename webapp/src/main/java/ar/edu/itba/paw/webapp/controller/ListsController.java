@@ -102,7 +102,7 @@ public class ListsController {
     }
 
     //CREATE A NEW LIST - PART 1
-    @RequestMapping(value = "/createList", method = {RequestMethod.GET})
+    @RequestMapping(value = "/lists/new", method = {RequestMethod.GET})
     public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
         return new ModelAndView("createListForm");
     }

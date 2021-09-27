@@ -62,7 +62,7 @@
                 <jsp:param name="url" value="/lists/edit/${mediaListId}/manageMedia"/>
             </jsp:include>
             <div class="flex justify-between px-4 mb-2">
-                <jsp:include page="/WEB-INF/jsp/components/delete.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
                     <jsp:param name="mediaListId" value="${mediaListId}"/>
                     <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
                     <jsp:param name="title" value="Delete this list"/>
