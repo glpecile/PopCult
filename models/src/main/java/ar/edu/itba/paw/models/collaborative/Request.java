@@ -3,15 +3,13 @@ package ar.edu.itba.paw.models.collaborative;
 public class Request {
     private final int collabId;
     private final String requesterUsername;
-    private final String title;
-    private final String body;
+    private final String message;
     private final int collabType;
 
-    public Request(int collabId, String requesterUsername, String title, String body, int collabType) {
+    public Request(int collabId, String requesterUsername, String message, int collabType) {
         this.collabId = collabId;
         this.requesterUsername = requesterUsername;
-        this.title = title;
-        this.body = body;
+        this.message = message;
         this.collabType = collabType;
     }
 
@@ -19,17 +17,14 @@ public class Request {
         return collabId;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
     public String getRequesterUsername() {
         return requesterUsername;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
 
     public int getCollabType() {
         return collabType;

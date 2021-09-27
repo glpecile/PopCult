@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import java.util.List;
 
 public interface CollaborativeListService {
-    Request makeNewRequest(int listId, int userId, String title, String body, int collabType);
+    Request makeNewRequest(int listId, int userId, String message, int collabType);
 
     List<Request> getRequestsByUserId(int userId);
 }

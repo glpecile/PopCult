@@ -26,7 +26,7 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
     @Autowired
     public CollaborativeListsDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsertCollab = new SimpleJdbcInsert(ds).withTableName("collaborative").usingGeneratedKeyColumns("collabId");
+        jdbcInsertCollab = new SimpleJdbcInsert(ds).withTableName("collaborative").usingGeneratedKeyColumns("collabid");
         jdbcInsertRequest = new SimpleJdbcInsert(ds).withTableName("request");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS collaborative (" +
@@ -39,15 +39,14 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS request (" +
                 "collabId INT," +
-                "requestTitle TEXT," +
-                "requestBody TEXT," +
+                "requestMessage TEXT," +
                 "requestType INT NOT NULL," +
                 "FOREIGN KEY(collabId) REFERENCES collaborative(collabId) ON DELETE CASCADE)");
 
     }
 
     @Override
-    public Request makeNewRequest(int listId, int userId, String title, String body, int collabType) {
+    public Request makeNewRequest(int listId, int userId,String message, int collabType) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
         data.put("collaboratorId", userId);
@@ -56,16 +55,15 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
 
         Map<String, Object> map = new HashMap<>();
         map.put("collabId", key);
-        map.put("requestTitle", title);
-        map.put("requestBody", body);
+        map.put("requestMessage", message);
         map.put("requestType", collabType);
         jdbcInsertRequest.execute(map);
-        return new Request(key, "", title, body, collabType);
+        return new Request(key, "", message, collabType);
     }
 
     // requests from a user       return jdbcTemplate.query("SELECT * FROM medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid JOIN users u on aux.collaboratorid = u.userid",new Object[]{userId},REQUEST_ROW_MAPPER);
     @Override
     public List<Request> getRequestsByUserId(int userId) {
-        return jdbcTemplate.query("SELECT * FROM medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid JOIN users u on m.userid = ?",new Object[]{userId},REQUEST_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM (medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid) JOIN users u on u.userid= aux.collaboratorid AND m.userid = ?", new Object[]{userId}, REQUEST_ROW_MAPPER);
     }
 }

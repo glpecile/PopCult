@@ -13,10 +13,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.CommentForm;
-import ar.edu.itba.paw.webapp.form.ListForm;
-import ar.edu.itba.paw.webapp.form.ListMediaForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -44,6 +41,8 @@ public class ListsController {
     private SearchService searchService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private CollaborativeListService collaborativeListService;
 
     private static final int itemsPerPage = 6;
     private static final int discoveryListsAmount = 4;
@@ -95,10 +94,25 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
-    @RequestMapping(value = "lists/{listId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
+    @RequestMapping(value = "/lists/{listId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
     public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId) {
         commentService.deleteCommentFromList(commentId);
         return new ModelAndView("redirect:/lists/" + listId);
+    }
+
+    @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.GET})
+    public ModelAndView makeRequestToCollab(@PathVariable("listId") final int listId, @ModelAttribute("requestForm") CollabRequestForm requestForm) {
+        return new ModelAndView("requestToCollab");
+    }
+
+    @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.POST})
+    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId, @Valid @ModelAttribute("requestForm") CollabRequestForm requestForm, final BindingResult errors) {
+        if (errors.hasErrors())
+            return makeRequestToCollab(listId, requestForm);
+        userService.getCurrentUser().ifPresent(user -> {
+            collaborativeListService.makeNewRequest(listId, user.getUserId(), requestForm.getMessage(), requestForm.getType());
+        });
+        return new ModelAndView("redirect:/lists/" + listId).addObject("successfulRequest"); //TODO mensaje de que salio todo ok
     }
 
     //CREATE A NEW LIST - PART 1
@@ -196,7 +210,7 @@ public class ListsController {
         //return listDescription(listId);
     }
 
-    private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId, @ModelAttribute("mediaForm") ListMediaForm mediaForm,  @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
+    private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId, @ModelAttribute("mediaForm") ListMediaForm mediaForm, @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
         PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaListId, page - 1, itemsPerPage);
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);

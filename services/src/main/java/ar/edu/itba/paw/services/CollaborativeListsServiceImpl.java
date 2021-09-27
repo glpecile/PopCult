@@ -14,8 +14,8 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     private CollaborativeListsDao collaborativeListsDao;
 
     @Override
-    public Request makeNewRequest(int listId, int userId, String title, String body, int collabType) {
-        return collaborativeListsDao.makeNewRequest(listId, userId, title, body, collabType);
+    public Request makeNewRequest(int listId, int userId, String message, int collabType) {
+        return collaborativeListsDao.makeNewRequest(listId, userId, message, collabType);
     }
 
     @Override

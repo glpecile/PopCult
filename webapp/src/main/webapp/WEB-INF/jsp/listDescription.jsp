@@ -12,6 +12,8 @@
 <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/manageMedia" var="editListMediaPath"/>
 <c:url value="/lists/${listId}/comment" var="commentPath"/>
+<c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
+
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -59,11 +61,13 @@
                     </div>
                     <c:if test="${list.collaborative}">
                         <div class="flex justify-end">
+                            <a href="${requestPath}">
                             <button type="button"
                                     class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
                                 Ask to collaborate
                             </button>
+                            </a>
                         </div>
                     </c:if>
                 </c:otherwise>
