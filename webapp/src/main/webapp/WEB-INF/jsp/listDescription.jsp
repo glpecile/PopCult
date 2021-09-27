@@ -34,17 +34,21 @@
         <!-- Media icons -->
         <div class="flex flex-wrap justify-start">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
-            <div class="flex justify-center py-2">
-                <c:choose>
-                    <c:when test="${list.userId == currentUser.userId}">
+            <c:choose>
+                <c:when test="${list.userId == currentUser.userId}">
+                    <div class="flex justify-center py-2">
+
                         <a href="${editListMediaPath}">
-                            <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <button type="button"
+                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
                                 Edit list
                             </button>
                         </a>
-                    </c:when>
-                    <c:otherwise>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="flex justify-center py-2">
                         <form:form cssClass="m-0" action="${forkPath}" method="POST">
                             <button type="submit" id="fork" name="fork"
                                     class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
@@ -52,9 +56,18 @@
                                 Fork this list
                             </button>
                         </form:form>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+                    </div>
+                    <c:if test="${list.collaborative}">
+                        <div class="flex justify-end">
+                            <button type="button"
+                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                                <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
+                                Ask to collaborate
+                            </button>
+                        </div>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
         </div>
         <!-- Films and Series in the list -->
         <div class="row pb-4">
@@ -82,8 +95,9 @@
             <spring:message code="comments.placeholder" var="commentPlaceholder"/>
             <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
                 <label class="p-2 text-semibold w-full flex flex-col">
-                    <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
-                              name="body" placeholder="${commentPlaceholder}"  type="text"/>
+                    <form:textarea path="body" rows="3"
+                                   class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
+                                   name="body" placeholder="${commentPlaceholder}" type="text"/>
                     <form:errors path="body" cssClass="formError text-red-500" element="p"/>
                     <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
                     <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"
