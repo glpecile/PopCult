@@ -23,7 +23,7 @@ public class ListMediaForm {
         if (mediaList == null) return new HashMap<>();
         Map<Integer, String> map = new HashMap<>();
         for (Media m : mediaList) {
-            map.put(m.getMediaId(), m.getTitle() + "(" + m.getReleaseYear() + ")");
+            map.put(m.getMediaId(), " " + m.getTitle() + " (" + m.getReleaseYear() + ")");
         }
         return map;
     }

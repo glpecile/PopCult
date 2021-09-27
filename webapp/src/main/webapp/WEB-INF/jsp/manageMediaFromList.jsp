@@ -20,12 +20,12 @@
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
-        <div class="row g-3 p-2 my-8 bg-white shadow-lg">
+        <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
             <div class="flex justify-between">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                         data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
-                    <i class="fas fa-pencil-alt text-gray-500 my-2 group-hover:text-white"></i> Edit Details
+                    <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i> Edit Details
                 </button>
             </div>
             <%--List current content--%>
@@ -33,7 +33,7 @@
                 <h4 class="py-0.5">Currently in this list</h4>
                 <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
                         data-bs-toggle="modal" data-bs-target="#addMediaModal">
-                    <i class="fas fa-plus text-gray-500 my-2 group-hover:text-white"></i> Add Media
+                    <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i> Add Media
                 </button>
             </div>
             <c:if test="${mediaContainer.totalCount == 0}">
@@ -179,24 +179,24 @@
                             </label>
                         </div>
                     </form>
-                    <form:form modelAttribute="mediaForm" action="${addMediaPath}" method="POST">
+                    <form:form cssClass="m-0 p-0" modelAttribute="mediaForm" action="${addMediaPath}" method="POST">
                     <c:if test="${searchTerm != null}">
-                        <br>
-                        <h2 class="font-bold py-2">Searching by: <c:out value="${searchTerm}"/></h2>
+                        <h2 class="font-bold pb-1.5">
+                            <spring:message code="search.by"/> <c:out value="${searchTerm}"/>
+                        </h2>
                         <!-- Search Results of every Media -->
                         <div class="row">
-                            <h2 class="font-bold py-2">Search Results:</h2>
                             <div class="overflow-y-auto h-32">
                                 <div class="flex flex-col space-y-2.5">
                                     <form:checkboxes path="media" items="${searchResults}"/>
-                                    <form:errors path="media" cssClass="error"/>
+                                    <form:errors path="media" cssClass="error text-red-400"/>
                                 </div>
                             </div>
                         </div>
                         <br>
                     </c:if>
                 </div>
-                <div class="modal-footer flex space-x-2 pb-0">
+                <div class="modal-footer flex space-x-2">
                     <button type="submit" value="add" name="add"
                             class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
                         <i class="fas fa-plus group-hover:text-white pr-2"></i>Add Media
