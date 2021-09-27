@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -18,24 +19,29 @@
         <form:form modelAttribute="changePassword" action="${postPath}" method="post"
                    class="g-3 p-4 my-8 bg-white shadow-lg rounded-lg">
             <div class="flex flex-col justify-center items-center">
-                <h2 class="text-3xl">Edit <c:out value="${user.username}"/>'s password</h2>
+                <h2 class="text-3xl">
+                    <c:out value="${user.username}"/><spring:message code="profile.passwordChange.header"/>
+                </h2>
                 <br>
-
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="currentPassword" cssClass="form-label">Current Password: </form:label>
+                    <form:label path="currentPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.current"/>
+                    </form:label>
                     <form:input path="currentPassword" type="password" cssClass="form-control"/>
                     <form:errors path="currentPassword" cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
-
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="newPassword" cssClass="form-label">New Password: </form:label>
+                    <form:label path="newPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.new"/>
+                    </form:label>
                     <form:input path="newPassword" type="password" cssClass="form-control"/>
                     <form:errors path="newPassword" cssClass="formError text-sm text-red-500" element="p"/>
                     <form:errors cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
-
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="repeatPassword" cssClass="form-label">Repeat Password: </form:label>
+                    <form:label path="repeatPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.repeat"/>
+                    </form:label>
                     <form:input path="repeatPassword" type="password" cssClass="form-control"/>
                     <form:errors path="repeatPassword" cssClass="formError text-sm text-red-500" element="p"/>
                 </div>
@@ -45,10 +51,14 @@
                     <%--discard changes--%>
                 <a href=
                         <c:url value="/settings"/>>
-                    <button class="btn btn-light my-2" type="button">Discard</button>
+                    <button class="btn btn-light my-2" type="button">
+                        <spring:message code="profile.passwordChange.discard"/>
+                    </button>
                 </a>
                     <%--save changes--%>
-                <button class="btn btn-secondary my-2" id="changePass" name="changePass" type="submit">Save</button>
+                <button class="btn btn-secondary my-2" id="changePass" name="changePass" type="submit">
+                    <spring:message code="profile.passwordChange.save"/>
+                </button>
             </div>
         </form:form>
     </div>
