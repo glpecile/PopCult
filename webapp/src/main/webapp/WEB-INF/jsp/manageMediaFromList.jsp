@@ -15,6 +15,7 @@
 <c:url value="/lists/${mediaListId}" var="listPath"/>
 <c:url value="/list/edit/${mediaListId}" var="editListDetails"/>
 <c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
+<c:url value="/lists/edit/${list.mediaListId}/addMedia" var="addMediaPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -29,7 +30,13 @@
             </div>
             <%--List current content--%>
             <c:if test="${mediaContainer.totalCount != 0}">
-                <h4 class="py-0.5">Currently in this list</h4>
+                <div class="flex justify-between">
+                    <h4 class="py-0.5">Currently in this list</h4>
+                    <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
+                            data-bs-toggle="modal" data-bs-target="#addMediaModal">
+                        <i class="fas fa-plus text-gray-500 my-2 group-hover:text-white"></i> Add Media
+                    </button>
+                </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
                 <c:forEach var="media" items="${mediaContainer.elements}">
@@ -51,43 +58,6 @@
                 <jsp:param name="url" value="/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
-            <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
-            <!-- Search input -->
-            <form class="space-y-4" action="${searchUrl}" method="get" enctype="application/x-www-form-urlencoded">
-                <div class="flex flex-col relative">
-                    <label class="py-2 text-semibold w-full flex">
-                        <input type="hidden" name="mediaListId" value="${mediaListId}">
-                        <input class="form-control text-base rounded-full h-8 shadow-sm pl-3 pr-8" type="text"
-                               name="term"
-                               placeholder="<spring:message code="search.placeholder"/>"/>
-                        <button class="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
-                                name="search" id="search" type="submit">
-                            <i class="fas fa-search text-gray-500 text-center rounded-full mb-2"></i>
-                        </button>
-                    </label>
-                </div>
-            </form>
-            <c:if test="${searchTerm != null}">
-                <br>
-                <h2 class="font-bold text-2xl py-2"> Search Term: <c:out value="${searchTerm}"/></h2>
-                <!-- Search Results of every Media -->
-                <div class="row">
-                    <h2 class="font-bold text-2xl py-2">Search Results</h2>
-                    <c:forEach var="media" items="${searchResults}">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                                <jsp:param name="image" value="${media.image}"/>
-                                <jsp:param name="title" value="${media.title}"/>
-                                <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                                <jsp:param name="mediaId" value="${media.mediaId}"/>
-                                <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/lists/edit/${mediaListId}/addMedia"/>
-                            </jsp:include>
-                        </div>
-                    </c:forEach>
-                </div>
-                <br>
-            </c:if>
             <div class="flex justify-between px-4 mb-2">
                 <jsp:include page="/WEB-INF/jsp/components/delete.jsp">
                     <jsp:param name="mediaListId" value="${mediaListId}"/>
@@ -104,7 +74,7 @@
             </div>
         </div>
     </div>
-    <%-- Edit List Details Modals--%>
+    <%-- Edit List Details Modal--%>
     <div class="modal fade" id="editListDetailsModal" tabindex="-1" aria-labelledby="editListDetailsModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -178,11 +148,81 @@
             </div>
         </div>
     </div>
+    <%-- Add Media Modal--%>
+    <div class="modal fade" id="addMediaModal" tabindex="-1" aria-labelledby="addMediaModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="addMediaModalLabel">Search and add new media</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
+                    <!-- Search input -->
+                    <form class="space-y-4" action="${searchUrl}" method="get"
+                          enctype="application/x-www-form-urlencoded">
+                        <div class="flex flex-col relative">
+                            <label class="py-2 text-semibold w-full flex">
+                                <input type="hidden" name="mediaListId" value="${mediaListId}">
+                                <input class="form-control text-base rounded-full h-8 shadow-sm pl-3 pr-8"
+                                       type="text"
+                                       name="term"
+                                       placeholder="<spring:message code="search.placeholder"/>"/>
+                                <button class="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
+                                        name="search" id="search" type="submit">
+                                    <i class="fas fa-search text-gray-500 text-center rounded-full mb-2"></i>
+                                </button>
+                            </label>
+                        </div>
+                    </form>
+                    <form:form modelAttribute="mediaForm" action="${addMediaPath}" method="POST">
+                    <c:if test="${searchTerm != null}">
+                        <br>
+                        <h2 class="font-bold py-2">Searching by: <c:out value="${searchTerm}"/></h2>
+                        <!-- Search Results of every Media -->
+                        <div class="row">
+                            <h2 class="font-bold py-2">Search Results:</h2>
+                            <div class="flex flex-col space-y-2.5">
+                                <form:checkboxes path="media" items="${searchResults}"/>
+                                <form:errors path="media" cssClass="error" />
+                            </div>
+                                <%--                                <c:forEach var="media" items="${searchResults}">--%>
+                                <%--                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">--%>
+                                <%--                                        <jsp:include page="/WEB-INF/jsp/components/card.jsp">--%>
+                                <%--                                            <jsp:param name="image" value="${media.image}"/>--%>
+                                <%--                                            <jsp:param name="title" value="${media.title}"/>--%>
+                                <%--                                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>--%>
+                                <%--                                            <jsp:param name="mediaId" value="${media.mediaId}"/>--%>
+                                <%--                                            <jsp:param name="addToListId" value="${mediaListId}"/>--%>
+                                <%--                                            <jsp:param name="addPath" value="/lists/edit/${mediaListId}/addMedia"/>--%>
+                                <%--                                        </jsp:include>--%>
+                                <%--                                    </div>--%>
+                                <%--                                </c:forEach>--%>
+                        </div>
+                        <br>
+                    </c:if>
+                </div>
+                <div class="modal-footer flex space-x-2 pb-0">
+                    <button type="submit" value="add" name="add"
+                            class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-plus group-hover:text-white pr-2"></i>Add Media
+                    </button>
+                </div>
+                </form:form>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     <c:if test="${editDetailsErrors}">
     $(document).ready(function () {
         $('#editListDetailsModal').modal('show');
+    });
+    </c:if>
+    <c:if test="${searchTerm!=null}">
+    $(document).ready(function () {
+        $('#addMediaModal').modal('show');
     });
     </c:if>
 </script>
