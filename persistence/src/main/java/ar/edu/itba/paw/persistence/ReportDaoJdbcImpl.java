@@ -93,7 +93,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<ListReport> getListReports(int page, int pageSize) {
-        List<ListReport> listReportList = jdbcTemplate.query("SELECT * FROM listReport NATURAL JOIN mediaList OFFSET ? LIMIT ?",
+        List<ListReport> listReportList = jdbcTemplate.query("SELECT * FROM listReport NATURAL JOIN mediaList ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 LIST_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM listReport", COUNT_ROW_MAPPER)
@@ -103,7 +103,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
-        List<ListCommentReport> listCommentReportList = jdbcTemplate.query("SELECT * FROM listCommentReport NATURAL JOIN listComment OFFSET ? LIMIT ?",
+        List<ListCommentReport> listCommentReportList = jdbcTemplate.query("SELECT * FROM listCommentReport NATURAL JOIN listComment ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 LIST_COMMENT_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM listCommentReport", COUNT_ROW_MAPPER)
@@ -113,7 +113,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
-        List<MediaCommentReport> mediaCommentReportList = jdbcTemplate.query("SELECT * FROM mediaCommentReport NATURAL JOIN mediaComment OFFSET ? LIMIT ?",
+        List<MediaCommentReport> mediaCommentReportList = jdbcTemplate.query("SELECT * FROM mediaCommentReport NATURAL JOIN mediaComment ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 MEDIA_COMMENT_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM mediaCommentReport", COUNT_ROW_MAPPER)
