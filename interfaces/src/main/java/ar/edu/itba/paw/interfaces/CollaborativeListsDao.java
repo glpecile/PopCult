@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import java.util.List;
 
 public interface CollaborativeListsDao {
-    Request makeNewRequest(int listId, int userId,String message, int collabType);
+    Request makeNewRequest(int listId, int userId);
 
-    List<Request> getRequestsByUserId(int userId);
+    List<Request> getRequestsByUserId(int userId, int page, int pageSize);
 }

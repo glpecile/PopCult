@@ -100,19 +100,10 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
-    @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.GET})
-    public ModelAndView makeRequestToCollab(@PathVariable("listId") final int listId, @ModelAttribute("requestForm") CollabRequestForm requestForm) {
-        return new ModelAndView("requestToCollab");
-    }
-
     @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.POST})
-    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId, @Valid @ModelAttribute("requestForm") CollabRequestForm requestForm, final BindingResult errors) {
-        if (errors.hasErrors())
-            return makeRequestToCollab(listId, requestForm);
-        userService.getCurrentUser().ifPresent(user -> {
-            collaborativeListService.makeNewRequest(listId, user.getUserId(), requestForm.getMessage(), requestForm.getType());
-        });
-        return new ModelAndView("redirect:/lists/" + listId).addObject("successfulRequest"); //TODO mensaje de que salio todo ok
+    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId, @RequestParam("userId") int userId) {
+        collaborativeListService.makeNewRequest(listId, userId);
+        return new ModelAndView("redirect:/lists/" + listId).addObject("successfulRequest", true); //TODO mensaje de que salio todo ok
     }
 
     //CREATE A NEW LIST - PART 1

@@ -146,8 +146,7 @@ public class RowMappers {
             (rs, rowNum) -> new Request(
                     rs.getInt("collabId"),
                     rs.getString("username"),
-                    rs.getString("requestMessage"),
-                    rs.getInt("requestType"));
+                    rs.getBoolean("accepted"));
 }
 
 

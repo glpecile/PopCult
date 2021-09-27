@@ -14,12 +14,12 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     private CollaborativeListsDao collaborativeListsDao;
 
     @Override
-    public Request makeNewRequest(int listId, int userId, String message, int collabType) {
-        return collaborativeListsDao.makeNewRequest(listId, userId, message, collabType);
+    public Request makeNewRequest(int listId, int userId) {
+        return collaborativeListsDao.makeNewRequest(listId, userId);
     }
 
     @Override
-    public List<Request> getRequestsByUserId(int userId) {
-        return collaborativeListsDao.getRequestsByUserId(userId);
+    public List<Request> getRequestsByUserId(int userId, int page, int pageSize) {
+        return collaborativeListsDao.getRequestsByUserId(userId, page, pageSize);
     }
 }

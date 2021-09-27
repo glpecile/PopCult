@@ -18,7 +18,7 @@ import java.util.Map;
 public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsertCollab;
-    private final SimpleJdbcInsert jdbcInsertRequest;
+//    private final SimpleJdbcInsert jdbcInsertRequest;
 
     private static final RowMapper<Request> REQUEST_ROW_MAPPER = RowMappers.REQUEST_ROW_MAPPER;
 
@@ -27,43 +27,47 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
     public CollaborativeListsDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertCollab = new SimpleJdbcInsert(ds).withTableName("collaborative").usingGeneratedKeyColumns("collabid");
-        jdbcInsertRequest = new SimpleJdbcInsert(ds).withTableName("request");
+//        jdbcInsertRequest = new SimpleJdbcInsert(ds).withTableName("request");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS collaborative (" +
                 "collabId SERIAL PRIMARY KEY," +
                 "listId INT NOT NULL," +
                 "collaboratorId INT NOT NULL," +
-                "collabType INT," +
+                "accepted BOOLEAN," +
+//                "collabType INT," +
                 "FOREIGN KEY(listId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-                "FOREIGN KEY(collaboratorId) REFERENCES users(userid) ON DELETE CASCADE)");
+                "FOREIGN KEY(collaboratorId) REFERENCES users(userid) ON DELETE CASCADE," +
+                "UNIQUE(listId, collaboratorId))");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS request (" +
-                "collabId INT," +
-                "requestMessage TEXT," +
-                "requestType INT NOT NULL," +
-                "FOREIGN KEY(collabId) REFERENCES collaborative(collabId) ON DELETE CASCADE)");
+//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS request (" +
+//                "collabId INT," +
+//                "requestMessage TEXT," +
+//                "requestType INT NOT NULL," +
+//                "FOREIGN KEY(collabId) REFERENCES collaborative(collabId) ON DELETE CASCADE)");
 
     }
 
     @Override
-    public Request makeNewRequest(int listId, int userId,String message, int collabType) {
+    public Request makeNewRequest(int listId, int userId) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
         data.put("collaboratorId", userId);
-        data.put("collabType", null);
+//        data.put("collabType", null);
+        data.put("accepted", false);
         int key = jdbcInsertCollab.executeAndReturnKey(data).intValue();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("collabId", key);
-        map.put("requestMessage", message);
-        map.put("requestType", collabType);
-        jdbcInsertRequest.execute(map);
-        return new Request(key, "", message, collabType);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("collabId", key);
+//        map.put("requestMessage", message);
+//        map.put("requestType", collabType);
+//        jdbcInsertRequest.execute(map);
+//        return new Request(key, "", message, collabType);
+        return new Request(key, "", false);
     }
 
     // requests from a user       return jdbcTemplate.query("SELECT * FROM medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid JOIN users u on aux.collaboratorid = u.userid",new Object[]{userId},REQUEST_ROW_MAPPER);
     @Override
-    public List<Request> getRequestsByUserId(int userId) {
-        return jdbcTemplate.query("SELECT * FROM (medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid) JOIN users u on u.userid= aux.collaboratorid AND m.userid = ?", new Object[]{userId}, REQUEST_ROW_MAPPER);
+    public List<Request> getRequestsByUserId(int userId, int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{userId, false, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
     }
 }

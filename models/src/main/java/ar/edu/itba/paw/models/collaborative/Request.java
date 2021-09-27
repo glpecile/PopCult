@@ -3,22 +3,20 @@ package ar.edu.itba.paw.models.collaborative;
 public class Request {
     private final int collabId;
     private final String requesterUsername;
-    private final String message;
-    private final int collabType;
+    private final boolean accepted;
 
-    public Request(int collabId, String requesterUsername, String message, int collabType) {
+    public Request(int collabId, String requesterUsername, boolean accepted) {
         this.collabId = collabId;
         this.requesterUsername = requesterUsername;
-        this.message = message;
-        this.collabType = collabType;
+        this.accepted = accepted;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
     }
 
     public int getCollabId() {
         return collabId;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public String getRequesterUsername() {
@@ -26,7 +24,4 @@ public class Request {
     }
 
 
-    public int getCollabType() {
-        return collabType;
-    }
 }
