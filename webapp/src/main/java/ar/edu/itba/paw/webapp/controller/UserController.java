@@ -13,7 +13,6 @@ import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ImageForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserDataForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -69,8 +68,8 @@ public class UserController {
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         //
-        final List<ListCover> userPublicListCover = getListCover(userLists.getElements(), listsService);
         PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicListCover);
         mav.addObject("userPublicLists", userPublicLists);
         return mav;
@@ -83,7 +82,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
-        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        PageContainer<Media> suggestedMedia = mediaService.getMostLikedMedia(page - 1, itemsPerPage);
         mav.addObject("user", user);
         mav.addObject("favoriteMediaContainer", favoriteMedia);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
@@ -102,7 +101,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user.getUserId(), page - 1, itemsPerPage);
-        PageContainer<Media> suggestedMedia = mediaService.getMediaList(page - 1, itemsPerPage);
+        PageContainer<Media> suggestedMedia = mediaService.getMostLikedMedia(page - 1, itemsPerPage);
         // List<Media> toWatchMedia = toWatchMediaIds.getElements();
 //        mav.addObject("title", "Watchlist");
         // mav.addObject("mediaList", toWatchMedia);
@@ -155,6 +154,11 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+
+        PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user.getUserId(), page - 1, listsPerPage);
+        final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
+        mav.addObject("userPublicListCover", userPublicFavListCover);
+        mav.addObject("userPublicLists", userPublicFavLists);
         return mav;
     }
 

@@ -62,10 +62,10 @@ public class WatchServiceImpl implements WatchService {
         return watchDao.getWatchedMediaId(userId, page, pageSize);
     }
 
-    @Override
-    public Optional<Integer> getWatchedMediaCount(int userId) {
-        return watchDao.getWatchedMediaCount(userId);
-    }
+//    @Override
+//    public Optional<Integer> getWatchedMediaCount(int userId) {
+//        return watchDao.getWatchedMediaCount(userId);
+//    }
 
 //    @Override
 //    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
@@ -78,8 +78,8 @@ public class WatchServiceImpl implements WatchService {
 
     }
 
-    @Override
-    public Optional<Integer> getToWatchMediaCount(int userId) {
-        return watchDao.getToWatchMediaCount(userId);
-    }
+//    @Override
+//    public Optional<Integer> getToWatchMediaCount(int userId) {
+//        return watchDao.getToWatchMediaCount(userId);
+//    }
 }

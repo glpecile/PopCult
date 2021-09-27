@@ -9,10 +9,10 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Add media to a new list &#8226; PopCult</title>
     <c:url value="/editList/${mediaListId}" var="deletePath"/>
-    <c:url value="/createList/addMedia" var="searchUrl"/>
+    <c:url value="/addMedia/${mediaListId}" var="searchUrl"/>
 
 </head>
-<body>
+<body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
@@ -30,7 +30,7 @@
                             <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                             <jsp:param name="mediaId" value="${media.mediaId}"/>
                             <jsp:param name="deleteFromListId" value="${mediaListId}"/>
-                            <jsp:param name="deletePath" value="/createList/addMedia"/>
+                            <jsp:param name="deletePath" value="/addMedia/${mediaListId}"/>
                         </jsp:include>
                     </div>
                 </c:forEach>
@@ -40,7 +40,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/createList/addMedia"/>
+                <jsp:param name="url" value="/addMedia/${mediaListId}"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
@@ -73,7 +73,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/createList/addMedia"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>
@@ -90,7 +90,7 @@
                                 <jsp:param name="releaseDate" value="${media.releaseYear}"/>
                                 <jsp:param name="mediaId" value="${media.mediaId}"/>
                                 <jsp:param name="addToListId" value="${mediaListId}"/>
-                                <jsp:param name="addPath" value="/createList/addMedia"/>
+                                <jsp:param name="addPath" value="/addMedia/${mediaListId}"/>
                             </jsp:include>
                         </div>
                     </c:forEach>

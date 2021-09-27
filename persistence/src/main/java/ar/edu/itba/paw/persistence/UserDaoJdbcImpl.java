@@ -67,7 +67,7 @@ public class UserDaoJdbcImpl implements UserDao {
         args.put("name", name);
 //        args.put("profilephoto", profilePhotoURL);
         args.put("enabled", enabled);
-
+        args.put("imageid", 1);
         int userId = 0;
         try {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
