@@ -118,12 +118,10 @@ public class ListsController {
 
         if (errors.hasErrors()) {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
-            // return new ModelAndView("redirect: " + request.getHeader("referer"));
             return manageMediaFromList(mediaListId,  form, mediaForm);
         }
         final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1 , searchAmount, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements();
         searchResults.addAll (searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements());
-//        return manageMediaFromList(mediaListId, searchForm.getTerm(), searchResults, form, mediaForm);
         return manageMediaFromList(mediaListId,  form, mediaForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults",mediaForm.generateMediaMap(searchResults));
 
     }
@@ -149,10 +147,8 @@ public class ListsController {
         if (errors.hasErrors()) {
             System.out.println(errors.hasErrors());
             return manageMediaFromList(listId,  form, mediaForm).addObject("editDetailsErrors", errors.hasErrors());
-//            return manageMediaFromList(page, listId, null, null, form)
             }
         listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
-        //update stuff
         return new ModelAndView("redirect:/lists/edit/"+listId+"/manageMedia");
     }
     //END EDIT LIST
@@ -183,8 +179,6 @@ public class ListsController {
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);
-//        mav.addObject("searchTerm", searchTerm);
-//        mav.addObject("searchResults", mediaForm.generateMediaMap(searchResults));
         return mav;
     }
 }

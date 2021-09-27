@@ -29,13 +29,18 @@
                 </button>
             </div>
             <%--List current content--%>
-            <c:if test="${mediaContainer.totalCount != 0}">
-                <div class="flex justify-between">
-                    <h4 class="py-0.5">Currently in this list</h4>
-                    <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
-                            data-bs-toggle="modal" data-bs-target="#addMediaModal">
-                        <i class="fas fa-plus text-gray-500 my-2 group-hover:text-white"></i> Add Media
-                    </button>
+            <div class="flex justify-between">
+                <h4 class="py-0.5">Currently in this list</h4>
+                <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
+                        data-bs-toggle="modal" data-bs-target="#addMediaModal">
+                    <i class="fas fa-plus text-gray-500 my-2 group-hover:text-white"></i> Add Media
+                </button>
+            </div>
+            <c:if test="${mediaContainer.totalCount == 0}">
+<%--                TODO alinear al centro--%>
+                <div class="flex justify-content-center">
+                    <h4 class="py-0.5">It seems this list is empty!</h4>
+                    <h4 class="py-0.5">You can search for media to add with the <i class="fas fa-plus"></i>Add Media button!</h4>
                 </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
@@ -57,7 +62,6 @@
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
                 <jsp:param name="url" value="/lists/edit/${mediaListId}/manageMedia"/>
             </jsp:include>
-            <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <div class="flex justify-between px-4 mb-2">
                 <jsp:include page="/WEB-INF/jsp/components/delete.jsp">
                     <jsp:param name="mediaListId" value="${mediaListId}"/>
