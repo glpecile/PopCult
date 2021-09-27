@@ -13,7 +13,7 @@ public interface UserDao {
 
     Optional<User> getByUsername(String username);
 
-    User register(String email, String userName, String password, String name, boolean enabled);
+    User register(String email, String userName, String password, String name, boolean enabled, int imageId, int role);
 
     Optional<User> changePassword(int userId, String password);
 
