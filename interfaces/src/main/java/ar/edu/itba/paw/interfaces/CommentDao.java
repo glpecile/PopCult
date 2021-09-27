@@ -17,4 +17,7 @@ public interface CommentDao {
 
     void deleteCommentFromList(int commentId);
 
+    void deleteCommentFromMedia(int commentId);
+
+
 }

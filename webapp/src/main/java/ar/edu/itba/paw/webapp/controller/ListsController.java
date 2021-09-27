@@ -73,7 +73,7 @@ public class ListsController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
-        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, 0, 4);
+        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
@@ -92,8 +92,9 @@ public class ListsController {
         commentService.addCommentToList(userId, listId, form.getBody());
         return new ModelAndView("redirect:/lists/" + listId);
     }
-    @RequestMapping(value="lists/{listId}/deleteComment")
-    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId){
+
+    @RequestMapping(value = "lists/{listId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId) {
         commentService.deleteCommentFromList(commentId);
         return new ModelAndView("redirect:/lists/" + listId);
     }

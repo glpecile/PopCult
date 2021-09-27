@@ -88,4 +88,9 @@ public class CommentDaoJdbcImpl implements CommentDao {
     public void deleteCommentFromList(int commentId) {
         jdbcTemplate.update("DELETE FROM listcomment WHERE commentid = ?", commentId);
     }
+
+    @Override
+    public void deleteCommentFromMedia(int commentId) {
+        jdbcTemplate.update("DELETE FROM mediacomment WHERE commentid = ?", commentId);
+    }
 }

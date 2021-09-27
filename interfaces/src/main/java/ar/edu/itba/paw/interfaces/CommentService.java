@@ -16,4 +16,7 @@ public interface CommentService {
     PageContainer<Comment> getListComments(int listId, int page, int pageSize);
 
     void deleteCommentFromList(int commentId);
+
+    void deleteCommentFromMedia(int commentId);
+
 }

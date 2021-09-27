@@ -38,4 +38,9 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentFromList(int commentId) {
         commentDao.deleteCommentFromList(commentId);
     }
+
+    @Override
+    public void deleteCommentFromMedia(int commentId) {
+        commentDao.deleteCommentFromMedia(commentId);
+    }
 }
