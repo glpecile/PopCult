@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -12,6 +13,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class ListsController {
     private FavoriteService favoriteService;
     @Autowired
     private SearchService searchService;
+    @Autowired
+    private CommentService commentService;
 
     private static final int itemsPerPage = 4;
     private static final int discoveryListsAmount = 4;
@@ -63,20 +67,36 @@ public class ListsController {
         return getListCover(MediaListLists, listsService);
     }
 
-    @RequestMapping("/lists/{listId}")
-    public ModelAndView listDescription(@PathVariable("listId") final int listId) {
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.GET})
+    public ModelAndView listDescription(@PathVariable("listId") final int listId, @ModelAttribute("commentForm") CommentForm commentForm) {
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
+        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
+        mav.addObject("listCommentsContainer", listCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
         });
         return mav;
+    }
+
+    @RequestMapping(value = "/lists/{listId}/comment", method = {RequestMethod.POST})
+    public ModelAndView addComment(@PathVariable("listId") final int listId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return listDescription(listId, form);
+        commentService.addCommentToList(userId, listId, form.getBody());
+        return new ModelAndView("redirect:/lists/" + listId);
+    }
+
+    @RequestMapping(value = "lists/{listId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId) {
+        commentService.deleteCommentFromList(commentId);
+        return new ModelAndView("redirect:/lists/" + listId);
     }
 
     //CREATE A NEW LIST - PART 1
@@ -173,14 +193,16 @@ public class ListsController {
     public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.addListToFav(listId, user.getUserId());
-        return listDescription(listId);
+        return new ModelAndView("redirect:/lists/" + listId);
+        //return listDescription(listId);
     }
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         favoriteService.deleteListFromFav(listId, user.getUserId());
-        return listDescription(listId);
+        return new ModelAndView("redirect:/lists/" + listId);
+        //return listDescription(listId);
     }
 
     private ModelAndView addMediaObjects(@RequestParam(value = "page", defaultValue = "1") int page, @PathVariable("listId") Integer mediaListId, @RequestParam(required = false) String searchTerm, @RequestParam(required = false) PageContainer<Media> searchFilmsResults, @RequestParam(required = false) PageContainer<Media> searchSeriesResults, ModelAndView mav) {

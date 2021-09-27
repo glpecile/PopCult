@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,11 +22,11 @@
     <div class="flex flex-col justify-center items-center py-4 mx-auto">
         <sec:authorize access="!isAuthenticated()">
             <h1 class="text-center text-3xl">
-                A site for film and series lovers...
+                <spring:message code="home.slogan"/>
             </h1>
             <a class="btn btn-secondary rounded-full shadow-md hover:shadow-lg my-4 w-1/4"
                href="<c:url value="/register"/>">
-                Get started - sign up!
+                <spring:message code="home.callToAction"/>
             </a>
         </sec:authorize>
         <sec:authorize access="isAuthenticated()">
@@ -33,9 +34,9 @@
                 <sec:authentication property="principal.username"/>
             </c:set>
             <h1 class="text-center text-3xl">
-                Welcome back...
+                <spring:message code="home.loggedGreeting"/>
             </h1>
-            <a class="text-center text-5xl font-bold" aria-current="page"
+            <a class="text-center text-5xl font-bold text-purple-500 hover:text-purple-900" aria-current="page"
                href="<c:url value="/user/${username}"/>">
                     ${username}
             </a>

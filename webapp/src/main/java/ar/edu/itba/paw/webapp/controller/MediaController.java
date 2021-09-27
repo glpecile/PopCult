@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -13,15 +14,15 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.form.CommentForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,14 @@ public class MediaController {
     private FavoriteService favoriteService;
     @Autowired
     private WatchService watchService;
+    @Autowired
+    private CommentService commentService;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
     private static final int lastAddedAmount = 6;
+    private static final int defaultValue = 1;
 
     @RequestMapping("/")
     public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -71,8 +75,8 @@ public class MediaController {
         return mav;
     }
 
-    @RequestMapping("/media/{mediaId}")
-    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.GET})
+    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page, @ModelAttribute("commentForm") CommentForm commentForm) {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
@@ -81,8 +85,9 @@ public class MediaController {
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
-        final Map<String,String> map = new HashMap<>();
-        map.put("mediaId",Integer.toString(mediaId));
+        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, defaultValue - 1, itemsPerPage);
+        final Map<String, String> map = new HashMap<>();
+        map.put("mediaId", Integer.toString(mediaId));
         mav.addObject("media", media);
         mav.addObject("genreList", genreList);
         mav.addObject("studioList", studioList);
@@ -91,8 +96,10 @@ public class MediaController {
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("mediaListContainer", mediaList);
         String urlBase = UriComponentsBuilder.newInstance().path("/media/{mediaId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase",urlBase);
+        mav.addObject("urlBase", urlBase);
+        mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
+            mav.addObject("currentUser", user);
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
@@ -101,6 +108,20 @@ public class MediaController {
         });
 
         return mav;
+    }
+
+    @RequestMapping(value = "/media/{mediaId}/comment", method = {RequestMethod.POST})
+    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        if (errors.hasErrors())
+            return mediaDescription(defaultValue, mediaId, form);
+        commentService.addCommentToMedia(userId, mediaId, form.getBody());
+        return new ModelAndView("redirect:/media/" + mediaId);
+    }
+
+    @RequestMapping(value = "/media/{mediaId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @RequestParam("commentId") int commentId) {
+        commentService.deleteCommentFromMedia(commentId);
+        return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
