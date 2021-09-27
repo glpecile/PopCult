@@ -12,10 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ReportDaoJdbcImpl implements ReportDao {
@@ -89,6 +86,24 @@ public class ReportDaoJdbcImpl implements ReportDao {
         data.put("report", report);
         data.put("data", new Date());
         jdbcInsertMediaCommentReport.execute(data);
+    }
+
+    @Override
+    public Optional<ListReport> getListReportById(int reportId) {
+        return jdbcTemplate.query("SELECT * FROM listReport NATURAL JOIN mediaList WHERE reportId = ?", new Object[]{reportId}, LIST_REPORT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<ListCommentReport> getListCommentReportById(int reportId) {
+        return jdbcTemplate.query("SELECT * FROM listCommentReport NATURAL JOIN listComment WHERE reportId = ?", new Object[]{reportId}, LIST_COMMENT_REPORT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
+        return jdbcTemplate.query("SELECT * FROM mediaCommentReport NATURAL JOIN mediaComment WHERE reportId = ?", new Object[]{reportId}, MEDIA_COMMENT_REPORT_ROW_MAPPER)
+                .stream().findFirst();
     }
 
     @Override
