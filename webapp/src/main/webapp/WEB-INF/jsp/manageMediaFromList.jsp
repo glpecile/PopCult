@@ -55,7 +55,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/addMedia/${mediaListId}"/>
+                <jsp:param name="url" value="/lists/edit/${mediaListId}/manageMedia"/>
             </jsp:include>
             <input type="hidden" value="${mediaContainer.currentPage+1}" id="page" name="page">
             <div class="flex justify-between px-4 mb-2">
@@ -160,7 +160,7 @@
                 <div class="modal-body">
                     <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
                     <!-- Search input -->
-                    <form class="space-y-4" action="${searchUrl}" method="get"
+                    <form class="space-y-2" action="${searchUrl}" method="get"
                           enctype="application/x-www-form-urlencoded">
                         <div class="flex flex-col relative">
                             <label class="py-2 text-semibold w-full flex">
@@ -183,22 +183,12 @@
                         <!-- Search Results of every Media -->
                         <div class="row">
                             <h2 class="font-bold py-2">Search Results:</h2>
-                            <div class="flex flex-col space-y-2.5">
-                                <form:checkboxes path="media" items="${searchResults}"/>
-                                <form:errors path="media" cssClass="error" />
+                            <div class="overflow-y-auto h-32">
+                                <div class="flex flex-col space-y-2.5">
+                                    <form:checkboxes path="media" items="${searchResults}"/>
+                                    <form:errors path="media" cssClass="error"/>
+                                </div>
                             </div>
-                                <%--                                <c:forEach var="media" items="${searchResults}">--%>
-                                <%--                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">--%>
-                                <%--                                        <jsp:include page="/WEB-INF/jsp/components/card.jsp">--%>
-                                <%--                                            <jsp:param name="image" value="${media.image}"/>--%>
-                                <%--                                            <jsp:param name="title" value="${media.title}"/>--%>
-                                <%--                                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>--%>
-                                <%--                                            <jsp:param name="mediaId" value="${media.mediaId}"/>--%>
-                                <%--                                            <jsp:param name="addToListId" value="${mediaListId}"/>--%>
-                                <%--                                            <jsp:param name="addPath" value="/lists/edit/${mediaListId}/addMedia"/>--%>
-                                <%--                                        </jsp:include>--%>
-                                <%--                                    </div>--%>
-                                <%--                                </c:forEach>--%>
                         </div>
                         <br>
                     </c:if>

@@ -51,7 +51,7 @@
                         Discard changes
                     </button>
                 </a>
-                <button class="row btn btn-secondary py-2" type="submit">Create list and continue to Step 2</button>
+                <button class="row btn btn-secondary py-2" type="submit">Create list and continue</button>
             </div>
         </form:form>
     </div>
