@@ -62,7 +62,7 @@
                     <c:if test="${list.collaborative}">
                         <div class="flex justify-end py-2">
                             <form action="${requestPath}" method="POST">
-                                <input type="hidden" name="userId" value="${user.userId}">
+                                <input type="hidden" name="userId" value="${currentUser.userId}">
                                 <button type="submit"
                                         class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                     <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>

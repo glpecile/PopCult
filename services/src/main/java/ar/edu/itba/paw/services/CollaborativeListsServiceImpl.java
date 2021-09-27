@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     }
 
     @Override
-    public List<Request> getRequestsByUserId(int userId, int page, int pageSize) {
+    public PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize) {
         return collaborativeListsDao.getRequestsByUserId(userId, page, pageSize);
     }
 }

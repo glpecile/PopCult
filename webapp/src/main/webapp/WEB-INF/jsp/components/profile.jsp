@@ -7,6 +7,8 @@
             <sec:authentication property="principal.username"/>
         </c:set>
     </sec:authorize>
+    <c:url value="/logout" var="logout"/>
+    <c:url value="/user/${param.username}/requests" var="requests"/>
     <c:choose>
         <c:when test="${currentUsername == param.username}">
             <!-- Profile pic row -->
@@ -30,12 +32,18 @@
                 </a>
             </div>
             <h4>Or as we like to call you: <b><c:out value="${param.username}"/></b></h4>
-            <a href=<c:url value="/logout"/>>
-                <button type="button"
-                        class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                    Logout
-                </button>
-            </a>
+            <div class="flex flex-row">
+                <a href=${requests}>
+                    <button type="button"
+                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">Requests
+                    </button>
+                </a>
+                <a href=${logout}>
+                    <button type="button"
+                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">Logout
+                    </button>
+                </a>
+            </div>
             <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
@@ -46,7 +54,8 @@
                         </div>
                         <div class="modal-body">
                             <c:url value="/uploadImage" var="uploadPath"/>
-                            <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}" enctype="multipart/form-data">
+                            <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}"
+                                       enctype="multipart/form-data">
                                 <div class="row px-2 pb-2">
                                         <%--                                    <input type="file" name="file"/>--%>
                                         <%--                                    <input type="hidden" name="username" value="<c:out value="${param.username}"/>">--%>

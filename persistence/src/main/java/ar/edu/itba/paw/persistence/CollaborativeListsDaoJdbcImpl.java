@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +23,7 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
 
     private static final RowMapper<Request> REQUEST_ROW_MAPPER = RowMappers.REQUEST_ROW_MAPPER;
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public CollaborativeListsDaoJdbcImpl(final DataSource ds) {
@@ -62,12 +64,14 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
 //        map.put("requestType", collabType);
 //        jdbcInsertRequest.execute(map);
 //        return new Request(key, "", message, collabType);
-        return new Request(key, "", false);
+        return null;
     }
 
     // requests from a user       return jdbcTemplate.query("SELECT * FROM medialist m JOIN (SELECT * FROM request r JOIN collaborative c ON r.collabid = c.collabid) aux ON m.medialistid = aux.listid JOIN users u on aux.collaboratorid = u.userid",new Object[]{userId},REQUEST_ROW_MAPPER);
     @Override
-    public List<Request> getRequestsByUserId(int userId, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{userId, false, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
+    public PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize) {
+        List<Request> requestList = jdbcTemplate.query("SELECT collabid, collaboratorid, username, listid, listname, accepted  FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{userId, false, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ?", new Object[]{userId, false}, COUNT_ROW_MAPPER ).stream().findFirst().orElse(0);
+        return new PageContainer<>(requestList, page, pageSize, count);
     }
 }
