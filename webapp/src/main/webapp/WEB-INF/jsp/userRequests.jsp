@@ -9,7 +9,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Collaboration Requests &#8226; PopCult</title>
+    <title><spring:message code="profile.requests.title"/> &#8226; PopCult</title>
 
 </head>
 <body class="bg-gray-50">
@@ -17,12 +17,13 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <br>
     <div class="col-8 offset-2 flex-grow">
-        <h1 class="font-bold text-3xl pt-2">
-            Pending Requests
-<%--            <spring:message code=""/>--%>
+        <h1 class="font-bold text-2xl pt-2">
+            <spring:message code="profile.requests.title"/>
         </h1>
         <c:if test="${requestContainer.totalCount == 0}">
-            <h3 class="text-center text-gray-400">It seems there are no requests to show!</h3>
+            <h3 class="text-center text-gray-400 pt-3">
+                <spring:message code="profile.requests.none"/>
+            </h3>
         </c:if>
         <c:forEach var="request" items="${requestContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/request.jsp">
@@ -34,6 +35,7 @@
             </jsp:include>
         </c:forEach>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
 </html>
