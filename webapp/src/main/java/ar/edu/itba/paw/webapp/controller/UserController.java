@@ -177,7 +177,6 @@ public class UserController {
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
         if (errors.hasErrors())
             return editUserDetails(form);
-        System.out.println(userId + form.getUsername() + form.getName() + form.getEmail());
         userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
         return new ModelAndView("redirect:/user/" + form.getUsername());
     }

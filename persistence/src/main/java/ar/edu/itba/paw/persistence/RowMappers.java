@@ -93,7 +93,8 @@ public class RowMappers {
                     rs.getString("password"),
                     rs.getString("name"), //TODO
                     rs.getBoolean("enabled"),
-                    rs.getInt("imageId"));
+                    rs.getInt("imageId"),
+                    rs.getInt("role"));
     /**
      * Token RowMappers.
      */

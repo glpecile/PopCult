@@ -46,7 +46,7 @@ public class ListsController {
 
     private static final int itemsPerPage = 6;
     private static final int discoveryListsAmount = 4;
-    private static final int lastAddedAmount = 4;
+    private static final int lastAddedAmount = 6;
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;

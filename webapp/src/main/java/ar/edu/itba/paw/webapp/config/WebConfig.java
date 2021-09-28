@@ -7,10 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -21,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 @ComponentScan({"ar.edu.itba.paw.webapp.controller",
         "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"})
+
 // https://www.tabnine.com/code/java/methods/org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry/addResourceHandler
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -57,16 +62,35 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
-        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
+        // https://stackoverflow.com/questions/50225180/internationalization-locale-not-working-with-accents-in-java-spring-boot
+        messageSource.setDefaultEncoding(StandardCharsets.ISO_8859_1.displayName());
         messageSource.setCacheSeconds(5);
         return messageSource;
+    }
+
+    // Source: http://acodigo.blogspot.com/2017/04/spring-mvc-i18n-soporte-para-varios.html
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new SessionLocaleResolver();
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        return localeChangeInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
     }
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(1024*1024*10);
-        multipartResolver.setMaxUploadSizePerFile(1024*1024*2);
+        multipartResolver.setMaxUploadSize(1024 * 1024 * 10);
+        multipartResolver.setMaxUploadSizePerFile(1024 * 1024 * 2);
         return multipartResolver;
     }
 }

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <nav class="navbar navbar-expand-lg w-full navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-yellow-500 to-purple-900">
     <div class="container-fluid flex sm:px-12 px-16">
         <a class="navbar-brand m-0 p-0" href="<c:url value="/"/>">
@@ -15,17 +16,25 @@
         <div class="collapse navbar-collapse flex space-x-8 justify-center items-center text-center sm:justify-end" id="navbarScroll">
             <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll overflow-hidden">
                 <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/media/films"/>">Films</a>
+                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/media/films"/>">
+                        <spring:message code="nav.films"/>
+                    </a>
                 </li>
                 <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/media/series"/>">Series</a>
+                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/media/series"/>">
+                        <spring:message code="nav.series"/>
+                    </a>
                 </li>
                 <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/lists"/>">Lists</a>
+                    <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/lists"/>">
+                        <spring:message code="nav.lists"/>
+                    </a>
                 </li>
                 <sec:authorize access="!isAuthenticated()">
                     <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                        <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/login"/>">Log-In</a>
+                        <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/login"/>">
+                            <spring:message code="nav.SignIn"/>
+                        </a>
                     </li>
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">

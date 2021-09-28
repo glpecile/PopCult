@@ -38,6 +38,7 @@ public class UserDaoJdbcImpl implements UserDao {
                 "name VARCHAR(100)," +
                 "enabled BOOLEAN NOT NULL," +
                 "imageId INT," +
+                "role INT NOT NULL," +
                 "UNIQUE(email)," +
                 "UNIQUE(username)," +
                 "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
@@ -59,15 +60,15 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, boolean enabled) {
+    public User register(String email, String userName, String password, String name, boolean enabled, int imageId, int role) {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
-//        args.put("profilephoto", profilePhotoURL);
         args.put("enabled", enabled);
-        args.put("imageid", 1);
+        args.put("imageid", imageId);
+        args.put("role", role);
         int userId = 0;
         try {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
@@ -79,7 +80,7 @@ public class UserDaoJdbcImpl implements UserDao {
                 throw new UsernameAlreadyExistsException();
             }
         }
-        return new User(userId, email, userName, password, name, enabled, 0);
+        return new User(userId, email, userName, password, name, enabled, imageId, role);
 
     }
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.image.Image;
+import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class UserServiceImpl implements UserService {
 
     private static final boolean NOT_ENABLED_USER = false;
     private static final boolean ENABLED_USER = true;
+    private static final int DEFAULT_IMAGE_ID = 1;
+    private static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
     @Autowired
     public UserServiceImpl(MessageSource messageSource) {
@@ -60,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER);
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
 
         String token = verificationTokenService.createVerificationToken(user.getUserId());
 
@@ -71,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     private void sendVerificationEmail(String email, String username, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("username", username); //TODO swap to full name
+        mailMap.put("username", username);
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
         emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
