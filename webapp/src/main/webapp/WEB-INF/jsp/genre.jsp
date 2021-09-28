@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -7,16 +8,22 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><c:out value="${genreName}"/> &#8226; PopCult</title>
+    <title>
+        <c:out value="${genreName}"/> &#8226; PopCult
+    </title>
 </head>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 flex-col offset-2 flex h-screen">
     <div class="flex-grow">
         <div class="row m-0">
-            <h1 class="display-5 fw-bolder py-8"><c:out value="${genreName}"/> Genre</h1>
+            <h1 class="display-5 fw-bolder py-8"><c:out value="${genreName}"/>
+                <spring:message code="media.genre"/>
+            </h1>
             <c:if test="${fn:length(genreLists) > 0}">
-                <h4 class="font-bold text-2xl">Lists that contain this genre</h4>
+                <h4 class="font-bold text-2xl">
+                    <spring:message code="genre.lists"/>
+                </h4>
                 <c:forEach var="cover" items="${genreLists}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-8">
                         <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -32,8 +39,10 @@
             </c:if>
         </div>
         <div class="row m-0">
-            <h4 class="font-bold text-2xl">There are <c:out value="${mediaPageContainer.totalCount}"/> <c:out value="${genreName}"/> Films
-                & Series</h4>
+            <h4 class="font-bold text-2xl">
+                <spring:message code="genre.thereAre"/> <c:out value="${mediaPageContainer.totalCount}"/> <c:out value="${genreName}"/>
+                <spring:message code="general.Films&Series"/>
+            </h4>
             <c:forEach var="media" items="${mediaPageContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 pt-4">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -53,7 +62,7 @@
             </jsp:include>
         </div>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

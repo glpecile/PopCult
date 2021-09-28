@@ -46,7 +46,7 @@
                         <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button"
                                 id="addMediaToList"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                            Add to a list
+                            <spring:message code="media.addToList"/>
                         </button>
                         <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
                             <c:forEach var="list" items="${userLists}">
@@ -56,7 +56,9 @@
                                            value="<c:out value = "${list.mediaListId}"/>">
                                 </form>
                             </c:forEach>
-                            <a class="dropdown-item py-0" href=${createListPath}>+ Create a new list</a>
+                            <a class="dropdown-item py-0" href=${createListPath}>
+                                <spring:message code="lists.create"/>
+                            </a>
                         </ul>
                     </div>
                 </sec:authorize>
@@ -81,7 +83,9 @@
             <br>
 
             <c:if test="${fn:length(genreList) > 0}">
-                <h5 class="font-bold text-2xl py-2">Genre</h5>
+                <h5 class="font-bold text-2xl py-2">
+                    <spring:message code="media.genre"/>
+                </h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="genre" items="${genreList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
@@ -94,7 +98,9 @@
             </c:if>
 
             <c:if test="${fn:length(studioList) > 0}">
-                <h5 class="font-bold text-2xl py-2"><br>Production Companies</h5>
+                <h5 class="font-bold text-2xl py-2"><br>
+                    <spring:message code="media.studio"/>
+                </h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="studio" items="${studioList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
@@ -107,7 +113,9 @@
             </c:if>
 
             <c:if test="${fn:length(directorList) > 0}">
-                <h5 class="font-bold text-2xl py-2"><br>Director</h5>
+                <h5 class="font-bold text-2xl py-2"><br>
+                    <spring:message code="media.director"/>
+                </h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="director" items="${directorList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
@@ -120,7 +128,9 @@
             </c:if>
 
             <c:if test="${fn:length(actorList) > 0}">
-                <h5 class="font-bold text-2xl py-2"><br>Cast</h5>
+                <h5 class="font-bold text-2xl py-2"><br>
+                    <spring:message code="media.cast"/>
+                </h5>
                 <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
                     <c:forEach var="actor" items="${actorList}">
                         <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
@@ -136,7 +146,9 @@
     </div>
     <div class="row">
         <c:if test="${fn:length(relatedLists) > 0}">
-            <h2 class="font-bold text-2xl py-2">Popular Lists</h2>
+            <h2 class="font-bold text-2xl py-2">
+                <spring:message code="lists.popular"/>
+            </h2>
             <c:forEach var="cover" items="${relatedLists}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3">
                     <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -157,7 +169,7 @@
         </c:if>
     </div>
     <!-- Comments Section -->
-    <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
+    <div class="flex flex-col bg-white shadow-md rounded-lg pb-3 mt-1.5">
         <div class="flex justify-between p-2.5 pb-0">
             <h2 class="font-bold text-2xl">
                 <spring:message code="comments.section"/>
@@ -170,7 +182,7 @@
         <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
             <label class="p-2 text-semibold w-full flex flex-col">
                 <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
-                               name="body" placeholder="${commentPlaceholder}"  type="text"/>
+                               name="body" placeholder="${commentPlaceholder}" type="text"/>
                 <form:errors path="body" cssClass="formError text-red-500" element="p"/>
                 <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
                 <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"
