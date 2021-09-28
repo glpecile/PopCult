@@ -3,9 +3,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <share>
     <div class="flex justify-center py-2">
-        <button type="button" class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded" data-bs-toggle="modal"
+        <button type="button" class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded" data-bs-toggle="modal"
                 data-bs-target="#shareModal">
-            <i class="fas fa-share-alt pr-2 text-purple-500 hover:text-purple-900"></i><spring:message code="general.share"/>
+            <i class="fas fa-share-alt pr-2 text-purple-500 group-hover:text-purple-900"></i><spring:message code="general.share"/>
         </button>
     </div>
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">

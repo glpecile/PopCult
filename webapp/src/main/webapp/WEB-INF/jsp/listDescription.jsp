@@ -22,7 +22,7 @@
             <div class="col-md-auto">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
-                    by: <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
+                    <spring:message code="lists.by"/> <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
                 </a></h4>
             </div>
             <div class="pt-2.5">
@@ -39,12 +39,11 @@
             <c:choose>
                 <c:when test="${canEdit}">
                     <div class="flex justify-center py-2">
-
                         <a href="${editListMediaPath}">
                             <button type="button"
-                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                                <i class="far fa-edit pr-2 text-purple-500 hover:text-purple-900"></i>
-                                Edit list
+                                    class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                                <i class="far fa-edit pr-2 text-purple-500 group-hover:text-purple-900"></i>
+                                <spring:message code="lists.edit"/>
                             </button>
                         </a>
                     </div>
@@ -56,7 +55,7 @@
                             <button type="submit"
                                     class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
                                 <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
-                                Ask to collaborate
+                                <spring:message code="lists.collaborate"/>
                             </button>
                         </form>
                     </div>
@@ -66,9 +65,9 @@
                 <div class="flex justify-end py-2">
                     <form:form cssClass="m-0" action="${forkPath}" method="POST">
                         <button type="submit" id="fork" name="fork"
-                                class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                            <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
-                            Fork this list
+                                class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                            <i class="far fa-copy pr-2 text-purple-500 group-hover:text-purple-900"></i>
+                            <spring:message code="lists.fork"/>
                         </button>
                     </form:form>
                 </div>
