@@ -63,4 +63,14 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     public void rejectRequest(int collabId) {
         collaborativeListsDao.rejectRequest(collabId);
     }
+
+    @Override
+    public void deleteCollaborator(int collabId) {
+        collaborativeListsDao.rejectRequest(collabId);
+    }
+
+    @Override
+    public PageContainer<Request> getListCollaborators(int listId, int page, int pageSize) {
+        return collaborativeListsDao.getListCollaborators(listId, page, pageSize);
+    }
 }

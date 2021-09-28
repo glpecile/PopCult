@@ -13,4 +13,6 @@ public interface CollaborativeListsDao {
     void acceptRequest(int collabId);
 
     void rejectRequest(int collabId);
+
+    PageContainer<Request> getListCollaborators(int listId, int page, int pageSize);
 }

@@ -13,4 +13,8 @@ public interface CollaborativeListService {
     void acceptRequest(int collabId);
 
     void rejectRequest(int collabId);
+
+    void deleteCollaborator(int collabId);
+
+    PageContainer<Request> getListCollaborators(int listId, int page, int pageSize);
 }

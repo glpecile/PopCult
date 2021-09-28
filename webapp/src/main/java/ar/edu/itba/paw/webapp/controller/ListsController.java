@@ -49,6 +49,7 @@ public class ListsController {
     private static final int lastAddedAmount = 4;
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
+    private static final int collaboratorsAmount = 20;
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -105,6 +106,12 @@ public class ListsController {
     public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId, @RequestParam("userId") int userId) {
         collaborativeListService.makeNewRequest(listId, userId);
         return new ModelAndView("redirect:/lists/" + listId).addObject("successfulRequest", true); //TODO mensaje de que salio todo ok
+    }
+
+    @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
+    public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") int collabId) {
+        collaborativeListService.deleteCollaborator(collabId);
+        return new ModelAndView("redirect:/lists/edit/" + listId+"/manageMedia");
     }
 
     //CREATE A NEW LIST - PART 1
@@ -207,6 +214,7 @@ public class ListsController {
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);
+        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaListId, defaultValue - 1, collaboratorsAmount));
         mav.addObject("currentUser", userService.getCurrentUser().orElseThrow(UserNotFoundException::new));
         return mav;
     }

@@ -71,7 +71,7 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
     @Override
     public PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize) {
         List<Request> requestList = jdbcTemplate.query("SELECT collabid, collaboratorid, username, listid, listname, accepted  FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{userId, false, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
-        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ?", new Object[]{userId, false}, COUNT_ROW_MAPPER ).stream().findFirst().orElse(0);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = ? WHERE accepted = ?", new Object[]{userId, false}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
@@ -84,5 +84,12 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
     public void rejectRequest(int collabId) {
         jdbcTemplate.update("DELETE FROM collaborative WHERE collabid = ?", collabId);
 
+    }
+
+    @Override
+    public PageContainer<Request> getListCollaborators(int listId, int page, int pageSize) {
+        List<Request> requestList = jdbcTemplate.query("SELECT * FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND medialistid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{listId, true, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND medialistid = ? WHERE accepted = ?", new Object[]{listId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(requestList, page, pageSize, count);
     }
 }

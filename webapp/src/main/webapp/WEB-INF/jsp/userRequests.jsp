@@ -21,6 +21,9 @@
             Pending Requests
 <%--            <spring:message code=""/>--%>
         </h1>
+        <c:if test="${requestContainer.totalCount == 0}">
+            <h3 class="text-center text-gray-400">It seems there are no requests to show!</h3>
+        </c:if>
         <c:forEach var="request" items="${requestContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/request.jsp">
                 <jsp:param name="username" value="${request.collaboratorUsername}"/>
