@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
-<c:url value="/user/${param.username}/requests/reject" var="rejectPath"/>
-<c:url value="/user/${param.username}/requests/accept" var="acceptPath"/>
-<c:url value="/user/${param.username}" var="userProfilePath"/>
+<c:url value="/user/${param.currentUsername}/requests/reject" var="rejectPath"/>
+<c:url value="/user/${param.currentUsername}/requests/accept" var="acceptPath"/>
+<c:url value="/user/${param.currentUsername}" var="userProfilePath"/>
 <c:url value="/lists/${param.listId}" var="listPath"/>
 <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between">
     <div class="flex">

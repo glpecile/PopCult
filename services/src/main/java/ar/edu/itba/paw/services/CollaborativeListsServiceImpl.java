@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CollaborativeListsServiceImpl implements CollaborativeListService {
@@ -56,6 +53,18 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Override
     public void acceptRequest(int collabId) {
+        try {
+            Request collaboration = collaborativeListsDao.getById(collabId).orElseThrow(RuntimeException::new);
+            final Map<String, Object> mailMap = new HashMap<>();
+            mailMap.put("listname", collaboration.getListname());
+            mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
+            mailMap.put("listId", collaboration.getListId());
+            final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, Locale.getDefault());
+            User to = userDao.getById(collaboration.getCollaboratorId()).orElseThrow(RuntimeException::new);
+            emailService.sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
+        }catch (RuntimeException e) {
+            //TODO log correspondiente
+        }
         collaborativeListsDao.acceptRequest(collabId);
     }
 
@@ -72,5 +81,10 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Override
     public PageContainer<Request> getListCollaborators(int listId, int page, int pageSize) {
         return collaborativeListsDao.getListCollaborators(listId, page, pageSize);
+    }
+
+    @Override
+    public Optional<Request> getById(int collabId) {
+        return collaborativeListsDao.getById(collabId);
     }
 }

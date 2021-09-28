@@ -30,6 +30,7 @@
                 <jsp:param name="listname" value="${request.listname}"/>
                 <jsp:param name="listId" value="${request.listId}"/>
                 <jsp:param name="collabId" value="${request.collabId}"/>
+                <jsp:param name="currentUsername" value="${username}"/>
             </jsp:include>
         </c:forEach>
     </div>

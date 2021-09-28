@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CollaborativeListService {
     Request makeNewRequest(int listId, int userId);
@@ -17,4 +18,6 @@ public interface CollaborativeListService {
     void deleteCollaborator(int collabId);
 
     PageContainer<Request> getListCollaborators(int listId, int page, int pageSize);
+
+    Optional<Request> getById(int collabId);
 }

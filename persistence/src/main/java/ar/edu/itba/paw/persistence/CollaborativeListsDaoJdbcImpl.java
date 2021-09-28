@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
@@ -91,5 +92,10 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
         List<Request> requestList = jdbcTemplate.query("SELECT * FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND medialistid = ? WHERE accepted = ? OFFSET ? LIMIT ?", new Object[]{listId, true, page * pageSize, pageSize}, REQUEST_ROW_MAPPER);
         int count = jdbcTemplate.query("SELECT COUNT(*) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND medialistid = ? WHERE accepted = ?", new Object[]{listId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(requestList, page, pageSize, count);
+    }
+
+    @Override
+    public Optional<Request> getById(int collabId) {
+        return jdbcTemplate.query("SELECT * FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid WHERE collabid = ?", new Object[]{collabId}, REQUEST_ROW_MAPPER).stream().findFirst();
     }
 }
