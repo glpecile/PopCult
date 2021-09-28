@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.lists.MediaList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,8 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -20,6 +25,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private SpringTemplateEngine templateEngine;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
@@ -49,4 +56,39 @@ public class EmailServiceImpl implements EmailService {
         return templateEngine.process(template, thymeleafContext);
     }
 
+    public void sendReportCreatedEmail(String to, String report) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("report", report);
+        final String subject = messageSource.getMessage("email.report.created.subject", null, Locale.getDefault());
+        sendEmail(to, subject, "reportCreated.html", mailMap);
+    }
+
+    public void sendReportApprovedEmail(String to, String report) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("report", report);
+        final String subject = messageSource.getMessage("email.report.approved.subject", null, Locale.getDefault());
+        sendEmail(to, subject, "reportApproved.html", mailMap);
+    }
+
+    public void sendReportRejectedEmail(String to, String report) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("report", report);
+        final String subject = messageSource.getMessage("email.report.rejected.subject", null, Locale.getDefault());
+        sendEmail(to, subject, "reportRejected.html", mailMap);
+    }
+
+    public void sendDeletedCommentEmail(String to, Comment comment) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("comment", comment.getCommentBody());
+        final String subject = messageSource.getMessage("email.deleted.comment.subject", null, Locale.getDefault());
+        sendEmail(to, subject, "deletedComment.html", mailMap);
+    }
+
+    public void sendDeletedListEmail(String to, MediaList mediaList) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("list", mediaList.getListName());
+        mailMap.put("listDescription", mediaList.getDescription());
+        final String subject = messageSource.getMessage("email.deleted.list.subject", null, Locale.getDefault());
+        sendEmail(to, subject, "deletedList.html", mailMap);
+    }
 }

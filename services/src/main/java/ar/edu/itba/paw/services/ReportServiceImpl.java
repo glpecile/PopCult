@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.CommentService;
-import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.interfaces.ReportDao;
-import ar.edu.itba.paw.interfaces.ReportService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
@@ -19,20 +16,33 @@ public class ReportServiceImpl implements ReportService {
     private ListsService listsService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    EmailService emailService;
+    @Autowired
+    UserService userService;
 
     @Override
     public void reportList(int listId, String report) {
         reportDao.reportList(listId, report);
+        userService.getCurrentUser().ifPresent(user -> {
+            emailService.sendReportCreatedEmail(user.getEmail(), report);
+        });
     }
 
     @Override
     public void reportListComment(int listId, int commentId, String report) {
         reportDao.reportListComment(listId, commentId, report);
+        userService.getCurrentUser().ifPresent(user -> {
+            emailService.sendReportCreatedEmail(user.getEmail(), report);
+        });
     }
 
     @Override
     public void reportMediaComment(int mediaId, int commentId, String report) {
         reportDao.reportMediaComment(mediaId, commentId, report);
+        userService.getCurrentUser().ifPresent(user -> {
+            emailService.sendReportCreatedEmail(user.getEmail(), report);
+        });
     }
 
     @Override
@@ -52,37 +62,77 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void deleteListReport(int reportId) {
-        reportDao.deleteListReport(reportId);
+        reportDao.getListReportById(reportId).ifPresent(report -> {
+            reportDao.deleteListReport(reportId);
+            userService.getCurrentUser().ifPresent(user -> {
+                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
+            });
+        });
+
     }
 
     @Override
     public void deleteListCommentReport(int reportId) {
-        reportDao.deleteListCommentReport(reportId);
+        reportDao.getListCommentReportById(reportId).ifPresent(report -> {
+            reportDao.deleteListCommentReport(reportId);
+            userService.getCurrentUser().ifPresent(user -> {
+                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
+            });
+        });
     }
 
     @Override
     public void deleteMediaCommentReport(int reportId) {
-        reportDao.deleteMediaCommentReport(reportId);
+        reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
+            reportDao.deleteMediaCommentReport(reportId);
+            userService.getCurrentUser().ifPresent(user -> {
+                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
+            });
+        });
     }
 
     @Override
     public void approveListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(listReport -> {
-            listsService.deleteList(listReport.getMediaListId());
+            listsService.getMediaListById(listReport.getMediaListId()).ifPresent(mediaList -> {
+                listsService.deleteList(listReport.getMediaListId());
+                userService.getById(mediaList.getUserId()).ifPresent(user -> {
+                    emailService.sendDeletedListEmail(user.getEmail(), mediaList);
+                });
+                userService.getCurrentUser().ifPresent(user -> {
+                    emailService.sendReportApprovedEmail(user.getEmail(), listReport.getReport());
+                });
+            });
         });
     }
 
     @Override
     public void approveListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(listCommentReport -> {
-            commentService.deleteCommentFromList(listCommentReport.getCommentId());
+            commentService.getListCommentById(listCommentReport.getCommentId()).ifPresent(comment -> {
+                commentService.deleteCommentFromList(listCommentReport.getCommentId());
+                userService.getById(comment.getUserId()).ifPresent(user -> {
+                    emailService.sendDeletedCommentEmail(user.getEmail(), comment);
+                });
+                userService.getCurrentUser().ifPresent(user -> {
+                    emailService.sendReportApprovedEmail(user.getEmail(), listCommentReport.getReport());
+                });
+            });
         });
     }
 
     @Override
     public void approveMediaCommentReport(int reportId) {
-        reportDao.getMediaCommentReportById(reportId).ifPresent(mediaCommentReport ->  {
-            commentService.deleteCommentFromMedia(mediaCommentReport.getCommentId());
+        reportDao.getMediaCommentReportById(reportId).ifPresent(mediaCommentReport -> {
+            commentService.getMediaCommentById(mediaCommentReport.getCommentId()).ifPresent(comment -> {
+                commentService.deleteCommentFromMedia(mediaCommentReport.getCommentId());
+                userService.getById(comment.getUserId()).ifPresent(user -> {
+                    emailService.sendDeletedCommentEmail(user.getEmail(), comment);
+                });
+                userService.getCurrentUser().ifPresent(user -> {
+                    emailService.sendReportApprovedEmail(user.getEmail(), mediaCommentReport.getReport());
+                });
+            });
         });
     }
 }
