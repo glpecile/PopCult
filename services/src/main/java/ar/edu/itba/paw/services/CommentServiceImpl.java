@@ -25,6 +25,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Optional<Comment> getMediaCommentById(int commentId) {
+        return commentDao.getMediaCommentById(commentId);
+    }
+
+    @Override
+    public Optional<Comment> getListCommentById(int commentId) {
+        return commentDao.getListCommentById(commentId);
+    }
+
+    @Override
     public PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize) {
         return commentDao.getMediaComments(mediaId, page, pageSize);
     }
