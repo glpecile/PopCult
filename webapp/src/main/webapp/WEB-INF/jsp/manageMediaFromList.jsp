@@ -17,30 +17,44 @@
 <c:url value="/list/edit/${mediaListId}" var="editListDetails"/>
 <c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/addMedia" var="addMediaPath"/>
+<c:url value="/lists/${list.mediaListId}/cancelCollab" var="deleteCollabPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <c:set var="isOwner" value="${currentUser.userId == list.userId}"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
             <div class="flex justify-between m-0">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
+                <c:if test="${isOwner}">
                 <button class="btn btn-link my-3.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                         data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
-                    <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i> Edit Details
-                </button>
+                        <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i> Edit Details
+                    </button>
+                </c:if>
             </div>
             <%--List current content--%>
             <div class="flex justify-between">
                 <h4 class="py-0.5">Currently in this list</h4>
-                <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
-                        data-bs-toggle="modal" data-bs-target="#addMediaModal">
-                    <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i> Add Media
-                </button>
+                <div class="flex justify-end space-x-2">
+                    <c:if test="${list.collaborative && isOwner}">
+                        <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
+                                data-bs-toggle="modal" data-bs-target="#manageCollaboratorsModal">
+                            <i class="fas fa-users text-gray-500 group-hover:text-white pr-2"></i> Manage
+                            Collaborators
+                        </button>
+                    </c:if>
+                    <button class="btn btn-link my-1.5 px-2.5 group bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
+                            data-bs-toggle="modal" data-bs-target="#addMediaModal">
+                        <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i> Add Media
+                    </button>
+                </div>
             </div>
             <c:if test="${mediaContainer.totalCount == 0}">
                 <div class="flex flex-col">
                     <h4 class="text-center py-0.5">It seems this list is empty!</h4>
-                    <h4 class="text-center py-0.5">You can search for media to add with the + Add Media button!</h4>
+                    <h4 class="text-center py-0.5">You can search for media to add with the <i class="fas fa-plus"></i>Add
+                        Media button!</h4>
                 </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
@@ -63,12 +77,14 @@
                 <jsp:param name="url" value="/lists/edit/${mediaListId}/manageMedia"/>
             </jsp:include>
             <div class="flex justify-between mb-2">
-                <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
-                    <jsp:param name="mediaListId" value="${mediaListId}"/>
-                    <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
-                    <jsp:param name="title" value="Delete this list"/>
-                    <jsp:param name="message" value="Are you sure you want to delete this list?"/>
-                </jsp:include>
+                <c:if test="${isOwner}">
+                    <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
+                        <jsp:param name="mediaListId" value="${mediaListId}"/>
+                        <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
+                        <jsp:param name="title" value="Delete this list"/>
+                        <jsp:param name="message" value="Are you sure you want to delete this list?"/>
+                    </jsp:include>
+                </c:if>
                 <a href=${listPath}>
                     <button type="button"
                             class="btn btn-warning btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
@@ -208,6 +224,51 @@
             </div>
         </div>
     </div>
+
+    <%-- Manage Collaborators Modal--%>
+    <div class="modal fade" id="manageCollaboratorsModal" tabindex="-1" aria-labelledby="manageCollaboratorsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="manageCollaboratorsModalLabel">Manage this list
+                        collaborators</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="overflow-y-auto h-50">
+                        <div class="flex flex-col space-y-2.5">
+                            <c:if test="${collaboratorsContainer.totalCount == 0}">
+                                <h3 class="text-center text-gray-400">It seems this list has no collaborators! :c</h3>
+                            </c:if>
+                            <c:forEach var="collaborators" items="${collaboratorsContainer.elements}">
+                                <c:url value="/user/${collaborators.collaboratorUsername}" var="userProfilePath"/>
+                                <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between">
+                                    <div class="flex">
+                                        <h4 class="pl-3 py-4 text-xl font-semibold tracking-tight text-gray-800">
+                                            User <a href="${userProfilePath}"
+                                                    class="text-purple-500 hover:text-purple-900"><c:out
+                                                value="${collaborators.collaboratorUsername}"/></a> collaborates in this
+                                            list.
+                                        </h4>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <form:form cssClass="m-0" action="${deleteCollabPath}" method="DELETE">
+                                            <input type="hidden" name="collabId" value="${collaborators.collabId}">
+                                            <button type="submit"><i
+                                                    class="fas fa-times text-xl text-gray-800 justify-end p-4 hover:text-red-400 cursor-pointer"
+                                                    title="Cancel collaboration"></i></button>
+                                        </form:form>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script>
     <c:if test="${editDetailsErrors}">

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,14 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
-public class EditListVoter implements AccessDecisionVoter<FilterInvocation> {
+public class RequestsManagerVoter implements AccessDecisionVoter<FilterInvocation> {
     @Autowired
-    UserService userService;
-    @Autowired
-    ListsService listsService;
+    private UserService userService;
 
     @Override
     public boolean supports(ConfigAttribute attribute) {
@@ -34,26 +35,17 @@ public class EditListVoter implements AccessDecisionVoter<FilterInvocation> {
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
-        if (URL.toLowerCase().contains("/lists/edit/")) {
+        if (URL.startsWith("/user/") && URL.endsWith("/requests")) {
             try {
-                int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/edit/", "").replaceFirst("/.*", ""));
+                String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/requests"));
                 userService.getCurrentUser().ifPresent(user -> {
-                    listsService.getMediaListById(mediaListId).ifPresent(mediaList -> {
-                        if (URL.endsWith("/manageMedia") || URL.endsWith("/addMedia") || URL.contains("/search") || URL.endsWith("deleteMedia")) {
-                            if (listsService.canEditList(user.getUserId(), mediaList.getMediaListId())) {
-                                vote.set(ACCESS_GRANTED);
-                            } else {
-                                vote.set(ACCESS_DENIED);
-                            }
-                        } else {
-                            if (user.getUserId() == mediaList.getUserId()) {
-                                vote.set(ACCESS_GRANTED);
-                            } else {
-                                vote.set(ACCESS_DENIED);
-                            }
-                        }
-                    });
+                    if ((user.getUsername().equals(username))) {
+                        vote.set(ACCESS_GRANTED);
+                    } else {
+                        vote.set(ACCESS_DENIED);
+                    }
                 });
+
             } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }

@@ -8,6 +8,8 @@
             <sec:authentication property="principal.username"/>
         </c:set>
     </sec:authorize>
+    <c:url value="/logout" var="logout"/>
+    <c:url value="/user/${param.username}/requests" var="requests"/>
     <c:choose>
         <c:when test="${currentUsername == param.username}">
             <!-- Profile pic row -->
@@ -34,6 +36,13 @@
                 <!-- Or as we like to call you: Username -->
                 <spring:message code="profile.description"/><b><c:out value="${param.username}"/></b>
             </h4>
+            <!-- TODO internacionalicion del Requests -->
+            <div class="flex flex-row">
+                <a href=${requests}>
+                    <button type="button"
+                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white">Requests
+                    </button>
+                </a>
             <a href=<c:url value="/logout"/>>
                 <button type="button"
                         class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">
@@ -52,7 +61,8 @@
                         </div>
                         <div class="modal-body">
                             <c:url value="/uploadImage" var="uploadPath"/>
-                            <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}" enctype="multipart/form-data">
+                            <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}"
+                                       enctype="multipart/form-data">
                                 <div class="row px-2 pb-2">
                                     <form:input path="image" cssClass="form-control" type="file" accept="image/*"/>
                                     <form:errors path="image" cssClass="form-control" element="p"/>

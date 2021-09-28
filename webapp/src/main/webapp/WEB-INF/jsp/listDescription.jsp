@@ -12,6 +12,8 @@
 <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/manageMedia" var="editListMediaPath"/>
 <c:url value="/lists/${listId}/comment" var="commentPath"/>
+<c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
+
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -20,7 +22,7 @@
             <div class="col-md-auto">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
-                    by: <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
+                    <spring:message code="lists.by"/> <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
                 </a></h4>
             </div>
             <div class="pt-2.5">
@@ -34,27 +36,42 @@
         <!-- Media icons -->
         <div class="flex flex-wrap justify-start">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
-            <div class="flex justify-center py-2">
-                <c:choose>
-                    <c:when test="${list.userId == currentUser.userId}">
+            <c:choose>
+                <c:when test="${canEdit}">
+                    <div class="flex justify-center py-2">
                         <a href="${editListMediaPath}">
-                            <button type="button" class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                            <button type="button"
+                                    class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
                                 <i class="far fa-edit pr-2 text-purple-500 group-hover:text-purple-900"></i>
-                                Edit list
+                                <spring:message code="lists.edit"/>
                             </button>
                         </a>
-                    </c:when>
-                    <c:otherwise>
-                        <form:form cssClass="m-0" action="${forkPath}" method="POST">
-                            <button type="submit" id="fork" name="fork"
-                                    class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
-                                <i class="far fa-copy pr-2 text-purple-500 group-hover:text-purple-900"></i>
-                                Fork this list
+                    </div>
+                </c:when>
+                <c:when test="${list.collaborative && !canEdit}">
+                    <div class="flex justify-center py-2">
+                        <form action="${requestPath}" method="POST">
+                            <input type="hidden" name="userId" value="${currentUser.userId}">
+                            <button type="submit"
+                                    class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                                <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
+                                <spring:message code="lists.collaborate"/>
                             </button>
-                        </form:form>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+                        </form>
+                    </div>
+                </c:when>
+            </c:choose>
+            <c:if test="${list.userId != currentUser.userId}">
+                <div class="flex justify-end py-2">
+                    <form:form cssClass="m-0" action="${forkPath}" method="POST">
+                        <button type="submit" id="fork" name="fork"
+                                class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                            <i class="far fa-copy pr-2 text-purple-500 group-hover:text-purple-900"></i>
+                            <spring:message code="lists.fork"/>
+                        </button>
+                    </form:form>
+                </div>
+            </c:if>
         </div>
         <!-- Films and Series in the list -->
         <div class="row pb-4">
@@ -82,7 +99,8 @@
             <spring:message code="comments.placeholder" var="commentPlaceholder"/>
             <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
                 <label class="p-2 text-semibold w-full flex flex-col">
-                    <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
+                    <form:textarea path="body" rows="3"
+                                   class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
                                    name="body" placeholder="${commentPlaceholder}" type="text"/>
                     <form:errors path="body" cssClass="formError text-red-500" element="p"/>
                     <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">

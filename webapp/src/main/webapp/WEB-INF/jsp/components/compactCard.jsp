@@ -13,8 +13,7 @@
         </h4>
     </div>
     <form:form cssClass="m-0" action="${deletePath}" method="DELETE">
-        <button type="submit" name="deleteMedia"><i class="fas fa-times text-xl text-gray-800 justify-end p-4 hover:text-red-400 cursor-pointer"
-           title="<spring:message code="general.delete"/>"></i></button>
+        <button type="submit" name="deleteMedia"><i class="fas fa-times text-xl text-gray-800 justify-end p-4 hover:text-red-400 cursor-pointer" title="<spring:message code="general.delete"/>"></i></button>
         <input id="mediaListId" type="hidden" name="mediaListId" value="${param.deleteFromListId}">
         <input id="mediaId" type="hidden" name="mediaId" value="${param.mediaId}">
     </form:form>

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -138,6 +139,18 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("username"),
                     rs.getString("description"));
+
+    /**
+     * Request RowMappers.
+     */
+    public static final RowMapper<Request> REQUEST_ROW_MAPPER =
+            (rs, rowNum) -> new Request(
+                    rs.getInt("collabId"),
+                    rs.getInt("collaboratorId"),
+                    rs.getString("username"),
+                    rs.getInt("listId"),
+                    rs.getString("listname"),
+                    rs.getBoolean("accepted"));
 }
 
 
