@@ -200,6 +200,8 @@
                         <jsp:param name="commenterId" value="${comment.userId}"/>
                         <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                         <jsp:param name="commentId" value="${comment.commentId}"/>
+                        <jsp:param name="type" value="media"/>
+                        <jsp:param name="id" value="${mediaId}"/>
                         <jsp:param name="deletePath" value="/media/${mediaId}/deleteComment"/>
                     </jsp:include>
                 </c:forEach>

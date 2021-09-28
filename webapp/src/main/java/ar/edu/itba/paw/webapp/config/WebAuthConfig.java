@@ -134,6 +134,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register/**", "/login").anonymous()
                 .antMatchers("/createList").hasRole("USER")
                 .antMatchers("/editList/**").hasRole("USER")
+                .antMatchers("/admin/**").hasRole("MOD")
                 .antMatchers(HttpMethod.POST).hasRole("USER")
                 .antMatchers(HttpMethod.DELETE).hasRole("USER")
                 .antMatchers("/**").permitAll()
