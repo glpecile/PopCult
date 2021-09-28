@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Watched Media &#8226; PopCult</title>
+    <title><spring:message code="profile.tabs.watchedMedia"/> &#8226; PopCult</title>
 </head>
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
@@ -27,7 +28,9 @@
         <%-- current tab --%>
         <div class="row">
             <c:if test="${watchedMediaIdsContainer.totalCount == 0}">
-                <h3 class="text-center text-gray-400">It seems there is no watched media to show! :c</h3>
+                <h3 class="text-center text-gray-400">
+                    <spring:message code="profile.watchedMedia.noMedia"/>
+                </h3>
             </c:if>
             <c:forEach var="media" items="${watchedMediaIdsContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
