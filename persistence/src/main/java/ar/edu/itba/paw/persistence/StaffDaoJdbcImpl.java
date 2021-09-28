@@ -86,7 +86,7 @@ public class StaffDaoJdbcImpl implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
-                                                List<Media> elements = jdbcTemplate.query("SELECT * FROM director NATURAL JOIN media " +
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM director NATURAL JOIN media " +
                                                         "WHERE staffMemberId = ? " +
                                                         "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +

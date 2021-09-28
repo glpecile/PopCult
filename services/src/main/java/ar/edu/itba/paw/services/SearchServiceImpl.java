@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,8 +50,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort, int genre) {
-        if(genre == Genre.ALL.ordinal() + 1)
-            return searchMediaByTitle(title, page, pageSize, mediaType, sort);
         return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre);
     }
 

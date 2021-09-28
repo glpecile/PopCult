@@ -3,7 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.SearchDAO;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class SearchDAOJdbcImpl implements SearchDAO {
+public class SearchDaoJdbcImpl implements SearchDAO {
     private final JdbcTemplate jdbcTemplate;
 
 
@@ -28,7 +30,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
     @Autowired
-    public SearchDAOJdbcImpl(final DataSource ds) {
+    public SearchDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
@@ -75,6 +77,16 @@ public class SearchDAOJdbcImpl implements SearchDAO {
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
+    private String buildAndWhereStatement(int genre, int mediaType){
+        StringBuilder toReturn = new StringBuilder("");
+        boolean allMediaType = mediaType == MediaType.ALL.ordinal() + 1;
+        boolean allGenreType = genre == Genre.ALL.ordinal() + 1;
+        if(!allGenreType)
+            toReturn.append(String.format(" AND genreid = %d ", genre));
+        if(!allMediaType)
+            toReturn.append(String.format(" AND type = %d ", mediaType));
+        return toReturn.toString();
+    }
     @Override
     public PageContainer<Media> searchMediaByTitleNotInList(int listId, String title, int page, int pageSize, int mediaType, int sort) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
@@ -86,8 +98,11 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort, int genre) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND genreid = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType,genre,page * pageSize, pageSize},MEDIA_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND genreid = ? ", new Object[]{title,mediaType, genre},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        String andWhereStatement = buildAndWhereStatement(genre, mediaType);
+        String selectBaseStatement = "SELECT DISTINCT * FROM media  WHERE mediaid IN ( " ;
+        String selectNotInStatement = "SELECT DISTINCT mediaid FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%')  " + andWhereStatement;
+        List<Media> elements = jdbcTemplate.query(selectBaseStatement + selectNotInStatement + ")" + orderBy + " OFFSET ? LIMIT ?", new Object[]{title,page * pageSize, pageSize},MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT (*) FROM media WHERE mediaid IN ( " + selectNotInStatement + andWhereStatement + " )", new Object[]{title},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 

@@ -54,6 +54,7 @@ public class SearchController {
     public ModelAndView search(HttpServletRequest request,
                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                final BindingResult errors,
+                               @RequestParam(value = "page", defaultValue = "1") final int page,
                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
                                @RequestParam(value = "genre", defaultValue = "all") final String genre) {
         LOGGER.info("Search term: {}", searchForm.getTerm());
@@ -64,16 +65,16 @@ public class SearchController {
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
         final ModelAndView mav = new ModelAndView("search");
-        final PageContainer<Media> searchFilmsResults = searchService.searchMediaByTitle(searchForm.getTerm(),firstPage,itemsPerPage, MediaType.MOVIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
-        final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),firstPage,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),firstPage,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
+        final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.ALL.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
+        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
-
-        mav.addObject("searchFilmsContainer", searchFilmsResults);
-        mav.addObject("searchSeriesContainer", searchSeriesResults);
+        System.out.println(searchMediaResults.getTotalCount());
+        mav.addObject("searchFilmsContainer", searchMediaResults);
         mav.addObject("listCoversContainer", listCoversContainer);
         mav.addObject("term", searchForm.getTerm());
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
         final Map<String, String> queries = new HashMap<>();
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
@@ -95,13 +96,13 @@ public class SearchController {
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
-        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
+        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();
         final ModelAndView mav = new ModelAndView("searchSeries");
         final PageContainer<Media> searchSeriesResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, MediaType.SERIE.ordinal(),SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal);
         mav.addObject("searchSeriesContainer", searchSeriesResults);
         mav.addObject("term", searchForm.getTerm());
-        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toLowerCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toLowerCase).collect(Collectors.toList()));
         final Map<String, String> queries = new HashMap<>();
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
