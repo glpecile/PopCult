@@ -39,7 +39,8 @@ public class EditListVoter implements AccessDecisionVoter<FilterInvocation> {
 
                 userService.getCurrentUser().ifPresent(user -> {
                     listsService.getMediaListById(mediaListId).ifPresent(mediaList -> {
-                        if (user.getUserId() == mediaList.getUserId()) {
+//                        if (user.getUserId() == mediaList.getUserId()) {
+                        if(listsService.canEditList(user.getUserId(), mediaList.getMediaListId())){
                             vote.set(ACCESS_GRANTED);
                         } else {
                             vote.set(ACCESS_DENIED);
