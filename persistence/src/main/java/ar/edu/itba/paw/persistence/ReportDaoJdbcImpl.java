@@ -90,7 +90,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public Optional<ListReport> getListReportById(int reportId) {
-        return jdbcTemplate.query("SELECT * FROM listReport NATURAL JOIN mediaList WHERE reportId = ?", new Object[]{reportId}, LIST_REPORT_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT * FROM listReport JOIN mediaList ON listreport.listid = medialist.medialistid WHERE reportId = ?", new Object[]{reportId}, LIST_REPORT_ROW_MAPPER)
                 .stream().findFirst();
     }
 
@@ -108,7 +108,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<ListReport> getListReports(int page, int pageSize) {
-        List<ListReport> listReportList = jdbcTemplate.query("SELECT * FROM listReport NATURAL JOIN mediaList ORDER BY date DESC OFFSET ? LIMIT ?",
+        List<ListReport> listReportList = jdbcTemplate.query("SELECT * FROM listReport JOIN mediaList ON listreport.listid = medialist.medialistid ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 LIST_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM listReport", COUNT_ROW_MAPPER)
