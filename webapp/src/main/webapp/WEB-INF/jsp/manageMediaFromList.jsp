@@ -66,8 +66,6 @@
                         <jsp:param name="mediaId" value="${media.mediaId}"/>
                         <jsp:param name="deleteFromListId" value="${mediaListId}"/>
                         <jsp:param name="deletePath" value="/lists/edit/${mediaListId}/deleteMedia"/>
-                        <jsp:param name="currUser" value="${currentUser.userId}"/>
-                        <jsp:param name="listOwner" value="${list.userId}"/>
                     </jsp:include>
                 </c:forEach>
             </div>
