@@ -291,6 +291,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public boolean canEditList(int userId, int listId) {
-        return jdbcTemplate.query("SELECT COUNT(collabid) FROM medialist m JOIN collaborative c ON m.medialistid = c.listId WHERE listId = ? AND( m.userId = ? OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
+        return jdbcTemplate.query("SELECT COUNT(*) FROM medialist LEFT JOIN collaborative c on medialist.medialistid = c.listid WHERE medialistid = ? AND ((userid = ?) OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
     }
 }
