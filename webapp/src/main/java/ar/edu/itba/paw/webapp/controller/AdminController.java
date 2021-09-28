@@ -20,7 +20,7 @@ public class AdminController {
     @Autowired
     private ReportService reportService;
 
-    private static final int itemsPerPage = 1; //TODO swap to 12. 1 is for pagination tests
+    private static final int itemsPerPage = 12;
     private static final int adminPanelItemsPerPage = 3;
 
 

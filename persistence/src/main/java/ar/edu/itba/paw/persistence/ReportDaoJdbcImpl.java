@@ -84,7 +84,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
         data.put("mediaId", mediaId);
         data.put("commentId", commentId);
         data.put("report", report);
-        data.put("data", new Date());
+        data.put("date", new Date());
         jdbcInsertMediaCommentReport.execute(data);
     }
 
