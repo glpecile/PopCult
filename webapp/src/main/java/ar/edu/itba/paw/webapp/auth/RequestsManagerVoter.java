@@ -35,7 +35,7 @@ public class RequestsManagerVoter implements AccessDecisionVoter<FilterInvocatio
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
-        if (URL.startsWith("/user/") && URL.endsWith("/requests")) {
+        if (URL.startsWith("/user/") && URL.contains("/requests")) {
             try {
                 String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/requests"));
                 userService.getCurrentUser().ifPresent(user -> {
