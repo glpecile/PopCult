@@ -39,7 +39,7 @@ public class EditListVoter implements AccessDecisionVoter<FilterInvocation> {
                 int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/edit/", "").replaceFirst("/.*", ""));
                 userService.getCurrentUser().ifPresent(user -> {
                     listsService.getMediaListById(mediaListId).ifPresent(mediaList -> {
-                        if (URL.endsWith("/manageMedia") || URL.endsWith("/addMedia") || URL.contains("/search")) {
+                        if (URL.endsWith("/manageMedia") || URL.endsWith("/addMedia") || URL.contains("/search") || URL.endsWith("deleteMedia")) {
                             if (listsService.canEditList(user.getUserId(), mediaList.getMediaListId())) {
                                 vote.set(ACCESS_GRANTED);
                             } else {
