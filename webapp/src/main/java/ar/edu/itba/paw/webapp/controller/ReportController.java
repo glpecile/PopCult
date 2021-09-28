@@ -45,7 +45,7 @@ public class ReportController {
             return reportList(listId, reportForm);
         }
         reportService.reportList(listId, reportForm.getReport());
-        return new ModelAndView("redirect:/lists/"+ listId);
+        return new ModelAndView("redirect:/lists/" + listId);
     }
 
     @RequestMapping(value = "/report/lists/{listId}/comment/{commentId}", method = RequestMethod.GET)
@@ -76,7 +76,7 @@ public class ReportController {
     public ModelAndView reportMediaComment(@PathVariable("mediaId") final int mediaId,
                                            @PathVariable("commentId") final int commentId,
                                            @ModelAttribute("reportForm") final ReportForm reportForm) {
-        ModelAndView mav = new ModelAndView("reportList");
+        ModelAndView mav = new ModelAndView("reportComment");
         mav.addObject("comment", commentService.getMediaCommentById(commentId).orElseThrow(CommentNotFoundException::new));
         mav.addObject("id", mediaId);
         mav.addObject("type", "media");

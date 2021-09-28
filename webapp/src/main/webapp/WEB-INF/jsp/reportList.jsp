@@ -15,7 +15,7 @@
     <div class="col-8 offset-2 flex-grow">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
         <h2 class="text-3xl"><c:out value="${list.listName}"/></h2>
-            <h2 class="text-md"><c:out value="${list.description}"/></h2>
+            <h2 class="text-xl"><c:out value="${list.description}"/></h2>
             <br>
             <jsp:include page="/WEB-INF/jsp/components/reportForm.jsp">
                 <jsp:param name="reportPath" value="/report/lists/${list.mediaListId}"/>

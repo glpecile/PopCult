@@ -8,7 +8,6 @@
 <form:form method="POST" modelAttribute="reportForm" action="${reportPath}">
     <h2 class="text-3xl"><spring:message code="report.message"/></h2>
     <div>
-        <form:label path="report" for="report" class="form-label"><spring:message code="report"/></form:label>
         <form:textarea path="report" type="text" class="form-control h-24 resize-y overflow-clip overflow-auto" id="report"
                        value=""/>
         <form:errors path="report" cssClass="formError text-red-500" element="p"/>

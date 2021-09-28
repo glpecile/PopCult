@@ -14,7 +14,7 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
-            <h2 class="text-xs"><c:out value="${comment.commentBody}"/></h2>
+            <h2 class="text-xl"><c:out value="${comment.commentBody}"/></h2>
             <br>
             <jsp:include page="/WEB-INF/jsp/components/reportForm.jsp">
                 <jsp:param name="reportPath" value="/report/${type}/${id}/comment/${comment.commentId}"/>

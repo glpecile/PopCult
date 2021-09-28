@@ -16,21 +16,34 @@
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <div class="flex justify-content-start content-center pt-4">
-            <div class="col-md-auto">
-                <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
-                    by: <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
-                </a></h4>
+        <div class="flex justify-between">
+            <div class="flex justify-content-start content-center pt-4">
+                <div class="col-md-auto">
+                    <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
+                    <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
+                        by: <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
+                    </a></h4>
+                </div>
+                <div class="pt-2.5">
+                    <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
+                        <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
+                        <jsp:param name="favorite" value="${isFavoriteList}"/>
+                    </jsp:include>
+                </div>
             </div>
-            <div class="pt-2.5">
-                <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
-                    <jsp:param name="URL" value="/lists/${list.mediaListId}"/>
-                    <jsp:param name="favorite" value="${isFavoriteList}"/>
-                </jsp:include>
+            <div class="pt-5">
+                <c:url var="reportPath" value="/report/lists/${listId}"/>
+                <a href="${reportPath}">
+                    <button type="button">
+                        <i class="fas fa-exclamation-circle text-right text-gray-400 justify-end hover:text-yellow-400 cursor-pointer fa-2x"
+                           title="Report"></i>
+                    </button>
+                </a>
             </div>
         </div>
+
         <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
+
         <!-- Media icons -->
         <div class="flex flex-wrap justify-start">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
@@ -101,6 +114,8 @@
                             <jsp:param name="commenterId" value="${comment.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                             <jsp:param name="commentId" value="${comment.commentId}"/>
+                            <jsp:param name="type" value="lists"/>
+                            <jsp:param name="id" value="${listId}"/>
                             <jsp:param name="deletePath" value="/lists/${listId}/deleteComment"/>
                         </jsp:include>
                     </c:forEach>
