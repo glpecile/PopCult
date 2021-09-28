@@ -46,7 +46,7 @@
                 </a>
                 <a href=<c:url value="/logout"/>>
                     <button type="button"
-                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">
+                            class="justify-end btn btn-rounded btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">
                         <!-- Log out -->
                         <i class="fas fa-sign-out-alt text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.signOut"/>
                     </button>
