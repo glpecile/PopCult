@@ -37,7 +37,7 @@
         <div class="flex flex-wrap justify-start">
             <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
             <c:choose>
-                <c:when test="${list.userId == currentUser.userId}">
+                <c:when test="${canEdit}">
                     <div class="flex justify-center py-2">
 
                         <a href="${editListMediaPath}">
@@ -49,30 +49,30 @@
                         </a>
                     </div>
                 </c:when>
-                <c:otherwise>
+                <c:when test="${list.collaborative && !canEdit}">
                     <div class="flex justify-center py-2">
-                        <form:form cssClass="m-0" action="${forkPath}" method="POST">
-                            <button type="submit" id="fork" name="fork"
+                        <form action="${requestPath}" method="POST">
+                            <input type="hidden" name="userId" value="${currentUser.userId}">
+                            <button type="submit"
                                     class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                                <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
-                                Fork this list
+                                <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
+                                Ask to collaborate
                             </button>
-                        </form:form>
+                        </form>
                     </div>
-                    <c:if test="${list.collaborative}">
-                        <div class="flex justify-end py-2">
-                            <form action="${requestPath}" method="POST">
-                                <input type="hidden" name="userId" value="${currentUser.userId}">
-                                <button type="submit"
-                                        class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
-                                    <i class="fas fa-users pr-2 text-purple-500 hover:text-purple-900"></i>
-                                    Ask to collaborate
-                                </button>
-                            </form>
-                        </div>
-                    </c:if>
-                </c:otherwise>
+                </c:when>
             </c:choose>
+            <c:if test="${list.userId != currentUser.userId}">
+                <div class="flex justify-end py-2">
+                    <form:form cssClass="m-0" action="${forkPath}" method="POST">
+                        <button type="submit" id="fork" name="fork"
+                                class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                            <i class="far fa-copy pr-2 text-purple-500 hover:text-purple-900"></i>
+                            Fork this list
+                        </button>
+                    </form:form>
+                </div>
+            </c:if>
         </div>
         <!-- Films and Series in the list -->
         <div class="row pb-4">

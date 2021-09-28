@@ -82,6 +82,7 @@ public class ListsController {
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
+            mav.addObject("canEdit", listsService.canEditList(user.getUserId(), listId));
         });
         return mav;
     }
@@ -206,6 +207,7 @@ public class ListsController {
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);
+        mav.addObject("currentUser", userService.getCurrentUser().orElseThrow(UserNotFoundException::new));
         return mav;
     }
 }

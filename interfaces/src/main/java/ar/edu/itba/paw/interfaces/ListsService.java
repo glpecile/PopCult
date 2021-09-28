@@ -64,4 +64,6 @@ public interface ListsService {
 
     PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
 
+    boolean canEditList(int userId, int listId);
+
 }
