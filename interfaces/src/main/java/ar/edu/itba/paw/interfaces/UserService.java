@@ -15,6 +15,8 @@ public interface UserService {
 
     User register(String email, String username, String password, String name);
 
+    Optional<User> changePassword(int userId, String currentPassword, String newPassword);
+
     Optional<User> getCurrentUser();
 
     boolean confirmRegister(Token token);
@@ -23,5 +25,7 @@ public interface UserService {
 
     Optional<Image> getUserProfileImage(int imageId);
 
-    void uploadUserProfileImage(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType);
+    void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType);
+
+    void updateUserData(int userId, String email, String username, String name);
 }

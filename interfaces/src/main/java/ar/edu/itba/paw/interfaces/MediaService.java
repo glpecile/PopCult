@@ -25,4 +25,9 @@ public interface MediaService {
     List<Media> searchMediaByTitle(String title, int page, int pageSize);
 
     Optional<Integer> getCountSearchMediaByTitle(String title);
+
+    PageContainer<Media> getMostLikedMedia(int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
+
 }

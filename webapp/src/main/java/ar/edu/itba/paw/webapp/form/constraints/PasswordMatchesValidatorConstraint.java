@@ -6,7 +6,7 @@ import ar.edu.itba.paw.webapp.form.annotations.PasswordMatches;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class PasswordMatchesValidatorConstraint implements ConstraintValidator<PasswordMatches, Object> {
+public class PasswordMatchesValidatorConstraint implements ConstraintValidator<PasswordMatches, UserForm> {
 
     @Override
     public void initialize(PasswordMatches passwordMatches) {
@@ -14,8 +14,7 @@ public class PasswordMatchesValidatorConstraint implements ConstraintValidator<P
     }
 
     @Override
-    public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-        UserForm userForm = (UserForm) o;
-        return userForm.getPassword().equals(userForm.getRepeatPassword());
+    public boolean isValid(UserForm value, ConstraintValidatorContext constraintValidatorContext) {
+        return value.getPassword().equals(value.getRepeatPassword());
     }
 }

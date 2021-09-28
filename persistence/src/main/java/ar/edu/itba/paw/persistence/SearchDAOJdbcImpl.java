@@ -47,7 +47,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
 
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%')  OFFSET ? LIMIT ?", new Object[]{title, page, pageSize}, MEDIA_ROW_MAPPER);
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%')  OFFSET ? LIMIT ?", new Object[]{title, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
@@ -60,7 +60,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType, page, pageSize}, MEDIA_ROW_MAPPER);
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? ", new Object[]{title, mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
@@ -70,7 +70,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
         String orderBy = "ORDER BY " + SortType.values()[sort].nameMediaList;
         List<MediaList> elements = jdbcTemplate.query("SELECT * FROM medialist WHERE listname ILIKE CONCAT('%', ?, '%') "
                 + orderBy + " OFFSET ? LIMIT ?", new Object[]{name,
-                page, pageSize}, MEDIA_LIST_ROW_MAPPER);
+                page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE listname ILIKE CONCAT('%', ?, '%')", new Object[]{name}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
@@ -78,7 +78,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     @Override
     public PageContainer<Media> searchMediaByTitleNotInList(int listId, String title, int page, int pageSize, int mediaType, int sort) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ?  AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = ?)" + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType, listId, page, pageSize}, MEDIA_ROW_MAPPER);
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ?  AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = ?)" + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType, listId, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = ?)", new Object[]{title, mediaType, listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
@@ -86,7 +86,7 @@ public class SearchDAOJdbcImpl implements SearchDAO {
     @Override
     public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort, int genre) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND genreid = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType,genre,page, pageSize},MEDIA_ROW_MAPPER);
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND genreid = ? " + orderBy + " OFFSET ? LIMIT ?", new Object[]{title, mediaType,genre,page * pageSize, pageSize},MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%') AND type = ? AND genreid = ? ", new Object[]{title,mediaType, genre},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }

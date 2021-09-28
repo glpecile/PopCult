@@ -106,8 +106,7 @@ public class SearchController {
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
         queries.put("genre", genre);
-        queries.put("page",Integer.toString(page));
-        String urlBase = UriComponentsBuilder.newInstance().path("/search/series").query("term={term}&sort={sort}&genre={genre}&page={page}").buildAndExpand(queries).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/search/series").query("term={term}&sort={sort}&genre={genre}").buildAndExpand(queries).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -136,8 +135,7 @@ public class SearchController {
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
         queries.put("genre", genre);
-        queries.put("page",Integer.toString(page));
-        String urlBase = UriComponentsBuilder.newInstance().path("/search/films").query("term={term}&sort={sort}&genre={genre}&page={page}").buildAndExpand(queries).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/search/films").query("term={term}&sort={sort}&genre={genre}").buildAndExpand(queries).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }
@@ -157,7 +155,7 @@ public class SearchController {
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
         final ModelAndView mav = new ModelAndView("searchLists");
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),firstPage,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
+        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page - 1,listsPerPage, SortType.valueOf(sortType.toUpperCase()).ordinal(), genreOrdinal, minimumMediaMatches);
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
         mav.addObject("searchListsContainer", listCoversContainer);
@@ -168,8 +166,7 @@ public class SearchController {
         queries.put("term", searchForm.getTerm());
         queries.put("sort", sortType);
         queries.put("genre", genre);
-        queries.put("page",Integer.toString(page));
-        String urlBase = UriComponentsBuilder.newInstance().path("/search/lists").query("term={term}&sort={sort}&genre={genre}&page={page}").buildAndExpand(queries).toUriString();
+        String urlBase = UriComponentsBuilder.newInstance().path("/search/lists").query("term={term}&sort={sort}&genre={genre}").buildAndExpand(queries).toUriString();
         mav.addObject("urlBase", urlBase);
         return mav;
     }

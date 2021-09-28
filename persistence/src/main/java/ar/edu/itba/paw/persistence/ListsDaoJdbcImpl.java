@@ -61,7 +61,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 "mediaId INT NOT NULL," +
                 "mediaListId INT NOT NULL, " +
                 "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
+                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
+                "UNIQUE(mediaId, mediaListId))");
 
 //        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
 //                "mediaListId INT NOT NULL, " +
@@ -191,7 +192,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
         return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = ? AND visibility = ? GROUP BY mediaList.medialistid, medialist.name, description, " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = ? AND visibility = ? GROUP BY mediaList.medialistid, medialist.listname, description, " +
                 "creationdate  HAVING COUNT(mediaId) >= ? ORDER BY creationdate DESC LIMIT ?", new Object[]{genreId, true, minMatches, pageSize}, MEDIA_LIST_ROW_MAPPER);
     }
 
@@ -214,7 +215,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
-        try{
+        try {
             listElementjdbcInsert.execute(data);
         } catch (DuplicateKeyException e) {
             throw new MediaAlreadyInListException();
@@ -279,5 +280,12 @@ public class ListsDaoJdbcImpl implements ListsDao {
     @Override
     public Optional<User> getListOwner(int listId) {
         return jdbcTemplate.query("SELECT DISTINCT * FROM medialist NATURAL JOIN users WHERE medialistid = ? ", new Object[]{listId}, USER_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
+        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE visibility = ?", new Object[]{true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
     }
 }

@@ -9,9 +9,10 @@ public class User {
     private final String name;
     private final boolean enabled;
     private final int imageId;
+    private final int role;
 
 
-    public User(int userId, String email, String username, String password, String name, boolean enabled, int imageId) {
+    public User(int userId, String email, String username, String password, String name, boolean enabled, int imageId, int role) {
         this.userId = userId;
         this.email = email;
         this.username = username;
@@ -19,6 +20,7 @@ public class User {
         this.name = name;
         this.enabled = enabled;
         this.imageId = imageId;
+        this.role = role;
     }
 
     public int getUserId() {
@@ -47,5 +49,9 @@ public class User {
 
     public int getImageId() {
         return imageId;
+    }
+
+    public int getRole() {
+        return role;
     }
 }

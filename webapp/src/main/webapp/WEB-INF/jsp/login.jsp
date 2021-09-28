@@ -6,10 +6,10 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Log-in &#8226; PopCult</title></head>
-<body>
+<body class="bg-gradient-to-r from-yellow-500 to-purple-900">
 <%-- Variables --%>
 <c:url value="/login" var="loginUrl"/>
-<div class="flex flex-col h-screen bg-gradient-to-r from-yellow-500 to-purple-900">
+<div class="min-h-screen flex flex-col">
     <div class="flex-grow space-y-2">
         <%-- Logo and card title --%>
         <a class="flex justify-center items-center pt-16" href="<c:url value="/"/>">
@@ -50,8 +50,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Nav -->
     <div class="text-white">
         <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
     </div>
