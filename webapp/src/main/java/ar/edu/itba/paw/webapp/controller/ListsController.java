@@ -96,8 +96,8 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
-    @RequestMapping(value = "/lists/{listId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @RequestParam("commentId") int commentId) {
+    @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @PathVariable("commentId") int commentId) {
         commentService.deleteCommentFromList(commentId);
         return new ModelAndView("redirect:/lists/" + listId);
     }

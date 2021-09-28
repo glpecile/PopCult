@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.webapp.auth.DeleteCommentVoter;
 import ar.edu.itba.paw.webapp.auth.EditListVoter;
 import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
@@ -50,6 +51,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RequestsManagerVoter requestsManagerVoter;
 
+    @Autowired
+    private DeleteCommentVoter deleteCommentVoter;
+
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
 
@@ -72,7 +76,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RoleVoter(),
                 new AuthenticatedVoter(),
                 editListVoter,
-                requestsManagerVoter
+                requestsManagerVoter,
+                deleteCommentVoter
         );
         return new UnanimousBased(decisionVoters);
     }

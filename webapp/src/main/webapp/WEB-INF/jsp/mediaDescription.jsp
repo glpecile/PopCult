@@ -202,7 +202,7 @@
                         <jsp:param name="commentId" value="${comment.commentId}"/>
                         <jsp:param name="type" value="media"/>
                         <jsp:param name="id" value="${mediaId}"/>
-                        <jsp:param name="deletePath" value="/media/${mediaId}/deleteComment"/>
+                        <jsp:param name="deletePath" value="/media/${mediaId}/deleteComment/${comment.commentId}"/>
                     </jsp:include>
                 </c:forEach>
             </c:when>

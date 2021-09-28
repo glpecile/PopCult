@@ -134,7 +134,7 @@
                             <jsp:param name="commentId" value="${comment.commentId}"/>
                             <jsp:param name="type" value="lists"/>
                             <jsp:param name="id" value="${listId}"/>
-                            <jsp:param name="deletePath" value="/lists/${listId}/deleteComment"/>
+                            <jsp:param name="deletePath" value="/lists/${listId}/deleteComment/${comment.commentId}"/>
                         </jsp:include>
                     </c:forEach>
                 </c:when>

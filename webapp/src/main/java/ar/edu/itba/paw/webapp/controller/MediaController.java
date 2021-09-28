@@ -118,8 +118,8 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    @RequestMapping(value = "/media/{mediaId}/deleteComment", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @RequestParam("commentId") int commentId) {
+    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId) {
         commentService.deleteCommentFromMedia(commentId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
