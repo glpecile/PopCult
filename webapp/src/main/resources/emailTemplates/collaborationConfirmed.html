@@ -12,12 +12,13 @@
     <div>
         <h2 th:text="#{collabConfirmEmail.greeting (${collabUsername})}"></h2>
         <p th:text="#{collabConfirmEmail.message(${listname})}"></p>
-        <p th:text="#{collabConfirmEmail.options}"></p>
-        <p th:text="#{collabConfirmEmail.closing}"></p>
-        <a th:href="@{http://localhost:8080/webapp_war/lists/(listId=${listId})}">
-            <button style="background-color: white;border: none;color: white;padding: 10px;text-align: center;text-decoration-color: black;border-radius: 20px;"
+        <span th:text="#{collabConfirmEmail.options}"></span>
+        <a th:href="@{http://localhost:8080/webapp_war/lists/{listid}(listid=${listId})}">
+            <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
                     th:text="#{collabConfirmEmail.here}"></button>
         </a>
+        <br>
+        <p th:text="#{collabConfirmEmail.closing}"></p>
         <br><br>
         <p th:text="#{collabEmail.close}"></p>
     </div>
