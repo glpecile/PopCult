@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.webapp.auth.EditListVoter;
+import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private EditListVoter editListVoter;
 
+    @Autowired
+    private RequestsManagerVoter requestsManagerVoter;
+
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
 
@@ -67,7 +71,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter
+                editListVoter,
+                requestsManagerVoter
         );
         return new UnanimousBased(decisionVoters);
     }

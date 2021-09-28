@@ -288,4 +288,9 @@ public class ListsDaoJdbcImpl implements ListsDao {
         int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE visibility = ?", new Object[]{true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
     }
+
+    @Override
+    public boolean canEditList(int userId, int listId) {
+        return jdbcTemplate.query("SELECT COUNT(*) FROM medialist LEFT JOIN collaborative c on medialist.medialistid = c.listid WHERE medialistid = ? AND ((userid = ?) OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
+    }
 }
