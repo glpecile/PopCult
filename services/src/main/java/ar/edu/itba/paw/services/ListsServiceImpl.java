@@ -157,4 +157,9 @@ public class ListsServiceImpl implements ListsService {
     public boolean canEditList(int userId, int listId) {
         return listsDao.canEditList(userId, listId);
     }
+
+    @Override
+    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
+        return listsDao.getUserEditableLists(userId, page, pageSize);
+    }
 }

@@ -51,6 +51,7 @@ public class UserController {
 
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
+    private static final int editablePerPage = 6;
 
 
     @RequestMapping("/user/{username}")
@@ -250,5 +251,17 @@ public class UserController {
     public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
         collaborativeListService.rejectRequest(collabId);
         return new ModelAndView("redirect:/user/" + username + "/requests");
+    }
+
+    @RequestMapping("user/{username}/lists")
+    public ModelAndView userEditableLists(@PathVariable("username") final String username,  @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userEditableLists");
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user.getUserId(), page - 1, editablePerPage);
+        final List<ListCover> editableCovers = getListCover(editableLists.getElements(), listsService);
+        mav.addObject("user", user);
+        mav.addObject("listContainer", editableLists);
+        mav.addObject("covers", editableCovers);
+        return mav;
     }
 }

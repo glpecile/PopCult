@@ -293,4 +293,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public boolean canEditList(int userId, int listId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM medialist LEFT JOIN collaborative c on medialist.medialistid = c.listid WHERE medialistid = ? AND ((userid = ?) OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
     }
+
+    @Override
+    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
+        List<MediaList> editableLists = jdbcTemplate.query("((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) OFFSET ? LIMIT ?",new Object[]{userId, userId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM ((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) AS aux ",new Object[]{userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(editableLists, page, pageSize, count);
+    }
 }
