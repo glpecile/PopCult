@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
@@ -23,7 +23,7 @@ public class RegisterController {
     @Autowired
     UserService userService;
     @Autowired
-    VerificationTokenService verificationTokenService;
+    TokenService tokenService;
 
     @RequestMapping(value = "/register", method = {RequestMethod.GET})
     public ModelAndView registerForm(@ModelAttribute("registerForm") final UserForm form) {
@@ -53,7 +53,7 @@ public class RegisterController {
 
     @RequestMapping(value = "/register/confirm")
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
-        Token verificationToken = verificationTokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
+        Token verificationToken = tokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
         //TODO
         if (userService.confirmRegister(verificationToken)) {
             return new ModelAndView("login").addObject("successfulConfirmation", true);

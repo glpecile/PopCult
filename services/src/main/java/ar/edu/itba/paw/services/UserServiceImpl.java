@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Autowired
-    private VerificationTokenService verificationTokenService;
+    private TokenService tokenService;
 
     private final MessageSource messageSource;
 
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
 
-        String token = verificationTokenService.createVerificationToken(user.getUserId());
+        String token = tokenService.createVerificationToken(user.getUserId());
 
         sendVerificationEmail(email, username, token);
 
@@ -101,18 +101,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean confirmRegister(Token token) {
-        boolean isValidToken = verificationTokenService.isValidToken(token);
+        boolean isValidToken = tokenService.isValidToken(token);
         if(isValidToken) {
             userDao.confirmRegister(token.getUserId(), ENABLED_USER);
-            verificationTokenService.deleteToken(token);
+            tokenService.deleteToken(token);
         }
         return isValidToken;
     }
 
     @Override
     public void resendVerificationEmail(String token) {
-        verificationTokenService.renewToken(token);
-        verificationTokenService.getToken(token).ifPresent(validToken -> {
+        tokenService.renewToken(token);
+        tokenService.getToken(token).ifPresent(validToken -> {
             getById(validToken.getUserId()).ifPresent(user -> {
                 sendVerificationEmail(user.getEmail(), user.getUsername(), validToken.getToken());
             });

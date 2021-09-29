@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.VerificationTokenDao;
+import ar.edu.itba.paw.interfaces.TokenDao;
 import ar.edu.itba.paw.models.user.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,14 +15,14 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class VerificationTokenJdbcImpl implements VerificationTokenDao {
+public class TokenJdbcImpl implements TokenDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Token> TOKEN_ROW_MAPPER = RowMappers.TOKEN_ROW_MAPPER;
 
     @Autowired
-    public VerificationTokenJdbcImpl(final DataSource ds) {
+    public TokenJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("verificationToken");
 
