@@ -47,10 +47,10 @@
                                 <c:out value="${username}"/>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>"><spring:message code="profile.title"/> </a></li>
-                                <li><a class="dropdown-item" href="#"><spring:message code="lists.manageLists"/></a></li>
-                                    <%--  TODO view with users editable lists --%>
-                                <li><a class="dropdown-item" href="<c:url value="/user/${param.username}/requests"/>"><spring:message code="profile.requests"/></a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/"/>"><spring:message code="nav.drop.home"/> </a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>"><spring:message code="nav.drop.profile"/> </a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/user/${username}/lists"/>"><spring:message code="nav.drop.lists"/></a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/user/${username}/requests"/>"><spring:message code="nav.drop.requests"/></a></li>
                                 <li><a class="dropdown-item" href="<c:url value="/logout"/>"><spring:message code="profile.signOut" /></a></li>
                             </ul>
                         </li>
