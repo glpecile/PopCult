@@ -14,7 +14,8 @@
             <i class="fas fa-bars transition duration-500 ease-in-out transform focus:-translate-y-1 focus:scale-105"></i>
         </button>
         <div class="collapse navbar-collapse flex space-x-8 justify-center items-center text-center sm:justify-end" id="navbarScroll">
-            <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll overflow-hidden">
+            <ul class="navbar-nav ms-auto my-2 my-lg-0">
+            <%--            <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll overflow-hidden">--%>
                 <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <a class="nav-link active text-lg lg:text-right" aria-current="page" href="<c:url value="/media/films"/>">
                         <spring:message code="nav.films"/>
@@ -41,32 +42,18 @@
                     <c:set var="username">
                         <sec:authentication property="principal.username"/>
                     </c:set>
-                    <li class="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                        <a class="nav-link active text-lg lg:text-right" aria-current="page"
-                           href="<c:url value="/user/${username}"/>">${username}</a>
-                    </li>
-                    <!-- TODO: Fix dropdown. -->
-                    <%--                    <li class="nav-item dropdown transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">--%>
-                    <%--                        <a class="text-white text-lg lg:text-right nav-link dropdown-toggle"--%>
-                    <%--                           role="button"--%>
-                    <%--                           id="dropdownMenuButton"--%>
-                    <%--                           data-mdb-toggle="dropdown"--%>
-                    <%--                           aria-expanded="false"--%>
-                    <%--                        >--%>
-                    <%--                                ${username}--%>
-                    <%--                        </a>--%>
-                    <%--                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">--%>
-                    <%--                            <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>">--%>
-                    <%--                                Profile--%>
-                    <%--                            </a></li>--%>
-                    <%--                            <li><a class="dropdown-item" href="<c:url value="/createList"/>">--%>
-                    <%--                                Create a List--%>
-                    <%--                            </a></li>--%>
-                    <%--                            <li><a class="dropdown-item" href="<c:url value="/logout"/>">--%>
-                    <%--                                Log-Out--%>
-                    <%--                            </a></li>--%>
-                    <%--                        </ul>--%>
-                    <%--                    </li>--%>
+                        <li class="nav-item dropdown transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                            <a class="nav-link dropdown-toggle active text-lg lg:text-right" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <c:out value="${username}"/>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>"><spring:message code="profile.title"/> </a></li>
+                                <li><a class="dropdown-item" href="#"><spring:message code="lists.manageLists"/></a></li>
+                                    <%--  TODO view with users editable lists --%>
+                                <li><a class="dropdown-item" href="<c:url value="/user/${param.username}/requests"/>"><spring:message code="profile.requests"/></a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/logout"/>"><spring:message code="profile.signOut" /></a></li>
+                            </ul>
+                        </li>
                 </sec:authorize>
                 <li class="nav-item">
                     <jsp:include page="/WEB-INF/jsp/components/searchInput.jsp"/>
