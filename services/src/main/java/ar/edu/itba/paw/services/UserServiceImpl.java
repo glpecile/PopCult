@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
+import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
 
-        String token = tokenService.createVerificationToken(user.getUserId());
+        String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
         sendVerificationEmail(email, username, token);
 
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean confirmRegister(Token token) {
-        boolean isValidToken = tokenService.isValidToken(token);
+        boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
         if(isValidToken) {
             userDao.confirmRegister(token.getUserId(), ENABLED_USER);
             tokenService.deleteToken(token);

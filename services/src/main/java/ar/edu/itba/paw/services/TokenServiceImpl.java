@@ -20,9 +20,9 @@ public class TokenServiceImpl implements TokenService {
     private static final int EXPIRATION = 60 * 24;
 
     @Override
-    public String createVerificationToken(int userId) {
+    public String createToken(int userId, int type) {
         String token = UUID.randomUUID().toString();
-        tokenDao.createVerificationToken(userId, token, calculateExpiryDate(EXPIRATION));
+        tokenDao.createToken(userId, type, token, calculateExpiryDate(EXPIRATION));
         return token;
     }
 
@@ -44,9 +44,9 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public boolean isValidToken(Token token) {
+    public boolean isValidToken(Token token, int type) {
         Calendar calendar = Calendar.getInstance();
-        return token.getExpiryDate().getTime() > calendar.getTime().getTime();
+        return token.getType() == type && token.getExpiryDate().getTime() > calendar.getTime().getTime();
     }
 
     @Override

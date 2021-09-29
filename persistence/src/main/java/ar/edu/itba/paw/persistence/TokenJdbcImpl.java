@@ -16,18 +16,19 @@ import java.util.Optional;
 
 @Repository
 public class TokenJdbcImpl implements TokenDao {
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Token> TOKEN_ROW_MAPPER = RowMappers.TOKEN_ROW_MAPPER;
 
     @Autowired
     public TokenJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("verificationToken");
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("token");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS verificationToken(" +
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS token(" +
                 "userId INT NOT NULL," +
+                "type INT NOT NULL," +
                 "token TEXT NOT NULL," +
                 "expiryDate DATE NOT NULL," +
                 "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE" +
@@ -35,9 +36,10 @@ public class TokenJdbcImpl implements TokenDao {
     }
 
     @Override
-    public void createVerificationToken(int userId, String token, Date expiryDate) {
+    public void createToken(int userId, int type, String token, Date expiryDate) {
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
+        data.put("type", type);
         data.put("token", token);
         data.put("expiryDate", expiryDate);
         jdbcInsert.execute(data);
@@ -45,18 +47,18 @@ public class TokenJdbcImpl implements TokenDao {
 
     @Override
     public Optional<Token> getToken(String token) {
-        return jdbcTemplate.query("SELECT * FROM verificationToken WHERE token = ?", new Object[] {token}, TOKEN_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT * FROM token WHERE token = ?", new Object[] {token}, TOKEN_ROW_MAPPER)
                 .stream().findFirst();
     }
 
     @Override
     public void deleteToken(Token token) {
-        jdbcTemplate.update("DELETE FROM verificationToken WHERE token = ?", token.getToken());
+        jdbcTemplate.update("DELETE FROM token WHERE token = ?", token.getToken());
     }
 
     @Override
     public void renewToken(String token, Date newExpiryDate) {
-        jdbcTemplate.update("UPDATE verificationtoken SET expirydate = ? WHERE token = ?", newExpiryDate, token);
+        jdbcTemplate.update("UPDATE token SET expirydate = ? WHERE token = ?", newExpiryDate, token);
     }
 }
 

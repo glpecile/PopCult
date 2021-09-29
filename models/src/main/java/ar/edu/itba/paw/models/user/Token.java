@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class Token {
     private final int userId;
-    private final String token;
     private final int type;
+    private final String token;
     private final Date expiryDate;
 
     @Deprecated
@@ -16,10 +16,10 @@ public class Token {
         this.type = TokenType.VERIFICATION.ordinal();
     }
 
-    public Token(int userId, String token, int type, Date expiryDate) {
+    public Token(int userId, int type, String token, Date expiryDate) {
         this.userId = userId;
-        this.token = token;
         this.type = type;
+        this.token = token;
         this.expiryDate = expiryDate;
     }
 
@@ -27,12 +27,12 @@ public class Token {
         return userId;
     }
 
-    public String getToken() {
-        return token;
-    }
-
     public int getType() {
         return type;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public Date getExpiryDate() {

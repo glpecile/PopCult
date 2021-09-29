@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface TokenDao {
-    void createVerificationToken(int userId, String token, Date expiryDate);
+    void createToken(int userId, int type, String token, Date expiryDate);
 
     Optional<Token> getToken(String token);
 
