@@ -5,7 +5,7 @@
 </head>
 <body>
 <div>
-    <a th:href="@{http://localhost:8080/webapp_war/}">
+    <a th:href="@{http://pawserver.it.itba.edu.ar/paw-2021b-2/}">
         <img style="max-width: 300px;" class="textlogo"
              src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
     </a>
@@ -13,7 +13,7 @@
         <h2 th:text="#{collabConfirmEmail.greeting (${collabUsername})}"></h2>
         <p th:text="#{collabConfirmEmail.message(${listname})}"></p>
         <span th:text="#{collabConfirmEmail.options}"></span>
-        <a th:href="@{http://localhost:8080/webapp_war/lists/{listid}(listid=${listId})}">
+        <a th:href="@{http://pawserver.it.itba.edu.ar/paw-2021b-2/lists/{listid}(listid=${listId})}">
             <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
                     th:text="#{collabConfirmEmail.here}"></button>
         </a>
