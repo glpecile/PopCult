@@ -28,7 +28,7 @@
                 <br>
             <div class="col-8 offset-2">
                 <div class="row">
-                    <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchFilmsContainer.totalCount}"/> result(s) for <c:out value="${term}"/></h1>
+                    <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchFilmsContainer.totalCount}"/> result(s) for <c:out value="${param.term}"/></h1>
                 </div>
                 <br>
                 <div class="flex text-center">
@@ -57,14 +57,6 @@
                 </div>
                 <c:if test="${searchFilmsContainer.totalCount > 0}">
                     <div class="row">
-                        <c:url value="/search/films" var="filmsUrl">
-                            <c:param name="sort" value="${param.sort}"/>
-                            <c:param name="term" value="${param.term}"/>
-                            <c:param name="genre" value="${param.genre}"/>
-                        </c:url>
-                        <a href="${filmsUrl}">
-                            <h2 class="font-bold text-2xl py-2">Search Films Results</h2>
-                        </a>
                         <c:forEach var="media" items="${searchFilmsContainer.elements}">
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -107,15 +99,20 @@
             </c:when>
             <c:otherwise>
                 <div class="row">
-                    <h1 class="font-bold text-2xl py-2">Sorry, we couldn't find any terms for <c:out value="${term}"/></h1>
+                    <h1 class="font-bold text-2xl py-2">Sorry, we couldn't find any terms for <c:out value="${param.term}"/></h1>
                 </div>
                 <br>
             </c:otherwise>
         </c:choose>
+                <c:url value="" var="urlBase2">
+                    <c:forEach var="p" items="${param}">
+                        <c:param name="${p.key}" value="${p.value}"/>
+                    </c:forEach>
+                </c:url>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${searchFilmsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${searchFilmsContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="${urlBase2}"/>
                 </jsp:include>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

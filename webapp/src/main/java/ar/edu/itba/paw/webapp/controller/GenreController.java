@@ -42,7 +42,7 @@ public class GenreController {
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
-        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal() + 1;
+        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();
         final String genreName = Genre.valueOf(normalizedGenre).getGenre();
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
         final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);

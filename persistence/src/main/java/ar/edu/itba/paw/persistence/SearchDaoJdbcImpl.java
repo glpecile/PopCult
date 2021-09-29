@@ -77,14 +77,20 @@ public class SearchDaoJdbcImpl implements SearchDAO {
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
-    private String buildAndWhereStatement(int genre, int mediaType){
+    private String buildAndWhereStatement(List<Integer> genre, List<Integer> mediaType){
         StringBuilder toReturn = new StringBuilder("");
-        boolean allMediaType = mediaType == MediaType.ALL.ordinal() + 1;
-        boolean allGenreType = genre == Genre.ALL.ordinal() + 1;
-        if(!allGenreType)
-            toReturn.append(String.format(" AND genreid = %d ", genre));
-        if(!allMediaType)
-            toReturn.append(String.format(" AND type = %d ", mediaType));
+        boolean flag;
+        for (int id: genre) {
+            flag = (id == Genre.ALL.ordinal());
+            if(!flag)
+                toReturn.append(String.format(" AND genreid = %d ", id));
+        }
+        for (int type: mediaType) {
+            flag = (type == MediaType.ALL.ordinal());
+            if(!flag)
+                toReturn.append(String.format(" AND type = %d ", type));
+        }
+        System.out.println(toReturn);
         return toReturn.toString();
     }
     @Override
@@ -96,7 +102,7 @@ public class SearchDaoJdbcImpl implements SearchDAO {
     }
 
     @Override
-    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort, int genre) {
+    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
         String andWhereStatement = buildAndWhereStatement(genre, mediaType);
         String selectBaseStatement = "SELECT DISTINCT * FROM media  WHERE mediaid IN ( " ;
