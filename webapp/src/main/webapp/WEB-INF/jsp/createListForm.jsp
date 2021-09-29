@@ -8,13 +8,14 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Create a new list &#8226; PopCult</title>
 </head>
+<c:url value="/lists/new" var="createListPath"/>
+<c:url value="/lists" var="listsPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <c:url value="/createList" var="postPath"/>
     <div class="flex-grow col-8 offset-2">
-        <form:form modelAttribute="createListForm" action="${postPath}" method="post" class="row g-3 p-2 my-8 bg-white shadow-lg">
-            <h2 class="font-bold text-2xl">Step 1: Create a new list</h2>
+        <form:form modelAttribute="createListForm" action="${createListPath}" method="post" class="row g-3 p-2 my-8 bg-white shadow-lg">
+            <h2 class="font-bold text-2xl">Create a new list!</h2>
             <div class="col-md-6">
                 <div>
                     <form:label path="listTitle" for="listName" class="form-label">Name of the list</form:label>
@@ -44,13 +45,13 @@
                 </div>
             </div>
             <div class="flex justify-between px-4">
-                <a href=<c:url value="/lists"/>>
+                <a href=${listsPath}>
                     <button type="button"
                             class="btn btn-warning btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
                         Discard changes
                     </button>
                 </a>
-                <button class="row btn btn-secondary py-2" type="submit">Create list and continue to Step 2</button>
+                <button class="row btn btn-secondary py-2" type="submit">Create list and continue</button>
             </div>
         </form:form>
     </div>

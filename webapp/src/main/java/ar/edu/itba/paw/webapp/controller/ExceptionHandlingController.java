@@ -30,6 +30,7 @@ public class ExceptionHandlingController {
             StudioNotFoundException.class,
             UserNotFoundException.class,
             ImageNotFoundException.class,
+            CommentNotFoundException.class,
             IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
     ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");

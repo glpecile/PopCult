@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -44,6 +45,8 @@ public class UserController {
     private FavoriteService favoriteService;
     @Autowired
     private WatchService watchService;
+    @Autowired
+    private CollaborativeListService collaborativeListService;
 
 
     private static final int listsPerPage = 4;
@@ -174,7 +177,6 @@ public class UserController {
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
         if (errors.hasErrors())
             return editUserDetails(form);
-        System.out.println(userId + form.getUsername() + form.getName() + form.getEmail());
         userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
         return new ModelAndView("redirect:/user/" + form.getUsername());
     }
@@ -226,5 +228,27 @@ public class UserController {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         watchService.updateWatchedMediaDate(mediaId, userId, f.parse(watchedDate));
         return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
+    }
+
+    @RequestMapping("/user/{username}/requests")
+    public ModelAndView userCollabRequests(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userRequests");
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user.getUserId(), page - 1, itemsPerPage * 4);
+        mav.addObject("username", username);
+        mav.addObject("requestContainer", requestContainer);
+        return mav;
+    }
+
+    @RequestMapping("/user/{username}/requests/accept")
+    public ModelAndView acceptCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        collaborativeListService.acceptRequest(collabId);
+        return new ModelAndView("redirect:/user/" + username + "/requests");
+    }
+
+    @RequestMapping("/user/{username}/requests/reject")
+    public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        collaborativeListService.rejectRequest(collabId);
+        return new ModelAndView("redirect:/user/" + username + "/requests");
     }
 }

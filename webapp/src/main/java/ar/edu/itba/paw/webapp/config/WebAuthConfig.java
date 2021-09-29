@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.webapp.auth.DeleteCommentVoter;
 import ar.edu.itba.paw.webapp.auth.EditListVoter;
+import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +14,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
@@ -21,6 +26,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -42,6 +48,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private EditListVoter editListVoter;
 
+    @Autowired
+    private RequestsManagerVoter requestsManagerVoter;
+
+    @Autowired
+    private DeleteCommentVoter deleteCommentVoter;
+
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
 
@@ -60,12 +72,40 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDecisionManager accessDecisionManager() {
         List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
-                new WebExpressionVoter(),
+                webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter
+                editListVoter,
+                requestsManagerVoter,
+                deleteCommentVoter
         );
         return new UnanimousBased(decisionVoters);
+    }
+
+    @Bean
+    public WebExpressionVoter webExpressionVoter() {
+        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+        webExpressionVoter.setExpressionHandler(webSecurityExpressionHandler());
+        return  webExpressionVoter;
+    }
+
+    @Bean
+    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = String.format("%s > %s and %s > %s",
+                Roles.ADMIN.getRoleType(),
+                Roles.MOD.getRoleType(),
+                Roles.MOD.getRoleType(),
+                Roles.USER.getRoleType());
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
     }
 
     @Override
@@ -95,11 +135,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
+                .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/register/**", "/login").anonymous()
-                .antMatchers("/createList").hasRole("EDITOR")
-                .antMatchers("/editList/**").hasRole("EDITOR").accessDecisionManager(accessDecisionManager())
-                .antMatchers(HttpMethod.POST).hasRole("EDITOR")
-                .antMatchers(HttpMethod.DELETE).hasRole("EDITOR")
+                .antMatchers("/createList").hasRole("USER")
+                .antMatchers("/editList/**").hasRole("USER")
+                .antMatchers("/admin/**").hasRole("MOD")
+                .antMatchers(HttpMethod.POST).hasRole("USER")
+                .antMatchers(HttpMethod.DELETE).hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
