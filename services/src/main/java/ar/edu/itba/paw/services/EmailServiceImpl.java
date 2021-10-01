@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +31,9 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private UserDao userDao;
+
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
@@ -44,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setText(getHtmlBody(template, variables), true);
 
             javaMailSender.send(mimeMessage);
-        } catch(MessagingException messagingException) {
+        } catch (MessagingException messagingException) {
             //TODO LOG error
         }
 
@@ -90,5 +96,23 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("listDescription", mediaList.getDescription());
         final String subject = messageSource.getMessage("email.deleted.list.subject", null, Locale.getDefault());
         sendEmail(to, subject, "deletedList.html", mailMap);
+    }
+
+    public void sendNewRequestEmail(MediaList list, User user) {
+        User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("listname", list.getListName());
+        mailMap.put("username", user.getUsername());
+        final String subject = messageSource.getMessage("collabEmail.subject", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
+    }
+
+    public void sendCollabRequestAccepted(User to, Request collaboration) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("listname", collaboration.getListname());
+        mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
+        mailMap.put("listId", collaboration.getListId());
+        final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
     }
 }
