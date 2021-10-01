@@ -52,21 +52,10 @@ public class ListsServiceImpl implements ListsService {
         return listsDao.getDiscoveryMediaLists(pageSize);
     }
 
-//    @Override
-//    public List<Integer> getMediaIdInListIds(int mediaListId) {
-//        return listsDao.getMediaIdInListIds(mediaListId);
-//    }
-
     @Override
     public List<Media> getMediaIdInList(int mediaListId) {
         return listsDao.getMediaIdInList(mediaListId);
     }
-
-//    @Override
-//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
-//        return listsDao.getMediaIdInListIds(mediaListId, page, pageSize);
-//
-//    }
 
     @Override
     public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){
@@ -87,21 +76,6 @@ public class ListsServiceImpl implements ListsService {
     public PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
         return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
     }
-
-//    @Override
-//    public Optional<Integer> getListCount() {
-//        return listsDao.getListCount();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromUserId(int userId) {
-//        return listsDao.getListCountFromUserId(userId);
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromMedia(int mediaId) {
-//        return listsDao.getListCountFromMedia(mediaId);
-//    }
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {

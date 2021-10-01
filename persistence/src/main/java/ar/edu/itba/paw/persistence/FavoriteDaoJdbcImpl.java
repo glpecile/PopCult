@@ -72,12 +72,6 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
-    public PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritemedia WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(elements,page,pageSize,totalCount);
-    }
-    @Override
     public PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM favoritemedia NATURAL JOIN media WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritemedia WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
@@ -106,13 +100,6 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     public boolean isFavoriteList(int mediaListId, int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM favoritelists WHERE medialistid = ? AND userid = ?", new Object[]{mediaListId, userId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0) > 0;
-    }
-
-    @Override
-    public PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT * FROM favoritelists WHERE userId = ? OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, MEDIA_LIST_ID_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritelists WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override
