@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
@@ -30,30 +31,40 @@
                     aria-expanded="false">
                 <c:choose>
                     <c:when test="${roleType == 'actor'}">
-                        Actor
+                        <spring:message code="staff.director"/>
                     </c:when>
                     <c:when test="${roleType == 'director'}">
-                        Director
+                        <spring:message code="staff.director"/>
                     </c:when>
                     <c:otherwise>
-                        All
+                        <spring:message code="staff.all"/>
                     </c:otherwise>
                 </c:choose>
             </button>
             <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">Actor</a></li>
-                <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/director'/>">Director</a></li>
+                <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">
+                    <spring:message code="staff.actor"/>
+                </a></li>
+                <li><a class="dropdown-item" href="<c:url value='/staff/${staffMemberId}/director'/>">
+                    <spring:message code="staff.director"/>
+                </a></li>
             </ul>
         </div>
         <c:choose>
             <c:when test="${roleType == 'actor'}">
-                <h4 class="font-bold text-2xl">Films & Series starring ${member.name}</h4>
+                <h4 class="font-bold text-2xl">
+                    <spring:message code="staff.starring"/> ${member.name}
+                </h4>
             </c:when>
             <c:when test="${roleType == 'director'}">
-                <h4 class="font-bold text-2xl">Films & Series directed by ${member.name}</h4>
+                <h4 class="font-bold text-2xl">
+                    <spring:message code="staff.directing"/> ${member.name}
+                </h4>
             </c:when>
             <c:otherwise>
-                <h4 class="font-bold text-2xl">Known for</h4>
+                <h4 class="font-bold text-2xl">
+                    <spring:message code="staff.known"/>
+                </h4>
             </c:otherwise>
         </c:choose>
     </div>

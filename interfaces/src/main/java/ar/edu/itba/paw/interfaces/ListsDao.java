@@ -62,4 +62,11 @@ public interface ListsDao {
     Optional<MediaList> createMediaListCopy(int userId, int toCopyListId);
 
     Optional<User> getListOwner(int listId);
+
+    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
+
+    boolean canEditList(int userId, int listId);
+
+    PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
+
 }

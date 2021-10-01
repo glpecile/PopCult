@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html lang="en">
@@ -11,24 +12,27 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title>Series Discovery &#8226; PopCult</title>
+    <title><spring:message code="series.title"/> &#8226; PopCult</title>
 </head>
-
-<body>
+<body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <c:choose>
     <c:when test="${fn:length(mediaListContainer.elements) == 0}">
         <br>
-        <h3 class="text-center"> Sorry, we don't have series to show you right now.</h3>
+        <h3 class="text-center">
+            <spring:message code="series.noMedia"/>
+        </h3>
     </c:when>
     <c:otherwise>
         <div class="col-8 offset-2">
             <br>
-            <h4 class="font-bold text-2xl pt-2">Recently Added Series</h4>
+            <h4 class="font-bold text-2xl pt-2">
+                <spring:message code="series.popular"/>
+            </h4>
             <div class="flex flex-col" data-controller="slider">
                 <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                     <c:set var="i" value="1"/>
-                    <c:forEach var="latestSerie" items="${latestSeriesList}">
+                    <c:forEach var="latestSerie" items="${mostLikedSeries}">
                         <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
                             <c:set var="i" value="${i + 1}"/>
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -59,7 +63,9 @@
             </div>
 
             <div class="row">
-                <h4 class="font-bold text-2xl pt-2">Explore some Series</h4>
+                <h4 class="font-bold text-2xl pt-2">
+                    <spring:message code="series.explore"/>
+                </h4>
                 <c:forEach var="media" items="${mediaListContainer.elements}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                         <jsp:include page="/WEB-INF/jsp/components/card.jsp">

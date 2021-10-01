@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ImageDao;
 import ar.edu.itba.paw.models.image.Image;
-import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,20 +35,17 @@ public class ImageDaoJdbcImpl implements ImageDao {
     }
 
     @Override
-    public Optional<Image> getUserProfilePicture(int userId) {
-        return jdbcTemplate.query("SELECT * FROM image NATURAL JOIN users WHERE userid = ?", new Object[]{userId}, IMAGE_ROW_MAPPER).stream().findFirst();
+    public Optional<Image> getImage(int imageId) {
+        return jdbcTemplate.query("SELECT * FROM image WHERE imageId = ?", new Object[]{imageId}, IMAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<Image> uploadUserProfilePicture(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType) {
+    public Optional<Image> uploadImage(byte[] photoBlob, long imageContentLength, String imageContentType) {
         final Map<String, Object> data = new HashMap<>();
         data.put("photoBlob", photoBlob);
         data.put("imageContentLength", imageContentLength);
         data.put("imageContentType", imageContentType);
         KeyHolder key = jdbcInsert.executeAndReturnKeyHolder(data);
-        jdbcTemplate.update("UPDATE users SET imageid = ? WHERE userid = ? ", key.getKey(), userId);
         return Optional.of(new Image((int) key.getKey(), photoBlob, imageContentLength, imageContentType));
-
-
     }
 }

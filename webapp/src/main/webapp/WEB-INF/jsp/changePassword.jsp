@@ -2,58 +2,67 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>Update your Settings &#8226; PopCult</title>
-    <c:url value="/user/${user.username}" var="postPath"/>
 </head>
-<body>
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 offset-2">
-    <br>
-    <form:form modelAttribute="changePassword" action="${postPath}" method="post"
-               class="g-3 p-4 my-8 bg-white shadow-lg rounded-lg">
-        <div class="flex flex-col justify-center items-center">
-            <h2 class="text-3xl">Edit <c:out value="${user.username}"/>'s password</h2>
-            <br>
-
-            <div class="py-1 text-semibold w-full">
-                <form:label path="currentPassword" cssClass="form-label">Current Password: </form:label>
-                <form:input type="text" cssClass="form-control" path="currentPassword" value="*********"/>
-                <form:errors path="currentPassword" cssClass="formError text-red-500" element="p"/>
-            </div>
-
-            <div class="py-1 text-semibold w-full">
-                <form:label path="newPassword" cssClass="form-label">New Password: </form:label>
-                <form:input type="text" cssClass="form-control" path="newPassword"/>
-                <form:errors path="newPassword" cssClass="formError text-red-500" element="p"/>
-            </div>
-
-            <div class="py-1 text-semibold w-full">
-                <form:label path="repeatPassword" cssClass="form-label">Repeat Password: </form:label>
-                <form:input type="text" cssClass="form-control" path="repeatPassword"/>
-                <form:errors path="repeatPassword" cssClass="formError text-red-500" element="p"/>
-            </div>
-        </div>
+<body class="bg-gray-50">
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 offset-2 flex-grow">
         <br>
-        <div class="row">
-            <div class="col-6 col-lg-2">
+        <c:url value="/changePassword" var="postPath"/>
+        <form:form modelAttribute="changePassword" action="${postPath}" method="post"
+                   class="g-3 p-4 my-8 bg-white shadow-lg rounded-lg">
+            <div class="flex flex-col justify-center items-center">
+                <h2 class="text-3xl">
+                    <c:out value="${user.username}"/><spring:message code="profile.passwordChange.header"/>
+                </h2>
+                <br>
+                <div class="py-1 text-semibold w-full">
+                    <form:label path="currentPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.current"/>
+                    </form:label>
+                    <form:input path="currentPassword" type="password" cssClass="form-control"/>
+                    <form:errors path="currentPassword" cssClass="formError text-sm text-red-500" element="p"/>
+                </div>
+                <div class="py-1 text-semibold w-full">
+                    <form:label path="newPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.new"/>
+                    </form:label>
+                    <form:input path="newPassword" type="password" cssClass="form-control"/>
+                    <form:errors path="newPassword" cssClass="formError text-sm text-red-500" element="p"/>
+                    <form:errors cssClass="formError text-sm text-red-500" element="p"/>
+                </div>
+                <div class="py-1 text-semibold w-full">
+                    <form:label path="repeatPassword" cssClass="form-label">
+                        <spring:message code="profile.passwordChange.repeat"/>
+                    </form:label>
+                    <form:input path="repeatPassword" type="password" cssClass="form-control"/>
+                    <form:errors path="repeatPassword" cssClass="formError text-sm text-red-500" element="p"/>
+                </div>
+            </div>
+            <br>
+            <div class="flex justify-between">
                     <%--discard changes--%>
-                <a href=<c:url value="/settings"/> >
-                    <button class="btn btn-light my-2">Discard Changes</button>
+                <a href=
+                        <c:url value="/settings"/>>
+                    <button class="btn btn-light my-2" type="button">
+                        <spring:message code="profile.passwordChange.discard"/>
+                    </button>
                 </a>
-            </div>
-            <div class="col-6 col-lg-2">
                     <%--save changes--%>
-                <input type="hidden" id="user" name="user" value="<c:out value="${user}"/>"/>
-                <button class="btn btn-secondary my-2" id="submit" name="submit" type="submit">Save Changes</button>
+                <button class="btn btn-secondary my-2" id="changePass" name="changePass" type="submit">
+                    <spring:message code="profile.passwordChange.save"/>
+                </button>
             </div>
-        </div>
-    </form:form>
+        </form:form>
+    </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

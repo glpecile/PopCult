@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form.annotations;
 
+import ar.edu.itba.paw.webapp.form.constraints.ChangePasswordMatchesValidatorConstraint;
 import ar.edu.itba.paw.webapp.form.constraints.PasswordMatchesValidatorConstraint;
 
 import javax.validation.Constraint;
@@ -14,10 +15,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = PasswordMatchesValidatorConstraint.class)
+@Constraint(validatedBy = {PasswordMatchesValidatorConstraint.class, ChangePasswordMatchesValidatorConstraint.class})
 @Documented
 public @interface PasswordMatches {
-    String message() default "Passwords don't match";
+    String message() default "Passwords don't match.";
 
     Class<?> [] groups() default {};
 

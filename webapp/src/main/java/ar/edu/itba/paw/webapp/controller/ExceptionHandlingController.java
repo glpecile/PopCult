@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,12 +22,16 @@ public class ExceptionHandlingController {
     @Autowired
     private MessageSource messageSource;
 
-    @ExceptionHandler({ListNotFoundException.class,
+    @ExceptionHandler({
+            DataIntegrityViolationException.class,
+            ListNotFoundException.class,
             MediaNotFoundException.class,
             StaffNotFoundException.class,
             StudioNotFoundException.class,
             UserNotFoundException.class,
-            IllegalArgumentException.class})
+            ImageNotFoundException.class,
+            CommentNotFoundException.class,
+            IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
     ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
@@ -49,7 +55,7 @@ public class ExceptionHandlingController {
         return mav;
     }
 
-    @ExceptionHandler({UnregisteredUserException.class})
+    @ExceptionHandler({UnregisteredUserException.class, BadCredentialsException.class})
     public ModelAndView unregisteredUserException() {
         LOGGER.info("Handling UnregisteredUserException");
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.incorrect", null, Locale.getDefault()));
@@ -67,4 +73,6 @@ public class ExceptionHandlingController {
         LOGGER.info("Handling DisabledUserException");
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.internalError", null, Locale.getDefault()));
     }
+
+
 }

@@ -14,12 +14,12 @@ public class ImageServiceImpl implements ImageService {
     ImageDao imageDao;
 
     @Override
-    public Optional<Image> getUserProfilePicture(int userId) {
-        return imageDao.getUserProfilePicture(userId);
+    public Optional<Image> getImage(int imageId) {
+        return imageDao.getImage(imageId);
     }
 
     @Override
-    public Optional<Image> uploadUserProfilePicture(int userId, byte[] photoBlob, Integer imageContentLength, String imageContentType) {
-        return imageDao.uploadUserProfilePicture(userId, photoBlob, imageContentLength, imageContentType);
+    public Optional<Image> uploadImage(byte[] photoBlob, long imageContentLength, String imageContentType) {
+        return imageDao.uploadImage(photoBlob, imageContentLength, imageContentType);
     }
 }
