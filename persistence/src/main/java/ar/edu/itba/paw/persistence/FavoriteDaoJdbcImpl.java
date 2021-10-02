@@ -156,6 +156,16 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     }
 
     @Override
+    public int getLikesFromList(int listId) {
+        return jdbcTemplate.query("SELECT COUNT(*) FROM favoritelists WHERE medialistid = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+    }
+
+    @Override
+    public int getLikesFromMedia(int mediaId) {
+        return jdbcTemplate.query("SELECT COUNT(*) FROM favoritemedia WHERE mediaid = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+    }
+
+    @Override
     public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
         List<Media> recommendedMedia = jdbcTemplate.query("(SELECT * FROM media NATURAL JOIN (SELECT mediaid FROM favoritemedia WHERE userid IN " +
                 "(SELECT m.userid FROM favoritemedia f JOIN favoritemedia m ON f.mediaid = m.mediaid WHERE f.userid = ?) " +

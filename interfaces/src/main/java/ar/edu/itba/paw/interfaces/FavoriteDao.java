@@ -40,4 +40,8 @@ public interface FavoriteDao {
 
     PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
 
+    int getLikesFromList(int listId);
+
+    int getLikesFromMedia(int mediaId);
+
 }

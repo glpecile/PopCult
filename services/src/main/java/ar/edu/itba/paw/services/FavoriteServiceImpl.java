@@ -14,8 +14,7 @@ import java.util.Optional;
 public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private FavoriteDao favoriteDao;
-
-
+    
     @Override
     public void addMediaToFav(int mediaId, int userId) {
         favoriteDao.addMediaToFav(mediaId, userId);
@@ -94,5 +93,15 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
         return favoriteDao.getMostLikedMedia(mediaType, page, pageSize);
+    }
+
+    @Override
+    public int getLikesFromList(int listId) {
+        return favoriteDao.getLikesFromList(listId);
+    }
+
+    @Override
+    public int getLikesFromMedia(int mediaId) {
+        return favoriteDao.getLikesFromMedia(mediaId);
     }
 }
