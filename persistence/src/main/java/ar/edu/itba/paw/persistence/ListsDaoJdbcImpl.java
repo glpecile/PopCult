@@ -128,19 +128,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         return jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ROW_MAPPER);
     }
 
-//    @Override
-//    public List<Integer> getMediaIdInListIds(int mediaListId) {
-//        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
-//    }
-
-//    @Override
-//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
-//        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
-//        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst().orElse(0);
-//        return new PageContainer<>(elements,page,pageSize,totalCount);
-//    }
-
     @Override
     public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
@@ -170,24 +157,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
-
-//    @Override
-//    public Optional<Integer> getListCount() {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromUserId(int userId) {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromMedia(int mediaId) {
-//        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {

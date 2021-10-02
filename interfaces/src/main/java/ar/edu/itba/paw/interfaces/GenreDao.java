@@ -9,9 +9,6 @@ import java.util.Optional;
 public interface GenreDao {
     List<String> getGenreByMediaId(int mediaId);
 
-    @Deprecated
-    PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize);
-
     PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize);
 
     Optional<Integer> getMediaCountByGenre(int genreId);

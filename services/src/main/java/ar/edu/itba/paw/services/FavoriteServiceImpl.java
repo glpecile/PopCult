@@ -32,11 +32,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteMediaIds(userId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize) {
         return favoriteDao.getUserFavoriteMedia(userId,page,pageSize);
     }
@@ -59,11 +54,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public boolean isFavoriteList(int mediaListId, int userId) {
         return favoriteDao.isFavoriteList(mediaListId, userId);
-    }
-
-    @Override
-    public PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteListsIds(userId, page, pageSize);
     }
 
     @Override
