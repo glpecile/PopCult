@@ -90,7 +90,6 @@ public class SearchDaoJdbcImpl implements SearchDAO {
         }
        if(fromDate != null && toDate != null)
             toReturn.append(String.format(" AND releasedate BETWEEN %s AND %s", fromDate, toDate));
-        System.out.println(toReturn);
         return toReturn.toString();
     }
     @Override

@@ -36,22 +36,26 @@
                 <form:form cssClass="m-0 p-0" modelAttribute="searchForm" action="${searchUrl}" method="GET">
                     <form:hidden path="term" value="${param.term}"/>
                     <div class="flex text-center">
-                        <div class="dropdown pr-4">
-                            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <c:choose>
-                                    <c:when test="${param.sortType == null}">
-                                        <c:out value="ALL"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value="${param.sortType}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </button>
-                            <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">
-                                <form:select path="sortType" items="${sortTypes}"/>
+<%--                        <div class="dropdown pr-4">--%>
+<%--                            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"--%>
+<%--                                    aria-expanded="false">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${param.sortType == null}">--%>
+<%--                                        <c:out value="ALL"/>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <c:out value="${param.sortType}"/>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </button>--%>
+                        <div>
+                            <ul>
+<%--                                <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">--%>
+                                    <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
+<%--                                </ul>--%>
                             </ul>
                         </div>
+
                         <div class="dropdown pr-4">
                             <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
                                     aria-expanded="false">
@@ -68,12 +72,16 @@
                                 </c:choose>
                             </button>
                             <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton2">
-<%--                                <c:forEach var="type" items="${genreTypes}">--%>
-<%--                                    <li><a class="dropdown-item" href="<spring:url value=""><spring:param name="sort" value="${param.sort}" /><spring:param name="genre" value="${type}" /><spring:param name="term" value="${param.term}"/></spring:url>"><c:out value="${type}"/></a></li>--%>
-<%--                                </c:forEach>--%>
-                                    <form:checkboxes path="genres" items="${genreTypes}"/>
+                                <div class="overflow-y-auto h-32">
+                                    <div class="flex flex-col space-y-2.5">
+                                        <form:checkboxes path="genres" items="${genreTypes}"/>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
+                        <button class="btn btn-secondary btn-rounded " type="" name="clear">
+                            <c:out value="CLEAR FILTERS"/>
+                        </button>
                         <button class="btn btn-secondary btn-rounded " type="submit" name="search">
                             <c:out value="SEARCH"/>
                         </button>
@@ -131,7 +139,16 @@
         </c:choose>
                 <c:url value="" var="urlBase2">
                     <c:forEach var="p" items="${param}">
-                        <c:param name="${p.key}" value="${p.value}"/>
+                        <c:choose>
+                            <c:when test="${p.key eq 'genres'}">
+                                <c:forEach var="genre" items="${paramValues.genres}">
+                                    <c:param name="genres" value="${genre}"/>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <c:param name="${p.key}" value="${p.value}"/>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </c:url>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
