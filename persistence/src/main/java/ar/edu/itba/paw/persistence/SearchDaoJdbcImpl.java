@@ -13,8 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class SearchDaoJdbcImpl implements SearchDAO {
@@ -77,19 +76,20 @@ public class SearchDaoJdbcImpl implements SearchDAO {
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
-    private String buildAndWhereStatement(List<Integer> genre, List<Integer> mediaType){
-        StringBuilder toReturn = new StringBuilder("");
-        boolean flag;
-        for (int id: genre) {
-            flag = (id == Genre.ALL.ordinal());
-            if(!flag)
-                toReturn.append(String.format(" AND genreid = %d ", id));
+    private String buildAndWhereStatement(List<Integer> genre, List<Integer> mediaType, Date fromDate, Date toDate){
+        StringBuilder toReturn = new StringBuilder();
+        String inSql;
+        if(!genre.isEmpty()){
+            inSql = String.join(",", Collections.nCopies(genre.size(),  "?"));
+            toReturn.append(" AND genreid IN ( ").append(inSql).append(" )");
         }
-        for (int type: mediaType) {
-            flag = (type == MediaType.ALL.ordinal());
-            if(!flag)
-                toReturn.append(String.format(" AND type = %d ", type));
+        if(!mediaType.isEmpty()){
+            inSql = String.join(",", Collections.nCopies(mediaType.size(), "?"));
+            toReturn.append(" AND type IN ( ").append(inSql).append(" )");
+
         }
+       if(fromDate != null && toDate != null)
+            toReturn.append(String.format(" AND releasedate BETWEEN %s AND %s", fromDate, toDate));
         System.out.println(toReturn);
         return toReturn.toString();
     }
@@ -102,13 +102,28 @@ public class SearchDaoJdbcImpl implements SearchDAO {
     }
 
     @Override
-    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre) {
+    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre, Date fromDate, Date toDate) {
         String orderBy = " ORDER BY " + SortType.values()[sort].nameMedia;
-        String andWhereStatement = buildAndWhereStatement(genre, mediaType);
+        String andWhereStatement = buildAndWhereStatement(genre, mediaType, fromDate, toDate);
         String selectBaseStatement = "SELECT DISTINCT * FROM media  WHERE mediaid IN ( " ;
-        String selectNotInStatement = "SELECT DISTINCT mediaid FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%')  " + andWhereStatement;
-        List<Media> elements = jdbcTemplate.query(selectBaseStatement + selectNotInStatement + ")" + orderBy + " OFFSET ? LIMIT ?", new Object[]{title,page * pageSize, pageSize},MEDIA_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT (*) FROM media WHERE mediaid IN ( " + selectNotInStatement + andWhereStatement + " )", new Object[]{title},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        String selectInStatement = "SELECT DISTINCT mediaid FROM media NATURAL JOIN mediagenre WHERE title ILIKE CONCAT('%', ?, '%')  " + andWhereStatement;
+        List<Object> whereObj = new ArrayList<>();
+        List<Object> objs = new ArrayList<>();
+        objs.add(title);
+        if(!mediaType.isEmpty())
+            whereObj.addAll(mediaType);
+        if(!genre.isEmpty())
+            whereObj.addAll(genre);
+        if(fromDate != null && toDate != null) {
+            whereObj.add(fromDate);
+            whereObj.add(toDate);
+        }
+        objs.addAll(whereObj);
+        List<Object> elementObjs = new ArrayList<>(objs);
+        elementObjs.add(page*pageSize);
+        elementObjs.add(pageSize);
+        List<Media> elements = jdbcTemplate.query(selectBaseStatement + selectInStatement + ")" + orderBy + " OFFSET ? LIMIT ?", elementObjs.toArray(),MEDIA_ROW_MAPPER);
+        int totalCount = jdbcTemplate.query("SELECT COUNT (*) FROM media WHERE mediaid IN ( " + selectInStatement + " )", objs.toArray(),COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
@@ -126,4 +141,5 @@ public class SearchDaoJdbcImpl implements SearchDAO {
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE medialist.listname ILIKE CONCAT('%', ?, '%')", new Object[]{name},COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
+
 }
