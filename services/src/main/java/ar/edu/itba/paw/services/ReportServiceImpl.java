@@ -23,26 +23,30 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void reportList(int listId, String report) {
-        reportDao.reportList(listId, report);
         userService.getCurrentUser().ifPresent(user -> {
-            emailService.sendReportCreatedEmail(user.getEmail(), report);
+            reportDao.reportList(listId, user.getUserId(), report);
+            sendReportCreatedEmail(user.getEmail(), report);
         });
     }
 
     @Override
     public void reportListComment(int listId, int commentId, String report) {
-        reportDao.reportListComment(listId, commentId, report);
         userService.getCurrentUser().ifPresent(user -> {
-            emailService.sendReportCreatedEmail(user.getEmail(), report);
+            reportDao.reportListComment(listId, commentId, user.getUserId(), report);
+            sendReportCreatedEmail(user.getEmail(), report);
         });
     }
 
     @Override
     public void reportMediaComment(int mediaId, int commentId, String report) {
-        reportDao.reportMediaComment(mediaId, commentId, report);
         userService.getCurrentUser().ifPresent(user -> {
-            emailService.sendReportCreatedEmail(user.getEmail(), report);
+            reportDao.reportMediaComment(mediaId, commentId, user.getUserId(), report);
+            sendReportCreatedEmail(user.getEmail(), report);
         });
+    }
+
+    private void sendReportCreatedEmail(String email, String report) {
+        emailService.sendReportCreatedEmail(email, report);
     }
 
     @Override
@@ -89,6 +93,10 @@ public class ReportServiceImpl implements ReportService {
                 emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
             });
         });
+    }
+
+    private void sendReportRejectedEmail(String report) {
+
     }
 
     @Override
