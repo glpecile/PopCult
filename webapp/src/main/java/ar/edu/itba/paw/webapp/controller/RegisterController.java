@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
-import ar.edu.itba.paw.webapp.exceptions.VerificationTokenNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ public class RegisterController {
 
     @RequestMapping(value = "/register/confirm")
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
-        Token verificationToken = tokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
+        Token verificationToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
         //TODO
         if (userService.confirmRegister(verificationToken)) {
             return new ModelAndView("login").addObject("successfulConfirmation", true);
