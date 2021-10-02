@@ -37,7 +37,7 @@
                 <c:url var="reportPath" value="/report/lists/${listId}"/>
                 <a href="${reportPath}">
                     <button type="button">
-                        <i class="fas fa-exclamation-circle text-right text-gray-400 justify-end hover:text-yellow-400 cursor-pointer fa-2x"
+                        <i class="fas fa-exclamation-circle text-right text-gray-500 justify-end hover:text-yellow-400 cursor-pointer fa-2x"
                            title="Report"></i>
                     </button>
                 </a>
