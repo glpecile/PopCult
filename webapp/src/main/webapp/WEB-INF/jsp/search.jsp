@@ -29,34 +29,16 @@
                 </div>
                 <br>
             <div class="col-8 offset-2">
-                <div class="row">
-                    <h1 class="font-bold text-2xl py-2">There are <c:out value="${ searchFilmsContainer.totalCount}"/> result(s) for <c:out value="${param.term}"/></h1>
-                </div>
-                <br>
                 <form:form cssClass="m-0 p-0" modelAttribute="searchForm" action="${searchUrl}" method="GET">
                     <form:hidden path="term" value="${param.term}"/>
-                    <div class="flex text-center">
-<%--                        <div class="dropdown pr-4">--%>
-<%--                            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"--%>
-<%--                                    aria-expanded="false">--%>
-<%--                                <c:choose>--%>
-<%--                                    <c:when test="${param.sortType == null}">--%>
-<%--                                        <c:out value="ALL"/>--%>
-<%--                                    </c:when>--%>
-<%--                                    <c:otherwise>--%>
-<%--                                        <c:out value="${param.sortType}"/>--%>
-<%--                                    </c:otherwise>--%>
-<%--                                </c:choose>--%>
-<%--                            </button>--%>
-                        <div>
-                            <ul>
-<%--                                <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">--%>
-                                    <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
-<%--                                </ul>--%>
-                            </ul>
+                    <div class="flex text-center justify-between">
+                        <div class="flex flex-col">
+                             <span>Sort By </span>
+                            <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
                         </div>
 
-                        <div class="dropdown pr-4">
+                        <div class="dropdown pr-4 flex flex-col">
+                            <span>Categories </span>
                             <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 <c:choose>
@@ -79,10 +61,10 @@
                                 </div>
                             </ul>
                         </div>
-                        <button class="btn btn-secondary btn-rounded " type="" name="clear">
+                        <button class="btn btn-secondary btn-rounded " type="submit" name="clear" id="clear">
                             <c:out value="CLEAR FILTERS"/>
                         </button>
-                        <button class="btn btn-secondary btn-rounded " type="submit" name="search">
+                        <button class="btn btn-secondary btn-rounded " type="submit" name="search" id="search">
                             <c:out value="SEARCH"/>
                         </button>
                     </div>

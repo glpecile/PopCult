@@ -90,6 +90,10 @@ public class SearchController {
         return mav;
     }
 
+    @RequestMapping(value = "/search", method = {RequestMethod.GET}, params = "clear")
+    public ModelAndView clearFilters(@ModelAttribute("searchForm") final SearchForm searchForm){
+        return new ModelAndView("redirect:/search?term=" + searchForm.getTerm());
+    }
     @RequestMapping(value = "/search/series", method = {RequestMethod.GET})
     public ModelAndView searchSeries(HttpServletRequest request,
                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
