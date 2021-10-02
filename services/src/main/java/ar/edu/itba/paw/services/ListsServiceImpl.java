@@ -136,4 +136,9 @@ public class ListsServiceImpl implements ListsService {
     public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
         return listsDao.getUserEditableLists(userId, page, pageSize);
     }
+
+    @Override
+    public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
+        return listsDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+    }
 }

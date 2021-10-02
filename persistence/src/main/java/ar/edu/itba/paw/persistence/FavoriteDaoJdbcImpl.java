@@ -121,21 +121,4 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
     public Optional<Integer> getFavoriteListsCount(int userId) {
         return jdbcTemplate.query("SELECT COUNT(*) AS count FROM favoritelists WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst();
     }
-
-    @Override
-    public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
-        List<MediaList> recommendationsList = jdbcTemplate.query("((SELECT * FROM medialist NATURAL JOIN (SELECT medialistid FROM favoritelists WHERE userid IN " +
-                "(SELECT l.userid FROM favoritelists f JOIN favoritelists l ON f.medialistid = l.medialistid WHERE f.userid = ?) " +
-                "EXCEPT SELECT medialistId FROM favoritelists WHERE userid = ?) as AUX " +
-                "UNION (SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? " +
-                "GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC)) " +
-                "EXCEPT SELECT m.* FROM medialist m RIGHT JOIN favoritelists f2 ON m.userid=f2.userid WHERE f2.userid = ?) OFFSET ? LIMIT ?", new Object[]{userId, userId, true, userId, page * pageSize, pageSize}, MEDIA_LIST_MAPPER);
-        int count = jdbcTemplate.query("SELECT COUNT(*) FROM ((SELECT * FROM medialist NATURAL JOIN (SELECT medialistid FROM favoritelists WHERE userid IN (SELECT l.userid FROM favoritelists f JOIN favoritelists l ON f.medialistid = l.medialistid WHERE f.userid = ?)  EXCEPT SELECT medialistId FROM favoritelists WHERE userid = ?) as AUX UNION (SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC)) EXCEPT SELECT m.* FROM medialist m RIGHT JOIN favoritelists f2 ON m.userid=f2.userid WHERE f2.userid = ?) as AUX", new Object[]{userId, userId, true, userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(recommendationsList, page, pageSize, count);
-    }
-
-    @Override
-    public PageContainer<MediaList> getRecommendationsBasedOnFavMedia(int userId, int page, int pageSize) {
-        return null;
-    }
 }

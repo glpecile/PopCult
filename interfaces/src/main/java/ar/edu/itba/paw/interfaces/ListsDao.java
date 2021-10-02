@@ -57,4 +57,6 @@ public interface ListsDao {
 
     PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
 
+    PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize);
+
 }

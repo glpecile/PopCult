@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -120,5 +121,10 @@ public class MediaDaoJdbcImpl implements MediaDao {
         List<Media> likedMoviesList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int moviesCunt = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(likedMoviesList, page, pageSize, moviesCunt);
+    }
+
+    @Override
+    public PageContainer<MediaList> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
+        return null;
     }
 }
