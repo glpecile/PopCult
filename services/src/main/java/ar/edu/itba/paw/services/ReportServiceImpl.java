@@ -68,9 +68,7 @@ public class ReportServiceImpl implements ReportService {
     public void deleteListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(report -> {
             reportDao.deleteListReport(reportId);
-            userService.getCurrentUser().ifPresent(user -> {
-                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
-            });
+            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
         });
 
     }
@@ -79,9 +77,7 @@ public class ReportServiceImpl implements ReportService {
     public void deleteListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(report -> {
             reportDao.deleteListCommentReport(reportId);
-            userService.getCurrentUser().ifPresent(user -> {
-                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
-            });
+            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
         });
     }
 
@@ -89,14 +85,14 @@ public class ReportServiceImpl implements ReportService {
     public void deleteMediaCommentReport(int reportId) {
         reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
             reportDao.deleteMediaCommentReport(reportId);
-            userService.getCurrentUser().ifPresent(user -> {
-                emailService.sendReportRejectedEmail(user.getEmail(), report.getReport());
-            });
+            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
         });
     }
 
-    private void sendReportRejectedEmail(String report) {
-
+    private void sendReportRejectedEmail(int reporteeId, String report) {
+        userService.getById(reporteeId).ifPresent(user -> {
+            emailService.sendReportRejectedEmail(user.getEmail(), report);
+        });
     }
 
     @Override
