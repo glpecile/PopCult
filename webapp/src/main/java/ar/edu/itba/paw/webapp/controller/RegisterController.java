@@ -59,20 +59,6 @@ public class RegisterController {
             return new ModelAndView("login").addObject("successfulConfirmation", true);
 
         }
-        return new ModelAndView("redirect:/register/tokentimedout?token=" + token);
-    }
-
-    @RequestMapping(value = "/register/tokentimedout")
-    public ModelAndView tokenTimedOut(@RequestParam("token") final String token) {
-        ModelAndView mav = new ModelAndView("tokenTimedOut");
-        mav.addObject("token", token);
-        return mav;
-    }
-
-    @RequestMapping(value = "/register/resendemail")
-    public ModelAndView resendEmail(@RequestParam("token") final String token) {
-        ModelAndView mav = new ModelAndView("sentEmail");
-        userService.resendVerificationEmail(token);
-        return mav;
+        return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
     }
 }

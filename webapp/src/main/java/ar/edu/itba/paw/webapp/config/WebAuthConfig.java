@@ -136,7 +136,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/register/**", "/login").anonymous()
+                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
                 .antMatchers("/createList").hasRole("USER")
                 .antMatchers("/editList/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("MOD")

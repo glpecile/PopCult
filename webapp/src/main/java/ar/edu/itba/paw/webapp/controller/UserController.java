@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -8,12 +9,12 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.ImageForm;
-import ar.edu.itba.paw.webapp.form.PasswordForm;
-import ar.edu.itba.paw.webapp.form.UserDataForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -47,6 +50,8 @@ public class UserController {
     private WatchService watchService;
     @Autowired
     private CollaborativeListService collaborativeListService;
+    @Autowired
+    private TokenService tokenService;
 
 
     private static final int listsPerPage = 4;
@@ -191,8 +196,9 @@ public class UserController {
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
     public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors) {
-        if (errors.hasErrors())
+        if (errors.hasErrors()) {
             return changeUserPassword(form);
+        }
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
 
         try {
@@ -204,6 +210,47 @@ public class UserController {
 
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
+
+    @RequestMapping(value = "/forgotPassword", method = {RequestMethod.GET})
+    public ModelAndView forgotPasswordForm(@ModelAttribute("emailForm") final EmailForm emailForm) {
+        return new ModelAndView("forgotPassword");
+    }
+
+    @RequestMapping(value = "/forgotPassword", method = {RequestMethod.POST})
+    public ModelAndView forgotPassword(@Valid @ModelAttribute("emailForm") final EmailForm emailForm,
+                                       final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return forgotPasswordForm(emailForm);
+        }
+        try {
+            userService.forgotPassword(emailForm.getEmail());
+        } catch (EmailNotExistsException e) {
+            errors.rejectValue("email", "forgotPassword.emailNotExists");
+            return forgotPasswordForm(emailForm);
+        }
+        return new ModelAndView("sentEmail");
+    }
+
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
+    public ModelAndView resetPasswordForm(@ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
+                                          @RequestParam(value = "token", defaultValue = "") final String token) {
+        return new ModelAndView("resetPassword");
+    }
+
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    public ModelAndView resetPassword(@Valid @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
+                                      final BindingResult errors,
+                                      @RequestParam(value = "token", defaultValue = "") final String token) {
+        if(errors.hasErrors()) {
+            return resetPasswordForm(resetPasswordForm, token);
+        }
+        Token resetPasswordToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
+        if(userService.resetPassword(resetPasswordToken, resetPasswordForm.getNewPassword())) {
+            return new ModelAndView("redirect:/login");
+        }
+        return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
+    }
+
 
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
     public ModelAndView uploadProfilePicture(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
