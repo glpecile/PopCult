@@ -63,15 +63,23 @@ public class MediaController {
         final ModelAndView mav = new ModelAndView("home");
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
-        mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        userService.getCurrentUser().ifPresent(user -> {
+            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.MOVIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user.getUserId(), defaultValue - 1, lastAddedAmount);
+            final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
+            mav.addObject("discoveryFilmContainer", discoveryFilmContainer);
+            mav.addObject("discoverySeriesContainer", discoverySeriesContainer);
+            mav.addObject("discoveryListsContainer",discoveryListsContainer);
+            mav.addObject("discoveryListsCovers", discoveryListsCovers);
+        });
         return mav;
     }
 
