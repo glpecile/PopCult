@@ -28,7 +28,7 @@
                         result(s) for <c:out value="${param.term}"/></h1>
                 </div>
                 <br>
-            <div class="col-8 offset-2">
+            <div class="col-12">
                 <form:form cssClass="m-0 p-0" modelAttribute="searchForm" action="${searchUrl}" method="GET">
                     <form:hidden path="term" value="${param.term}"/>
                     <div class="flex text-center justify-between">
@@ -37,6 +37,30 @@
                             <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
                         </div>
 
+<%--                        <div class="dropdown pr-4 flex flex-col">--%>
+<%--                            <span>Decades </span>--%>
+<%--                            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"--%>
+<%--                                    aria-expanded="false">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${fn:length(param.decades) == 0}">--%>
+<%--                                        <c:out value="ALL"/>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:when test="${fn:length(param.decades) > 1}">--%>
+<%--                                        <c:out value="MULTIPLE"/>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <c:out value="${param.decades}"/>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </button>--%>
+<%--                            <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton2">--%>
+<%--                                <div class="overflow-y-auto h-32">--%>
+<%--                                    <div class="flex flex-col space-y-2.5">--%>
+<%--                                        <form:checkboxes path="decades" items="${decadesType}"/>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
                         <div class="dropdown pr-4 flex flex-col">
                             <span>Categories </span>
                             <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
@@ -61,11 +85,11 @@
                                 </div>
                             </ul>
                         </div>
+                        <button class="btn btn-secondary btn-rounded " type="submit" >
+                            <c:out value="APPLY FILTERS"/>
+                        </button>
                         <button class="btn btn-secondary btn-rounded " type="submit" name="clear" id="clear">
                             <c:out value="CLEAR FILTERS"/>
-                        </button>
-                        <button class="btn btn-secondary btn-rounded " type="submit" name="search" id="search">
-                            <c:out value="SEARCH"/>
                         </button>
                     </div>
                 </form:form>

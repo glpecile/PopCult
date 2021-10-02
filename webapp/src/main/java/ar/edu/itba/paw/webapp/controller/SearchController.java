@@ -70,9 +70,9 @@ public class SearchController {
         final List<Integer> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).map(MediaType::ordinal).collect(Collectors.toList());
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 //        try {
-            //final Date fromDate = f.parse("1960-10-10");
+//            final Date fromDate = f.parse("1960-10-10");
             final Date fromDate = null;
-            //final Date toDate = f.parse("2010-10-10");
+//            final Date toDate = f.parse("2010-10-10");
             final Date toDate = null;
             final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), genres, fromDate, toDate);
             final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), 1, minimumMediaMatches);
