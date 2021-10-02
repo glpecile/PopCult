@@ -123,11 +123,6 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        return listsDao.getMostLikedLists(page, pageSize);
-    }
-
-    @Override
     public boolean canEditList(int userId, int listId) {
         return listsDao.canEditList(userId, listId);
     }

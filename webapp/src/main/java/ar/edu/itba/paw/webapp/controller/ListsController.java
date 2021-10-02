@@ -56,7 +56,7 @@ public class ListsController {
         final ModelAndView mav = new ModelAndView("lists");
         final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
         final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
-        final List<ListCover> mostLikedLists = generateCoverList(listsService.getMostLikedLists(defaultValue - 1, lastAddedAmount).getElements());
+        final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, lastAddedAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         mav.addObject("discovery", discoveryCovers);
         mav.addObject("mostLikedLists", mostLikedLists);
