@@ -5,7 +5,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Log-in &#8226; PopCult</title></head>
+    <title><spring:message code="login.title"/> &#8226; PopCult</title></head>
 <body class="bg-gradient-to-r from-yellow-500 to-purple-900">
 <%-- Variables --%>
 <c:url value="/login" var="loginUrl"/>
@@ -46,6 +46,8 @@
                     <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="login.login"/></button>
                     <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/register"/>"><spring:message
                             code="register.cta"/></a>
+                    <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/forgotPassword"/>"><spring:message
+                            code="login.forgotPassword"/></a>
                 </div>
             </form>
         </div>

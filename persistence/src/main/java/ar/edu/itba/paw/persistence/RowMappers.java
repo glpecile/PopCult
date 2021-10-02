@@ -1,9 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.report.ListCommentReport;
+import ar.edu.itba.paw.models.report.ListReport;
+import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import ar.edu.itba.paw.models.staff.Studio;
@@ -91,13 +96,15 @@ public class RowMappers {
                     rs.getString("password"),
                     rs.getString("name"), //TODO
                     rs.getBoolean("enabled"),
-                    rs.getInt("imageId"));
+                    rs.getInt("imageId"),
+                    rs.getInt("role"));
     /**
      * Token RowMappers.
      */
     public static final RowMapper<Token> TOKEN_ROW_MAPPER =
             (rs, rowNum) -> new Token(
                     rs.getInt("userId"),
+                    rs.getInt("type"),
                     rs.getString("token"),
                     rs.getDate("expiryDate"));
 
@@ -126,6 +133,65 @@ public class RowMappers {
                     rs.getBytes("photoBlob"),
                     rs.getInt("imageContentLength"),
                     rs.getString("imageContentType"));
+
+    /**
+     * Comment RowMappers.
+     */
+    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
+            (rs, rowNum) -> new Comment(
+                    rs.getInt("commentId"),
+                    rs.getInt("userId"),
+                    rs.getString("username"),
+                    rs.getString("description"));
+
+    /**
+     * Request RowMappers.
+     */
+    public static final RowMapper<Request> REQUEST_ROW_MAPPER =
+            (rs, rowNum) -> new Request(
+                    rs.getInt("collabId"),
+                    rs.getInt("collaboratorId"),
+                    rs.getString("username"),
+                    rs.getInt("listId"),
+                    rs.getString("listname"),
+                    rs.getBoolean("accepted"));
+
+
+    /**
+     * Reports RowMappers
+     */
+    public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new ListReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("listId"),
+                    rs.getInt("userId"),
+                    rs.getString("listName"),
+                    rs.getString("description")
+            );
+
+    public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new ListCommentReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("commentId"),
+                    rs.getInt("listId"),
+                    rs.getInt("userId"),
+                    rs.getString("description")
+            );
+
+    public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
+            (rs, rowNum) -> new MediaCommentReport(
+                    rs.getInt("reportId"),
+                    rs.getString("report"),
+                    rs.getDate("date"),
+                    rs.getInt("commentId"),
+                    rs.getInt("mediaId"),
+                    rs.getInt("userId"),
+                    rs.getString("description")
+            );
 }
 
 

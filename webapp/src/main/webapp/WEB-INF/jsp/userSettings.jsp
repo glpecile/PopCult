@@ -2,12 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Update your Settings &#8226; PopCult</title>
+    <title>
+        <spring:message code="profile.settings.title"/> &#8226; PopCult</title>
     <c:url value="/settings" var="postPath"/>
 </head>
 <body class="bg-gray-50">
@@ -17,44 +19,61 @@
         <br>
         <form:form cssClass="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" modelAttribute="userSettings" action="${postPath}" method="post">
             <div class="flex flex-col justify-center items-center">
-                <h2 class="text-3xl">Edit <c:out value="${user.username}"/>'s profile</h2>
+                <h2 class="text-3xl">
+                    <spring:message code="profile.settings.header" arguments="${user.username}"/>
+                </h2>
                 <br>
+                    <%-- Name Form --%>
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="name" cssClass="form-label">Name: </form:label>
+                    <form:label path="name" cssClass="form-label">
+                        <spring:message code="profile.settings.name"/>
+                    </form:label>
                     <form:input type="text" cssClass="form-control" path="name" value="${user.name}"/>
                     <form:errors path="name" cssClass="formError text-red-500" element="p"/>
                 </div>
-
+                    <%-- Username Form --%>
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="username" cssClass="form-label">Username: </form:label>
+                    <form:label path="username" cssClass="form-label">
+                        <spring:message code="profile.settings.username"/>
+                    </form:label>
                     <form:input type="text" cssClass="form-control" path="username" value="${user.username}"/>
                     <form:errors path="username" cssClass="formError text-red-500" element="p"/>
                 </div>
-
+                    <%-- Email Form --%>
                 <div class="py-1 text-semibold w-full">
-                    <form:label path="email" cssClass="form-label">Email: </form:label>
+                    <form:label path="email" cssClass="form-label">
+                        <spring:message code="profile.settings.email"/>
+                    </form:label>
                     <form:input type="text" cssClass="form-control" path="email" value="${user.email}"/>
                     <form:errors path="email" cssClass="formError text-red-500" element="p"/>
                 </div>
             </div>
             <br>
-            <div class="row">
-                    <%--change password--%>
-                <div class="col-md-8">
-                    <a href=<c:url value="/changePassword"/>>
-                        <button type="button" class="btn btn-dark my-2">Change Password</button>
-                    </a>
-                </div>
-                <div class="col-6 col-lg-2">
-                        <%--  discard changes--%>
+            <div class="flex justify-between">
+                    <%-- Change password --%>
+                <a href=<c:url value="/changePassword"/>>
+                    <button type="button"
+                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
+                        <spring:message code="profile.settings.passwordChange"/>
+                    </button>
+                </a>
+                <div class="flex space-x-3">
+                        <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>
-                        <button type="button" class="btn btn-light my-2">Discard</button>
+                        <button type="button"
+                                class="btn btn-warning bg-gray-300 group hover:bg-yellow-400 text-gray-700 font-semibold hover:text-white my-2">
+                            <i class="fas fa-undo group-hover:text-white pr-2"></i>
+                            <spring:message code="general.revert"/>
+                        </button>
                     </a>
-                </div>
-                <div class="col-6 col-lg-2">
-                        <%--save changes--%>
+                        <%-- Save changes --%>
                     <input type="hidden" name="userId" id="userId" value="<c:out value="${user.userId}"/>">
-                    <button class="btn btn-secondary my-2" id="editUser" name="editUser" type="submit">Save</button>
+                    <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white my-2"
+                            id="editUser" name="editUser" type="submit">
+                        <i class="fas fa-save group-hover:text-white pr-2"></i>
+                        <spring:message code="general.save"/>
+                    </button>
                 </div>
             </div>
         </form:form>

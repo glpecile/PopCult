@@ -21,11 +21,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
-        return genreDao.getMediaByGenreIds(genreId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
         return genreDao.getMediaByGenre(genreId, page, pageSize);
     }

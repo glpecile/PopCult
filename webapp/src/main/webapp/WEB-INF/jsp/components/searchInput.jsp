@@ -10,7 +10,7 @@
                    placeholder="<spring:message code="search.placeholder"/>"/>
             <button class="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
                     type="submit">
-                <i class="fas fa-search text-gray-500 text-center rounded-full mb-2"></i>
+                <i class="fas fa-search text-gray-500 hover:text-gray-800 text-center rounded-full mb-2"></i>
             </button>
         </label>
     </div>

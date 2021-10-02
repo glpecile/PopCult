@@ -14,8 +14,7 @@ import java.util.Optional;
 public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private FavoriteDao favoriteDao;
-
-
+    
     @Override
     public void addMediaToFav(int mediaId, int userId) {
         favoriteDao.addMediaToFav(mediaId, userId);
@@ -32,13 +31,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteMediaIds(userId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteMedia(userId,page,pageSize);
+        return favoriteDao.getUserFavoriteMedia(userId, page, pageSize);
     }
 
     @Override
@@ -62,13 +56,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteListsIds(userId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<MediaList> getUserFavoriteLists(int userId, int page, int pageSize) {
-        return favoriteDao.getUserFavoriteLists(userId,page,pageSize);
+        return favoriteDao.getUserFavoriteLists(userId, page, pageSize);
     }
 
     @Override
@@ -79,5 +68,40 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Optional<Integer> getFavoriteListsCount(int userId) {
         return favoriteDao.getFavoriteListsCount(userId);
+    }
+
+    @Override
+    public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
+        return favoriteDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
+        return favoriteDao.getMostLikedLists(page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
+        return favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
+        return favoriteDao.getMostLikedMedia(page, pageSize);
+    }
+
+    @Override
+    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
+        return favoriteDao.getMostLikedMedia(mediaType, page, pageSize);
+    }
+
+    @Override
+    public int getLikesFromList(int listId) {
+        return favoriteDao.getLikesFromList(listId);
+    }
+
+    @Override
+    public int getLikesFromMedia(int mediaId) {
+        return favoriteDao.getLikesFromMedia(mediaId);
     }
 }

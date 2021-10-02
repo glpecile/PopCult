@@ -17,11 +17,15 @@ public interface UserService {
 
     Optional<User> changePassword(int userId, String currentPassword, String newPassword);
 
+    void forgotPassword(String email);
+
+    boolean resetPassword(Token token, String newPassword);
+
     Optional<User> getCurrentUser();
 
     boolean confirmRegister(Token token);
 
-    void resendVerificationEmail(String token);
+    void resendToken(String token);
 
     Optional<Image> getUserProfileImage(int imageId);
 

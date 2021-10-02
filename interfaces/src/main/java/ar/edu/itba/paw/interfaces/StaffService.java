@@ -16,13 +16,7 @@ public interface StaffService {
 
     List<StaffMember> getPersonList();
 
-    @Deprecated
-    PageContainer<Integer> getMediaByDirectorIds(int staffMemberId, int page, int pageSize);
-
     PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize);
-
-    @Deprecated
-    PageContainer<Integer> getMediaByActorIds(int staffMemberId, int page, int pageSize);
 
     PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize);
 
@@ -31,9 +25,6 @@ public interface StaffService {
             return getMediaByActor(staffMemberId,page,pageSize);
         return getMediaByDirector(staffMemberId,page,pageSize);
     }
-
-    @Deprecated
-    PageContainer<Integer> getMediaIds(int staffMemberId, int page, int pageSize);
 
     PageContainer<Media> getMedia(int staffMemberId, int page, int pageSize);
 
