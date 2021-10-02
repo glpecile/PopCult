@@ -8,12 +8,12 @@
             <c:choose>
                 <c:when test="${param.path == 'myLists'}">
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
-                        <c:out value="${param.username}"/><spring:message code="profile.tabs.main"/>
+                        <spring:message code="profile.tabs.main" arguments="${param.username}"/>
                     </button>
                 </c:when>
                 <c:otherwise>
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none">
-                        <c:out value="${param.username}"/><spring:message code="profile.tabs.main"/>
+                        <spring:message code="profile.tabs.main" arguments="${param.username}"/>
                     </button>
                 </c:otherwise>
             </c:choose>

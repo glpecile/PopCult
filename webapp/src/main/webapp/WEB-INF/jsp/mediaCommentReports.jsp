@@ -16,40 +16,39 @@
 </head>
 
 <body class="bg-gray-50">
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 offset-2 py-2">
-    <!-- Admin Panel message -->
-    <div class="flex flex-col justify-center items-center py-4 mx-auto">
-        <h1 class="text-center text-3xl">
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 offset-2 py-2 flex-grow">
+        <!-- Admin Panel message -->
+        <h1 class="text-start display-5 fw-bolder py-4">
             <spring:message code="admin.title.mediaCommentReports"/>
         </h1>
+        <!-- Media comments reports -->
+        <div class="flex justify-between">
+            <h2 class="font-bold text-2xl pt-2">
+                <spring:message code="admin.mediaCommentReports" arguments="${mediaCommentReportPageContainer.totalCount}"/>
+            </h2>
+        </div>
+        <div class="row">
+            <c:forEach var="mediaCommentReport" items="${mediaCommentReportPageContainer.elements}">
+                <div class="py-2">
+                    <jsp:include page="/WEB-INF/jsp/components/commentReport.jsp">
+                        <jsp:param name="comment" value="${mediaCommentReport.commentBody}"/>
+                        <jsp:param name="report" value="${mediaCommentReport.report}"/>
+                        <jsp:param name="type" value="media"/>
+                        <jsp:param name="reportId" value="${mediaCommentReport.reportId}"/>
+                    </jsp:include>
+                </div>
+            </c:forEach>
+        </div>
     </div>
-
-    <!-- Media comments reports -->
-    <div class="flex justify-between">
-        <h2 class="font-bold text-2xl pt-2">
-            <spring:message code="admin.mediaCommentReports" arguments="${mediaCommentReportPageContainer.totalCount}"/>
-        </h2>
-    </div>
-    <div class="row">
-        <c:forEach var="mediaCommentReport" items="${mediaCommentReportPageContainer.elements}">
-            <div class="py-2">
-                <jsp:include page="/WEB-INF/jsp/components/commentReport.jsp">
-                    <jsp:param name="comment" value="${mediaCommentReport.commentBody}"/>
-                    <jsp:param name="report" value="${mediaCommentReport.report}"/>
-                    <jsp:param name="type" value="media"/>
-                    <jsp:param name="reportId" value="${mediaCommentReport.reportId}"/>
-                </jsp:include>
-            </div>
-        </c:forEach>
-    </div>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${mediaCommentReportPageContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaCommentReportPageContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="/admin/reports/media/comments"/>
+    </jsp:include>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-<jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-    <jsp:param name="mediaPages" value="${mediaCommentReportPageContainer.totalPages}"/>
-    <jsp:param name="currentPage" value="${mediaCommentReportPageContainer.currentPage + 1}"/>
-    <jsp:param name="url" value="/admin/reports/media/comments"/>
-</jsp:include>
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
 
