@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public PageContainer<Media> getMediaList(int page, int pageSize) {
-        return mediaDao.getMediaList( page,  pageSize);
+        return mediaDao.getMediaList(page, pageSize);
     }
 
     @Override
@@ -60,15 +61,5 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public Optional<Integer> getCountSearchMediaByTitle(String title) {
         return mediaDao.getCountSearchMediaByTitle(title);
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
-        return mediaDao.getMostLikedMedia(page, pageSize);
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
-        return mediaDao.getMostLikedMedia(mediaType, page, pageSize);
     }
 }

@@ -36,22 +36,22 @@
                 <!-- Or as we like to call you: Username -->
                 <spring:message code="profile.description"/><b><c:out value="${param.username}"/></b>
             </h4>
-            <div class="flex flex-row space-x-2">
-                <a href=${requests}>
-                    <button type="button"
-                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 group hover:bg-purple-500 text-gray-700 font-semibold hover:text-white">
-                        <!-- Requests -->
-                        <i class="fas fa-tasks text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.requests"/>
-                    </button>
-                </a>
-                <a href=<c:url value="/logout"/>>
-                    <button type="button"
-                            class="justify-end btn btn-rounded btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">
-                        <!-- Log out -->
-                        <i class="fas fa-sign-out-alt text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.signOut"/>
-                    </button>
-                </a>
-            </div>
+<%--            <div class="flex flex-row space-x-2">--%>
+<%--                <a href=${requests}>--%>
+<%--                    <button type="button"--%>
+<%--                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 group hover:bg-purple-500 text-gray-700 font-semibold hover:text-white">--%>
+<%--                        <!-- Requests -->--%>
+<%--                        <i class="fas fa-tasks text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.requests"/>--%>
+<%--                    </button>--%>
+<%--                </a>--%>
+<%--                <a href=<c:url value="/logout"/>>--%>
+<%--                    <button type="button"--%>
+<%--                            class="justify-end btn btn-rounded btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">--%>
+<%--                        <!-- Log out -->--%>
+<%--                        <i class="fas fa-sign-out-alt text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.signOut"/>--%>
+<%--                    </button>--%>
+<%--                </a>--%>
+<%--            </div>--%>
             <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="flex justify-end pt-8">
                                     <button type="submit"
-                                            class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
+                                            class="btn btn-success bg-gray-300 group hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
                                         <i class="fas fa-save group-hover:text-white pr-2"></i><spring:message code="profile.ppSave"/>
                                     </button>
                                 </div>

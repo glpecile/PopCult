@@ -22,13 +22,8 @@ public interface ListsService {
     PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize);
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
-//    @Deprecated
-//    List<Integer> getMediaIdInListIds(int mediaListId);//TODO BORRAR
 
     List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
-
-//    @Deprecated
-//    PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize);
 
     PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
 
@@ -37,12 +32,6 @@ public interface ListsService {
     List<MediaList> getNLastAddedList(int amount);
 
     PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
-
-//    Optional<Integer> getListCount();
-//
-//    Optional<Integer> getListCountFromUserId(int userId);
-//
-//    Optional<Integer> getListCountFromMedia(int mediaId);
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
@@ -62,8 +51,8 @@ public interface ListsService {
 
     Optional<User> getListOwner(int listId);
 
-    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
-
     boolean canEditList(int userId, int listId);
+
+    PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
 
 }

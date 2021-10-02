@@ -20,8 +20,8 @@
             <div class="flex flex-col justify-center items-center">
                 <p class="text"><spring:message code="email.timedOutToken"/></p>
                 <br>
-                <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/register/resendemail?token=${token}"/>"><spring:message
-                        code="email.resendVerificationEmail"/></a>
+                <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/resendToken?token=${token}"/>"><spring:message
+                        code="email.resendEmail"/></a>
             </div>
         </div>
     </div>

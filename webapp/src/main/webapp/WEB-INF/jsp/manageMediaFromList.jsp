@@ -94,7 +94,7 @@
                 <a href=${listPath}>
                     <button type="button"
                             class="btn btn-warning btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
-                        <i class="fas fa-save group-hover:text-white pr-2"></i>
+                        <i class="fas fa-check group-hover:text-white pr-2"></i>
                         <spring:message code="general.done"/>
                     </button>
                 </a>

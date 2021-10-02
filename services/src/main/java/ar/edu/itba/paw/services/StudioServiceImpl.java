@@ -27,11 +27,6 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize) {
-        return studioDao.getMediaByStudioIds(studioId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize) {
         return studioDao.getMediaByStudio(studioId, page, pageSize);
     }

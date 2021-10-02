@@ -128,19 +128,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         return jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ROW_MAPPER);
     }
 
-//    @Override
-//    public List<Integer> getMediaIdInListIds(int mediaListId) {
-//        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
-//    }
-
-//    @Override
-//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
-//        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
-//        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst().orElse(0);
-//        return new PageContainer<>(elements,page,pageSize,totalCount);
-//    }
-
     @Override
     public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
@@ -170,24 +157,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
-
-//    @Override
-//    public Optional<Integer> getListCount() {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromUserId(int userId) {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromMedia(int mediaId) {
-//        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
 
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
@@ -283,14 +252,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE visibility = ?", new Object[]{true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
-    }
-
-    @Override
     public boolean canEditList(int userId, int listId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM medialist LEFT JOIN collaborative c on medialist.medialistid = c.listid WHERE medialistid = ? AND ((userid = ?) OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
     }
+
+    @Override
+    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
+        List<MediaList> editableLists = jdbcTemplate.query("((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) OFFSET ? LIMIT ?",new Object[]{userId, userId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM ((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) AS aux ",new Object[]{userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(editableLists, page, pageSize, count);
+    }
+
+
 }
