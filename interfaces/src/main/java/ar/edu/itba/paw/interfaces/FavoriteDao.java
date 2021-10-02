@@ -29,4 +29,15 @@ public interface FavoriteDao {
     PageContainer<MediaList> getUserPublicFavoriteLists(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteListsCount(int userId);
+
+    PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize);
+
+    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
+
+    PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
+
 }

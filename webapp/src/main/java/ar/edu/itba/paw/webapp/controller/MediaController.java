@@ -179,7 +179,7 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
-        final PageContainer<Media> mostLikedFilms = mediaService.getMostLikedMedia(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
@@ -193,7 +193,7 @@ public class MediaController {
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("series");
         final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
-        final PageContainer<Media> mostLikedSeries = mediaService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);

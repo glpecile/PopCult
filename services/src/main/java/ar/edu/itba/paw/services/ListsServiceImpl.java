@@ -123,11 +123,6 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        return listsDao.getMostLikedLists(page, pageSize);
-    }
-
-    @Override
     public boolean canEditList(int userId, int listId) {
         return listsDao.canEditList(userId, listId);
     }
@@ -135,10 +130,5 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
         return listsDao.getUserEditableLists(userId, page, pageSize);
-    }
-
-    @Override
-    public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
-        return listsDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
     }
 }

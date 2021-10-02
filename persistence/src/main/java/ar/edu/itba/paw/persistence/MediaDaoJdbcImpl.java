@@ -107,31 +107,4 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public Optional<Integer> getCountSearchMediaByTitle(String title) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title}, COUNT_ROW_MAPPER).stream().findFirst();
     }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
-        List<Media> mediaList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
-        int mediaListCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(mediaList, page, pageSize, mediaListCount);
-
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
-        List<Media> likedMoviesList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
-        int moviesCunt = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(likedMoviesList, page, pageSize, moviesCunt);
-    }
-
-    @Override
-    public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
-        List<Media> recommendedMedia = jdbcTemplate.query("(SELECT * FROM media NATURAL JOIN (SELECT mediaid FROM favoritemedia WHERE userid IN " +
-                "(SELECT m.userid FROM favoritemedia f JOIN favoritemedia m ON f.mediaid = m.mediaid WHERE f.userid = ?) " +
-                "EXCEPT SELECT mediaId FROM favoritemedia WHERE userid = ?) as AUX " +
-                "UNION (SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? " +
-                "GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC) " +
-                "EXCEPT SELECT media.* FROM media NATURAL JOIN favoritemedia f2 WHERE f2.userid = ?) OFFSET ? LIMIT ?", new Object[]{userId, userId, mediaType, userId, page * pageSize, pageSize}, MEDIA_ROW_MAPPER) ;
-        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (SELECT * FROM media NATURAL JOIN (SELECT mediaid FROM favoritemedia WHERE userid IN (SELECT m.userid FROM favoritemedia f JOIN favoritemedia m ON f.mediaid = m.mediaid WHERE f.userid = ?)  EXCEPT SELECT mediaId FROM favoritemedia WHERE userid = ?) as AUX UNION (SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC) EXCEPT SELECT media.* FROM media NATURAL JOIN favoritemedia f2 WHERE f2.userid = ?) as AUX", new Object[]{userId, userId, mediaType, userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(recommendedMedia, page, pageSize, count);
-    }
 }
