@@ -74,7 +74,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public PageContainer<MediaList> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
+    public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
         return mediaDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
     }
 }

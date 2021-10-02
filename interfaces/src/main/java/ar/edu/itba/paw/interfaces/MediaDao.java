@@ -31,6 +31,6 @@ public interface MediaDao {
 
     PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
 
-    PageContainer<MediaList> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize);
+    PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize);
 
 }
