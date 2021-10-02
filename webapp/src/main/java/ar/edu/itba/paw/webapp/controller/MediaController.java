@@ -67,6 +67,7 @@ public class MediaController {
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
+        mav.addObject("scrollItemsAmount", itemsPerContainer);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
