@@ -38,6 +38,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
 
+    @Override
     public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -62,6 +63,16 @@ public class EmailServiceImpl implements EmailService {
         return templateEngine.process(template, thymeleafContext);
     }
 
+    @Override
+    public void sendResetPasswordEmail(String to, String username, String token) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", username);
+        mailMap.put("token", token);
+        final String subject = messageSource.getMessage("email.resetPassword", null, Locale.getDefault());
+        sendEmail(to, subject, "resetPassword.html", mailMap);
+    }
+
+    @Override
     public void sendReportCreatedEmail(String to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
@@ -69,6 +80,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to, subject, "reportCreated.html", mailMap);
     }
 
+    @Override
     public void sendReportApprovedEmail(String to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
@@ -76,6 +88,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to, subject, "reportApproved.html", mailMap);
     }
 
+    @Override
     public void sendReportRejectedEmail(String to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
@@ -83,6 +96,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to, subject, "reportRejected.html", mailMap);
     }
 
+    @Override
     public void sendDeletedCommentEmail(String to, Comment comment) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("comment", comment.getCommentBody());
@@ -90,6 +104,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to, subject, "deletedComment.html", mailMap);
     }
 
+    @Override
     public void sendDeletedListEmail(String to, MediaList mediaList) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("list", mediaList.getListName());
