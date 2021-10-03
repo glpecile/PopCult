@@ -111,7 +111,7 @@ public class MediaController {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
-            final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
+            final List<MediaList> userLists = listsService.getUserEditableLists(user.getUserId(), defaultValue-1, itemsPerPage).getElements();
             mav.addObject("userLists", userLists);
         });
 
