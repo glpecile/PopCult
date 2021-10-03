@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,30 +27,56 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void reportList(int listId, String report) {
-        userService.getCurrentUser().ifPresent(user -> {
-            reportDao.reportList(listId, user.getUserId(), report);
-            sendReportCreatedEmail(user.getEmail(), report);
-        });
+        if (principalIsMod()) {
+            listsService.getMediaListById(listId).ifPresent(mediaList -> {
+                listsService.deleteList(mediaList.getMediaListId());
+                sendDeletedListEmail(mediaList.getUserId(), mediaList);
+            });
+        } else {
+            userService.getCurrentUser().ifPresent(user -> {
+                reportDao.reportList(listId, user.getUserId(), report);
+                sendReportCreatedEmail(user.getEmail(), report);
+            });
+        }
     }
 
     @Override
     public void reportListComment(int listId, int commentId, String report) {
-        userService.getCurrentUser().ifPresent(user -> {
-            reportDao.reportListComment(listId, commentId, user.getUserId(), report);
-            sendReportCreatedEmail(user.getEmail(), report);
-        });
+        if (principalIsMod()) {
+            commentService.getListCommentById(commentId).ifPresent(comment -> {
+                commentService.deleteCommentFromList(comment.getCommentId());
+                sendDeletedCommentEmail(comment.getUserId(), comment);
+            });
+        } else {
+            userService.getCurrentUser().ifPresent(user -> {
+                reportDao.reportListComment(listId, commentId, user.getUserId(), report);
+                sendReportCreatedEmail(user.getEmail(), report);
+            });
+        }
     }
 
     @Override
     public void reportMediaComment(int mediaId, int commentId, String report) {
-        userService.getCurrentUser().ifPresent(user -> {
-            reportDao.reportMediaComment(mediaId, commentId, user.getUserId(), report);
-            sendReportCreatedEmail(user.getEmail(), report);
-        });
+        if (principalIsMod()) {
+            commentService.getMediaCommentById(commentId).ifPresent(comment -> {
+                commentService.deleteCommentFromMedia(comment.getCommentId());
+                sendDeletedCommentEmail(comment.getUserId(), comment);
+            });
+        } else {
+            userService.getCurrentUser().ifPresent(user -> {
+                reportDao.reportMediaComment(mediaId, commentId, user.getUserId(), report);
+                sendReportCreatedEmail(user.getEmail(), report);
+            });
+        }
     }
 
     private void sendReportCreatedEmail(String email, String report) {
         emailService.sendReportCreatedEmail(email, report);
+    }
+
+    private boolean principalIsMod() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MOD"));
     }
 
     @Override
