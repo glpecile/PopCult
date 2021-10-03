@@ -49,13 +49,23 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="<c:url value="/"/>"><spring:message code="nav.drop.home"/> </a></li>
-                            <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>"><spring:message code="nav.drop.profile"/> </a>
-                            </li>
-                            <li><a class="dropdown-item" href="<c:url value="/user/${username}/lists"/>"><spring:message
-                                    code="nav.drop.lists"/></a></li>
-                            <li><a class="dropdown-item" href="<c:url value="/user/${username}/requests"/>"><spring:message
-                                    code="nav.drop.requests"/></a></li>
-                            <li><a class="dropdown-item" href="<c:url value="/logout"/>"><spring:message code="profile.signOut"/></a></li>
+                            <li><a class="dropdown-item" href="<c:url value="/user/${username}"/>">
+                                <spring:message code="nav.drop.profile"/>
+                            </a></li>
+                            <sec:authorize access="hasRole('MOD')">
+                                <li><a class="dropdown-item" href="<c:url value="/admin"/>">
+                                    <spring:message code="nav.drop.admin"/>
+                                </a></li>
+                            </sec:authorize>
+                            <li><a class="dropdown-item" href="<c:url value="/user/${username}/lists"/>">
+                                <spring:message code="nav.drop.lists"/>
+                            </a></li>
+                            <li><a class="dropdown-item" href="<c:url value="/user/${username}/requests"/>">
+                                <spring:message code="nav.drop.requests"/>
+                            </a></li>
+                            <li><a class="dropdown-item" href="<c:url value="/logout"/>">
+                                <spring:message code="profile.signOut"/>
+                            </a></li>
                         </ul>
                     </li>
                 </sec:authorize>
