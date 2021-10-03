@@ -17,6 +17,11 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <br>
     <div class="col-8 offset-2 flex-grow">
+        <h2 class="display-5 fw-bolder"><spring:message code="profile.panel.title" arguments="${username}"/></h2>
+        <jsp:include page="/WEB-INF/jsp/components/notificationTabs.jsp">
+            <jsp:param name="username" value="${username}"/>
+            <jsp:param name="path" value="requests"/>
+        </jsp:include>
         <h1 class="font-bold text-2xl pt-2">
             <spring:message code="profile.requests.title"/>
         </h1>
@@ -36,6 +41,7 @@
         </c:forEach>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
+
 </div>
 </body>
 </html>

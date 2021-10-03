@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -52,6 +53,8 @@ public class UserController {
     private CollaborativeListService collaborativeListService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private CommentService commentService;
 
 
     private static final int listsPerPage = 4;
@@ -242,11 +245,11 @@ public class UserController {
     public ModelAndView resetPassword(@Valid @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
                                       final BindingResult errors,
                                       @RequestParam(value = "token", defaultValue = "") final String token) {
-        if(errors.hasErrors()) {
+        if (errors.hasErrors()) {
             return resetPasswordForm(resetPasswordForm, token);
         }
         Token resetPasswordToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
-        if(userService.resetPassword(resetPasswordToken, resetPasswordForm.getNewPassword())) {
+        if (userService.resetPassword(resetPasswordToken, resetPasswordForm.getNewPassword())) {
             return new ModelAndView("redirect:/login");
         }
         return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
@@ -301,7 +304,7 @@ public class UserController {
     }
 
     @RequestMapping("user/{username}/lists")
-    public ModelAndView userEditableLists(@PathVariable("username") final String username,  @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userEditableLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userEditableLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user.getUserId(), page - 1, editablePerPage);
@@ -309,6 +312,16 @@ public class UserController {
         mav.addObject("user", user);
         mav.addObject("listContainer", editableLists);
         mav.addObject("covers", editableCovers);
+        return mav;
+    }
+
+    @RequestMapping("user/{username}/notifications")
+    public ModelAndView userNotifications(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        ModelAndView mav = new ModelAndView("userNotifications");
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        PageContainer<Comment> notificationContainer = commentService.getUserListsCommentsNotifications(user.getUserId(), page - 1, itemsPerPage * 4);
+        mav.addObject("username", username);
+        mav.addObject("notifications", notificationContainer);
         return mav;
     }
 }
