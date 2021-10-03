@@ -22,9 +22,16 @@
             <div class="flex justify-content-start content-center pt-4">
                 <div class="col-md-auto">
                     <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                    <h4 class="py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/user/${user.username}"/>">
-                    <spring:message code="lists.by"/> <b class="text-purple-500 hover:text-purple-900"><c:out value="${user.username}"/></b>
-                    </a></h4>
+                    <div class="flex justify-right">
+                    <h4 class="py-2 pb-2.5">
+                    <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900" href="<c:url value="/user/${user.username}"/>"><b><c:out value="${user.username}"/></b></a>
+                    </h4>
+                    <c:if test="${forkedFrom != null}">
+                        <h4 class="py-2 pb-2.5">
+                        , <spring:message code="lists.forkedFrom"/> <a class="text-purple-500 hover:text-purple-900" href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out value="${forkedFrom.listName}"/></b></a>
+                    </h4>
+                    </c:if>
+                    </div>
                 </div>
                 <div class="pt-2.5">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
