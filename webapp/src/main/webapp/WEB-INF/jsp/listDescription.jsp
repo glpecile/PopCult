@@ -44,11 +44,19 @@
                             <h4 class="py-2 pb-2.5">
                                 <spring:message code="lists.forkedAmount"/>
                             </h4>
-                            <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
-                                    <c:out value="${forks.totalCount}"/>
-                            </div>
+                            <button class="btn btn-link flex rounded-full p-2.5 my-1 h-6 w-6 group justify-center items-center text-white bg-purple-500 hover:bg-purple-600 font-semibold"
+                                    data-bs-toggle="modal" data-bs-target="#forksModal">
+                                <c:out value="${forks.totalCount}"/>
+                            </button>
                             <h4 class="py-2 pb-2.5">
-                                <spring:message code="lists.forkedTimes"/>
+                                <c:choose>
+                                    <c:when test="${forks.totalCount == 1}">
+                                        <spring:message code="lists.forkedTime"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="lists.forkedTimes"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </h4>
                         </div>
                     </c:if>
@@ -145,7 +153,7 @@
                     <spring:message code="comments.section"/>
                 </h2>
                 <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
-                    ${listCommentsContainer.totalCount}
+                    <c:out value="${listCommentsContainer.totalCount}"/>
                 </div>
             </div>
             <spring:message code="comments.placeholder" var="commentPlaceholder"/>
@@ -186,6 +194,35 @@
         </div>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
+    <%-- Forks Modal--%>
+    <div class="modal fade" id="forksModal" tabindex="-1" aria-labelledby="forksModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="forksModalLabel">
+                        <spring:message code="lists.forks"/>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="overflow-y-auto h-50">
+                        <c:forEach var="fork" items="${forks.elements}">
+                            <a href="<c:url value="/lists/${fork.mediaListId}"/> ">
+                                <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
+                                    <div class="flex">
+                                        <h4 class="pl-3 py-4 text-xl font-semibold tracking-tight text-gray-800">
+                                            <c:out value="${fork.listName}"/>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
