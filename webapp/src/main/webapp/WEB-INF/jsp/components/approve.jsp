@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <form class="m-0" action="<c:url value="${param.approvePath}"/>" method="POST">
     <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold group hover:text-white"
-            type="submit" id="approveReport" name="approveReport" title="Approve report">
+            type="submit" id="approveReport" name="approveReport">
         <i class="far fa-thumbs-up group-hover:text-white pr-2"></i>
         <spring:message code="report.approve"/>
     </button>

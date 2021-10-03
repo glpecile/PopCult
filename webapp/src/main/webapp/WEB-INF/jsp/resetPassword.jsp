@@ -2,8 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -30,7 +33,7 @@
                         <form:label path="newPassword" cssClass="form-label">
                             <spring:message code="register.password"/>
                         </form:label>
-                        <form:input path="newPassword" type="password" cssClass="form-control" />
+                        <form:input path="newPassword" type="password" cssClass="form-control"/>
                         <form:errors path="newPassword" cssClass="formError text-sm text-red-500" element="p"/>
                         <form:errors cssClass="formError text-sm text-red-500" element="p"/>
                     </div>

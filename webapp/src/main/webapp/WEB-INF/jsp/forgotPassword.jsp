@@ -2,8 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -18,7 +21,9 @@
             <img class="w-32" src="<c:url value='/resources/images/PopCultLogo.png'/>" alt="popcult_logo" onclick="this.src='<c:url
                     value='/resources/images/PopCultLogoClosed.png'/>'">
         </a>
-        <h2 class="font-bold text-4xl text-center text-white py-2"><spring:message code="forgotPassword"/></h2>
+        <h2 class="font-bold text-4xl text-center text-white py-2">
+            <spring:message code="forgotPassword"/>
+        </h2>
 
         <%-- Forgot password form --%>
         <div class="container w-full max-w-xs mx-auto mt-8 px-4 font-sans rounded-lg shadow-lg bg-white p-2 my-8">
@@ -31,16 +36,16 @@
                         <form:input type="text" cssClass="form-control" path="email"/>
                         <form:errors path="email" cssClass="formError text-sm text-red-500" element="p"/>
                     </div>
-                    <div class="py-1 px-2.5 text-semibold flex justify-between">
-                        <a href="<c:url value="/login"/>">
-                            <button class="btn btn-secondary px-2.5 mt-2" type="button">
-                                <spring:message code="forgotPassword.cancel"/>
-                            </button>
-                        </a>
-                        <button class="btn btn-secondary px-2.5 mt-2" type="submit">
-                            <spring:message code="forgotPassword.button"/>
+                </div>
+                <div class="py-1 px-2.5 text-semibold flex justify-between">
+                    <a href="<c:url value="/login"/>">
+                        <button class="btn btn-dark px-2.5 my-2" type="button">
+                            <spring:message code="forgotPassword.cancel"/>
                         </button>
-                    </div>
+                    </a>
+                    <button class="btn btn-secondary px-2.5 my-2" type="submit">
+                        <spring:message code="forgotPassword.button"/>
+                    </button>
                 </div>
             </form:form>
         </div>
