@@ -97,18 +97,20 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendDeletedCommentEmail(String to, Comment comment) {
+    public void sendDeletedCommentEmail(String to, String comment, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("comment", comment.getCommentBody());
+        mailMap.put("comment", comment);
+        mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.deleted.comment.subject", null, Locale.getDefault());
         sendEmail(to, subject, "deletedComment.html", mailMap);
     }
 
     @Override
-    public void sendDeletedListEmail(String to, MediaList mediaList) {
+    public void sendDeletedListEmail(String to, MediaList mediaList, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("list", mediaList.getListName());
         mailMap.put("listDescription", mediaList.getDescription());
+        mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.deleted.list.subject", null, Locale.getDefault());
         sendEmail(to, subject, "deletedList.html", mailMap);
     }

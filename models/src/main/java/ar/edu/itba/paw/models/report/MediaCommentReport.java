@@ -8,8 +8,8 @@ public class MediaCommentReport extends Report {
     private final int userId;
     private final String commentBody;
 
-    public MediaCommentReport(int reportId, String report, Date date, int commentId, int mediaId, int userId, String commentBody) {
-        super(reportId, report, date);
+    public MediaCommentReport(int reportId, int reporteeId, String report, Date date, int commentId, int mediaId, int userId, String commentBody) {
+        super(reportId, reporteeId, report, date);
         this.commentId = commentId;
         this.mediaId = mediaId;
         this.userId = userId;
