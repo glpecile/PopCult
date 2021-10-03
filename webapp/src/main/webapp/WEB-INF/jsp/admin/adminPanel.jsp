@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,10 +29,11 @@
             <b class="text-purple-500 hover:text-purple-900"><spring:message code="report.title.plural"/></b>
         </a></h2>
         <!-- Link to mods -->
-        <h2 class="text-xl py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/admin/mods"/>">
-            <b class="text-purple-500 hover:text-purple-900"><spring:message code="mods.title"/></b>
-        </a></h2>
-
+        <sec:authorize access="hasRole('ADMIN')">
+            <h2 class="text-xl py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/admin/mods"/>">
+                <b class="text-purple-500 hover:text-purple-900"><spring:message code="mods.title"/></b>
+            </a></h2>
+        </sec:authorize>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
