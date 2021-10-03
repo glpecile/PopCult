@@ -58,7 +58,7 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize){
+    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize) {
         return listsDao.getMediaIdInList(mediaListId, page, pageSize);
     }
 
@@ -130,5 +130,15 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
         return listsDao.getUserEditableLists(userId, page, pageSize);
+    }
+
+    @Override
+    public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
+        return listsDao.getListForks(listId, page, pageSize);
+    }
+
+    @Override
+    public Optional<MediaList> getForkedFrom(int listId) {
+        return listsDao.getForkedFrom(listId);
     }
 }

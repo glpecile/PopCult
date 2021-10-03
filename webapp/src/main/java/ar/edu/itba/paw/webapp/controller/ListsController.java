@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -76,10 +77,15 @@ public class ListsController {
         final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
+        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
+        final PageContainer<MediaList> forks = listsService.getListForks(listId, defaultValue-1, itemsPerPage);
+        mav.addObject("forks", forks);
+        mav.addObject("collaborators", collaborators);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
         mav.addObject("listCommentsContainer", listCommentsContainer);
+        listsService.getForkedFrom(listId).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
@@ -111,7 +117,7 @@ public class ListsController {
     @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
     public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") int collabId) {
         collaborativeListService.deleteCollaborator(collabId);
-        return new ModelAndView("redirect:/lists/edit/" + listId+"/manageMedia");
+        return new ModelAndView("redirect:/lists/edit/" + listId + "/manageMedia");
     }
 
     //CREATE A NEW LIST - PART 1
