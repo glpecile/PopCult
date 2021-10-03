@@ -19,12 +19,12 @@
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 py-2 flex-grow">
-        <!-- Admin Panel message -->
+        <!-- Report Panel message -->
         <h1 class="text-center display-5 fw-bolder py-4">
-            <spring:message code="admin.title"/>
+            <spring:message code="report.title.plural"/>
         </h1>
         <%--    tabs     --%>
-        <jsp:include page="/WEB-INF/jsp/components/adminTabs.jsp">
+        <jsp:include page="/WEB-INF/jsp/components/reportTabs.jsp">
             <jsp:param name="path" value="listCommentsReports"/>
             <jsp:param name="listReports" value="${listReports}"/>
             <jsp:param name="listCommentsReports" value="${listCommentReportPageContainer.totalCount}"/>
