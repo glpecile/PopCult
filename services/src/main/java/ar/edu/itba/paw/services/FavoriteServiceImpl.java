@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,7 +74,14 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
-        return favoriteDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+        PageContainer<MediaList> recommendations = favoriteDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+        if (recommendations.getTotalCount() < pageSize) {
+            PageContainer<MediaList> filler = favoriteDao.getMostLikedLists(page, pageSize - recommendations.getTotalCount());
+            List<MediaList> toAdd = recommendations.getElements();
+            toAdd.addAll(filler.getElements());
+            return new PageContainer<>(toAdd, page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+        }
+        return recommendations;
     }
 
     @Override
@@ -83,7 +91,14 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
-        return favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
+        PageContainer<Media> recommendations = favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
+        if (recommendations.getTotalCount() < pageSize) {
+            PageContainer<Media> filler = favoriteDao.getMostLikedMedia(mediaType, page, pageSize - recommendations.getTotalCount());
+            List<Media> toAdd = recommendations.getElements();
+            toAdd.addAll(filler.getElements());
+            return new PageContainer<>(toAdd, page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+        }
+        return recommendations;
     }
 
     @Override

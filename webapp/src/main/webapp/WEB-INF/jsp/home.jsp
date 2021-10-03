@@ -24,6 +24,7 @@
     <div class="col-8 offset-2 py-2">
         <!-- Welcome back message -->
         <div class="flex flex-col justify-center items-center py-4 mx-auto">
+            <c:set var="authenticated" value="false"/>
             <sec:authorize access="!isAuthenticated()">
                 <h1 class="text-center text-3xl">
                     <spring:message code="home.slogan"/>
@@ -36,6 +37,7 @@
             <sec:authorize access="isAuthenticated()">
                 <c:set var="username">
                     <sec:authentication property="principal.username"/>
+                    <c:set var="authenticated" value="true"/>
                 </c:set>
                 <h1 class="text-center text-3xl">
                     <spring:message code="home.loggedGreeting"/>
@@ -49,7 +51,14 @@
         <!-- Recent lists -->
         <div class="flex justify-between">
             <h2 class="font-bold text-2xl pt-2">
-                <spring:message code="home.title.lists"/>
+                <c:choose>
+                    <c:when test="${discoveryListsContainer.totalCount == 0 || !authenticated}">
+                        <spring:message code="home.title.lists"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="home.title.lists.discovery"/>
+                    </c:otherwise>
+                </c:choose>
             </h2>
             <a href="<c:url value="/lists"/>">
                 <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
@@ -61,7 +70,7 @@
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                 <c:set var="k" value="1"/>
                 <c:choose>
-                    <c:when test="${discoveryListsContainer.totalCount == 0}">
+                    <c:when test="${discoveryListsContainer.totalCount == 0 || !authenticated}">
                         <c:forEach var="cover" items="${recentlyAddedLists}">
                             <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
                                  id="${k}">
@@ -127,7 +136,14 @@
         <!-- Slider for films -->
         <div class="flex justify-between">
             <h2 class="font-bold text-2xl pt-2">
-                <spring:message code="home.title.films"/>
+                <c:choose>
+                    <c:when test="${discoveryFilmContainer.totalCount == 0 || !authenticated}">
+                        <spring:message code="home.title.films"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="home.title.films.discovery"/>
+                    </c:otherwise>
+                </c:choose>
             </h2>
             <a href="<c:url value="/media/films"/>">
                 <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
@@ -139,9 +155,10 @@
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                 <c:set var="i" value="7"/>
                 <c:choose>
-                    <c:when test="${discoveryFilmContainer.totalCount == 0}">
+                    <c:when test="${discoveryFilmContainer.totalCount == 0 || !authenticated}">
                         <c:forEach var="film" items="${latestFilmsList}">
-                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
+                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
+                                 id="${i}">
                                 <c:set var="i" value="${i + 1}"/>
                                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                     <jsp:param name="image" value="${film.image}"/>
@@ -154,7 +171,8 @@
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="film" items="${discoveryFilmContainer.elements}">
-                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
+                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
+                                 id="${i}">
                                 <c:set var="i" value="${i + 1}"/>
                                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                     <jsp:param name="image" value="${film.image}"/>
@@ -200,7 +218,14 @@
         <!-- Slider for series -->
         <div class="flex justify-between">
             <h2 class="font-bold text-2xl pt-2">
-                <spring:message code="home.title.series"/>
+                <c:choose>
+                    <c:when test="${discoverySeriesContainer.totalCount == 0 || !authenticated}">
+                        <spring:message code="home.title.series"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="home.title.series.discovery"/>
+                    </c:otherwise>
+                </c:choose>
             </h2>
             <a href="<c:url value="/media/series"/>">
                 <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
@@ -212,9 +237,10 @@
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                 <c:set var="j" value="13"/>
                 <c:choose>
-                    <c:when test="${discoverySeriesContainer.totalCount == 0}">
+                    <c:when test="${discoverySeriesContainer.totalCount == 0 || !authenticated}">
                         <c:forEach var="serie" items="${latestSeriesList}">
-                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
+                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
+                                 id="${j}">
                                 <c:set var="j" value="${j + 1}"/>
                                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                     <jsp:param name="image" value="${serie.image}"/>
@@ -227,7 +253,8 @@
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="serie" items="${discoverySeriesContainer.elements}">
-                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${j}">
+                            <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
+                                 id="${j}">
                                 <c:set var="j" value="${j + 1}"/>
                                 <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                                     <jsp:param name="image" value="${serie.image}"/>
