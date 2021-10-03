@@ -23,14 +23,20 @@
                 <div class="col-md-auto">
                     <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                     <div class="flex justify-right">
-                    <h4 class="py-2 pb-2.5">
-                    <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900" href="<c:url value="/user/${user.username}"/>"><b><c:out value="${user.username}"/></b></a>
-                    </h4>
-                    <c:if test="${forkedFrom != null}">
                         <h4 class="py-2 pb-2.5">
-                        , <spring:message code="lists.forkedFrom"/> <a class="text-purple-500 hover:text-purple-900" href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out value="${forkedFrom.listName}"/></b></a>
-                    </h4>
-                    </c:if>
+                            <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
+                                                                 href="<c:url value="/user/${user.username}"/>"><b><c:out
+                                value="${user.username}"/></b></a>
+                        </h4>
+                        <%-- Forked From --%>
+                        <c:if test="${forkedFrom != null}">
+                            <h4 class="py-2 pb-2.5">
+                                , <spring:message code="lists.forkedFrom"/> <a
+                                    class="text-purple-500 hover:text-purple-900"
+                                    href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out
+                                    value="${forkedFrom.listName}"/></b></a>
+                            </h4>
+                        </c:if>
                     </div>
                 </div>
                 <div class="pt-2.5">
@@ -52,6 +58,18 @@
         </div>
 
         <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
+        <c:if test="${collaborators.totalCount != 0}">
+            <h4 class="font-bold py-2 pb-2.5"><spring:message code="lists.collaborators"/></h4>
+            <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
+                <c:forEach var="collaborator" items="${collaborators.elements}">
+                    <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
+                        <jsp:param name="text" value="${collaborator.collaboratorUsername}"/>
+                        <jsp:param name="tooltip" value="${collaborator.collaboratorUsername}"/>
+                        <jsp:param name="url" value="/users/${collaborator.collaboratorUsername}"/>
+                    </jsp:include>
+                </c:forEach>
+            </div>
+        </c:if>
 
         <!-- Media icons -->
         <div class="flex flex-wrap justify-start">
