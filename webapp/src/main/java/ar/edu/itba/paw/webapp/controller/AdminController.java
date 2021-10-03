@@ -24,21 +24,21 @@ public class AdminController {
     private static final int adminPanelItemsPerPage = 3;
 
 
-    @RequestMapping("/admin")
-    public ModelAndView adminPanel() {
-        ModelAndView mav = new ModelAndView("adminPanel");
-        PageContainer<ListReport> listReportPageContainer = reportService.getListReports(0, adminPanelItemsPerPage);
-        PageContainer<ListCommentReport> listCommentReportPageContainer = reportService.getListCommentReports(0, adminPanelItemsPerPage);
-        PageContainer<MediaCommentReport> mediaCommentReportPageContainer = reportService.getMediaCommentReports(0, adminPanelItemsPerPage);
+//    @RequestMapping("/admin")
+//    public ModelAndView adminPanel() {
+//        ModelAndView mav = new ModelAndView("adminPanel");
+//        PageContainer<ListReport> listReportPageContainer = reportService.getListReports(0, adminPanelItemsPerPage);
+//        PageContainer<ListCommentReport> listCommentReportPageContainer = reportService.getListCommentReports(0, adminPanelItemsPerPage);
+//        PageContainer<MediaCommentReport> mediaCommentReportPageContainer = reportService.getMediaCommentReports(0, adminPanelItemsPerPage);
+//
+//        mav.addObject("listReportPageContainer", listReportPageContainer);
+//        mav.addObject("listCommentReportPageContainer", listCommentReportPageContainer);
+//        mav.addObject("mediaCommentReportPageContainer", mediaCommentReportPageContainer);
+//
+//        return mav;
+//    }
 
-        mav.addObject("listReportPageContainer", listReportPageContainer);
-        mav.addObject("listCommentReportPageContainer", listCommentReportPageContainer);
-        mav.addObject("mediaCommentReportPageContainer", mediaCommentReportPageContainer);
-
-        return mav;
-    }
-
-    @RequestMapping("/admin/reports/lists")
+    @RequestMapping({"/admin", "/admin/reports/lists"})
     public ModelAndView listReports(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("listReports");
         PageContainer<ListReport> listReportPageContainer = reportService.getListReports(page - 1, itemsPerPage);
@@ -46,16 +46,16 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/reports/lists/{reportId}/approve", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/lists/{reportId}", method = {RequestMethod.POST}, params = "approveReport")
     public ModelAndView approveListReport(HttpServletRequest request,
-                                             @PathVariable(value = "reportId") final int reportId) {
+                                          @PathVariable(value = "reportId") final int reportId) {
         reportService.approveListReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @RequestMapping(value = "/admin/reports/lists/{reportId}/reject", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/lists/{reportId}", method = {RequestMethod.POST}, params = "rejectReport")
     public ModelAndView rejectListReport(HttpServletRequest request,
-                                            @PathVariable(value = "reportId") final int reportId) {
+                                         @PathVariable(value = "reportId") final int reportId) {
         reportService.deleteListReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -69,16 +69,16 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/reports/lists/comments/{reportId}/approve", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/lists/comments/{reportId}", method = {RequestMethod.POST}, params = "approveReport")
     public ModelAndView approveListCommentReport(HttpServletRequest request,
-                                             @PathVariable(value = "reportId") final int reportId) {
+                                                 @PathVariable(value = "reportId") final int reportId) {
         reportService.approveListCommentReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @RequestMapping(value = "/admin/reports/lists/comments/{reportId}/reject", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/lists/comments/{reportId}", method = {RequestMethod.POST}, params = "rejectReport")
     public ModelAndView rejectListCommentReport(HttpServletRequest request,
-                                            @PathVariable(value = "reportId") final int reportId) {
+                                                @PathVariable(value = "reportId") final int reportId) {
         reportService.deleteListCommentReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -92,16 +92,16 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/reports/media/comments/{reportId}/approve", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/media/comments/{reportId}", method = {RequestMethod.POST}, params = "approveReport")
     public ModelAndView approveMediaCommentReport(HttpServletRequest request,
-                                             @PathVariable(value = "reportId") final int reportId) {
+                                                  @PathVariable(value = "reportId") final int reportId) {
         reportService.approveMediaCommentReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @RequestMapping(value = "/admin/reports/media/comments/{reportId}/reject", method = {RequestMethod.POST})
+    @RequestMapping(value = "/admin/reports/media/comments/{reportId}", method = {RequestMethod.POST}, params = "rejectReport")
     public ModelAndView rejectMediaCommentReport(HttpServletRequest request,
-                                            @PathVariable(value = "reportId") final int reportId) {
+                                                 @PathVariable(value = "reportId") final int reportId) {
         reportService.deleteMediaCommentReport(reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }

@@ -21,14 +21,13 @@
     <div class="col-8 offset-2 py-2 flex-grow">
         <!-- Admin Panel message -->
         <h1 class="text-start display-5 fw-bolder py-4">
-            <spring:message code="admin.title.listCommentReports"/>
+            <spring:message code="admin.title"/>
         </h1>
-        <!-- Media comments reports -->
-        <div class="flex justify-between">
-            <h2 class="font-bold text-2xl pt-2">
-                <spring:message code="admin.listCommentReports" arguments="${listCommentReportPageContainer.totalCount}"/>
-            </h2>
-        </div>
+        <%--    tabs     --%>
+        <jsp:include page="/WEB-INF/jsp/components/adminTabs.jsp">
+            <jsp:param name="path" value="listsCommentsReports"/>
+        </jsp:include>
+        <!-- Lists comments reports -->
         <div class="row">
             <c:forEach var="listCommentReport" items="${listCommentReportPageContainer.elements}">
                 <div class="py-2">
