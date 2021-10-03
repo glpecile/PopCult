@@ -18,9 +18,9 @@ public interface EmailService {
 
     void sendReportRejectedEmail(String to, String report);
 
-    void sendDeletedCommentEmail(String to, Comment comment);
+    void sendDeletedCommentEmail(String to, String comment, String report);
 
-    void sendDeletedListEmail(String to, MediaList mediaList);
+    void sendDeletedListEmail(String to, MediaList mediaList, String report);
 
     void sendNewRequestEmail(MediaList list, User user);
 

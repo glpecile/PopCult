@@ -30,7 +30,7 @@ public class ReportServiceImpl implements ReportService {
         if (principalIsMod()) {
             listsService.getMediaListById(listId).ifPresent(mediaList -> {
                 listsService.deleteList(mediaList.getMediaListId());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList);
+                sendDeletedListEmail(mediaList.getUserId(), mediaList, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -45,7 +45,7 @@ public class ReportServiceImpl implements ReportService {
         if (principalIsMod()) {
             commentService.getListCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromList(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment);
+                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
         if (principalIsMod()) {
             commentService.getMediaCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromMedia(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment);
+                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -131,7 +131,7 @@ public class ReportServiceImpl implements ReportService {
             listsService.getMediaListById(report.getMediaListId()).ifPresent(mediaList -> {
                 listsService.deleteList(mediaList.getMediaListId());
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList);
+                sendDeletedListEmail(mediaList.getUserId(), mediaList, report.getReport());
             });
         });
     }
@@ -142,7 +142,7 @@ public class ReportServiceImpl implements ReportService {
             commentService.getListCommentById(report.getCommentId()).ifPresent(comment -> {
                 commentService.deleteCommentFromList(comment.getCommentId());
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment);
+                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report.getReport());
             });
         });
     }
@@ -153,7 +153,7 @@ public class ReportServiceImpl implements ReportService {
             commentService.getMediaCommentById(report.getCommentId()).ifPresent(comment -> {
                 commentService.deleteCommentFromMedia(comment.getCommentId());
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment);
+                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report.getReport());
             });
         });
     }
@@ -164,15 +164,15 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
-    private void sendDeletedListEmail(int userId, MediaList mediaList) {
+    private void sendDeletedListEmail(int userId, MediaList mediaList, String report) {
         userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedListEmail(user.getEmail(), mediaList);
+            emailService.sendDeletedListEmail(user.getEmail(), mediaList, report);
         });
     }
 
-    private void sendDeletedCommentEmail(int userId, Comment comment) {
+    private void sendDeletedCommentEmail(int userId, String comment, String report) {
         userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedCommentEmail(user.getEmail(), comment);
+            emailService.sendDeletedCommentEmail(user.getEmail(), comment, report);
         });
     }
 }
