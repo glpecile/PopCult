@@ -78,7 +78,6 @@ public class MediaController {
             final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
             mav.addObject("discoveryFilmContainer", discoveryFilmContainer);
             mav.addObject("discoverySeriesContainer", discoverySeriesContainer);
-            mav.addObject("discoveryListsContainer",discoveryListsContainer);
             mav.addObject("discoveryListsCovers", discoveryListsCovers);
         });
         return mav;

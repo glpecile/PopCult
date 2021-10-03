@@ -52,7 +52,7 @@
         <div class="flex justify-between">
             <h2 class="font-bold text-2xl pt-2">
                 <c:choose>
-                    <c:when test="${discoveryListsContainer.totalCount == 0 || !authenticated}">
+                    <c:when test="${!authenticated}">
                         <spring:message code="home.title.lists"/>
                     </c:when>
                     <c:otherwise>
@@ -70,7 +70,7 @@
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                 <c:set var="k" value="1"/>
                 <c:choose>
-                    <c:when test="${discoveryListsContainer.totalCount == 0 || !authenticated}">
+                    <c:when test="${!authenticated}">
                         <c:forEach var="cover" items="${recentlyAddedLists}">
                             <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
                                  id="${k}">
@@ -137,7 +137,7 @@
         <div class="flex justify-between">
             <h2 class="font-bold text-2xl pt-2">
                 <c:choose>
-                    <c:when test="${discoveryFilmContainer.totalCount == 0 || !authenticated}">
+                    <c:when test="${!authenticated}">
                         <spring:message code="home.title.films"/>
                     </c:when>
                     <c:otherwise>
@@ -155,7 +155,7 @@
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
                 <c:set var="i" value="7"/>
                 <c:choose>
-                    <c:when test="${discoveryFilmContainer.totalCount == 0 || !authenticated}">
+                    <c:when test="${!authenticated}">
                         <c:forEach var="film" items="${latestFilmsList}">
                             <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image"
                                  id="${i}">
