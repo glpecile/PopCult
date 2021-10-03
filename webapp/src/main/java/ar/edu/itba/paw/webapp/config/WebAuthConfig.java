@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.models.user.Roles;
-import ar.edu.itba.paw.webapp.auth.DeleteCommentVoter;
-import ar.edu.itba.paw.webapp.auth.EditListVoter;
-import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
-import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
+import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -47,12 +44,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private EditListVoter editListVoter;
-
     @Autowired
     private RequestsManagerVoter requestsManagerVoter;
-
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
+    @Autowired
+    private ListsVoter listsVoter;
 
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
@@ -77,7 +74,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new AuthenticatedVoter(),
                 editListVoter,
                 requestsManagerVoter,
-                deleteCommentVoter
+                deleteCommentVoter,
+                listsVoter
         );
         return new UnanimousBased(decisionVoters);
     }
