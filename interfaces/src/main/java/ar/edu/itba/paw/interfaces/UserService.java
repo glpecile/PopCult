@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
@@ -32,4 +33,10 @@ public interface UserService {
     void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType);
 
     void updateUserData(int userId, String email, String username, String name);
+
+    PageContainer<User> getModerators(int page, int pageSize);
+
+    void promoteToMod(int userId);
+
+    void removeMod(int userId);
 }

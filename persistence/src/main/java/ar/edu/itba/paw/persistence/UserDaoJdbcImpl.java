@@ -3,6 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,5 +106,23 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public void updateUserData(int userId, String email, String username, String name) {
         jdbcTemplate.update("UPDATE users SET name = ?, email = ?, username = ? WHERE userid = ?", name, email, username, userId);
+    }
+
+    @Override
+    public PageContainer<User> getModerators(int page, int pageSize) {
+        List<User> moderators = jdbcTemplate.query("SELECT * FROM users WHERE role = ? OFFSET ? LIMIT ?", new Object[]{Roles.MOD.ordinal(), page * pageSize, page}, USER_ROW_MAPPER);
+        int moderatorsCount = jdbcTemplate.query("SELECT COUNT(*) FROM users WHERE role = ?", new Object[]{Roles.MOD.ordinal()}, COUNT_ROW_MAPPER)
+                .stream().findFirst().orElse(0);
+        return new PageContainer<User>(moderators, page, pageSize, moderatorsCount);
+    }
+
+    @Override
+    public void promoteToMod(int userId) {
+        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.MOD.ordinal(), userId);
+    }
+
+    @Override
+    public void removeMod(int userId) {
+        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.USER.ordinal(), userId);
     }
 }

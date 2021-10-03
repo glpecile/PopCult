@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
@@ -151,5 +152,18 @@ public class UserServiceImpl implements UserService {
         userDao.updateUserData(userId, email, username, name);
     }
 
+    @Override
+    public PageContainer<User> getModerators(int page, int pageSize) {
+        return userDao.getModerators(page, pageSize);
+    }
 
+    @Override
+    public void promoteToMod(int userId) {
+        userDao.promoteToMod(userId);
+    }
+
+    @Override
+    public void removeMod(int userId) {
+        userDao.removeMod(userId);
+    }
 }
