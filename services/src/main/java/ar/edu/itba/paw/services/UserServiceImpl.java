@@ -151,19 +151,4 @@ public class UserServiceImpl implements UserService {
     public void updateUserData(int userId, String email, String username, String name) {
         userDao.updateUserData(userId, email, username, name);
     }
-
-    @Override
-    public PageContainer<User> getModerators(int page, int pageSize) {
-        return userDao.getModerators(page, pageSize);
-    }
-
-    @Override
-    public void promoteToMod(int userId) {
-        userDao.promoteToMod(userId);
-    }
-
-    @Override
-    public void removeMod(int userId) {
-        userDao.removeMod(userId);
-    }
 }

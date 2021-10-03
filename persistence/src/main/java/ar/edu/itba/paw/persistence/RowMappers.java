@@ -79,7 +79,7 @@ public class RowMappers {
                     rs.getString("image")),
                     rs.getString("characterName"));
     /**
-     * Staff RowMappers.
+     * Studio RowMappers.
      */
     public static final RowMapper<Studio> STUDIO_ROW_MAPPER = (rs, rowNum) -> new Studio(
             rs.getInt("studioId"),
@@ -98,6 +98,7 @@ public class RowMappers {
                     rs.getBoolean("enabled"),
                     rs.getInt("imageId"),
                     rs.getInt("role"));
+
     /**
      * Token RowMappers.
      */

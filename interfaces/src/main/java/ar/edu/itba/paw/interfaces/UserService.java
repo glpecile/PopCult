@@ -33,10 +33,4 @@ public interface UserService {
     void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType);
 
     void updateUserData(int userId, String email, String username, String name);
-
-    PageContainer<User> getModerators(int page, int pageSize);
-
-    void promoteToMod(int userId);
-
-    void removeMod(int userId);
 }

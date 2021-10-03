@@ -107,22 +107,4 @@ public class UserDaoJdbcImpl implements UserDao {
     public void updateUserData(int userId, String email, String username, String name) {
         jdbcTemplate.update("UPDATE users SET name = ?, email = ?, username = ? WHERE userid = ?", name, email, username, userId);
     }
-
-    @Override
-    public PageContainer<User> getModerators(int page, int pageSize) {
-        List<User> moderators = jdbcTemplate.query("SELECT * FROM users WHERE role = ? OFFSET ? LIMIT ?", new Object[]{Roles.MOD.ordinal(), page * pageSize, page}, USER_ROW_MAPPER);
-        int moderatorsCount = jdbcTemplate.query("SELECT COUNT(*) FROM users WHERE role = ?", new Object[]{Roles.MOD.ordinal()}, COUNT_ROW_MAPPER)
-                .stream().findFirst().orElse(0);
-        return new PageContainer<User>(moderators, page, pageSize, moderatorsCount);
-    }
-
-    @Override
-    public void promoteToMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.MOD.ordinal(), userId);
-    }
-
-    @Override
-    public void removeMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.USER.ordinal(), userId);
-    }
 }
