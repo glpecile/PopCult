@@ -42,7 +42,11 @@ public class AdminController {
     public ModelAndView listReports(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("listReports");
         PageContainer<ListReport> listReportPageContainer = reportService.getListReports(page - 1, itemsPerPage);
+        int listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
+        int mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
         mav.addObject("listReportPageContainer", listReportPageContainer);
+        mav.addObject("listCommentsReports", listCommentsReports);
+        mav.addObject("mediaCommentsReports", mediaCommentsReports);
         return mav;
     }
 
@@ -64,8 +68,11 @@ public class AdminController {
     public ModelAndView listCommentReports(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("listCommentReports");
         PageContainer<ListCommentReport> listCommentReportPageContainer = reportService.getListCommentReports(page - 1, itemsPerPage);
+        int listReports = reportService.getListReports(0, 1).getTotalCount();
+        int mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
         mav.addObject("listCommentReportPageContainer", listCommentReportPageContainer);
-
+        mav.addObject("listReports", listReports);
+        mav.addObject("mediaCommentsReports", mediaCommentsReports);
         return mav;
     }
 
@@ -87,8 +94,11 @@ public class AdminController {
     public ModelAndView mediaCommentReports(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("mediaCommentReports");
         PageContainer<MediaCommentReport> mediaCommentReportPageContainer = reportService.getMediaCommentReports(page - 1, itemsPerPage);
+        int listReports = reportService.getListReports(0, 1).getTotalCount();
+        int listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
         mav.addObject("mediaCommentReportPageContainer", mediaCommentReportPageContainer);
-
+        mav.addObject("listReports", listReports);
+        mav.addObject("listCommentsReports", listCommentsReports);
         return mav;
     }
 

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title><spring:message code="admin.title.listReports"/> &#8226; PopCult</title>
+    <title><spring:message code="admin.title.listReports" arguments="${listReportPageContainer.totalCount}"/> &#8226; PopCult</title>
 </head>
 
 <body class="bg-gray-50">
@@ -20,12 +20,15 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 py-2 flex-grow">
         <!-- Admin Panel message -->
-        <h1 class="text-start display-5 fw-bolder py-4">
+        <h1 class="text-center display-5 fw-bolder py-4">
             <spring:message code="admin.title"/>
         </h1>
         <%--    tabs     --%>
         <jsp:include page="/WEB-INF/jsp/components/adminTabs.jsp">
-            <jsp:param name="path" value="listsReports"/>
+            <jsp:param name="path" value="listReports"/>
+            <jsp:param name="listReports" value="${listReportPageContainer.totalCount}"/>
+            <jsp:param name="listCommentsReports" value="${listCommentsReports}"/>
+            <jsp:param name="mediaCommentsReports" value="${mediaCommentsReports}"/>
         </jsp:include>
         <!-- Media comments reports -->
         <div class="row">
