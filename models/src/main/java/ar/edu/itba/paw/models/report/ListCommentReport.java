@@ -8,8 +8,8 @@ public class ListCommentReport extends Report {
     private final int userId;
     private final String commentBody;
 
-    public ListCommentReport(int reportId, String report, Date date, int commentId, int mediaListId, int userId, String commentBody) {
-        super(reportId, report, date);
+    public ListCommentReport(int reportId, int reporteeId, String report, Date date, int commentId, int mediaListId, int userId, String commentBody) {
+        super(reportId, reporteeId, report, date);
         this.commentId = commentId;
         this.mediaListId = mediaListId;
         this.userId = userId;

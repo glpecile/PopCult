@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public interface ReportDao {
 
-    void reportList(int listId, String report);
+    void reportList(int listId, int reporteeId, String report);
 
-    void reportListComment(int listId, int commentId, String report);
+    void reportListComment(int listId, int commentId, int reporteeId, String report);
 
-    void reportMediaComment(int mediaId, int commentId, String report);
+    void reportMediaComment(int mediaId, int commentId, int reporteeId, String report);
 
     Optional<ListReport> getListReportById(int reportId);
 

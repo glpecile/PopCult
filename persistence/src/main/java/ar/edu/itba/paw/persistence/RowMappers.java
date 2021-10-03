@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -103,6 +104,7 @@ public class RowMappers {
     public static final RowMapper<Token> TOKEN_ROW_MAPPER =
             (rs, rowNum) -> new Token(
                     rs.getInt("userId"),
+                    rs.getInt("type"),
                     rs.getString("token"),
                     rs.getDate("expiryDate"));
 
@@ -142,6 +144,18 @@ public class RowMappers {
                     rs.getString("username"),
                     rs.getString("description"));
 
+    /**
+     * Request RowMappers.
+     */
+    public static final RowMapper<Request> REQUEST_ROW_MAPPER =
+            (rs, rowNum) -> new Request(
+                    rs.getInt("collabId"),
+                    rs.getInt("collaboratorId"),
+                    rs.getString("username"),
+                    rs.getInt("listId"),
+                    rs.getString("listname"),
+                    rs.getBoolean("accepted"));
+
 
     /**
      * Reports RowMappers
@@ -149,6 +163,7 @@ public class RowMappers {
     public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("listId"),
@@ -160,6 +175,7 @@ public class RowMappers {
     public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListCommentReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),
@@ -171,6 +187,7 @@ public class RowMappers {
     public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new MediaCommentReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),

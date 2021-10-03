@@ -30,29 +30,13 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByDirectorIds(int staffMemberId, int page, int pageSize) {
-        return staffDao.getMediaByDirectorIds(staffMemberId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByDirector(staffMemberId, page, pageSize);
     }
 
     @Override
-    public PageContainer<Integer> getMediaByActorIds(int staffMemberId, int page, int pageSize) {
-        return staffDao.getMediaByActorIds(staffMemberId, page, pageSize);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByActor(staffMemberId,page,pageSize);
-    }
-
-
-    @Override
-    public PageContainer<Integer> getMediaIds(int staffMemberId, int page, int pageSize) {
-        return staffDao.getMediaIds(staffMemberId, page, pageSize);
     }
 
     @Override

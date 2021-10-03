@@ -12,9 +12,6 @@ public interface StudioService {
 
     List<Studio> getStudioByMediaId(int mediaId);
 
-    @Deprecated
-    PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize);
-
     PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize);
 
     Optional<Integer> getMediaCountByStudio(int studioId);

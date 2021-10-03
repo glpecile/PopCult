@@ -54,14 +54,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
-                .stream().findFirst().orElse(0);
-        return new PageContainer<>(elements,page,pageSize,totalCount);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaGenre NATURAL JOIN media WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize},
                 MEDIA_ROW_MAPPER);

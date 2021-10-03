@@ -36,53 +36,62 @@ public class ReportDaoJdbcImpl implements ReportDao {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listReport (" +
                 "reportId SERIAL PRIMARY KEY," +
                 "listId INT NOT NULL," +
+                "reporteeId INT NOT NULL," +
                 "report TEXT NOT NULL," +
                 "date DATE NOT NULL," +
-                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE)");
+                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE," +
+                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listCommentReport (" +
                 "reportId SERIAL PRIMARY KEY," +
                 "listId INT NOT NULL," +
                 "commentId INT NOT NULL," +
+                "reporteeId INT NOT NULL," +
                 "report TEXT NOT NULL," +
                 "date DATE NOT NULL," +
                 "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES listComment(commentId) ON DELETE CASCADE)");
+                "FOREIGN KEY (commentId) REFERENCES listComment(commentId) ON DELETE CASCADE," +
+                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaCommentReport (" +
                 "reportId SERIAL PRIMARY KEY," +
                 "mediaId INT NOT NULL," +
                 "commentId INT NOT NULL," +
+                "reporteeId INT NOT NULL," +
                 "report TEXT NOT NULL," +
                 "date DATE NOT NULL," +
                 "FOREIGN KEY (mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES mediaComment(commentId) ON DELETE CASCADE)");
+                "FOREIGN KEY (commentId) REFERENCES mediaComment(commentId) ON DELETE CASCADE," +
+                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
-    public void reportList(int listId, String report) {
+    public void reportList(int listId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertListReport.execute(data);
     }
 
     @Override
-    public void reportListComment(int listId, int commentId, String report) {
+    public void reportListComment(int listId, int commentId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
         data.put("commentId", commentId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertListCommentReport.execute(data);
     }
 
     @Override
-    public void reportMediaComment(int mediaId, int commentId, String report) {
+    public void reportMediaComment(int mediaId, int commentId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("commentId", commentId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertMediaCommentReport.execute(data);
