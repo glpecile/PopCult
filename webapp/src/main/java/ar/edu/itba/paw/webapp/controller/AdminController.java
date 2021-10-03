@@ -121,7 +121,9 @@ public class AdminController {
     public ModelAndView modsPanel(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("admin/modsPanel");
         PageContainer<User> moderatorsContainer = moderatorService.getModerators(page - 1, itemsPerPage);
+        int modRequests = moderatorService.getModRequesters(0, 1).getTotalCount();
         mav.addObject("moderatorsContainer", moderatorsContainer);
+        mav.addObject("modRequests", modRequests);
         return mav;
     }
 
@@ -136,7 +138,9 @@ public class AdminController {
     public ModelAndView getModRequests(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("admin/modsRequests");
         PageContainer<User> requestersContainer = moderatorService.getModRequesters(page - 1, itemsPerPage);
+        int moderators = moderatorService.getModerators(0, 1).getTotalCount();
         mav.addObject("requestersContainer", requestersContainer);
+        mav.addObject("moderators", moderators);
         return mav;
     }
 

@@ -8,12 +8,12 @@
             <c:choose>
                 <c:when test="${param.path == 'moderators'}">
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
-                        <spring:message code="mods.moderators.title" arguments=""/>
+                        <spring:message code="mods.moderators.title" arguments="${param.moderators}"/>
                     </button>
                 </c:when>
                 <c:otherwise>
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none">
-                        <spring:message code="mods.moderators.title" arguments=""/>
+                        <spring:message code="mods.moderators.title" arguments="${param.moderators}"/>
                     </button>
                 </c:otherwise>
             </c:choose>
@@ -22,12 +22,12 @@
             <c:choose>
                 <c:when test="${param.path == 'modRequests'}">
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
-                        <spring:message code="mods.requests.title" arguments=""/>
+                        <spring:message code="mods.requests.title" arguments="${param.modRequests}"/>
                     </button>
                 </c:when>
                 <c:otherwise>
                     <button class="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none">
-                        <spring:message code="mods.requests.title" arguments=""/>
+                        <spring:message code="mods.requests.title" arguments="${param.modRequests}"/>
                     </button>
                 </c:otherwise>
             </c:choose>

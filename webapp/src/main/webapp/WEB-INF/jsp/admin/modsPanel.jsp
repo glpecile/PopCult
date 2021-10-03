@@ -24,6 +24,8 @@
         <%--    tabs     --%>
         <jsp:include page="/WEB-INF/jsp/components/modsTabs.jsp">
             <jsp:param name="path" value="moderators"/>
+            <jsp:param name="moderators" value="${moderatorsContainer.totalCount}"/>
+            <jsp:param name="modRequests" value="${modRequests}"/>
         </jsp:include>
         <%--  Moderators      --%>
         <c:if test="${moderatorsContainer.totalCount == 0}">
