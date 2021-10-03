@@ -2,7 +2,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
@@ -18,8 +19,8 @@
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <div class="flex justify-between">
-            <div class="flex justify-content-start content-center pt-4">
+        <div class="flex flex-wrap justify-between pt-4">
+            <div class="flex justify-content-start content-center">
                 <div class="col-md-auto">
                     <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                     <div class="flex justify-right">
@@ -68,17 +69,14 @@
                     </jsp:include>
                 </div>
             </div>
-            <div class="pt-5">
-                <c:url var="reportPath" value="/report/lists/${listId}"/>
-                <a href="${reportPath}">
-                    <button type="button">
-                        <i class="fas fa-exclamation-circle text-right text-gray-500 justify-end hover:text-yellow-400 cursor-pointer fa-2x"
-                           title="Report"></i>
-                    </button>
-                </a>
-            </div>
+            <c:url var="reportPath" value="/report/lists/${listId}"/>
+            <a class="py-3.5 mt-0.5" href="${reportPath}">
+                <button type="button">
+                    <i class="fas fa-exclamation-circle text-right text-gray-500 justify-end hover:text-yellow-400 cursor-pointer fa-2x"
+                       title="Report"></i>
+                </button>
+            </a>
         </div>
-
         <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
         <c:if test="${collaborators.totalCount != 0}">
             <h4 class="font-bold py-2 pb-2.5"><spring:message code="lists.collaborators"/></h4>
@@ -87,7 +85,7 @@
                     <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                         <jsp:param name="text" value="${collaborator.collaboratorUsername}"/>
                         <jsp:param name="tooltip" value="${collaborator.collaboratorUsername}"/>
-                        <jsp:param name="url" value="/users/${collaborator.collaboratorUsername}"/>
+                        <jsp:param name="url" value="/user/${collaborator.collaboratorUsername}"/>
                     </jsp:include>
                 </c:forEach>
             </div>
