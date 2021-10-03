@@ -53,4 +53,9 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentFromMedia(int commentId) {
         commentDao.deleteCommentFromMedia(commentId);
     }
+
+    @Override
+    public PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize) {
+        return commentDao.getUserListsCommentsNotifications(userId, page, pageSize);
+    }
 }

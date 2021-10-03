@@ -21,8 +21,11 @@ public class CommentDaoJdbcImpl implements CommentDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsertMediaComment;
     private final SimpleJdbcInsert jdbcInsertListComment;
+    private final SimpleJdbcInsert jdbcInsertCommentNotifications;
 
     private static final RowMapper<Comment> COMMENT_ROW_MAPPER = RowMappers.COMMENT_ROW_MAPPER;
+
+    private static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER = RowMappers.COMMENT_NOTIFICATIONS_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
@@ -32,6 +35,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertMediaComment = new SimpleJdbcInsert(ds).withTableName("mediacomment").usingGeneratedKeyColumns("commentid");
         jdbcInsertListComment = new SimpleJdbcInsert(ds).withTableName("listcomment").usingGeneratedKeyColumns("commentid");
+        jdbcInsertCommentNotifications = new SimpleJdbcInsert(ds).withTableName("commentnotifications");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediacomment (" +
                 "commentId SERIAL PRIMARY KEY," +
@@ -48,6 +52,11 @@ public class CommentDaoJdbcImpl implements CommentDao {
                 "description TEXT," +
                 "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE SET NULL," +
                 "FOREIGN KEY (listId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS commentNotifications(" +
+                "commentId INT NOT NULL," +
+                "opened BOOLEAN DEFAULT FALSE," +
+                "FOREIGN KEY (commentId) REFERENCES listcomment(commentid))");
     }
 
     @Override
@@ -57,7 +66,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         data.put("mediaId", mediaId);
         data.put("description", comment);
         KeyHolder keyHolder = jdbcInsertMediaComment.executeAndReturnKeyHolder(data);
-        return new Comment((int) keyHolder.getKey(), userId,"", comment);
+        return new Comment((int) keyHolder.getKey(), userId, "", comment);
     }
 
     @Override
@@ -67,7 +76,13 @@ public class CommentDaoJdbcImpl implements CommentDao {
         data.put("listId", listId);
         data.put("description", comment);
         KeyHolder keyHolder = jdbcInsertListComment.executeAndReturnKeyHolder(data);
-        return new Comment((int) keyHolder.getKey(), userId,"", comment);
+
+        Map<String, Object> notificationData = new HashMap<>();
+        notificationData.put("commentId", keyHolder.getKey());
+        notificationData.put("opened", false);
+        jdbcInsertCommentNotifications.execute(notificationData);
+
+        return new Comment((int) keyHolder.getKey(), userId, "", comment);
     }
 
     @Override
@@ -91,7 +106,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
 
     @Override
     public PageContainer<Comment> getListComments(int listId, int page, int pageSize) {
-        List<Comment> listComments =  jdbcTemplate.query("SELECT * FROM listcomment NATURAL JOIN users WHERE listId = ? OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
+        List<Comment> listComments = jdbcTemplate.query("SELECT * FROM listcomment NATURAL JOIN users WHERE listId = ? OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
         int commentsAmount = jdbcTemplate.query("SELECT COUNT(*) FROM listcomment NATURAL JOIN users WHERE listId = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(listComments, page, pageSize, commentsAmount);
     }
@@ -104,5 +119,12 @@ public class CommentDaoJdbcImpl implements CommentDao {
     @Override
     public void deleteCommentFromMedia(int commentId) {
         jdbcTemplate.update("DELETE FROM mediacomment WHERE commentid = ?", commentId);
+    }
+
+    @Override
+    public PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize) {
+        List<Comment> notifications = jdbcTemplate.query("SELECT final.*, u.username FROM (users u JOIN (SELECT comments.*, m.listname FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?) AS final ON u.userid = final.userid) OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, COMMENT_NOTIFICATIONS_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(notifications, page, pageSize, count);
     }
 }

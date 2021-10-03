@@ -23,5 +23,6 @@ public interface CommentDao {
 
     void deleteCommentFromMedia(int commentId);
 
+    PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize);
 
 }
