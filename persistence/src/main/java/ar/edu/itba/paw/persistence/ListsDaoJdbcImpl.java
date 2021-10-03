@@ -267,8 +267,8 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
-        List<MediaList> forks = jdbcTemplate.query("SELECT m.* FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? OFFSET ? LIMIT ?", new Object[]{listId, page*pageSize,pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int count = jdbcTemplate.query("SELECT COUNT(m.*) FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        List<MediaList> forks = jdbcTemplate.query("SELECT m.* FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? AND m.visibility = ? OFFSET ? LIMIT ?", new Object[]{listId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(m.*) FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? AND m.visibility = ?", new Object[]{listId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(forks, page, pageSize, count);
     }
 
@@ -279,7 +279,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     @Override
     public Optional<MediaList> getForkedFrom(int listId) {
-        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ?", new Object[]{listId}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ? AND visibility = ?", new Object[]{listId, true}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
     }
 
 

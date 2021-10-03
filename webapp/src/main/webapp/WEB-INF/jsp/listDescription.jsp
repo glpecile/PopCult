@@ -44,7 +44,7 @@
                             <h4 class="py-2 pb-2.5">
                                 <spring:message code="lists.forkedAmount"/>
                             </h4>
-                            <button class="btn btn-link flex rounded-full p-2.5 my-1 h-6 w-6 group justify-center items-center text-white bg-purple-500 hover:bg-purple-600 font-semibold"
+                            <button class="btn btn-link flex rounded-full p-2.5 my-1 h-6 w-6 group justify-center items-center text-white bg-purple-500 hover:bg-purple-900 font-semibold"
                                     data-bs-toggle="modal" data-bs-target="#forksModal">
                                 <c:out value="${forks.totalCount}"/>
                             </button>
