@@ -131,4 +131,14 @@ public class ListsServiceImpl implements ListsService {
     public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
         return listsDao.getUserEditableLists(userId, page, pageSize);
     }
+
+    @Override
+    public PageContainer<User> getListForkers(int listId, int page, int pageSize) {
+        return listsDao.getListForkers(listId, page, pageSize);
+    }
+
+    @Override
+    public Optional<MediaList> getForkedFrom(int listId) {
+        return listsDao.getForkedFrom(listId);
+    }
 }

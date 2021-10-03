@@ -55,4 +55,8 @@ public interface ListsService {
 
     PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
 
+    PageContainer<User> getListForkers(int listId, int page, int pageSize);
+
+    Optional<MediaList> getForkedFrom(int listId);
+
 }
