@@ -14,17 +14,18 @@ public class SearchForm {
     @Pattern(regexp = "TITLE|DATE")
     private String sortType;
 
+    private List<Integer> decades;
+
     public List<Integer> getDecades() {
-        if(decades == null)
+        if(decades == null) {
             return new ArrayList<>();
+        }
         return decades;
     }
 
     public void setDecades(List<Integer> decades) {
         this.decades = decades;
     }
-
-    private List<Integer> decades;
 
     public String getSortType() {
         if(sortType == null)

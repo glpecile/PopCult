@@ -28,7 +28,9 @@ import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -69,22 +71,30 @@ public class SearchController {
         final List<Integer> genres = searchForm.getGenres().stream().map(Genre::valueOf).map(Genre::ordinal).collect(Collectors.toList());
         final List<Integer> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).map(MediaType::ordinal).collect(Collectors.toList());
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            final Date fromDate = f.parse("1960-10-10");
-            final Date fromDate = null;
-//            final Date toDate = f.parse("2010-10-10");
-            final Date toDate = null;
+        try {
+            Date fromDate = null;
+            if(!searchForm.getDecades().isEmpty())
+                fromDate = f.parse(searchForm.getDecades().stream().mapToInt(x->x).min().orElse(1920) + "-01-01");
+            Date toDate = null;
+            if(!searchForm.getDecades().isEmpty())
+                toDate = f.parse(searchForm.getDecades().stream().mapToInt(x->x+9).max().orElse(2029)  + "-12-31")  ;
             final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), genres, fromDate, toDate);
             final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), 1, minimumMediaMatches);
             final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
             final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
+            final List<String> decadesTypes = new ArrayList<>();
+            for (Integer i :
+                    IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+                decadesTypes.add(Integer.toString(i));
+            }
             mav.addObject("searchFilmsContainer", searchMediaResults);
             mav.addObject("listCoversContainer", listCoversContainer);
             mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
             mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+            mav.addObject("decadeTypes", decadesTypes);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         return mav;
