@@ -7,7 +7,9 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
+import ar.edu.itba.paw.models.report.Report;
 import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
         } else {
             userService.getCurrentUser().ifPresent(user -> {
                 reportDao.reportList(listId, user.getUserId(), report);
-                sendReportCreatedEmail(user.getEmail(), report);
+                sendReportCreatedEmail(user, report);
             });
         }
     }
@@ -49,12 +51,12 @@ public class ReportServiceImpl implements ReportService {
         if (principalIsMod()) {
             commentService.getListCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromList(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report);
+                sendDeletedCommentEmail(comment.getUserId(), comment, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
                 reportDao.reportListComment(listId, commentId, user.getUserId(), report);
-                sendReportCreatedEmail(user.getEmail(), report);
+                sendReportCreatedEmail(user, report);
             });
         }
     }
@@ -64,18 +66,18 @@ public class ReportServiceImpl implements ReportService {
         if (principalIsMod()) {
             commentService.getMediaCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromMedia(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report);
+                sendDeletedCommentEmail(comment.getUserId(), comment, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
                 reportDao.reportMediaComment(mediaId, commentId, user.getUserId(), report);
-                sendReportCreatedEmail(user.getEmail(), report);
+                sendReportCreatedEmail(user, report);
             });
         }
     }
 
-    private void sendReportCreatedEmail(String email, String report) {
-        emailService.sendReportCreatedEmail(email, report);
+    private void sendReportCreatedEmail(User user, String report) {
+        emailService.sendReportCreatedEmail(user, report);
     }
 
     private boolean principalIsMod() {
@@ -125,7 +127,7 @@ public class ReportServiceImpl implements ReportService {
 
     private void sendReportRejectedEmail(int reporteeId, String report) {
         userService.getById(reporteeId).ifPresent(user -> {
-            emailService.sendReportRejectedEmail(user.getEmail(), report);
+            emailService.sendReportRejectedEmail(user, report);
         });
     }
 
@@ -146,7 +148,7 @@ public class ReportServiceImpl implements ReportService {
             commentService.getListCommentById(report.getCommentId()).ifPresent(comment -> {
                 commentService.deleteCommentFromList(comment.getCommentId());
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report.getReport());
+                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
             });
         });
     }
@@ -157,26 +159,26 @@ public class ReportServiceImpl implements ReportService {
             commentService.getMediaCommentById(report.getCommentId()).ifPresent(comment -> {
                 commentService.deleteCommentFromMedia(comment.getCommentId());
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment.getCommentBody(), report.getReport());
+                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
             });
         });
     }
 
     private void sendReportApprovedEmail(int reporteeId, String report) {
         userService.getById(reporteeId).ifPresent(user -> {
-            emailService.sendReportApprovedEmail(user.getEmail(), report);
+            emailService.sendReportApprovedEmail(user, report);
         });
     }
 
     private void sendDeletedListEmail(int userId, MediaList mediaList, String report) {
         userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedListEmail(user.getEmail(), mediaList, report);
+            emailService.sendDeletedListEmail(user, mediaList, report);
         });
     }
 
-    private void sendDeletedCommentEmail(int userId, String comment, String report) {
+    private void sendDeletedCommentEmail(int userId, Comment comment, String report) {
         userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedCommentEmail(user.getEmail(), comment, report);
+            emailService.sendDeletedCommentEmail(user, comment, report);
         });
     }
 }

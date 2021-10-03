@@ -10,19 +10,21 @@ import java.util.Map;
 public interface EmailService {
     void sendEmail(String to, String subject, String template, Map<String, Object> variables);
 
-    void sendResetPasswordEmail(String to, String username, String token);
+    void sendVerificationEmail(User to, String token);
 
-    void sendReportCreatedEmail(String to, String report);
+    void sendResetPasswordEmail(User to, String token);
 
-    void sendReportApprovedEmail(String to, String report);
+    void sendReportCreatedEmail(User to, String report);
 
-    void sendReportRejectedEmail(String to, String report);
+    void sendReportApprovedEmail(User to, String report);
 
-    void sendDeletedCommentEmail(String to, String comment, String report);
+    void sendReportRejectedEmail(User to, String report);
 
-    void sendDeletedListEmail(String to, MediaList mediaList, String report);
+    void sendDeletedCommentEmail(User to, Comment comment, String report);
 
-    void sendNewRequestEmail(MediaList list, User user);
+    void sendDeletedListEmail(User to, MediaList mediaList, String report);
+
+    void sendNewRequestEmail(MediaList list, User requester);
 
     void sendCollabRequestAccepted(User to, Request collaboration);
     }

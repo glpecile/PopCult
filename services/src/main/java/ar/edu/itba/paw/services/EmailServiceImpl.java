@@ -64,62 +64,71 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendResetPasswordEmail(String to, String username, String token) {
+    public void sendVerificationEmail(User to, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("username", username);
+        mailMap.put("username", to.getUsername());
         mailMap.put("token", token);
-        final String subject = messageSource.getMessage("email.resetPassword", null, Locale.getDefault());
-        sendEmail(to, subject, "resetPassword.html", mailMap);
+        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "registerConfirmation.html", mailMap);
     }
 
     @Override
-    public void sendReportCreatedEmail(String to, String report) {
+    public void sendResetPasswordEmail(User to, String token) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", to.getUsername());
+        mailMap.put("token", token);
+        final String subject = messageSource.getMessage("email.resetPassword", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "resetPassword.html", mailMap);
+    }
+
+    @Override
+    public void sendReportCreatedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.created.subject", null, Locale.getDefault());
-        sendEmail(to, subject, "reportCreated.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportCreated.html", mailMap);
     }
 
     @Override
-    public void sendReportApprovedEmail(String to, String report) {
+    public void sendReportApprovedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.approved.subject", null, Locale.getDefault());
-        sendEmail(to, subject, "reportApproved.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportApproved.html", mailMap);
     }
 
     @Override
-    public void sendReportRejectedEmail(String to, String report) {
+    public void sendReportRejectedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.rejected.subject", null, Locale.getDefault());
-        sendEmail(to, subject, "reportRejected.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportRejected.html", mailMap);
     }
 
     @Override
-    public void sendDeletedCommentEmail(String to, String comment, String report) {
+    public void sendDeletedCommentEmail(User to, Comment comment, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("comment", comment);
+        mailMap.put("comment", comment.getCommentBody());
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.deleted.comment.subject", null, Locale.getDefault());
-        sendEmail(to, subject, "deletedComment.html", mailMap);
+        sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap);
     }
 
     @Override
-    public void sendDeletedListEmail(String to, MediaList mediaList, String report) {
+    public void sendDeletedListEmail(User to, MediaList mediaList, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("list", mediaList.getListName());
         mailMap.put("listDescription", mediaList.getDescription());
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.deleted.list.subject", null, Locale.getDefault());
-        sendEmail(to, subject, "deletedList.html", mailMap);
+        sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
     }
 
-    public void sendNewRequestEmail(MediaList list, User user) {
+    public void sendNewRequestEmail(MediaList list, User requester) {
         User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", list.getListName());
-        mailMap.put("username", user.getUsername());
+        mailMap.put("username", requester.getUsername());
         final String subject = messageSource.getMessage("collabEmail.subject", null, Locale.getDefault());
         sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
     }

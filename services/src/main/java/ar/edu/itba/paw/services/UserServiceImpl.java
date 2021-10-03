@@ -16,9 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -72,18 +69,9 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
-        sendVerificationEmail(email, username, token);
+        emailService.sendVerificationEmail(user, token);
 
         return user;
-    }
-
-    //TODO refactor calling emailservice
-    private void sendVerificationEmail(String email, String username, String token) {
-        final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("username", username);
-        mailMap.put("token", token);
-        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
-        emailService.sendEmail(email, subject, "registerConfirmation.html", mailMap);
     }
 
     @Override
@@ -100,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
         String token = tokenService.createToken(user.getUserId(), TokenType.RESET_PASS.ordinal());
-        emailService.sendResetPasswordEmail(email, user.getUsername(), token);
+        emailService.sendResetPasswordEmail(user, token);
     }
 
     @Override
@@ -138,9 +126,9 @@ public class UserServiceImpl implements UserService {
         tokenService.getToken(token).ifPresent(validToken -> {
             getById(validToken.getUserId()).ifPresent(user -> {
                 if (validToken.getType() == TokenType.VERIFICATION.ordinal()) {
-                    sendVerificationEmail(user.getEmail(), user.getUsername(), validToken.getToken());//TODO refactor calling emailservice
+                    emailService.sendVerificationEmail(user, validToken.getToken());
                 } else if (validToken.getType() == TokenType.RESET_PASS.ordinal()) {
-                    emailService.sendResetPasswordEmail(user.getEmail(), user.getUsername(), validToken.getToken());
+                    emailService.sendResetPasswordEmail(user, validToken.getToken());
                 }
             });
         });
