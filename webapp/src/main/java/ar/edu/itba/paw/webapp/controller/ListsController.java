@@ -77,13 +77,15 @@ public class ListsController {
         final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
+        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
+        final PageContainer<MediaList> forks = listsService.getListForks(listId, defaultValue-1, itemsPerPage);
+        mav.addObject("forks", forks);
+        mav.addObject("collaborators", collaborators);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
         mav.addObject("listCommentsContainer", listCommentsContainer);
         listsService.getForkedFrom(listId).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
-        PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
-        mav.addObject("collaborators", collaborators);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));

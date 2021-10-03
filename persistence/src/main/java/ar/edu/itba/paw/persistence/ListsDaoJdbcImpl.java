@@ -266,11 +266,16 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public PageContainer<User> getListForkers(int listId, int page, int pageSize) {
-        List<User> users = jdbcTemplate.query("SELECT u.* FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?) OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, USER_ROW_MAPPER);
-        int count = jdbcTemplate.query("SELECT COUNT(u.*) FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?)", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(users, page, pageSize, count);
+    public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
+        List<MediaList> forks = jdbcTemplate.query("SELECT m.* FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? OFFSET ? LIMIT ?", new Object[]{listId, page*pageSize,pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(m.*) FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(forks, page, pageSize, count);
     }
+
+    /* users that forked a list
+    List<User> users = jdbcTemplate.query("SELECT u.* FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?) OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, USER_ROW_MAPPER);
+    int count = jdbcTemplate.query("SELECT COUNT(u.*) FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?)", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(users, page, pageSize, count);*/
 
     @Override
     public Optional<MediaList> getForkedFrom(int listId) {

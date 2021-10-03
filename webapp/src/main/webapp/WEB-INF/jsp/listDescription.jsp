@@ -38,6 +38,20 @@
                             </h4>
                         </c:if>
                     </div>
+                    <%-- Amount of Forks --%>
+                    <c:if test="${forks.totalCount != 0}">
+                        <div class="flex">
+                            <h4 class="py-2 pb-2.5">
+                                <spring:message code="lists.forkedAmount"/>
+                            </h4>
+                            <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
+                                    <c:out value="${forks.totalCount}"/>
+                            </div>
+                            <h4 class="py-2 pb-2.5">
+                                <spring:message code="lists.forkedTimes"/>
+                            </h4>
+                        </div>
+                    </c:if>
                 </div>
                 <div class="pt-2.5">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
