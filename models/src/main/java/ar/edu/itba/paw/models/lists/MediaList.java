@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.lists;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class MediaList {
     private final int mediaListId;
@@ -50,4 +51,16 @@ public class MediaList {
         return collaborative;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MediaList mediaList = (MediaList) o;
+        return mediaListId == mediaList.mediaListId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mediaListId);
+    }
 }

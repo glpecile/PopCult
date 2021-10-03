@@ -8,7 +8,7 @@ import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -72,7 +72,17 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize) {
-        return favoriteDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+        PageContainer<MediaList> recommendations = favoriteDao.getRecommendationsBasedOnFavLists(userId, page, pageSize);
+        if (recommendations.getTotalCount() < pageSize) {
+            PageContainer<MediaList> filler = favoriteDao.getMostLikedLists(userId,0, pageSize * 2);
+            Set<MediaList> toAdd = new HashSet<>(recommendations.getElements());
+            for(MediaList list: filler.getElements()){
+                toAdd.add(list);
+                if(toAdd.size()==pageSize) break;
+            }
+            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+        }
+        return recommendations;
     }
 
     @Override
@@ -82,7 +92,17 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize) {
-        return favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
+        PageContainer<Media> recommendations = favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, userId, page, pageSize);
+        if (recommendations.getTotalCount() < pageSize) {
+            PageContainer<Media> filler = favoriteDao.getMostLikedMedia(mediaType,0, pageSize * 2);
+            Set<Media> toAdd = new HashSet<>(recommendations.getElements());
+            for(Media media: filler.getElements()){
+                toAdd.add(media);
+                if(toAdd.size()==pageSize) break;
+            }
+            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+        }
+        return recommendations;
     }
 
     @Override
