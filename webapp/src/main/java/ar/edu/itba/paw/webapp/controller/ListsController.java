@@ -21,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -94,11 +93,12 @@ public class ListsController {
         return mav;
     }
 
-    @RequestMapping(value = "/lists/{listId}/comment", method = {RequestMethod.POST})
-    public ModelAndView addComment(@PathVariable("listId") final int listId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "comment")
+    public ModelAndView addComment(@PathVariable("listId") final int listId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors())
             return listDescription(listId, form);
-        commentService.addCommentToList(userId, listId, form.getBody());
+        commentService.addCommentToList(user.getUserId(), listId, form.getBody());
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
@@ -109,9 +109,10 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.POST})
-    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId, @RequestParam("userId") int userId) {
-        collaborativeListService.makeNewRequest(listId, userId);
-        return new ModelAndView("redirect:/lists/" + listId).addObject("successfulRequest", true); //TODO mensaje de que salio todo ok
+    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId) {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        collaborativeListService.makeNewRequest(listId, user.getUserId());
+        return new ModelAndView("redirect:/lists/" + listId);
     }
 
     @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
@@ -149,7 +150,7 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/search", method = {RequestMethod.GET}, params = "search")
-    public ModelAndView searchMediaToAddToList(@PathVariable("listId") Integer mediaListId, HttpServletRequest request,
+    public ModelAndView searchMediaToAddToList(@PathVariable("listId") Integer mediaListId,
                                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                                final BindingResult errors,
                                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
@@ -170,7 +171,7 @@ public class ListsController {
         try {
             listsService.addToMediaList(mediaListId, mediaForm.getMedia());
         } catch (MediaAlreadyInListException e) {
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("alreadyInList", true);//TODO add in jsp message.
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("alreadyInList", true);
         }
         return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
     }

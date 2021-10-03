@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -118,11 +119,12 @@ public class MediaController {
         return mav;
     }
 
-    @RequestMapping(value = "/media/{mediaId}/comment", method = {RequestMethod.POST})
-    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
+    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors())
             return mediaDescription(defaultValue, mediaId, form);
-        commentService.addCommentToMedia(userId, mediaId, form.getBody());
+        commentService.addCommentToMedia(user.getUserId(), mediaId, form.getBody());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

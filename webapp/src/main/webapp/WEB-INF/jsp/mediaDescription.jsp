@@ -13,7 +13,7 @@
 </head>
 <c:url value="/lists/new" var="createListPath"/>
 <c:url value="/media/${mediaId}" var="mediaPath"/>
-<c:url value="/media/${mediaId}/comment" var="commentPath"/>
+<c:url value="/media/${mediaId}" var="commentPath"/>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
@@ -184,7 +184,7 @@
                 <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
                                name="body" placeholder="${commentPlaceholder}" type="text"/>
                 <form:errors path="body" cssClass="formError text-red-500" element="p"/>
-                <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
+                <input type="hidden" value="comment" name="comment" id="comment">
                 <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"
                         type="submit">
                     <spring:message code="comments.submit"/>

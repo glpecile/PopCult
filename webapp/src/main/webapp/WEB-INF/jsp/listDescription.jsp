@@ -11,7 +11,7 @@
 </head>
 <c:url value="/lists/${list.mediaListId}" var="forkPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/manageMedia" var="editListMediaPath"/>
-<c:url value="/lists/${listId}/comment" var="commentPath"/>
+<c:url value="/lists/${listId}" var="commentPath"/>
 <c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
 
 <body class="bg-gray-50">
@@ -163,7 +163,7 @@
                                    class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
                                    name="body" placeholder="${commentPlaceholder}" type="text"/>
                     <form:errors path="body" cssClass="formError text-red-500" element="p"/>
-                    <input type="hidden" value="<c:out value="${currentUser.userId}"/>" name="userId" id="userId">
+                    <input type="hidden" value="comment" name="comment" id="comment">
                     <button class="btn btn-secondary rounded-lg mt-2 bg-purple-500 hover:bg-purple-900 flex items-center w-24"
                             type="submit">
                         <spring:message code="comments.submit"/>
