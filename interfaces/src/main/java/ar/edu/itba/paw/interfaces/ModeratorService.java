@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
 
 public interface ModeratorService {
@@ -15,4 +16,6 @@ public interface ModeratorService {
     void addModRequest(int userId);
 
     void removeRequest(int userId);
+
+    boolean principalIsMod();
 }

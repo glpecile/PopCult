@@ -133,12 +133,24 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
     }
 
-    public void sendCollabRequestAccepted(User to, Request collaboration) {
+    public void sendCollabRequestAcceptedEmail(User to, Request collaboration) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", collaboration.getListname());
         mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
         mailMap.put("listId", collaboration.getListId());
         final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, Locale.getDefault());
         sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
+    }
+
+    @Override
+    public void sendModRequestApprovedEmail(User to) {
+        final String subject = messageSource.getMessage("email.mod.approved.subject", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "ModRequestApproved.html", null);
+    }
+
+    @Override
+    public void sendModRoleRemovedEmail(User to) {
+        final String subject = messageSource.getMessage("email.mod.removed.subject", null, Locale.getDefault());
+        sendEmail(to.getEmail(), subject, "ModRoleRemoved.html", null);
     }
 }

@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,7 +120,7 @@ public class AdminController {
     @RequestMapping(value = {"/admin/mods"}, method = {RequestMethod.GET})
     public ModelAndView modsPanel(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("admin/modsPanel");
-        PageContainer<User> moderatorsContainer =moderatorService.getModerators(page - 1, itemsPerPage);
+        PageContainer<User> moderatorsContainer = moderatorService.getModerators(page - 1, itemsPerPage);
         mav.addObject("moderatorsContainer", moderatorsContainer);
         return mav;
     }
@@ -131,7 +132,7 @@ public class AdminController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @RequestMapping(value="/admin/mods/requests", method = {RequestMethod.GET})
+    @RequestMapping(value = "/admin/mods/requests", method = {RequestMethod.GET})
     public ModelAndView getModRequests(@RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("admin/modsRequests");
         PageContainer<User> requestersContainer = moderatorService.getModRequesters(page - 1, itemsPerPage);
@@ -146,11 +147,18 @@ public class AdminController {
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 
-    @RequestMapping(value = "/admin/mods/requests/{userId}", method = {RequestMethod.POST, RequestMethod.DELETE}, params="rejectRequest")
+    @RequestMapping(value = "/admin/mods/requests/{userId}", method = {RequestMethod.POST, RequestMethod.DELETE}, params = "rejectRequest")
     public ModelAndView rejectModRequest(HttpServletRequest request,
                                          @PathVariable("userId") final int userId) {
         moderatorService.removeRequest(userId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+
+    @RequestMapping(value = "/requestMod")
+    ModelAndView requestMod() {
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        moderatorService.addModRequest(user.getUserId());
+        return new ModelAndView("modRequest/modRequestSent");
     }
 }
 

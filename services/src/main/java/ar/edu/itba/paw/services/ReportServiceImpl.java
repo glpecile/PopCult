@@ -29,11 +29,11 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private UserService userService;
     @Autowired
-    private RoleHierarchy roleHierarchy;
+    private ModeratorService moderatorService;
 
     @Override
     public void reportList(int listId, String report) {
-        if (principalIsMod()) {
+        if (moderatorService.principalIsMod()) {
             listsService.getMediaListById(listId).ifPresent(mediaList -> {
                 listsService.deleteList(mediaList.getMediaListId());
                 sendDeletedListEmail(mediaList.getUserId(), mediaList, report);
@@ -48,7 +48,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void reportListComment(int listId, int commentId, String report) {
-        if (principalIsMod()) {
+        if (moderatorService.principalIsMod()) {
             commentService.getListCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromList(comment.getCommentId());
                 sendDeletedCommentEmail(comment.getUserId(), comment, report);
@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void reportMediaComment(int mediaId, int commentId, String report) {
-        if (principalIsMod()) {
+        if (moderatorService.principalIsMod()) {
             commentService.getMediaCommentById(commentId).ifPresent(comment -> {
                 commentService.deleteCommentFromMedia(comment.getCommentId());
                 sendDeletedCommentEmail(comment.getUserId(), comment, report);
@@ -78,11 +78,6 @@ public class ReportServiceImpl implements ReportService {
 
     private void sendReportCreatedEmail(User user, String report) {
         emailService.sendReportCreatedEmail(user, report);
-    }
-
-    private boolean principalIsMod() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(Roles.MOD.getRoleType()));
     }
 
     @Override

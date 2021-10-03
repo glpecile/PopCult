@@ -32,7 +32,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Override
     public void acceptRequest(int collabId) {
-        collaborativeListsDao.getById(collabId).ifPresent((collaboration -> userDao.getById(collaboration.getCollaboratorId()).ifPresent(user -> emailService.sendCollabRequestAccepted(user, collaboration))));
+        collaborativeListsDao.getById(collabId).ifPresent((collaboration -> userDao.getById(collaboration.getCollaboratorId()).ifPresent(user -> emailService.sendCollabRequestAcceptedEmail(user, collaboration))));
         collaborativeListsDao.acceptRequest(collabId);
     }
 

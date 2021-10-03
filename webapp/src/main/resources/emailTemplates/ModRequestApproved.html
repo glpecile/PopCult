@@ -9,14 +9,9 @@
         <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
     </a>
     <div>
-        <p th:text="#{email.report.greeting}"></p>
-        <p th:text="#{email.report.approved}"></p>
-        <i th:text="${report}"></i>
-        <p th:text="#{email.report.approved.action}"></p>
-        <p th:text="#{email.report.collaboration}"></p>
-        <a th:href="@{http://localhost:8080/webapp_war/requestMod}">
-            <p style="color: purple;" th:text="#{email.report.sendModRequest}"></p>
-        </a>
+        <p th:text="#{email.mod.greeting}"></p>
+        <p th:text="#{email.mod.approved.body}"></p>
+        <p th:text="#{email.mod.close}"></p>
         <br>
         <p th:text="#{email.close}"></p>
     </div>
