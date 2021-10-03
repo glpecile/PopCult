@@ -163,7 +163,7 @@ public class RowMappers {
     public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListReport(
                     rs.getInt("reportId"),
-                    rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("listId"),
@@ -175,7 +175,7 @@ public class RowMappers {
     public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListCommentReport(
                     rs.getInt("reportId"),
-                    rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),
@@ -187,7 +187,7 @@ public class RowMappers {
     public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new MediaCommentReport(
                     rs.getInt("reportId"),
-                    rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),
