@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,10 +50,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort, int genre) {
-        if(genre == Genre.ALL.ordinal() + 1)
-            return searchMediaByTitle(title, page, pageSize, mediaType, sort);
-        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre);
+    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre, Date fromDate, Date toDate) {
+        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fromDate, toDate);
     }
 
     @Override

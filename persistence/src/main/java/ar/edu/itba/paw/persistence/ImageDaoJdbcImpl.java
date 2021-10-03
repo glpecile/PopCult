@@ -20,7 +20,7 @@ public class ImageDaoJdbcImpl implements ImageDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Image> IMAGE_ROW_MAPPER = RowMappers.IMAGE_ROW_MAPPER;
-
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     @Autowired
     public ImageDaoJdbcImpl(final DataSource ds) {
@@ -32,6 +32,14 @@ public class ImageDaoJdbcImpl implements ImageDao {
                 "photoBlob BYTEA," +
                 "imageContentLength INT," +
                 "imageContentType TEXT)");
+        if(jdbcTemplate.query("SELECT COUNT(*) FROM image", COUNT_ROW_MAPPER).stream().findFirst().orElse(0) != 0 ){
+            final Map<String, Object> data = new HashMap<>();
+            data.put("photoBlob", null);
+            data.put("imageContentLength", null);
+            data.put("imageContentType", null);
+            jdbcInsert.executeAndReturnKeyHolder(data);
+        }
+
     }
 
     @Override
@@ -48,4 +56,5 @@ public class ImageDaoJdbcImpl implements ImageDao {
         KeyHolder key = jdbcInsert.executeAndReturnKeyHolder(data);
         return Optional.of(new Image((int) key.getKey(), photoBlob, imageContentLength, imageContentType));
     }
+
 }
