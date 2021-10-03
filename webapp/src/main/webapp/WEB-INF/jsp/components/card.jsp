@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <c:url value="${param.deletePath}" var="deletePath"/>
 <%--<c:url value="${param.addPath}" var="addPath"/>--%>
@@ -13,7 +14,8 @@
                     <form:form cssClass="m-0" action="${deletePath}" method="DELETE">
                         <button type="submit" name="deleteMedia"
                                 class="bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent btn-rounded">
-                            <i class="fa fa-trash pr-2" aria-hidden="true"></i>Delete Media
+                            <i class="fa fa-trash pr-2" aria-hidden="true"></i>
+                            <spring:message code="general.delete"/>
                         </button>
                         <input id="mediaListId" type="hidden" name="mediaListId" value="${param.deleteFromListId}">
                         <input id="mediaId" type="hidden" name="mediaId" value="${param.mediaId}">

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class ExceptionHandlingController {
             StudioNotFoundException.class,
             UserNotFoundException.class,
             ImageNotFoundException.class,
+            CommentNotFoundException.class,
             IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
     ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
@@ -38,7 +40,7 @@ public class ExceptionHandlingController {
         return mav;
     }
 
-    @ExceptionHandler({VerificationTokenNotFoundException.class})
+    @ExceptionHandler({TokenNotFoundException.class})
     public ModelAndView tokenNotFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
@@ -66,12 +68,9 @@ public class ExceptionHandlingController {
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.disabled", null, Locale.getDefault()));
     }
 
-
     @ExceptionHandler({InternalAuthenticationServiceException.class})
     public ModelAndView internalAuthenticationServiceException() {
         LOGGER.info("Handling DisabledUserException");
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.internalError", null, Locale.getDefault()));
     }
-
-
 }

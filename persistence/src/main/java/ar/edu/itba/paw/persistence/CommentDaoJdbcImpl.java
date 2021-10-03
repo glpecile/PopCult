@@ -71,6 +71,18 @@ public class CommentDaoJdbcImpl implements CommentDao {
     }
 
     @Override
+    public Optional<Comment> getMediaCommentById(int commentId) {
+        return jdbcTemplate.query("SELECT * FROM mediacomment NATURAL JOIN users WHERE commentId = ?", new Object[]{commentId}, COMMENT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<Comment> getListCommentById(int commentId) {
+        return jdbcTemplate.query("SELECT * FROM listcomment NATURAL JOIN users WHERE commentId = ?", new Object[]{commentId}, COMMENT_ROW_MAPPER)
+                .stream().findFirst();
+    }
+
+    @Override
     public PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize) {
         List<Comment> mediaComments = jdbcTemplate.query("SELECT * FROM mediacomment NATURAL JOIN users WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
         int commentsAmount = jdbcTemplate.query("SELECT COUNT(*) FROM mediacomment NATURAL JOIN users WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);

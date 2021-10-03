@@ -23,13 +23,7 @@ public interface ListsDao {
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-//    @Deprecated
-//    List<Integer> getMediaIdInListIds(int mediaListId);//TODO BORRAR
-
     List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
-
-//    @Deprecated
-//    PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize);
 
     PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
 
@@ -38,12 +32,6 @@ public interface ListsDao {
     List<MediaList> getNLastAddedList(int amount);//TODO BORRAR. reemplaza la de arriba
 
     PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
-
-//    Optional<Integer> getListCount();
-//
-//    Optional<Integer> getListCountFromUserId(int userId);
-//
-//    Optional<Integer> getListCountFromMedia(int mediaId);
 
     List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches); //TODO paginar
 
@@ -63,6 +51,11 @@ public interface ListsDao {
 
     Optional<User> getListOwner(int listId);
 
-    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
+    boolean canEditList(int userId, int listId);
 
+    PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
+
+    PageContainer<MediaList> getListForks(int listId, int page, int pageSize);
+
+    Optional<MediaList> getForkedFrom(int listId);
 }

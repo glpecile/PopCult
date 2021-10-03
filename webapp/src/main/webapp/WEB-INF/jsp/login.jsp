@@ -1,11 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Log-in &#8226; PopCult</title></head>
+    <title><spring:message code="login.title"/> &#8226; PopCult</title></head>
 <body class="bg-gradient-to-r from-yellow-500 to-purple-900">
 <%-- Variables --%>
 <c:url value="/login" var="loginUrl"/>
@@ -44,10 +47,15 @@
                         ${error}
                     </div>
                     <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="login.login"/></button>
-                    <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/register"/>"><spring:message
-                            code="register.cta"/></a>
+                    <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/forgotPassword"/>"><spring:message
+                            code="login.forgotPassword"/></a>
                 </div>
             </form>
+        </div>
+        <div class="flex justify-center">
+            <a class="text-white text-center text-sm hover:text-purple-900 uppercase py-2" href="<c:url value="/register"/>">
+                <spring:message code="register.cta"/>
+            </a>
         </div>
     </div>
     <div class="text-white">

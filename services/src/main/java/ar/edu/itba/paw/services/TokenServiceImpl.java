@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.VerificationTokenDao;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.TokenDao;
+import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.models.user.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class VerificationTokenServiceImpl implements VerificationTokenService {
+public class TokenServiceImpl implements TokenService {
     @Autowired
-    VerificationTokenDao verificationTokenDao;
+    TokenDao tokenDao;
 
     private static final int EXPIRATION = 60 * 24;
 
     @Override
-    public String createVerificationToken(int userId) {
+    public String createToken(int userId, int type) {
         String token = UUID.randomUUID().toString();
-        verificationTokenDao.createVerificationToken(userId, token, calculateExpiryDate(EXPIRATION));
+        tokenDao.createToken(userId, type, token, calculateExpiryDate(EXPIRATION));
         return token;
     }
 
@@ -35,22 +35,22 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public Optional<Token> getToken(String token) {
-        return verificationTokenDao.getToken(token);
+        return tokenDao.getToken(token);
     }
 
     @Override
     public void deleteToken(Token token) {
-        verificationTokenDao.deleteToken(token);
+        tokenDao.deleteToken(token);
     }
 
     @Override
-    public boolean isValidToken(Token token) {
+    public boolean isValidToken(Token token, int type) {
         Calendar calendar = Calendar.getInstance();
-        return token.getExpiryDate().getTime() > calendar.getTime().getTime();
+        return token.getType() == type && token.getExpiryDate().getTime() > calendar.getTime().getTime();
     }
 
     @Override
     public void renewToken(String token) {
-        verificationTokenDao.renewToken(token, calculateExpiryDate(EXPIRATION));
+        tokenDao.renewToken(token, calculateExpiryDate(EXPIRATION));
     }
 }

@@ -11,6 +11,10 @@ public interface CommentDao {
 
     Comment addCommentToList(int userId, int listId, String comment);
 
+    Optional<Comment> getMediaCommentById(int commentId);
+
+    Optional<Comment> getListCommentById(int commentId);
+
     PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize);
 
     PageContainer<Comment> getListComments(int listId, int page, int pageSize);

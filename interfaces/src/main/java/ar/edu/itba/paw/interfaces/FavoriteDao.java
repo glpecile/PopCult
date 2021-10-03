@@ -13,8 +13,6 @@ public interface FavoriteDao {
     void deleteMediaFromFav(int mediaId, int userId);
 
     boolean isFavorite(int mediaId, int userId);
-    @Deprecated
-    PageContainer<Integer> getUserFavoriteMediaIds(int userId, int page, int pageSize);
 
     PageContainer<Media> getUserFavoriteMedia(int userId, int page, int pageSize);
 
@@ -26,12 +24,24 @@ public interface FavoriteDao {
 
     boolean isFavoriteList(int mediaListId, int userId);
 
-    @Deprecated
-    PageContainer<Integer> getUserFavoriteListsIds(int userId, int page, int pageSize);
-
     PageContainer<MediaList> getUserFavoriteLists(int userId, int page, int pageSize);
 
     PageContainer<MediaList> getUserPublicFavoriteLists(int userId, int page, int pageSize);
 
     Optional<Integer> getFavoriteListsCount(int userId);
+
+    PageContainer<MediaList> getRecommendationsBasedOnFavLists(int userId, int page, int pageSize);
+
+    PageContainer<MediaList> getMostLikedLists(int page, int pageSize);
+
+    PageContainer<Media> getRecommendationsBasedOnFavMedia(int mediaType, int userId, int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int page, int pageSize);
+
+    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
+
+    int getLikesFromList(int listId);
+
+    int getLikesFromMedia(int mediaId);
+
 }

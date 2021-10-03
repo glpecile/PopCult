@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.interfaces.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
-import ar.edu.itba.paw.webapp.exceptions.VerificationTokenNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class RegisterController {
     @Autowired
     UserService userService;
     @Autowired
-    VerificationTokenService verificationTokenService;
+    TokenService tokenService;
 
     @RequestMapping(value = "/register", method = {RequestMethod.GET})
     public ModelAndView registerForm(@ModelAttribute("registerForm") final UserForm form) {
@@ -53,26 +53,12 @@ public class RegisterController {
 
     @RequestMapping(value = "/register/confirm")
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
-        Token verificationToken = verificationTokenService.getToken(token).orElseThrow(VerificationTokenNotFoundException::new);
+        Token verificationToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
         //TODO
         if (userService.confirmRegister(verificationToken)) {
             return new ModelAndView("login").addObject("successfulConfirmation", true);
 
         }
-        return new ModelAndView("redirect:/register/tokentimedout?token=" + token);
-    }
-
-    @RequestMapping(value = "/register/tokentimedout")
-    public ModelAndView tokenTimedOut(@RequestParam("token") final String token) {
-        ModelAndView mav = new ModelAndView("tokenTimedOut");
-        mav.addObject("token", token);
-        return mav;
-    }
-
-    @RequestMapping(value = "/register/resendemail")
-    public ModelAndView resendEmail(@RequestParam("token") final String token) {
-        ModelAndView mav = new ModelAndView("sentEmail");
-        userService.resendVerificationEmail(token);
-        return mav;
+        return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
     }
 }

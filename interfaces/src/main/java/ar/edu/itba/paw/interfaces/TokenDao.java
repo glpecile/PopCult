@@ -5,8 +5,8 @@ import ar.edu.itba.paw.models.user.Token;
 import java.util.Date;
 import java.util.Optional;
 
-public interface VerificationTokenDao {
-    void createVerificationToken(int userId, String token, Date expiryDate);
+public interface TokenDao {
+    void createToken(int userId, int type, String token, Date expiryDate);
 
     Optional<Token> getToken(String token);
 
