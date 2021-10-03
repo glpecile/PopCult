@@ -7,7 +7,9 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
+import ar.edu.itba.paw.models.user.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,11 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private CommentService commentService;
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private RoleHierarchy roleHierarchy;
 
     @Override
     public void reportList(int listId, String report) {
@@ -76,7 +80,7 @@ public class ReportServiceImpl implements ReportService {
 
     private boolean principalIsMod() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MOD"));
+        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(Roles.MOD.getRoleType()));
     }
 
     @Override
