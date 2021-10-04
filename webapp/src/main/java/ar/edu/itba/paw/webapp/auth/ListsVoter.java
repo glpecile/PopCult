@@ -36,7 +36,7 @@ public class ListsVoter implements AccessDecisionVoter<FilterInvocation> {
         String URL = filterInvocation.getRequestUrl();
         if (URL.toLowerCase().contains("/user/") && URL.contains("/lists")) {
             try {
-                String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/lists"));
+                String username = URL.replaceFirst("/user/", "").replaceFirst("/lists.*", "");
                 userService.getCurrentUser().ifPresent(user -> {
                     if (user.getUsername().equals(username)) {
                         vote.set(ACCESS_GRANTED);
