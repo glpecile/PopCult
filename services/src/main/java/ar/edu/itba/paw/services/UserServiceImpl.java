@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
@@ -150,6 +151,4 @@ public class UserServiceImpl implements UserService {
     public void updateUserData(int userId, String email, String username, String name) {
         userDao.updateUserData(userId, email, username, name);
     }
-
-
 }
