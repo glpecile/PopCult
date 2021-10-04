@@ -53,7 +53,6 @@
         <jsp:param name="url" value="${baseURL}"/>
     </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
-
 </div>
 </body>
 </html>
