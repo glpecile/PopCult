@@ -11,10 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CommentDaoJdbcImpl implements CommentDao {
@@ -58,7 +55,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS commentNotifications(" +
                 "commentId INT NOT NULL," +
                 "opened BOOLEAN DEFAULT FALSE," +
-                "FOREIGN KEY (commentId) REFERENCES listcomment(commentid))");
+                "FOREIGN KEY (commentId) REFERENCES listcomment(commentid) ON DELETE CASCADE)");
     }
 
     @Override
@@ -67,6 +64,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         data.put("userId", userId);
         data.put("mediaId", mediaId);
         data.put("description", comment);
+        data.put("date", new Date());
         KeyHolder keyHolder = jdbcInsertMediaComment.executeAndReturnKeyHolder(data);
         return new Comment((int) keyHolder.getKey(), userId, "", comment);
     }
@@ -77,6 +75,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
         data.put("userId", userId);
         data.put("listId", listId);
         data.put("description", comment);
+        data.put("date", new Date());
         KeyHolder keyHolder = jdbcInsertListComment.executeAndReturnKeyHolder(data);
         return new Comment((int) keyHolder.getKey(), userId, "", comment);
     }

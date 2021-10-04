@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class ListsController {
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;
+    private static final int commentsAmount = 12;
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -77,7 +79,7 @@ public class ListsController {
         final List<Media> mediaFromList = listsService.getMediaIdInList(listId);
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
-        final PageContainer<MediaList> forks = listsService.getListForks(listId, defaultValue-1, itemsPerPage);
+        final PageContainer<MediaList> forks = listsService.getListForks(listId, defaultValue - 1, itemsPerPage);
         mav.addObject("forks", forks);
         mav.addObject("collaborators", collaborators);
         mav.addObject("list", mediaList);
@@ -93,7 +95,20 @@ public class ListsController {
         return mav;
     }
 
-    @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.POST}, params = "comment")
+    @RequestMapping("/lists/{listId}/comments")
+    public ModelAndView listComments(@PathVariable("listId") final int listId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        final ModelAndView mav = new ModelAndView("listCommentDetails");
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, page - 1, commentsAmount);
+        mav.addObject("list", mediaList);
+        mav.addObject("listCommentsContainer", listCommentsContainer);
+        userService.getCurrentUser().ifPresent(user -> {
+            mav.addObject("currentUser", user);
+        });
+        return mav;
+    }
+
+    @RequestMapping(value = {"/lists/{listId}"}, method = {RequestMethod.POST}, params = "comment")
     public ModelAndView addComment(@PathVariable("listId") final int listId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors())
@@ -102,10 +117,10 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
-    @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @PathVariable("commentId") int commentId) {
+    @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params =  "currentURL")
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @PathVariable("commentId") int commentId, @RequestParam("currentURL") final String currentURL) {
         commentService.deleteCommentFromList(commentId);
-        return new ModelAndView("redirect:/lists/" + listId);
+        return new ModelAndView("redirect:/lists/" + listId + currentURL);
     }
 
     @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.POST})

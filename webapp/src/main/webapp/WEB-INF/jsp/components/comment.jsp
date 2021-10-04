@@ -18,7 +18,7 @@
             </a>
             <c:if test="${param.commenterId == param.currentUserId}">
                 <form:form action="${deletePath}" method="DELETE">
-                    <input type="hidden" name="commentId" value="<c:out value="${param.commentId}"/>">
+                    <input type="hidden" name="currentURL" value="${param.currentURL}">
                     <button type="submit">
                         <i class="fas fa-times text-right text-gray-400 justify-end hover:text-red-400 cursor-pointer"
                        title="<spring:message code="comments.delete"/>"></i>
