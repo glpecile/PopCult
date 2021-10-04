@@ -22,6 +22,7 @@
 <c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/addMedia" var="addMediaPath"/>
 <c:url value="/lists/${list.mediaListId}/cancelCollab" var="deleteCollabPath"/>
+<c:url value="/lists/${listId}/collaborators" var="collaboratorsPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -33,7 +34,8 @@
                 <c:if test="${isOwner}">
                     <button class="btn btn-link my-3.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                             data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
-                        <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i><spring:message code="lists.editDetails"/>
+                        <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i><spring:message
+                            code="lists.editDetails"/>
                     </button>
                 </c:if>
             </div>
@@ -249,9 +251,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="manageCollaboratorsModalLabel">
-                        <spring:message code="lists.collab.manage"/>
-                    </h5>
+                    <div class="flex justify-between">
+                        <h5 class="modal-title font-bold text-2xl" id="manageCollaboratorsModalLabel">
+                            <spring:message code="lists.collab.manage"/>
+                        </h5>
+                        <a href="${collaboratorsPath}">
+                            <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
+                                <spring:message code="home.viewAll"/>
+                            </button>
+                        </a>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -263,24 +272,12 @@
                                 </h3>
                             </c:if>
                             <c:forEach var="collaborators" items="${collaboratorsContainer.elements}">
-                                <c:url value="/user/${collaborators.collaboratorUsername}" var="userProfilePath"/>
-                                <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between">
-                                    <div class="flex">
-                                        <h4 class="pl-3 py-4 text-xl font-normal tracking-tight">
-                                            <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900">
-                                                <c:out value="${collaborators.collaboratorUsername}"/></a>
-                                            <spring:message code="lists.collab"/>.
-                                        </h4>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <form:form cssClass="m-0" action="${deleteCollabPath}" method="DELETE">
-                                            <input type="hidden" name="collabId" value="${collaborators.collabId}">
-                                            <button type="submit"><i
-                                                    class="fas fa-times text-xl text-gray-800 justify-end p-4 hover:text-red-400 cursor-pointer"
-                                                    title="<spring:message code="lists.collab.cancel"/>"></i></button>
-                                        </form:form>
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/jsp/components/collaborator.jsp">
+                                    <jsp:param name="username" value="${collaborators.collaboratorUsername}"/>
+                                    <jsp:param name="collabId" value="${collaborators.collabId}"/>
+                                    <jsp:param name="returnURL" value="/lists/edit/${listId}/manageMedia"/>
+                                    <jsp:param name="deleteCollabPath" value="${deleteCollabPath}"/>
+                                </jsp:include>
                             </c:forEach>
                         </div>
                     </div>
