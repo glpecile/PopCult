@@ -14,13 +14,15 @@
 <c:url value="/lists/new" var="createListPath"/>
 <c:url value="/media/${mediaId}" var="mediaPath"/>
 <c:url value="/media/${mediaId}" var="commentPath"/>
+<c:url value="/media/${mediaId}/comments" var="commentsDetailPath"/>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <br>
 <div class="col-8 offset-2">
     <div class="row">
         <div class="col-12 col-lg-4">
-            <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}" alt="Media Image"/>
+            <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}"
+                 alt="Media Image"/>
             <!-- Button Grid. Possible TODO: Make component. -->
             <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
                 <%-- Icon row --%>
@@ -43,7 +45,8 @@
                 <%-- Dropdown lists list --%>
                 <sec:authorize access="isAuthenticated()">
                     <div class="dropdown flex justify-center py-2 shadow-md">
-                        <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded" type="button"
+                        <button class="btn btn-link text-purple-500 hover:text-purple-900 dropdown-toggle btn-rounded"
+                                type="button"
                                 id="addMediaToList"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             <spring:message code="media.addToList"/>
@@ -51,7 +54,8 @@
                         <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
                             <c:forEach var="list" items="${userLists}">
                                 <form action="${mediaPath}" method="POST">
-                                    <button class="dropdown-item py-0" type="submit"><c:out value="${list.listName}"/></button>
+                                    <button class="dropdown-item py-0" type="submit"><c:out
+                                            value="${list.listName}"/></button>
                                     <input type="hidden" id="mediaListId" name="mediaListId"
                                            value="<c:out value = "${list.mediaListId}"/>">
                                 </form>
@@ -174,14 +178,17 @@
             <h2 class="font-bold text-2xl">
                 <spring:message code="comments.section"/>
             </h2>
-            <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
-                ${mediaCommentsContainer.totalCount}
-            </div>
+            <a href="${commentsDetailPath}">
+                <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
+                    ${mediaCommentsContainer.totalCount}
+                </div>
+            </a>
         </div>
         <spring:message code="comments.placeholder" var="commentPlaceholder"/>
         <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
             <label class="p-2 text-semibold w-full flex flex-col">
-                <form:textarea path="body" rows="3" class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
+                <form:textarea path="body" rows="3"
+                               class="form-control resize-y text-base rounded-lg shadow-sm pl-3 pr-8"
                                name="body" placeholder="${commentPlaceholder}" type="text"/>
                 <form:errors path="body" cssClass="formError text-red-500" element="p"/>
                 <input type="hidden" value="comment" name="comment" id="comment">
@@ -203,6 +210,8 @@
                         <jsp:param name="type" value="media"/>
                         <jsp:param name="id" value="${mediaId}"/>
                         <jsp:param name="deletePath" value="/media/${mediaId}/deleteComment/${comment.commentId}"/>
+                        <jsp:param name="currentURL" value=""/>
+
                     </jsp:include>
                 </c:forEach>
             </c:when>

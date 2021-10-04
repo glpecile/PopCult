@@ -102,9 +102,7 @@ public class ListsController {
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, page - 1, commentsAmount);
         mav.addObject("list", mediaList);
         mav.addObject("listCommentsContainer", listCommentsContainer);
-        userService.getCurrentUser().ifPresent(user -> {
-            mav.addObject("currentUser", user);
-        });
+        userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
         return mav;
     }
 
