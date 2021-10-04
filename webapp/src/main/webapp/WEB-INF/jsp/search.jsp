@@ -43,29 +43,9 @@
                         <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
                     </div>
 
-                        <div class="dropdown pr-4 flex flex-col">
-                            <span>Decades </span>
-                            <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <c:choose>
-                                    <c:when test="${fn:length(param.decades) == 0}">
-                                        <c:out value="ALL"/>
-                                    </c:when>
-                                    <c:when test="${fn:length(param.decades) > 1}">
-                                        <c:out value="MULTIPLE"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value="${param.decades}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </button>
-                            <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton2">
-                                <div class="overflow-y-auto h-32">
-                                    <div class="flex flex-col space-y-2.5">
-                                        <form:select path="decade" items="${decades}"/>
-                                    </div>
-                                </div>
-                            </ul>
+                    <div class="flex flex-col">
+                        <span><spring:message code="search.decades"/></span>
+                        <form:select cssClass="form-select block w-full" path="decade" items="${decades}"/>
                     </div>
                     <div class="dropdown pr-4 flex flex-col">
                         <span>

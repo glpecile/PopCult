@@ -60,7 +60,6 @@ public class SearchServiceImpl implements SearchService {
                 fDate = f.parse(fromDate+ "-01-01");
                 tDate = f.parse(toDate + "-12-31");
         }
-        System.out.println("Las dates son " + fDate + " y " + tDate);
         return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
     }
 
