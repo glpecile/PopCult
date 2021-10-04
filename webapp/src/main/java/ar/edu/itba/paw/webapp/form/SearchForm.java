@@ -17,12 +17,12 @@ public class SearchForm {
     @Pattern(regexp = "19[0-9]0|20[0-2]")
     private String decade;
 
-    public String getDecades() {
+    public String getDecade() {
         return decade;
     }
 
-    public void setDecades(String decades) {
-        this.decade = decades;
+    public void setDecade(String decades) {
+        this.decade = decade;
     }
 
     public String getSortType() {

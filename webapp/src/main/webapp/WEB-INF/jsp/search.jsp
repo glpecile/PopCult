@@ -62,11 +62,10 @@
                             <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton2">
                                 <div class="overflow-y-auto h-32">
                                     <div class="flex flex-col space-y-2.5">
-                                        <form:select path="decades" items="${decadeTypes}"/>
+                                        <form:select path="decade" items="${decades}"/>
                                     </div>
                                 </div>
-                            </div>
-                        </ul>
+                            </ul>
                     </div>
                     <div class="dropdown pr-4 flex flex-col">
                         <span>
@@ -122,16 +121,9 @@
             <c:if test="${listCoversContainer.totalCount > 0}">
                 <!-- Search Results of every List -->
                 <div class="row">
-                    <c:url value="/search/lists" var="listsUrl">
-                        <c:param name="sort" value="${param.sort}"/>
-                        <c:param name="term" value="${param.term}"/>
-                        <c:param name="genre" value="${param.genre}"/>
-                    </c:url>
-                    <a href="${listsUrl}">
                         <h2 class="font-bold text-2xl py-2 text-purple-500 hover:text-purple-900">
                             <spring:message code="search.list.results"/>
                         </h2>
-                    </a>
                     <c:forEach var="cover" items="${listCoversContainer.elements}">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                             <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -177,7 +169,9 @@
             </jsp:include>
         </div>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp">
+        <jsp:param name="url" value="${urlBase2}"/>
+    </jsp:include>
 </div>
 </body>
 </html>

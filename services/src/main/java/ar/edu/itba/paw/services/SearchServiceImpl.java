@@ -56,9 +56,12 @@ public class SearchServiceImpl implements SearchService {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         Date fDate = null;
         Date tDate = null;
-        fromDate = f.parse(fromDate+ "-01-01");
-        toDate = f.parse(searchForm.getDecades().stream().mapToInt(x -> x + 9).max() + "-12-31");
-        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fromDate, toDate);
+        if(fromDate != null && toDate != null){
+                fDate = f.parse(fromDate+ "-01-01");
+                tDate = f.parse(toDate + "-12-31");
+        }
+        System.out.println("Las dates son " + fDate + " y " + tDate);
+        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
     }
 
     @Override
