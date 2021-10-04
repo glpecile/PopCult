@@ -35,8 +35,8 @@ public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocati
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
-        if (URL.startsWith("/user/") && (URL.contains("/requests") || URL.contains("/notifications"))) {
-            try {
+        try {
+            if (URL.startsWith("/user/") && (URL.contains("/requests"))) {
                 String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/requests"));
                 userService.getCurrentUser().ifPresent(user -> {
                     if ((user.getUsername().equals(username))) {
@@ -45,10 +45,18 @@ public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocati
                         vote.set(ACCESS_DENIED);
                     }
                 });
-
-            } catch (NumberFormatException e) {
-                vote.set(ACCESS_ABSTAIN);
+            } else if (URL.startsWith("/user/") && URL.contains("/notifications")) {
+                String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/notifications"));
+                userService.getCurrentUser().ifPresent(user -> {
+                    if ((user.getUsername().equals(username))) {
+                        vote.set(ACCESS_GRANTED);
+                    } else {
+                        vote.set(ACCESS_DENIED);
+                    }
+                });
             }
+        } catch (NumberFormatException e) {
+            vote.set(ACCESS_ABSTAIN);
         }
         return vote.get();
     }
