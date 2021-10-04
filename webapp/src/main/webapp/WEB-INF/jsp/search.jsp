@@ -42,7 +42,35 @@
                         </span>
                         <form:select cssClass="form-select block w-full" path="sortType" items="${sortTypes}"/>
                     </div>
-
+                    <div class="dropdown pr-4 flex flex-col">
+                        <span>
+                            <spring:message code="search.mediaTypes"/>
+                        </span>
+                        <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownType"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <c:choose>
+                                <c:when test="${fn:length(param.mediaTypes) == 0}">
+                                    <spring:message code="search.all"/>
+                                </c:when>
+                                <c:when test="${fn:length(param.mediaTypes) == 1}">
+                                    <c:out value="${param.mediaTypes}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach items="${paramValues.mediaTypes}" var="type">
+                                        <c:out value="${type} "/>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </button>
+                        <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownType">
+                            <div class="overflow-y-auto h-32">
+                                <div class="flex flex-col space-y-2.5">
+                                    <form:checkboxes path="mediaTypes" items="${mediaTypes}"/>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
                     <div class="flex flex-col">
                         <span><spring:message code="search.decades"/></span>
                         <form:select cssClass="form-select block w-full" path="decade" items="${decades}"/>
@@ -51,22 +79,22 @@
                         <span>
                             <spring:message code="search.categories"/>
                         </span>
-                        <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button class="btn btn-secondary btn-rounded dropdown-toggle" type="button" id="dropdownGenre"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false">
                             <c:choose>
                                 <c:when test="${fn:length(param.genres) == 0}">
-                                    <c:out value="ALL"/>
+                                    <spring:message code="search.all"/>
                                 </c:when>
                                 <c:when test="${fn:length(param.genres) > 1}">
-                                    <c:out value="MULTIPLE"/>
+                                    <spring:message code="search.multiple"/>
                                 </c:when>
                                 <c:otherwise>
                                     <c:out value="${param.genres}"/>
                                 </c:otherwise>
                             </c:choose>
                         </button>
-                        <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton2">
+                        <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownGenre">
                             <div class="overflow-y-auto h-32">
                                 <div class="flex flex-col space-y-2.5">
                                     <form:checkboxes path="genres" items="${genreTypes}"/>
@@ -75,10 +103,10 @@
                         </ul>
                     </div>
                     <button class="btn btn-secondary btn-rounded " type="submit">
-                        <c:out value="APPLY FILTERS"/>
+                        <spring:message code="search.applyFilters"/>
                     </button>
                     <button class="btn btn-secondary btn-rounded " type="submit" name="clear" id="clear">
-                        <c:out value="CLEAR FILTERS"/>
+                        <spring:message code="search.clearFilters"/>
                     </button>
                 </div>
             </form:form>

@@ -72,6 +72,7 @@ public class SearchController {
         for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
             decades.add(Integer.toString(i));
         }
+        mav.addObject("mediaTypes", Arrays.stream(MediaType.values()).map(MediaType::getType).map(String::toUpperCase).collect(Collectors.toList()));
         mav.addObject("searchFilmsContainer", searchMediaResults);
         mav.addObject("listCoversContainer", listCoversContainer);
         mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
