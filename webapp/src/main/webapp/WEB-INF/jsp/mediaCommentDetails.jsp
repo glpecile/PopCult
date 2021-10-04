@@ -58,6 +58,12 @@
             </c:choose>
         </div>
     </div>
+    <c:url var="urlBase" value=""/>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${mediaCommentsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${mediaCommentsContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase}"/>
+    </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
