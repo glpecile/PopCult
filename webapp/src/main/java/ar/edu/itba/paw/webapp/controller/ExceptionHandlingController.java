@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.ParseException;
 import java.util.Locale;
 
 @ControllerAdvice
@@ -70,7 +71,18 @@ public class ExceptionHandlingController {
 
     @ExceptionHandler({InternalAuthenticationServiceException.class})
     public ModelAndView internalAuthenticationServiceException() {
-        LOGGER.info("Handling DisabledUserException");
+        LOGGER.info("Handling InternalAuthenticationServiceException");
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.internalError", null, Locale.getDefault()));
     }
+
+    @ExceptionHandler({ParseException.class})
+    public ModelAndView internalException() {
+        LOGGER.info("Handling ParseException");
+        ModelAndView mav = new ModelAndView("error");
+        mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
+        mav.addObject("description", messageSource.getMessage("exception.internalException", null, Locale.getDefault()));
+        return mav;
+    }
+
+
 }

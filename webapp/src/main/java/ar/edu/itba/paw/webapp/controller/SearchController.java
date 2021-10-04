@@ -62,31 +62,27 @@ public class SearchController {
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
-        //final String normalizedGenre = searchForm.getGenres().get(0).replaceAll("\\s+", "").toUpperCase();
-        //final String normalizedMediaType = searchForm.getMediaTypes().get(0).replaceAll("\\s+", "").toUpperCase();
-        //final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();
         final ModelAndView mav = new ModelAndView("search");
-//        final List<Integer> genres = new ArrayList<>();
-//        genres.add(genreOrdinal);
         final List<Integer> genres = searchForm.getGenres().stream().map(Genre::valueOf).map(Genre::ordinal).collect(Collectors.toList());
         final List<Integer> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).map(MediaType::ordinal).collect(Collectors.toList());
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date fromDate = null;
-            if(!searchForm.getDecades().isEmpty())
-                fromDate = f.parse(searchForm.getDecades().stream().mapToInt(x->x).min().orElse(1920) + "-01-01");
             Date toDate = null;
-            if(!searchForm.getDecades().isEmpty())
-                toDate = f.parse(searchForm.getDecades().stream().mapToInt(x->x+9).max().orElse(2029)  + "-12-31")  ;
+            //if(!searchForm.getDecades().isEmpty()) {
+                fromDate = f.parse(searchForm.getDecades().stream().mapToInt(x -> x).min()+ "-01-01");
+                toDate = f.parse(searchForm.getDecades().stream().mapToInt(x -> x + 9).max() + "-12-31");
+            //}
             final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), genres, fromDate, toDate);
             final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), 1, minimumMediaMatches);
             final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
             final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
+
             final List<String> decadesTypes = new ArrayList<>();
-            for (Integer i :
-                    IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
                 decadesTypes.add(Integer.toString(i));
             }
+
             mav.addObject("searchFilmsContainer", searchMediaResults);
             mav.addObject("listCoversContainer", listCoversContainer);
             mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));

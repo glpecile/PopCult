@@ -13,18 +13,16 @@ public class SearchForm {
     private List<String> mediaTypes;
     @Pattern(regexp = "TITLE|DATE")
     private String sortType;
+    @Size(min = 4, max = 4)
+    @Pattern(regexp = "19[0-9]0|20[0-2]")
+    private String decade;
 
-    private List<Integer> decades;
-
-    public List<Integer> getDecades() {
-        if(decades == null) {
-            return new ArrayList<>();
-        }
-        return decades;
+    public String getDecades() {
+        return decade;
     }
 
-    public void setDecades(List<Integer> decades) {
-        this.decades = decades;
+    public void setDecades(String decades) {
+        this.decade = decades;
     }
 
     public String getSortType() {
