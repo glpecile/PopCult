@@ -14,14 +14,16 @@ public class SearchForm {
     @Pattern(regexp = "TITLE|DATE")
     private String sortType;
     @Size(max = 4)
-    @Pattern(regexp = "19[0-9]0|20[0-2]0")
+    @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0")
     private String decade;
 
     public String getDecade() {
+        if(decade != null && decade.compareTo("ALL") == 0)
+            return null;
         return decade;
     }
     public String getLastYear(){
-        if(decade == null)
+        if(decade == null ||decade.compareTo("ALL") == 0 )
             return null;
         return String.valueOf(Integer.parseInt(decade) + 9);
     }

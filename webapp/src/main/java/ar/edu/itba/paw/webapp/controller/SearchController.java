@@ -68,6 +68,7 @@ public class SearchController {
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
         final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
         for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
             decades.add(Integer.toString(i));
         }
