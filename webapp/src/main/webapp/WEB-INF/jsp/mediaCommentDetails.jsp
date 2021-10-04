@@ -22,7 +22,8 @@
     <br>
     <div class="col-8 offset-2 flex-grow">
         <h1 class="font-bold text-2xl pt-2">
-            <spring:message code="comments.title" arguments="${media.title}"/>
+            <spring:message code="comments.main.title"/><a class="text-purple-500 hover:text-purple-900" href="<c:url value="/media/${mediaId}"/>"> <c:out
+                value="${media.title}"/></a>
         </h1>
         <!-- Comments Section -->
         <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
@@ -58,6 +59,7 @@
             </c:choose>
         </div>
     </div>
+    <br>
     <c:url var="urlBase" value=""/>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaCommentsContainer.totalPages}"/>
