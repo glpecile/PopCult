@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,8 +52,15 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre, Date fromDate, Date toDate) {
-        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fromDate, toDate);
+    public PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre, String fromDate, String toDate) throws ParseException {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        Date fDate = null;
+        Date tDate = null;
+        if(fromDate != null && toDate != null){
+                fDate = f.parse(fromDate+ "-01-01");
+                tDate = f.parse(toDate + "-12-31");
+        }
+        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
     }
 
     @Override
