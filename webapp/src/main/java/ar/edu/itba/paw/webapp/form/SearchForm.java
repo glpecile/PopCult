@@ -13,7 +13,7 @@ public class SearchForm {
     private List<String> mediaTypes;
     @Pattern(regexp = "TITLE|DATE")
     private String sortType;
-    @Size(min = 4, max = 4)
+    @Size(max = 4)
     @Pattern(regexp = "19[0-9]0|20[0-2]0")
     private String decade;
 
@@ -21,6 +21,8 @@ public class SearchForm {
         return decade;
     }
     public String getLastYear(){
+        if(decade == null)
+            return null;
         return String.valueOf(Integer.parseInt(decade) + 9);
     }
 
