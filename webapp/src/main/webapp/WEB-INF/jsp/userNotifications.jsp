@@ -4,20 +4,25 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title><spring:message code="profile.requests.title"/> &#8226; PopCult</title>
-
 </head>
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <br>
     <div class="col-8 offset-2 flex-grow">
-        <h2 class="display-5 fw-bolder"><spring:message code="profile.panel.title" arguments="${username}"/></h2>
+        <h2 class="display-5 fw-bolder text-center">
+            <spring:message code="profile.panel.title" arguments="${username}"/>
+        </h2>
         <jsp:include page="/WEB-INF/jsp/components/notificationTabs.jsp">
             <jsp:param name="username" value="${username}"/>
             <jsp:param name="path" value="notifications"/>
@@ -32,8 +37,8 @@
         </c:if>
         <c:forEach var="notification" items="${notifications.elements}">
             <c:if test="${notification.username != username}">
-                <div class="w-full h-30 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
-                    <div class="flex flex-col">
+                <div class="w-full h-30 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2 relative">
+                    <div class="flex flex-col inline-flex">
                         <h4 class="text-base pl-3 py-4 text-xl font-normal tracking-tight">
                             <a href="<c:url value="/user/${notification.username}" />"
                                class="text-purple-500 hover:text-purple-900"><c:out
@@ -43,8 +48,13 @@
                                 class="text-purple-500 hover:text-purple-900"><c:out
                                 value="${notification.listname}"/></a>.
                         </h4>
-                        <h4 class="text-base pl-3 py-4 font-normal tracking-tight">"<c:out
+                        <h4 class="text-base pl-3 pb-4 font-normal tracking-tight">"<c:out
                                 value="${notification.commentBody}"/>"</h4>
+                        <!-- Notification bubble -->
+                        <span class="absolute h-3 w-3 top-0 right-0 mt-2 mr-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 mt-1"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500 mb-0.5"></span>
+                        </span>
                     </div>
                 </div>
             </c:if>
