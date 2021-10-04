@@ -42,6 +42,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
                 "userId INT NOT NULL," +
                 "mediaId INT NOT NULL," +
                 "description TEXT," +
+                "date DATE," +
                 "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE SET NULL," +
                 "FOREIGN KEY (mediaId) REFERENCES media(mediaId) ON DELETE CASCADE)");
 
@@ -50,6 +51,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
                 "userId INT NOT NULL," +
                 "listId INT NOT NULL," +
                 "description TEXT," +
+                "date DATE," +
                 "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE SET NULL," +
                 "FOREIGN KEY (listId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
 
@@ -101,14 +103,14 @@ public class CommentDaoJdbcImpl implements CommentDao {
 
     @Override
     public PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize) {
-        List<Comment> mediaComments = jdbcTemplate.query("SELECT * FROM mediacomment NATURAL JOIN users WHERE mediaId = ? OFFSET ? LIMIT ?", new Object[]{mediaId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
+        List<Comment> mediaComments = jdbcTemplate.query("SELECT * FROM mediacomment NATURAL JOIN users WHERE mediaId = ? ORDER BY date DESC OFFSET ? LIMIT ?", new Object[]{mediaId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
         int commentsAmount = jdbcTemplate.query("SELECT COUNT(*) FROM mediacomment NATURAL JOIN users WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(mediaComments, page, pageSize, commentsAmount);
     }
 
     @Override
     public PageContainer<Comment> getListComments(int listId, int page, int pageSize) {
-        List<Comment> listComments = jdbcTemplate.query("SELECT * FROM listcomment NATURAL JOIN users WHERE listId = ? OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
+        List<Comment> listComments = jdbcTemplate.query("SELECT * FROM listcomment NATURAL JOIN users WHERE listId = ? ORDER BY date DESC OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, COMMENT_ROW_MAPPER);
         int commentsAmount = jdbcTemplate.query("SELECT COUNT(*) FROM listcomment NATURAL JOIN users WHERE listId = ?", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(listComments, page, pageSize, commentsAmount);
     }
@@ -125,7 +127,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
 
     @Override
     public PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize) {
-        List<Comment> notifications = jdbcTemplate.query("SELECT final.*, u.username FROM (users u JOIN (SELECT comments.*, m.listname FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?) AS final ON u.userid = final.userid) OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, COMMENT_NOTIFICATIONS_ROW_MAPPER);
+        List<Comment> notifications = jdbcTemplate.query("SELECT final.*, u.username FROM (users u JOIN (SELECT comments.*, m.listname FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?) AS final ON u.userid = final.userid) ORDER BY final.date DESC OFFSET ? LIMIT ?", new Object[]{userId, page * pageSize, pageSize}, COMMENT_NOTIFICATIONS_ROW_MAPPER);
         int count = jdbcTemplate.query("SELECT COUNT(*) FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(notifications, page, pageSize, count);
     }
