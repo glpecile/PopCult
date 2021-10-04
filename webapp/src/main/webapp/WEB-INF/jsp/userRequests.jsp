@@ -46,6 +46,12 @@
             </jsp:include>
         </c:forEach>
     </div>
+    <c:url var="baseURL" value=""/>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${requestContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${requestContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${baseURL}"/>
+    </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 
 </div>

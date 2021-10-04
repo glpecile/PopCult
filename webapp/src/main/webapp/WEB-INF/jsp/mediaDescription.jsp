@@ -214,6 +214,12 @@
         </c:choose>
     </div>
 </div>
+<c:url var="baseURL" value=""/>
+<jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+    <jsp:param name="mediaPages" value="${mediaCommentsContainer.totalPages}"/>
+    <jsp:param name="currentPage" value="${mediaCommentsContainer.currentPage + 1}"/>
+    <jsp:param name="url" value="${baseURL}"/>
+</jsp:include>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
