@@ -21,6 +21,13 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <br>
     <div class="col-8 offset-2 flex-grow">
+        <h2 class="display-5 fw-bolder text-center">
+            <spring:message code="profile.panel.title" arguments="${username}"/>
+        </h2>
+        <jsp:include page="/WEB-INF/jsp/components/notificationTabs.jsp">
+            <jsp:param name="username" value="${username}"/>
+            <jsp:param name="path" value="requests"/>
+        </jsp:include>
         <h1 class="font-bold text-2xl pt-2">
             <spring:message code="profile.requests.title"/>
         </h1>
@@ -39,6 +46,12 @@
             </jsp:include>
         </c:forEach>
     </div>
+    <c:url var="baseURL" value=""/>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${requestContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${requestContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${baseURL}"/>
+    </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>

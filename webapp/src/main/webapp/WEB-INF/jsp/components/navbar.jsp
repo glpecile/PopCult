@@ -61,7 +61,7 @@
                                 <spring:message code="nav.drop.lists"/>
                             </a></li>
                             <li><a class="dropdown-item" href="<c:url value="/user/${username}/requests"/>">
-                                <spring:message code="nav.drop.requests"/>
+                                <spring:message code="nav.drop.notifications"/>
                             </a></li>
                             <li><a class="dropdown-item" href="<c:url value="/logout"/>">
                                 <spring:message code="profile.signOut"/>

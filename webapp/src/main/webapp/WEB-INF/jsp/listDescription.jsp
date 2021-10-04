@@ -14,7 +14,7 @@
 <c:url value="/lists/edit/${list.mediaListId}/manageMedia" var="editListMediaPath"/>
 <c:url value="/lists/${listId}" var="commentPath"/>
 <c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
-
+<c:url value="/lists/${listId}/comments" var="commentsDetailPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -150,9 +150,11 @@
                 <h2 class="font-bold text-2xl">
                     <spring:message code="comments.section"/>
                 </h2>
-                <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500">
+                <a href="${commentsDetailPath}">
+                <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
                     <c:out value="${listCommentsContainer.totalCount}"/>
                 </div>
+                </a>
             </div>
             <spring:message code="comments.placeholder" var="commentPlaceholder"/>
             <form:form modelAttribute="commentForm" action="${commentPath}" method="POST">
@@ -180,6 +182,7 @@
                             <jsp:param name="type" value="lists"/>
                             <jsp:param name="id" value="${listId}"/>
                             <jsp:param name="deletePath" value="/lists/${listId}/deleteComment/${comment.commentId}"/>
+                            <jsp:param name="currentURL" value=""/>
                         </jsp:include>
                     </c:forEach>
                 </c:when>

@@ -119,6 +119,17 @@ public class MediaController {
         return mav;
     }
 
+    @RequestMapping(value = "/media/{mediaId}/comments")
+    public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
+        final ModelAndView mav = new ModelAndView("mediaCommentDetails");
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, page - 1, itemsPerPage);
+        userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
+        mav.addObject("media", media);
+        mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
+        return mav;
+    }
+
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
     public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
@@ -128,10 +139,10 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId) {
+    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId,  @RequestParam("currentURL") final String currentURL) {
         commentService.deleteCommentFromMedia(commentId);
-        return new ModelAndView("redirect:/media/" + mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId + currentURL);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})

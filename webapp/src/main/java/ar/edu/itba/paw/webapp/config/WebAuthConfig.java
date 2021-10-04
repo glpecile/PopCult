@@ -45,7 +45,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private EditListVoter editListVoter;
     @Autowired
-    private RequestsManagerVoter requestsManagerVoter;
+    private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
     @Autowired
@@ -73,7 +73,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RoleVoter(),
                 new AuthenticatedVoter(),
                 editListVoter,
-                requestsManagerVoter,
+                userPanelManagerVoter,
                 deleteCommentVoter,
                 listsVoter
         );
