@@ -9,7 +9,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><spring:message code="profile.requests.title"/> &#8226; PopCult</title>
+    <title><spring:message code="mods.moderators.title" arguments="${moderatorsContainer.totalCount}"/> &#8226; PopCult</title>
 
 </head>
 <body class="bg-gray-50">

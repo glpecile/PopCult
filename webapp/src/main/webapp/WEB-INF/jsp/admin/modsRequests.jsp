@@ -9,7 +9,7 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><spring:message code="profile.requests.title"/> &#8226; PopCult</title>
+    <title><spring:message code="mods.requests.title" arguments="${requestersContainer.totalCount}"/> &#8226; PopCult</title>
 
 </head>
 <body class="bg-gray-50">
@@ -18,7 +18,7 @@
     <br>
     <div class="col-8 offset-2 flex-grow">
         <h1 class="text-center display-5 fw-bolder py-4">
-            <spring:message code="mods.requests.title"/>
+            <spring:message code="mods.title"/>
         </h1>
         <%--    tabs     --%>
         <jsp:include page="/WEB-INF/jsp/components/modsTabs.jsp">
