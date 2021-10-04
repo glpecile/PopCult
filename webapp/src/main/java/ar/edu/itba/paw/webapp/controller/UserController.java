@@ -324,4 +324,18 @@ public class UserController {
         mav.addObject("notifications", notificationContainer);
         return mav;
     }
+
+    @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
+    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username){
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        commentService.setUserListsCommentsNotificationsAsOpened(user.getUserId());
+        return new ModelAndView("redirect:/user/"+username+"/notifications");
+    }
+
+    @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "deleteNotifications")
+    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username){
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        commentService.deleteUserListsCommentsNotifications(user.getUserId());
+        return new ModelAndView("redirect:/user/"+username+"/notifications");
+    }
 }

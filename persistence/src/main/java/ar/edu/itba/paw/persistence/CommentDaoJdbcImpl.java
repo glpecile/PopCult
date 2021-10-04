@@ -76,13 +76,15 @@ public class CommentDaoJdbcImpl implements CommentDao {
         data.put("listId", listId);
         data.put("description", comment);
         KeyHolder keyHolder = jdbcInsertListComment.executeAndReturnKeyHolder(data);
+        return new Comment((int) keyHolder.getKey(), userId, "", comment);
+    }
 
+    @Override
+    public void addCommentNotification(int commentId) {
         Map<String, Object> notificationData = new HashMap<>();
-        notificationData.put("commentId", keyHolder.getKey());
+        notificationData.put("commentId", commentId);
         notificationData.put("opened", false);
         jdbcInsertCommentNotifications.execute(notificationData);
-
-        return new Comment((int) keyHolder.getKey(), userId, "", comment);
     }
 
     @Override
@@ -127,4 +129,15 @@ public class CommentDaoJdbcImpl implements CommentDao {
         int count = jdbcTemplate.query("SELECT COUNT(*) FROM (SELECT * FROM commentnotifications NATURAL JOIN listcomment)AS comments JOIN medialist m ON comments.listid = m.medialistid WHERE m.userid = ?", new Object[]{userId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(notifications, page, pageSize, count);
     }
+
+    @Override
+    public void setUserListsCommentsNotificationsAsOpened(int userId) {
+        jdbcTemplate.update("UPDATE commentnotifications SET opened = ? WHERE commentid IN (SELECT commentid FROM (commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = ?)", true, userId);
+    }
+
+    @Override
+    public void deleteUserListsCommentsNotifications(int userId) {
+        jdbcTemplate.update("DELETE FROM commentnotifications WHERE commentid IN (SELECT commentid FROM (commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = ?)", userId);
+    }
+
 }

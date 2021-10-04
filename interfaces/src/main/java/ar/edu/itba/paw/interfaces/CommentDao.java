@@ -11,6 +11,8 @@ public interface CommentDao {
 
     Comment addCommentToList(int userId, int listId, String comment);
 
+    void addCommentNotification(int commentId);
+
     Optional<Comment> getMediaCommentById(int commentId);
 
     Optional<Comment> getListCommentById(int commentId);
@@ -24,5 +26,9 @@ public interface CommentDao {
     void deleteCommentFromMedia(int commentId);
 
     PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize);
+
+    void setUserListsCommentsNotificationsAsOpened(int userId);
+
+    void deleteUserListsCommentsNotifications(int userId);
 
 }

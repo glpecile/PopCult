@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.CommentDao;
 import ar.edu.itba.paw.interfaces.CommentService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    UserService userService;
 
     @Override
     public Comment addCommentToMedia(int userId, int mediaId, String comment) {
@@ -21,7 +24,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment addCommentToList(int userId, int listId, String comment) {
-        return commentDao.addCommentToList(userId, listId, comment);
+        Comment com = commentDao.addCommentToList(userId, listId, comment);
+        userService.getCurrentUser().ifPresent(user -> {
+            if (com!= null) commentDao.addCommentNotification(com.getCommentId());
+        });
+        return com;
     }
 
     @Override
@@ -57,5 +64,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize) {
         return commentDao.getUserListsCommentsNotifications(userId, page, pageSize);
+    }
+
+    @Override
+    public void setUserListsCommentsNotificationsAsOpened(int userId) {
+        commentDao.setUserListsCommentsNotificationsAsOpened(userId);
+    }
+
+    @Override
+    public void deleteUserListsCommentsNotifications(int userId) {
+        commentDao.deleteUserListsCommentsNotifications(userId);
     }
 }

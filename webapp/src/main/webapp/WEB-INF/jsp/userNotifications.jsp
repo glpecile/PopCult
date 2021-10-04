@@ -13,8 +13,9 @@
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title><spring:message code="profile.requests.title"/> &#8226; PopCult</title>
+    <title><spring:message code="profile.notifications.title"/> &#8226; PopCult</title>
 </head>
+<c:url value="/user/${username}/notifications" var="postPath"/>
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -27,14 +28,36 @@
             <jsp:param name="username" value="${username}"/>
             <jsp:param name="path" value="notifications"/>
         </jsp:include>
-        <h1 class="font-bold text-2xl pt-2">
-            <spring:message code="profile.notifications.title"/>
-        </h1>
+        <div class="flex justify-between">
+            <h1 class="font-bold text-2xl pt-2 text-start">
+                <spring:message code="profile.notifications.title"/>
+            </h1>
+            <div class="flex flex-wrap justify-end">
+                <form action="${postPath}" method="POST" class="space-x-2">
+                    <input type="hidden" name="setOpen" value="">
+                    <button type="submit"
+                            class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                        <i class="fas fa-check-double pr-2 text-purple-500 group-hover:text-purple-900"></i>
+                        <spring:message code="profile.notifications.button.read"/>
+                    </button>
+                </form>
+                <form action="${postPath}" method="POST">
+                    <input type="hidden" name="deleteNotifications" value="">
+                    <button type="submit"
+                            class="btn btn-link text-purple-500 group hover:text-purple-900 btn-rounded">
+                        <i class="far fa-trash-alt pr-2 text-purple-500 group-hover:text-purple-900"></i>
+                        <spring:message code="profile.notifications.button.delete"/>
+                    </button>
+                </form>
+            </div>
+
+        </div>
         <c:if test="${notifications.totalCount == 0}">
             <h3 class="text-center text-gray-400 pt-3">
                 <spring:message code="profile.notifications.none"/>
             </h3>
         </c:if>
+
         <c:forEach var="notification" items="${notifications.elements}">
             <c:if test="${notification.username != username}">
                 <div class="w-full h-30 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2 relative">
@@ -51,10 +74,12 @@
                         <h4 class="text-base pl-3 pb-4 font-normal tracking-tight">"<c:out
                                 value="${notification.commentBody}"/>"</h4>
                         <!-- Notification bubble -->
+                        <c:if test="${!notification.opened}">
                         <span class="absolute h-3 w-3 top-0 right-0 mt-2 mr-3">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 mt-1"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500 mb-0.5"></span>
                         </span>
+                        </c:if>
                     </div>
                 </div>
             </c:if>

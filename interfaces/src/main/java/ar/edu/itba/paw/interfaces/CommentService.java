@@ -25,4 +25,8 @@ public interface CommentService {
 
     PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize);
 
+    void setUserListsCommentsNotificationsAsOpened(int userId);
+
+    void deleteUserListsCommentsNotifications(int userId);
+
 }
