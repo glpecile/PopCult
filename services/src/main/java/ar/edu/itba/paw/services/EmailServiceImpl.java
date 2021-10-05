@@ -124,11 +124,13 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
     }
 
-    public void sendNewRequestEmail(MediaList list, User requester) {
+    @Override
+    public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
         User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", list.getListName());
         mailMap.put("username", requester.getUsername());
+        mailMap.put("toUsername", listOwner.getUsername());
         final String subject = messageSource.getMessage("collabEmail.subject", null, Locale.getDefault());
         sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
     }
