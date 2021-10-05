@@ -77,23 +77,6 @@ public class ExceptionHandlingController {
         return new ModelAndView("/login").addObject("error", messageSource.getMessage("login.internalError", null, Locale.getDefault()));
     }
 
-    @ExceptionHandler({UserAlreadyIsModException.class})
-    public ModelAndView UserAlreadyIsMod() {
-        ModelAndView mav = new ModelAndView("error");
-        mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
-        mav.addObject("description", messageSource.getMessage("exception.userAlreadyIsMod", null, Locale.getDefault()));
-        return mav;
-    }
-
-    @ExceptionHandler({ModRequestAlreadyExistsException.class})
-    public ModelAndView ModRequestAlreadyExists() {
-        LOGGER.info("Handling ModRequestAlreadyExistsException");
-        ModelAndView mav = new ModelAndView("error");
-        mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
-        mav.addObject("description", messageSource.getMessage("exception.modRequestAlreadyExists", null, Locale.getDefault()));
-        return mav;
-    }
-
     @ExceptionHandler({ParseException.class})
     public ModelAndView internalException() {
         LOGGER.info("Handling ParseException");

@@ -27,7 +27,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,7 +206,7 @@ public class UserController {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
 
         try {
-            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword()).orElseThrow(UserNotFoundException::new);
+            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword());
         } catch (InvalidCurrentPasswordException e) {
             errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
             return changeUserPassword(form);

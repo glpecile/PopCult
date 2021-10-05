@@ -67,17 +67,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) {
-        userDao.getById(userId).ifPresent(user -> {
-            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-                throw new InvalidCurrentPasswordException();
-            }
-        });
+    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
+        Optional<User> user = userDao.getById(userId);
+        if(user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
+            throw new InvalidCurrentPasswordException();
+        }
         return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
     }
 
     @Override
-    public void forgotPassword(String email) {
+    public void forgotPassword(String email) throws EmailNotExistsException {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
         String token = tokenService.createToken(user.getUserId(), TokenType.RESET_PASS.ordinal());
         emailService.sendResetPasswordEmail(user, token);
