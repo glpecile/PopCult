@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sring" uri="http://www.springframework.org/tags" %>
 
 <!doctype html>
 <html lang="en">
@@ -24,16 +25,36 @@
         <h1 class="text-center display-5 fw-bolder py-4">
             <spring:message code="admin.title"/>
         </h1>
-        <!-- Link to reports -->
-        <h2 class="text-xl py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/admin/reports"/>">
-            <b class="text-purple-500 hover:text-purple-900"><spring:message code="report.title.plural"/></b>
-        </a></h2>
-        <!-- Link to mods -->
-        <sec:authorize access="hasRole('ADMIN')">
-            <h2 class="text-xl py-2 pb-2.5"><a class="hover:text-gray-800" href="<c:url value="/admin/mods"/>">
-                <b class="text-purple-500 hover:text-purple-900"><spring:message code="mods.title"/></b>
-            </a></h2>
-        </sec:authorize>
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+            <!-- Link to reports -->
+            <div
+                    class="group flex flex-col bg-white shadow-lg rounded-lg p-3 transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
+                <i class="fas fa-exclamation-circle text-center text-purple-500 group-hover:text-purple-900 fa-2x mt-3"></i>
+                <h2 class="text-2xl text-center py-2 pb-2.5">
+                    <a class="stretched-link text-purple-500 group-hover:text-purple-900" href="<c:url value="/admin/reports"/>">
+                        <b><spring:message code="report.title.plural"/></b>
+                    </a>
+                </h2>
+                <p class="p-2.5 m-1.5 text-center">
+                    <spring:message code="admin.reports.desc"/>
+                </p>
+            </div>
+            <!-- Link to mods -->
+            <sec:authorize access="hasRole('ADMIN')">
+                <div
+                        class="group flex flex-col bg-white shadow-lg rounded-lg p-3 transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
+                    <i class="fas fa-users text-center text-purple-500 group-hover:text-purple-900 fa-2x mt-3"></i>
+                    <h2 class="text-2xl text-center py-2 pb-2.5">
+                        <a class="stretched-link text-purple-500 group-hover:text-purple-900" href="<c:url value="/admin/mods"/>">
+                            <b><spring:message code="mods.title"/></b>
+                        </a>
+                    </h2>
+                    <p class="p-2.5 m-1.5 text-center">
+                        <spring:message code="admin.mods.desc"/>
+                    </p>
+                </div>
+            </sec:authorize>
+        </div>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
