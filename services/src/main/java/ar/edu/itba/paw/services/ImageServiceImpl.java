@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.ImageDao;
 import ar.edu.itba.paw.interfaces.ImageService;
+import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
 import ar.edu.itba.paw.models.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,13 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getImage(String imagePath) {
+    public Optional<Image> getImage(String imagePath) throws ImageConversionException {
         try {
             final byte[] imageBytes = Files.readAllBytes(Paths.get(Objects.requireNonNull(this.getClass().getClassLoader().getResource(imagePath)).toURI()));
             final Image image = new Image(0, imageBytes);
             return Optional.of(image);
         } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException("Error loading locale image");
+            throw new ImageConversionException();
         }
     }
 

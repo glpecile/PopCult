@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -16,6 +17,8 @@ import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -35,8 +38,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 
 @Controller
-public class UserController {
-
+public class UserController {    
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -56,7 +58,7 @@ public class UserController {
     @Autowired
     private CommentService commentService;
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaffMemberController.class);
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int editablePerPage = 6;
@@ -270,8 +272,14 @@ public class UserController {
 
     @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
-    byte[] getProfilePicture(@PathVariable("imageId") final int imageId) {
-        return userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+    byte[] getProfileImage(@PathVariable("imageId") final int imageId) {
+        byte[] profileImage = new byte[0];
+        try {
+            profileImage = userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+        } catch (ImageConversionException e) {
+            LOGGER.error("Error loading image {}", imageId);
+        }
+        return profileImage;
     }
 
     @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")

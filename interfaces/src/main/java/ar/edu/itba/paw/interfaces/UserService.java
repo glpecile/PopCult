@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
-import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
@@ -32,7 +29,7 @@ public interface UserService {
 
     void resendToken(String token);
 
-    Optional<Image> getUserProfileImage(int imageId);
+    Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
 
     void uploadUserProfileImage(int userId, byte[] photoBlob);
 
