@@ -32,11 +32,6 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
     public ModeratorDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("modRequests");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS modRequests(" +
-                "userId INT PRIMARY KEY," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override

@@ -41,25 +41,6 @@ public class StaffDaoJdbcImpl implements StaffDao {
         staffMemberjdbcInsert = new SimpleJdbcInsert(ds).withTableName("staffMember").usingGeneratedKeyColumns("staffMemberId");
         directorjdbcInsert = new SimpleJdbcInsert(ds).withTableName("director");
         castjdbcInsert = new SimpleJdbcInsert(ds).withTableName("cast");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS staffMember (" +
-                "staffMemberId SERIAL PRIMARY KEY," +
-                "name VARCHAR(100) NOT NULL," +
-                "description TEXT," +
-                "image TEXT)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS director (" +
-                "mediaId INT NOT NULL," +
-                "staffMemberId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE )");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS crew (" +
-                "mediaId INT NOT NULL," +
-                "staffMemberId INT NOT NULL," +
-                "characterName VARCHAR(100) NOT NULL," +
-                "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE)");
     }
 
     @Override

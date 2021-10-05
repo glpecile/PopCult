@@ -33,29 +33,6 @@ public class CommentDaoJdbcImpl implements CommentDao {
         jdbcInsertMediaComment = new SimpleJdbcInsert(ds).withTableName("mediacomment").usingGeneratedKeyColumns("commentid");
         jdbcInsertListComment = new SimpleJdbcInsert(ds).withTableName("listcomment").usingGeneratedKeyColumns("commentid");
         jdbcInsertCommentNotifications = new SimpleJdbcInsert(ds).withTableName("commentnotifications");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediacomment (" +
-                "commentId SERIAL PRIMARY KEY," +
-                "userId INT NOT NULL," +
-                "mediaId INT NOT NULL," +
-                "description TEXT," +
-                "date DATE," +
-                "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE SET NULL," +
-                "FOREIGN KEY (mediaId) REFERENCES media(mediaId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listcomment (" +
-                "commentId SERIAL PRIMARY KEY," +
-                "userId INT NOT NULL," +
-                "listId INT NOT NULL," +
-                "description TEXT," +
-                "date DATE," +
-                "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE SET NULL," +
-                "FOREIGN KEY (listId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS commentNotifications(" +
-                "commentId INT NOT NULL," +
-                "opened BOOLEAN DEFAULT FALSE," +
-                "FOREIGN KEY (commentId) REFERENCES listcomment(commentid) ON DELETE CASCADE)");
     }
 
     @Override

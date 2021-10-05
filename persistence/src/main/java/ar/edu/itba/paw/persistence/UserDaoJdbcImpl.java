@@ -32,19 +32,6 @@ public class UserDaoJdbcImpl implements UserDao {
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId SERIAL PRIMARY KEY," +
-                "email TEXT NOT NULL," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL," +
-                "name VARCHAR(100)," +
-                "enabled BOOLEAN NOT NULL," +
-                "imageId INT," +
-                "role INT NOT NULL," +
-                "UNIQUE(email)," +
-                "UNIQUE(username)," +
-                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
     }
 
     @Override

@@ -38,15 +38,6 @@ public class StudioDaoJdbcImpl implements StudioDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.studioJdbcInsert = new SimpleJdbcInsert(ds).withTableName("studio").usingGeneratedKeyColumns("studioId");
         this.mediaStudioJdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaStudio");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS studio (" +
-                "studioId SERIAL PRIMARY KEY," +
-                "name TEXT," +
-                "image TEXT)");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaStudio (" +
-                "mediaId INT NOT NULL," +
-                "studioId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId)," +
-                "FOREIGN KEY(studioId) REFERENCES studio(studioId))");
     }
 
     @Override

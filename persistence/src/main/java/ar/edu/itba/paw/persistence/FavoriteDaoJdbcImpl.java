@@ -39,18 +39,6 @@ public class FavoriteDaoJdbcImpl implements FavoriteDao {
         jdbcTemplate = new JdbcTemplate(ds);
         favoriteMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("favoritemedia");
         favoriteListsJdbcInsert = new SimpleJdbcInsert(ds).withTableName("favoritelists");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritemedia(" +
-                "userId INT NOT NULL," +
-                "mediaId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS favoritelists(" +
-                "userId INT NOT NULL," +
-                "mediaListId INT NOT NULL," +
-                "FOREIGN KEY(mediaListId) REFERENCES medialist(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
