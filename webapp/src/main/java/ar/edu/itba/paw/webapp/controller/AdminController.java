@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.interfaces.ReportService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
@@ -10,6 +12,7 @@ import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 @Controller
 public class AdminController {
@@ -27,6 +31,8 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private ModeratorService moderatorService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final int itemsPerPage = 12;
     private static final int adminPanelItemsPerPage = 3;
@@ -161,7 +167,19 @@ public class AdminController {
     @RequestMapping(value = "/requestMod")
     ModelAndView requestMod() {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
-        moderatorService.addModRequest(user.getUserId());
+        try {
+            moderatorService.addModRequest(user.getUserId());
+        } catch (UserAlreadyIsModException e) {
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
+            mav.addObject("description", messageSource.getMessage("exception.userAlreadyIsMod", null, Locale.getDefault()));
+            return mav;
+        } catch (ModRequestAlreadyExistsException e) {
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
+            mav.addObject("description", messageSource.getMessage("exception.modRequestAlreadyExists", null, Locale.getDefault()));
+            return mav;
+        }
         return new ModelAndView("modRequest/modRequestSent");
     }
 }

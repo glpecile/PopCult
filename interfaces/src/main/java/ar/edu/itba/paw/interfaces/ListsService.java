@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -37,9 +38,9 @@ public interface ListsService {
 
     MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative);
 
-    void addToMediaList(int mediaListId, int mediaId);
+    void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException;
 
-    void addToMediaList(int mediaListId, List<Integer> mediaIdList);
+    void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException;
 
     void deleteMediaFromList(int mediaListId, int mediaId);
 
