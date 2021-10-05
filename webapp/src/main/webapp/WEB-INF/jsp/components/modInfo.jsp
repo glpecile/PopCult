@@ -20,11 +20,9 @@
         </h4>
     </div>
     <div class="flex justify-between p-3 text-center justify-center items-center">
-        <form:form cssClass="m-0" action="${removePath}" method="DELETE">
-            <button type="submit" name="removeMod"><i
-                    class="fas fa-times text-xl text-gray-600 hover:text-red-400 cursor-pointer pl-3"
-                    title="<spring:message code="mods.remove"/>"></i></button>
-        </form:form>
+        <jsp:include page="/WEB-INF/jsp/components/rejectMod.jsp">
+            <jsp:param name="removeRequestPath" value="/admin/mods/${param.userId}"/>
+        </jsp:include>
     </div>
 </div>
 </html>
