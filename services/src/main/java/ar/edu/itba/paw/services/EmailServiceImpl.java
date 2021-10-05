@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -38,6 +39,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
 
+    @Async
     @Override
     public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -63,6 +65,7 @@ public class EmailServiceImpl implements EmailService {
         return templateEngine.process(template, thymeleafContext);
     }
 
+    @Async
     @Override
     public void sendVerificationEmail(User to, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -72,6 +75,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "registerConfirmation.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendResetPasswordEmail(User to, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -81,6 +85,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "resetPassword.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendReportCreatedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -89,6 +94,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "reportCreated.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendReportApprovedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -97,6 +103,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "reportApproved.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendReportRejectedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -105,6 +112,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "reportRejected.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendDeletedCommentEmail(User to, Comment comment, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -114,6 +122,7 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendDeletedListEmail(User to, MediaList mediaList, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
@@ -124,8 +133,9 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
     }
 
+    @Async
     @Override
-    public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
+    public void sendNewRequestEmail(MediaList list, User requester) {
         User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", list.getListName());
@@ -135,6 +145,8 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
     }
 
+    @Async
+    @Override
     public void sendCollabRequestAcceptedEmail(User to, Request collaboration) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", collaboration.getListname());
@@ -144,12 +156,14 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
     }
 
+    @Async
     @Override
     public void sendModRequestApprovedEmail(User to) {
         final String subject = messageSource.getMessage("email.mod.approved.subject", null, Locale.getDefault());
         sendEmail(to.getEmail(), subject, "ModRequestApproved.html", null);
     }
 
+    @Async
     @Override
     public void sendModRoleRemovedEmail(User to) {
         final String subject = messageSource.getMessage("email.mod.removed.subject", null, Locale.getDefault());
