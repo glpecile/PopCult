@@ -90,11 +90,9 @@
             </jsp:include>
             <div class="flex justify-between mb-2">
                 <c:if test="${isOwner}">
-                    <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
+                    <jsp:include page="/WEB-INF/jsp/components/confirmationDeleteListModal.jsp">
                         <jsp:param name="mediaListId" value="${mediaListId}"/>
                         <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
-                        <jsp:param name="title" value="Delete this list"/>
-                        <jsp:param name="message" value="Are you sure you want to delete this list?"/>
                     </jsp:include>
                 </c:if>
                 <a href=${listPath}>
@@ -225,7 +223,7 @@
                         </h2>
                         <!-- Search Results of every Media -->
                         <div class="row">
-                            <div class="overflow-y-auto h-32">
+                            <div class="overflow-y-auto h-50">
                                 <div class="flex flex-col space-y-2.5">
                                     <form:checkboxes path="media" items="${searchResults}"/>
                                     <form:errors path="media" cssClass="error text-red-400"/>

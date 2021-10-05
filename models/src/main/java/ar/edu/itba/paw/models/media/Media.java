@@ -55,7 +55,7 @@ public class Media {
         return releaseDate;
     }
 
-    public String getReleaseYear(){
+    public String getReleaseYear() {
         return String.valueOf(releaseDate).substring(0, 4);
     }
 

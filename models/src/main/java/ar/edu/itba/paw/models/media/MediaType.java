@@ -4,6 +4,7 @@ public enum MediaType {
 
     FILMS("Films"), SERIE("Serie"), LIST("List");
     final private String type;
+
     MediaType(String type) {
         this.type = type;
     }

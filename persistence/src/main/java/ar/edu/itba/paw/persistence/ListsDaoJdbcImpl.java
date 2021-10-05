@@ -156,7 +156,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, int mediaId) {
+    public void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
@@ -168,7 +168,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException {
         for (int mediaId : mediaIdList) {
             addToMediaList(mediaListId, mediaId);
         }
@@ -208,7 +208,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
             for (Media media : mediaList) {
                 mediaIdList.add(media.getMediaId());
             }
-            addToMediaList((int) key.getKey(), mediaIdList);
+            try {
+                addToMediaList((int) key.getKey(), mediaIdList);
+            } catch (MediaAlreadyInListException e) {
+                //TODO log
+            }
 
             //add to forkedLists table
             Map<String, Object> forkData = new HashMap<>();

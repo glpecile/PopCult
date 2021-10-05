@@ -94,7 +94,7 @@ public class RowMappers {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"), //TODO
+                    rs.getString("name"),
                     rs.getBoolean("enabled"),
                     rs.getInt("imageId"),
                     rs.getInt("role"));
@@ -131,9 +131,7 @@ public class RowMappers {
     public static final RowMapper<Image> IMAGE_ROW_MAPPER =
             (rs, rowNum) -> new Image(
                     rs.getInt("imageId"),
-                    rs.getBytes("photoBlob"),
-                    rs.getInt("imageContentLength"),
-                    rs.getString("imageContentType"));
+                    rs.getBytes("photoBlob"));
 
     /**
      * Comment RowMappers.

@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 import org.junit.Assert;
@@ -50,11 +52,11 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testRegister() {
+    public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         //1 - Setup - Preconditions
         when(mockDao.register(eq(EMAIL), eq(USERNAME), eq(PASSWORD), eq(NAME),
-                eq(NOT_ENABLED_USER), eq(DEFAULT_IMAGE_ID), eq(DEFAULT_USER_ROLE)))
-                .thenReturn(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE));
+                eq(NOT_ENABLED_USER), eq(DEFAULT_USER_ROLE)))
+                .thenReturn(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE));
         when(mockPasswordEncoder.encode(Mockito.anyString())).thenReturn(PASSWORD);
 
         //2 -Try class under test

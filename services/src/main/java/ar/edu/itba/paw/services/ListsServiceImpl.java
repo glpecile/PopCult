@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -88,12 +89,12 @@ public class ListsServiceImpl implements ListsService {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, int mediaId) {
+    public void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException {
         listsDao.addToMediaList(mediaListId, mediaId);
     }
 
     @Override
-    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException {
         listsDao.addToMediaList(mediaListId, mediaIdList);
     }
 

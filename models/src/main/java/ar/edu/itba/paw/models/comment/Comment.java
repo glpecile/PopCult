@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.models.comment;
 
 public class Comment {
-    final int commentId;
-    final int userId;
-    final String username;
-    final String commentBody;
-    final String listname;
-    final int listId;
-    final boolean opened;
+    private final int commentId;
+    private final int userId;
+    private final String username;
+    private final String commentBody;
+    private final String listname;
+    private final int listId;
+    private final boolean opened;
 
     public Comment(int commentId, int userId, String username, String commentBody) {
         this.commentId = commentId;

@@ -45,7 +45,7 @@ public class ReportController {
             return reportList(listId, reportForm);
         }
         reportService.reportList(listId, reportForm.getReport());
-        //TODO preguntar si esta bien
+
         return listsService.getMediaListById(listId).isPresent() ?
                 new ModelAndView("redirect:/lists/" + listId) :
                 new ModelAndView("redirect:/lists");

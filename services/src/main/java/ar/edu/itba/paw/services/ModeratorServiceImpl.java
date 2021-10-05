@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.ModeratorDao;
 import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.Roles;
@@ -54,7 +55,7 @@ public class ModeratorServiceImpl implements ModeratorService {
     }
 
     @Override
-    public void addModRequest(int userId) {
+    public void addModRequest(int userId) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
         if(principalIsMod()) {
             throw new UserAlreadyIsModException();
         }

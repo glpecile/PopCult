@@ -21,7 +21,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Override
     public Request makeNewRequest(int listId, int userId) {
-        userDao.getById(userId).ifPresent(user -> listsDao.getMediaListById(listId).ifPresent(list -> emailService.sendNewRequestEmail(list, user)));
+        userDao.getById(userId).ifPresent(user -> listsDao.getMediaListById(listId).ifPresent(list -> userDao.getById(list.getUserId()).ifPresent(listOwner -> emailService.sendNewRequestEmail(list, user, listOwner))));
         return collaborativeListsDao.makeNewRequest(listId, userId);
     }
 

@@ -11,10 +11,17 @@ import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     /* default */ static final boolean NOT_ENABLED_USER = false;
     /* default */ static final boolean ENABLED_USER = true;
-    /* default */ static final int DEFAULT_IMAGE_ID = 1;
+    /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
     /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
     @Override
@@ -57,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
         String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
@@ -67,17 +74,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) {
-        userDao.getById(userId).ifPresent(user -> {
-            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-                throw new InvalidCurrentPasswordException();
-            }
-        });
+    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
+        Optional<User> user = userDao.getById(userId);
+        if(user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
+            throw new InvalidCurrentPasswordException();
+        }
         return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
     }
 
     @Override
-    public void forgotPassword(String email) {
+    public void forgotPassword(String email) throws EmailNotExistsException {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
         String token = tokenService.createToken(user.getUserId(), TokenType.RESET_PASS.ordinal());
         emailService.sendResetPasswordEmail(user, token);
@@ -107,9 +113,19 @@ public class UserServiceImpl implements UserService {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
         if (isValidToken) {
             userDao.confirmRegister(token.getUserId(), ENABLED_USER);
+            getById(token.getUserId()).ifPresent(this::authWithoutPassword);
             tokenService.deleteToken(token);
         }
         return isValidToken;
+    }
+
+    private void authWithoutPassword(User user) {
+        final Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(Roles.values()[user.getRole()].getRoleType()));
+        org.springframework.security.core.userdetails.User userDetails =
+                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Override
@@ -128,12 +144,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<Image> getUserProfileImage(int imageId) {
+        if(imageId == User.DEFAULT_IMAGE) {
+            return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
+        }
         return imageService.getImage(imageId);
     }
 
     @Override
-    public void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType) {
-        imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
+    public void uploadUserProfileImage(int userId, byte[] photoBlob) {
+        imageService.uploadImage(photoBlob).ifPresent(image -> {
             userDao.updateUserProfileImage(userId, image.getImageId());
         });
     }

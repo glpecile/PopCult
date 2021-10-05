@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.models.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum SortType {
     //Pueden agregarse otro tipos de criterios de sort como cantidad de favoritos, forks en las listas, vistas
-    DATE("Date","releasedate", "creationdate", 6, 5),
-    TITLE("Title","title", "listname", 3, 3);
+    DATE("Date", "releasedate", "creationdate", 6, 5),
+    TITLE("Title", "title", "listname", 3, 3);
 
     public final String name;
     public final String nameMedia;

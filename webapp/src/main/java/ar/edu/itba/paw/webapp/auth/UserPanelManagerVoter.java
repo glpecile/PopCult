@@ -33,7 +33,7 @@ public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocati
         String URL = filterInvocation.getRequestUrl();
 
         if (URL.startsWith("/user/") && ((URL.contains("/requests")) || URL.contains("/notifications"))) {
-            String username = URL.replaceFirst("/user/", "").replaceFirst("/requests|/notifications", "");
+            String username = URL.replaceFirst("/user/", "").replaceFirst("(/requests|/notifications).*", "");
             userService.getCurrentUser().ifPresent(user -> {
                 if ((user.getUsername().equals(username))) {
                     vote.set(ACCESS_GRANTED);

@@ -9,15 +9,15 @@
 <c:url value="/user/${param.username}" var="userProfilePath"/>
 
 <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
-<%--     TODO centrar--%>
     <div class="flex">
-        <img class="inline-block object-cover rounded-full h-10 w-10" alt="profile_image"
+        <img class="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
              src="<c:url value="/user/image/${param.imageId}"/>">
         <h4 class="pl-3 py-4 text-xl font-normal tracking-tight">
-            <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900"><strong><c:out value="${param.name}"/></strong></a>
-        </h4>
-        <h4 class="pl-3 py-4 text-xl font-normal tracking-tight">
-            <spring:message code="mods.request.modRequest" arguments="${param.username}"/>
+            <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900"><strong><c:out value="${param.name}"/></strong></a>.
+            <spring:message code="profile.otherDescription"/>
+            <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900">
+                <c:out value="${param.username}"/>
+            </a>
         </h4>
     </div>
     <div class="flex justify-between p-3 text-center justify-center items-center">
