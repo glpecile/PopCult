@@ -3,10 +3,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div>
-    <button data-bs-toggle="modal" data-bs-target="#approveModModal">
-        <button type="submit" name="addMod"><i
+    <button data-bs-toggle="modal" data-bs-target="#approveModModal"><i
                 class="fas fa-check text-xl text-gray-600 hover:text-green-400 cursor-pointer pl-3"
-                title="<spring:message code="mods.promote"/>"></i></button>
+                title="<spring:message code="mods.promote"/>"></i>
     </button>
     <div class="modal fade" id="approveModModal" tabindex="-1" aria-labelledby="approveModModalLabel"
          aria-hidden="true">
@@ -24,8 +23,8 @@
                 <div class="modal-footer">
                     <c:url value="${param.promoteModPath}" var="promoteModPath"/>
                     <form:form cssClass="m-0" action="${promoteModPath}" method="POST">
-                        <button type="submit" class="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"  name="rejectRequest">
-                            <i class="fas fa-times group-hover:text-white pr-2" aria-hidden="true"></i>
+                        <button type="submit" name="addMod" class="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
+                            <i class="fas fa-check group-hover:text-white pr-2" aria-hidden="true"></i>
                             <spring:message code="mods.promote"/>
                         </button>
                     </form:form>
