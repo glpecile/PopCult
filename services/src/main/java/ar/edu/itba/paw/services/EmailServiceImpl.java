@@ -135,7 +135,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendNewRequestEmail(MediaList list, User requester) {
+    public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
         User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", list.getListName());
