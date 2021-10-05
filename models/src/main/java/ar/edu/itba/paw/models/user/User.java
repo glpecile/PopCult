@@ -2,6 +2,8 @@ package ar.edu.itba.paw.models.user;
 
 
 public class User {
+    public static final int DEFAULT_IMAGE = 0;
+
     private final int userId;
     private final String email;
     private final String username;
@@ -11,15 +13,14 @@ public class User {
     private final int imageId;
     private final int role;
 
-
-    public User(int userId, String email, String username, String password, String name, boolean enabled, int imageId, int role) {
+    public User(int userId, String email, String username, String password, String name, boolean enabled, Integer imageId, int role) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.password = password;
         this.name = name;
         this.enabled = enabled;
-        this.imageId = imageId;
+        this.imageId = imageId == null ? DEFAULT_IMAGE : imageId;
         this.role = role;
     }
 

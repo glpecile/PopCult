@@ -62,7 +62,7 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
     }
 
     @Override
-    public void addModRequest(int userId) {
+    public void addModRequest(int userId) throws ModRequestAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
         args.put("userId", userId);
         args.put("date", new Date());

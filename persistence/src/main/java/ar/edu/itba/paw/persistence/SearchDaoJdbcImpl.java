@@ -132,7 +132,7 @@ public class SearchDaoJdbcImpl implements SearchDAO {
         String orderBy = "ORDER BY " + SortType.values()[sort].nameMediaList;
         List<MediaList> elements = jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative " +
                 "FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList " +
-                "WHERE medialist.listname ILIKE CONCAT('%', ?, '%') AND genreid = ?" +
+                "WHERE medialist.listname ILIKE CONCAT('%', ?, '%') AND genreid = ? AND visibility = TRUE" +
                 " GROUP BY medialist.medialistid, medialist.userid, listname, description, creationdate " +
                 " HAVING COUNT(mediaid) >= ? "
                 + orderBy + " OFFSET ? LIMIT ?", new Object[]{name, genre, minMatches,

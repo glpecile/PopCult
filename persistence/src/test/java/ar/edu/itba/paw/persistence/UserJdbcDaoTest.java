@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -44,12 +46,12 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void testRegister() {
+    public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         //1 - Setup - Preconditions
 
 
         //2 -Try class under test
-        final User user = userDaoJdbc.register(EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
+        final User user = userDaoJdbc.register(EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
         //3 - Asserts - Postconditions
         Assert.assertNotNull(user);

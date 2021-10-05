@@ -115,7 +115,7 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
-    @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params =  "currentURL")
+    @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
     public ModelAndView deleteComment(@PathVariable("listId") final int listId, @PathVariable("commentId") int commentId, @RequestParam("currentURL") final String currentURL) {
         commentService.deleteCommentFromList(commentId);
         return new ModelAndView("redirect:/lists/" + listId + currentURL);
@@ -129,9 +129,9 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
-    public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") int collabId) {
+    public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") final int collabId, @RequestParam("returnURL") final String returnURL) {
         collaborativeListService.deleteCollaborator(collabId);
-        return new ModelAndView("redirect:/lists/edit/" + listId + "/manageMedia");
+        return new ModelAndView("redirect:"+ returnURL);
     }
 
     //CREATE A NEW LIST - PART 1
@@ -173,7 +173,7 @@ public class ListsController {
 //            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
         }
-        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.MOVIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements();
+        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.FILMS.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements();
         searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements());
         return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults", mediaForm.generateMediaMap(searchResults));
 
@@ -227,6 +227,14 @@ public class ListsController {
         favoriteService.deleteListFromFav(listId, user.getUserId());
         return new ModelAndView("redirect:/lists/" + listId);
         //return listDescription(listId);
+    }
+
+    @RequestMapping(value = "/lists/{listId}/collaborators")
+    public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        final ModelAndView mav = new ModelAndView("manageCollaboratorsFromList");
+        mav.addObject("list", listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new));
+        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(listId, page - 1, collaboratorsAmount));
+        return mav;
     }
 
     private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId, @ModelAttribute("mediaForm") ListMediaForm mediaForm, @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {

@@ -40,12 +40,12 @@
                 <jsp:param name="imageId" value="${request.imageId}"/>
             </jsp:include>
         </c:forEach>
+        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+            <jsp:param name="mediaPages" value="${requestersContainer.totalPages}"/>
+            <jsp:param name="currentPage" value="${requestersContainer.currentPage + 1}"/>
+            <jsp:param name="url" value="/admin/mods/requests"/>
+        </jsp:include>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${requestersContainer.totalPages}"/>
-        <jsp:param name="currentPage" value="${requestersContainer.currentPage + 1}"/>
-        <jsp:param name="url" value="/admin/mods/requests"/>
-    </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>

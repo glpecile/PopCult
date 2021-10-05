@@ -194,6 +194,12 @@
                 <scope>test</scope>
             </dependency>
 
+            <!--Transactional-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -1,10 +1,37 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<form class="m-0" action="${param.approvePath}" method="POST">
+<div>
     <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold group hover:text-white"
-            type="submit" id="approveReport" name="approveReport" title="<spring:message code="report.approve"/>">
+            data-bs-toggle="modal" data-bs-target="#approveReportModal">
         <i class="far fa-thumbs-up group-hover:text-white pr-2"></i>
         <spring:message code="report.approve"/>
     </button>
-</form>
+    <div class="modal fade" id="approveReportModal" tabindex="-1" aria-labelledby="approveReportModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="approveReportModalLabel">
+                        <spring:message code="modal.approveReport.header"/>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <spring:message code="modal.approveReport.body"/>
+                </div>
+                <div class="modal-footer">
+                    <form class="m-0" action="${param.approvePath}" method="POST">
+                        <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold group hover:text-white"
+                                type="submit" id="approveReport" name="approveReport">
+                            <i class="far fa-thumbs-up group-hover:text-white pr-2"></i>
+                            <spring:message code="report.approve"/>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%----%>
+

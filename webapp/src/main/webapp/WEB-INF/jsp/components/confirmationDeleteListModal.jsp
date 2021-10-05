@@ -13,12 +13,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="editDateModalLabel"><c:out
-                            value="${param.title}"/></h5>
+                    <h5 class="modal-title font-bold text-2xl" id="deleteModalLabel">
+                        <spring:message code="modal.deleteList.header"/>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p><c:out value="${param.message}"/></p>
+                    <spring:message code="modal.deleteList.body"/>
                 </div>
                 <div class="modal-footer">
                     <c:url value="${param.deleteListPath}" var="deleteListPath"/>

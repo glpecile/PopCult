@@ -24,7 +24,7 @@ public interface EmailService {
 
     void sendDeletedListEmail(User to, MediaList mediaList, String report);
 
-    void sendNewRequestEmail(MediaList list, User requester);
+    void sendNewRequestEmail(MediaList list, User requester, User listOwner);
 
     void sendCollabRequestAcceptedEmail(User to, Request collaboration);
 

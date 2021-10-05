@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -16,6 +17,8 @@ import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -35,8 +38,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 
 @Controller
-public class UserController {
-
+public class UserController {    
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -56,7 +58,7 @@ public class UserController {
     @Autowired
     private CommentService commentService;
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaffMemberController.class);
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int editablePerPage = 6;
@@ -206,7 +208,7 @@ public class UserController {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
 
         try {
-            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword()).orElseThrow(UserNotFoundException::new);
+            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword());
         } catch (InvalidCurrentPasswordException e) {
             errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
             return changeUserPassword(form);
@@ -256,22 +258,28 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
-    public ModelAndView uploadProfilePicture(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    @RequestMapping(value = "/user/{username}", method = {RequestMethod.POST}, params = "uploadImage")
+    public ModelAndView uploadProfilePicture(@PathVariable("username") final String username, @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
                                              final BindingResult error) throws IOException {
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         if (error.hasErrors()) {
-            return userProfile(imageForm, user.getUsername(), 1);
+            return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
         }
 
-        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes(), imageForm.getImage().getSize(), imageForm.getImage().getContentType());
-        return new ModelAndView("redirect:/user/" + user.getUsername());
+        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes());
+        return new ModelAndView("redirect:/user/" + username);
     }
 
     @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
-    byte[] getProfilePicture(@PathVariable("imageId") final int imageId) {
-        return userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+    byte[] getProfileImage(@PathVariable("imageId") final int imageId) {
+        byte[] profileImage = new byte[0];
+        try {
+            profileImage = userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
+        } catch (ImageConversionException e) {
+            LOGGER.error("Error loading image {}", imageId);
+        }
+        return profileImage;
     }
 
     @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
@@ -326,16 +334,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
-    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username){
+    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         commentService.setUserListsCommentsNotificationsAsOpened(user.getUserId());
-        return new ModelAndView("redirect:/user/"+username+"/notifications");
+        return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "deleteNotifications")
-    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username){
+    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         commentService.deleteUserListsCommentsNotifications(user.getUserId());
-        return new ModelAndView("redirect:/user/"+username+"/notifications");
+        return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 }
