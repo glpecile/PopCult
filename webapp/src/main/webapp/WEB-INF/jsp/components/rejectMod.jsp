@@ -23,6 +23,7 @@
                 <div class="modal-footer">
                     <c:url value="${param.removeRequestPath}" var="removeRequestPath"/>
                     <form:form cssClass="m-0" action="${removeRequestPath}" method="DELETE">
+                        <input type="hidden" name="removeMod">
                         <button type="submit" class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"  name="rejectRequest">
                             <i class="fas fa-times group-hover:text-white pr-2" aria-hidden="true"></i>
                             <spring:message code="mods.request.reject"/>
