@@ -14,6 +14,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Properties;
 
+
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.services"})
 @Configuration

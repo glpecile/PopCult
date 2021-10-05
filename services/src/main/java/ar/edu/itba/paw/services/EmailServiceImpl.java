@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -38,6 +39,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
 
+    @Async
     @Override
     public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
