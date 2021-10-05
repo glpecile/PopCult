@@ -29,7 +29,7 @@
     <c:set var="isOwner" value="${currentUser.userId == list.userId}"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
-            <div class="flex justify-between m-0">
+            <div class="flex flex-wrap justify-between m-0">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <c:if test="${isOwner}">
                     <button class="btn btn-link my-3.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
@@ -176,7 +176,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer flex space-x-2 pb-0">
+                    <div class="modal-footer flex space-x-2">
                         <button type="submit" value="save" name="save"
                                 class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
                             <i class="fas fa-save group-hover:text-white pr-2"></i><spring:message code="general.save"/>
