@@ -32,6 +32,7 @@ public class ImageDaoJdbcImpl implements ImageDao {
                 "photoBlob BYTEA," +
                 "imageContentLength INT," +
                 "imageContentType TEXT)");
+
         if(jdbcTemplate.query("SELECT COUNT(*) FROM image", COUNT_ROW_MAPPER).stream().findFirst().orElse(0) != 0 ){
             final Map<String, Object> data = new HashMap<>();
             data.put("photoBlob", null);

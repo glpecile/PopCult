@@ -257,16 +257,16 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})//TODO cambiar path porque es muy general
-    public ModelAndView uploadProfilePicture(@Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    @RequestMapping(value = "/user/{username}", method = {RequestMethod.POST}, params = "uploadImage")
+    public ModelAndView uploadProfilePicture(@PathVariable("username") final String username, @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
                                              final BindingResult error) throws IOException {
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         if (error.hasErrors()) {
-            return userProfile(imageForm, user.getUsername(), 1);
+            return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
         }
 
         userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes(), imageForm.getImage().getSize(), imageForm.getImage().getContentType());
-        return new ModelAndView("redirect:/user/" + user.getUsername());
+        return new ModelAndView("redirect:/user/" + username);
     }
 
     @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
@@ -327,16 +327,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
-    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username){
+    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         commentService.setUserListsCommentsNotificationsAsOpened(user.getUserId());
-        return new ModelAndView("redirect:/user/"+username+"/notifications");
+        return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "deleteNotifications")
-    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username){
+    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         commentService.deleteUserListsCommentsNotifications(user.getUserId());
-        return new ModelAndView("redirect:/user/"+username+"/notifications");
+        return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 }

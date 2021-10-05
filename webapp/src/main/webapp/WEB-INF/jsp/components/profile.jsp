@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<html>
 <div class="flex flex-col gap-3 justify-center items-center">
     <sec:authorize access="isAuthenticated()">
         <c:set var="currentUsername">
@@ -63,7 +64,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <c:url value="/uploadImage" var="uploadPath"/>
+                            <c:url value="/user/${param.username}" var="uploadPath"/>
                             <form:form method="POST" modelAttribute="imageForm" action="${uploadPath}"
                                        enctype="multipart/form-data">
                                 <div class="row px-2 pb-2">
@@ -71,6 +72,7 @@
                                     <form:errors path="image" cssClass="form-control" element="p"/>
                                 </div>
                                 <div class="flex justify-end pt-8">
+                                    <input type="hidden" name="uploadImage">
                                     <button type="submit"
                                             class="btn btn-success bg-gray-300 group hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
                                         <i class="fas fa-save group-hover:text-white pr-2"></i><spring:message code="profile.ppSave"/>
@@ -92,3 +94,11 @@
         </c:otherwise>
     </c:choose>
 </div>
+<script>
+    <c:if test="${param.errorUploadingImage}">
+    $(document).ready(function () {
+        $('#uploadModal').modal('show');
+    });
+    </c:if>
+</script>
+</html>

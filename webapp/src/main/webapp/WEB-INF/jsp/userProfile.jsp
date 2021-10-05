@@ -32,6 +32,7 @@
             <jsp:param name="name" value="${user.name}"/>
             <jsp:param name="username" value="${username}"/>
             <jsp:param name="imageId" value="${user.imageId}"/>
+            <jsp:param name="errorUploadingImage" value="${errorUploadingImage}"/>
         </jsp:include>
         <%--    tabs     --%>
         <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
