@@ -265,7 +265,7 @@ public class UserController {
             return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
         }
 
-        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes(), imageForm.getImage().getSize(), imageForm.getImage().getContentType());
+        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes());
         return new ModelAndView("redirect:/user/" + username);
     }
 

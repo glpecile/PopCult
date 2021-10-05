@@ -30,7 +30,7 @@ public interface UserService {
 
     Optional<Image> getUserProfileImage(int imageId);
 
-    void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType);
+    void uploadUserProfileImage(int userId, byte[] photoBlob);
 
     void updateUserData(int userId, String email, String username, String name);
 }

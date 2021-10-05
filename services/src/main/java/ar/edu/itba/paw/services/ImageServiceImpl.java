@@ -19,7 +19,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> uploadImage(byte[] photoBlob, long imageContentLength, String imageContentType) {
-        return imageDao.uploadImage(photoBlob, imageContentLength, imageContentType);
+    public Optional<Image> uploadImage(byte[] photoBlob) {
+        return imageDao.uploadImage(photoBlob);
     }
 }
