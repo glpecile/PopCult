@@ -94,7 +94,7 @@ public class RowMappers {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"), //TODO
+                    rs.getString("name"),
                     rs.getBoolean("enabled"),
                     rs.getInt("imageId"),
                     rs.getInt("role"));

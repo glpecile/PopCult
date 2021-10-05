@@ -11,10 +11,17 @@ import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -106,9 +113,19 @@ public class UserServiceImpl implements UserService {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
         if (isValidToken) {
             userDao.confirmRegister(token.getUserId(), ENABLED_USER);
+            getById(token.getUserId()).ifPresent(this::authWithoutPassword);
             tokenService.deleteToken(token);
         }
         return isValidToken;
+    }
+
+    private void authWithoutPassword(User user) {
+        final Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(Roles.values()[user.getRole()].getRoleType()));
+        org.springframework.security.core.userdetails.User userDetails =
+                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Override

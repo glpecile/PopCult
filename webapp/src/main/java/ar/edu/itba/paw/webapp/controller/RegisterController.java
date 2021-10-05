@@ -54,9 +54,9 @@ public class RegisterController {
     @RequestMapping(value = "/register/confirm")
     public ModelAndView confirmRegistration(@RequestParam("token") final String token) {
         Token verificationToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
-        //TODO
+
         if (userService.confirmRegister(verificationToken)) {
-            return new ModelAndView("login").addObject("successfulConfirmation", true);
+            return new ModelAndView("redirect:/");
 
         }
         return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
