@@ -151,8 +151,8 @@
                     <spring:message code="comments.section"/>
                 </h2>
                 <a href="${commentsDetailPath}">
-                <div class="flex rounded-full p-2.5 my-1 h-6 w-6 justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
-                    <c:out value="${listCommentsContainer.totalCount}"/>
+                <div class="flex rounded-full p-3.5 my-1 h-6 w-auto justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
+                    <spring:message code="home.viewAll"/> (<c:out value="${listCommentsContainer.totalCount}"/>)
                 </div>
                 </a>
             </div>
