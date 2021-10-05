@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
-import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
@@ -143,7 +140,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Image> getUserProfileImage(int imageId) {
+    public Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException {
         if(imageId == User.DEFAULT_IMAGE) {
             return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
         }
