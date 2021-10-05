@@ -31,23 +31,6 @@ public class CollaborativeListsDaoJdbcImpl implements CollaborativeListsDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertCollab = new SimpleJdbcInsert(ds).withTableName("collaborative").usingGeneratedKeyColumns("collabid");
 //        jdbcInsertRequest = new SimpleJdbcInsert(ds).withTableName("request");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS collaborative (" +
-                "collabId SERIAL PRIMARY KEY," +
-                "listId INT NOT NULL," +
-                "collaboratorId INT NOT NULL," +
-                "accepted BOOLEAN," +
-//                "collabType INT," +
-                "FOREIGN KEY(listId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-                "FOREIGN KEY(collaboratorId) REFERENCES users(userid) ON DELETE CASCADE," +
-                "UNIQUE(listId, collaboratorId))");
-
-//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS request (" +
-//                "collabId INT," +
-//                "requestMessage TEXT," +
-//                "requestType INT NOT NULL," +
-//                "FOREIGN KEY(collabId) REFERENCES collaborative(collabId) ON DELETE CASCADE)");
-
     }
 
     @Override

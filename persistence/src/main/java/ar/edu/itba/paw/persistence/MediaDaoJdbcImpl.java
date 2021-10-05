@@ -29,16 +29,6 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public MediaDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("media").usingGeneratedKeyColumns("mediaId");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS media (" +
-                "mediaId SERIAL PRIMARY KEY," +
-                "type INT NOT NULL," +
-                "title VARCHAR(100) NOT NULL, " +
-                "description TEXT," +
-                "image TEXT," +
-                "length INT," +
-                "releaseDate DATE," +
-                "seasons INT," +
-                "country INT)");
     }
 
     @Override

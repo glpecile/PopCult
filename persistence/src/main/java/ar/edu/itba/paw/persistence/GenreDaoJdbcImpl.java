@@ -35,17 +35,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
         jdbcTemplate = new JdbcTemplate(ds);
         genrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("genre").usingGeneratedKeyColumns("genreId");
         mediaGenrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaGenre");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS genre(" +
-                "genreId SERIAL PRIMARY KEY," +
-                "name TEXT NOT NULL)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaGenre(" +
-                "mediaId INT NOT NULL," +
-                "genreId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaid) ON DELETE CASCADE ," +
-                "FOREIGN KEY(genreId) REFERENCES genre(genreId) ON DELETE CASCADE )");
-
     }
 
     @Override
