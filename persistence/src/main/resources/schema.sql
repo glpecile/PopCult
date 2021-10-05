@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS image
     imageContentLength INT,
     imageContentType   TEXT
 );
-INSERT INTO image(photoBlob, imageContentLength, imageContentType) VALUES(null, 0, 'image/jpeg');
+INSERT INTO image(imageid, photoBlob, imageContentLength, imageContentType) VALUES(1, null, 0, 'image/jpeg') ON CONFLICT DO NOTHING;
 
 -- UserDao
 CREATE TABLE IF NOT EXISTS users
