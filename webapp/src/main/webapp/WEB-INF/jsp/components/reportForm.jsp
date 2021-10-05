@@ -6,7 +6,7 @@
 
 <c:url value="${param.reportPath}" var="reportPath"/>
 <form:form method="POST" modelAttribute="reportForm" action="${reportPath}">
-    <h2 class="text-2xl font-bold py-2"><spring:message code="report.message"/></h2>
+    <h2 class="text-lg font-bold py-2"><spring:message code="report.message"/></h2>
     <div>
         <form:textarea path="report" type="text" class="form-control h-24 resize-y overflow-clip overflow-auto" id="report"
                        value=""/>
