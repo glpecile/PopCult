@@ -87,6 +87,8 @@ public class ExceptionHandlingController {
 
     @ExceptionHandler({ModRequestAlreadyExistsException.class})
     public ModelAndView ModRequestAlreadyExists() {
+        LOGGER.info("Handling ModRequestAlreadyExistsException");
+        ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
         mav.addObject("description", messageSource.getMessage("exception.modRequestAlreadyExists", null, Locale.getDefault()));
         return mav;

@@ -73,7 +73,7 @@ public class MediaController {
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         userService.getCurrentUser().ifPresent(user -> {
-            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.MOVIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS.ordinal(), user.getUserId(), 0, itemsPerContainer);
             final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
             final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user.getUserId(), defaultValue - 1, lastAddedAmount);
             final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
