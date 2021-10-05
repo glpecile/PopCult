@@ -31,13 +31,6 @@ public class WatchDaoJdbcImpl implements WatchDao {
     public WatchDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         toWatchMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("towatchmedia");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS towatchmedia(" +
-                "userId INT NOT NULL," +
-                "mediaId INT NOT NULL," +
-                "watchDate DATE," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override

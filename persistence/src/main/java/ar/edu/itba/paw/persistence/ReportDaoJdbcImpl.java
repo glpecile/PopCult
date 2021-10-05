@@ -32,37 +32,6 @@ public class ReportDaoJdbcImpl implements ReportDao {
         jdbcInsertListReport = new SimpleJdbcInsert(ds).withTableName("listReport").usingGeneratedKeyColumns("reportId");
         jdbcInsertListCommentReport = new SimpleJdbcInsert(ds).withTableName("listCommentReport").usingGeneratedKeyColumns("reportId");
         jdbcInsertMediaCommentReport = new SimpleJdbcInsert(ds).withTableName("mediaCommentReport").usingGeneratedKeyColumns("reportId");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "listId INT NOT NULL," +
-                "reporteeId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listCommentReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "listId INT NOT NULL," +
-                "commentId INT NOT NULL," +
-                "reporteeId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES listComment(commentId) ON DELETE CASCADE," +
-                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaCommentReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "mediaId INT NOT NULL," +
-                "commentId INT NOT NULL," +
-                "reporteeId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES mediaComment(commentId) ON DELETE CASCADE," +
-                "FOREIGN KEY (reporteeId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override

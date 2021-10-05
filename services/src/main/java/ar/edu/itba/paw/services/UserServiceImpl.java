@@ -5,14 +5,12 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
-import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,13 +21,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private UserDao userDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private EmailService emailService;
@@ -37,17 +35,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TokenService tokenService;
 
-    private final MessageSource messageSource;
-
-    private static final boolean NOT_ENABLED_USER = false;
-    private static final boolean ENABLED_USER = true;
-    private static final int DEFAULT_IMAGE_ID = 1;
-    private static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
-
-    @Autowired
-    public UserServiceImpl(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+    /* default */ static final boolean NOT_ENABLED_USER = false;
+    /* default */ static final boolean ENABLED_USER = true;
+    /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
+    /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
     @Override
     public Optional<User> getById(int userId) {
@@ -66,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
         String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
@@ -137,12 +128,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<Image> getUserProfileImage(int imageId) {
+        if(imageId == User.DEFAULT_IMAGE) {
+            return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
+        }
         return imageService.getImage(imageId);
     }
 
     @Override
-    public void uploadUserProfileImage(int userId, byte[] photoBlob, long imageContentLength, String imageContentType) {
-        imageService.uploadImage(photoBlob, imageContentLength, imageContentType).ifPresent(image -> {
+    public void uploadUserProfileImage(int userId, byte[] photoBlob) {
+        imageService.uploadImage(photoBlob).ifPresent(image -> {
             userDao.updateUserProfileImage(userId, image.getImageId());
         });
     }

@@ -47,29 +47,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
 //        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD collaborative BOOLEAN NOT NULL default FALSE");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
-                "mediaListId SERIAL PRIMARY KEY," +
-                "userId INT NOT NULL," +
-                "listname TEXT NOT NULL," +
-                "description TEXT NOT NULL," +
-                "creationDate DATE," +
-                "visibility BOOLEAN," +
-                "collaborative BOOLEAN," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +
-                "mediaId INT NOT NULL," +
-                "mediaListId INT NOT NULL, " +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-                "UNIQUE(mediaId, mediaListId))");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
-                "originalistId INT NOT NULL," +
-                "forkedlistId INT NOT NULL, " +
-                "FOREIGN KEY (originalistId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-                "FOREIGN KEY (forkedlistId) REFERENCES medialist(medialistid) ON DELETE CASCADE)");
     }
 
     @Override

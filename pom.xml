@@ -28,6 +28,7 @@
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <mockito.version>2.25.1</mockito.version>
         <junit.version>4.12</junit.version>
+        <org.hsqldb.version>2.5.1</org.hsqldb.version>
     </properties>
 
     <modules>
@@ -177,6 +178,27 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!--Spring test & Hsqldb-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${org.springframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>${org.hsqldb.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!--Transactional-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${org.springframework.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

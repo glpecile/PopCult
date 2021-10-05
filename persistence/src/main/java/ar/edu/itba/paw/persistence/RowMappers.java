@@ -131,9 +131,7 @@ public class RowMappers {
     public static final RowMapper<Image> IMAGE_ROW_MAPPER =
             (rs, rowNum) -> new Image(
                     rs.getInt("imageId"),
-                    rs.getBytes("photoBlob"),
-                    rs.getInt("imageContentLength"),
-                    rs.getString("imageContentType"));
+                    rs.getBytes("photoBlob"));
 
     /**
      * Comment RowMappers.

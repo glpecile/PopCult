@@ -25,14 +25,6 @@ public class TokenJdbcImpl implements TokenDao {
     public TokenJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("token");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS token(" +
-                "userId INT NOT NULL," +
-                "type INT NOT NULL," +
-                "token TEXT NOT NULL," +
-                "expiryDate DATE NOT NULL," +
-                "FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE" +
-                ")");
     }
 
     @Override

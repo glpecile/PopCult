@@ -26,7 +26,9 @@ public class CommentServiceImpl implements CommentService {
     public Comment addCommentToList(int userId, int listId, String comment) {
         Comment com = commentDao.addCommentToList(userId, listId, comment);
         userService.getCurrentUser().ifPresent(user -> {
-            if (com!= null) commentDao.addCommentNotification(com.getCommentId());
+            if (com != null) {
+                commentDao.addCommentNotification(com.getCommentId());
+            }
         });
         return com;
     }
