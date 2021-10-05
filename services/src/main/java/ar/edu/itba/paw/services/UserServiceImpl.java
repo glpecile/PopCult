@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     /* default */ static final boolean NOT_ENABLED_USER = false;
     /* default */ static final boolean ENABLED_USER = true;
-    /* default */ static final int DEFAULT_IMAGE_ID = 1;
+    /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
     /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
     @Override
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
         String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
@@ -128,6 +128,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<Image> getUserProfileImage(int imageId) {
+        if(imageId == User.DEFAULT_IMAGE) {
+            return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
+        }
         return imageService.getImage(imageId);
     }
 

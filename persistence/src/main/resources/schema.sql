@@ -1,12 +1,9 @@
 -- ImageDao
 CREATE TABLE IF NOT EXISTS image
 (
-    imageid            SERIAL PRIMARY KEY,
-    photoBlob          BYTEA,
-    imageContentLength INT,
-    imageContentType   TEXT
+    imageId            SERIAL PRIMARY KEY,
+    photoBlob          BYTEA
 );
-INSERT INTO image(imageid, photoBlob, imageContentLength, imageContentType) VALUES(1, null, 0, 'image/jpeg') ON CONFLICT DO NOTHING;
 
 -- UserDao
 CREATE TABLE IF NOT EXISTS users

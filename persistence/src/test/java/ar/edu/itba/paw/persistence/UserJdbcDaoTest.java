@@ -49,7 +49,7 @@ public class UserJdbcDaoTest {
 
 
         //2 -Try class under test
-        final User user = userDaoJdbc.register(EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, DEFAULT_IMAGE_ID, DEFAULT_USER_ROLE);
+        final User user = userDaoJdbc.register(EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
         //3 - Asserts - Postconditions
         Assert.assertNotNull(user);

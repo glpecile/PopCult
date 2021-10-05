@@ -7,5 +7,7 @@ import java.util.Optional;
 public interface ImageService {
     Optional<Image> getImage(int imageId);
 
+    Optional<Image> getImage(String imagePath);
+
     Optional<Image> uploadImage(byte[] photoBlob);
 }
