@@ -3,16 +3,16 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div>
-    <button data-bs-toggle="modal" data-bs-target="#rejectModModal">
+    <button data-bs-toggle="modal" data-bs-target="#reject${param.id}ModModal">
         <i class="fas fa-times text-xl text-gray-600 hover:text-red-400 cursor-pointer pl-3"
                 title="<spring:message code="mods.request.reject"/>"></i>
     </button>
-    <div class="modal fade" id="rejectModModal" tabindex="-1" aria-labelledby="rejectModModalLabel"
+    <div class="modal fade" id="reject${param.id}ModModal" tabindex="-1" aria-labelledby="reject${param.id}ModModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="rejectModModalLabel">
+                    <h5 class="modal-title font-bold text-2xl" id="reject${param.id}ModModalLabel">
                         <spring:message code="mods.request.reject"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
