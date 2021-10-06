@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class GenreController {
+    private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     MediaService mediaService;
@@ -40,6 +43,7 @@ public class GenreController {
     @RequestMapping("/genre/{genre}")
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.info("Genre {} accessed", genre);
         final ModelAndView mav = new ModelAndView("genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();
