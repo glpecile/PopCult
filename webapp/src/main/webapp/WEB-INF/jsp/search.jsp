@@ -86,13 +86,13 @@
                                         aria-expanded="false">
                                     <c:choose>
                                         <c:when test="${fn:length(param.genres) == 0}">
-                                            <c:out value="ALL"/>
+                                            <spring:message code="All"/>
                                         </c:when>
                                         <c:when test="${fn:length(param.genres) > 1}">
-                                            <c:out value="MULTIPLE"/>
+                                            <spring:message code="Multiple"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <c:out value="${param.genres}"/>
+                                            <spring:message code="${param.genres}"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </button>

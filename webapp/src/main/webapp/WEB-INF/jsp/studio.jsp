@@ -28,7 +28,7 @@
             </div>
         </div>
         <h4 class="lead py-4">
-            <spring:message code="genre.thereAre"/> <c:out value="${mediaPageContainer.totalCount}"/> <spring:message code="studio.productions"/>
+            <spring:message code="studio.productions" arguments="${mediaPageContainer.totalCount}"/>
         </h4>
         <div class="row">
             <c:forEach var="media" items="${mediaPageContainer.elements}">
