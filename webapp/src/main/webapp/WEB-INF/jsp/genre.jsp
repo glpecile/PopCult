@@ -16,9 +16,9 @@
     </title>
 </head>
 <body class="bg-gray-50">
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 flex-col offset-2 flex h-screen">
-    <div class="flex-grow">
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 flex-col offset-2 flex flex-grow">
         <div class="row m-0">
             <h1 class="display-5 fw-bolder py-8"><c:out value="${genreName}"/>
                 <spring:message code="media.genre"/>
@@ -65,7 +65,7 @@
             </jsp:include>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
