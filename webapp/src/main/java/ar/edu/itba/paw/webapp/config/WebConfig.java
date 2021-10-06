@@ -41,6 +41,7 @@ import java.nio.charset.StandardCharsets;
         "ar.edu.itba.paw.persistence"})
 @Configuration
 @PropertySource({ "classpath:/config/mail-config-develop.properties" })
+//@PropertySource({ "classpath:/config/mail-config-production.properties" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Value("classpath:schema.sql")

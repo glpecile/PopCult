@@ -5,14 +5,14 @@
 </head>
 <body>
 <div>
-    <a th:href="@{http://localhost:8080/webapp_war/}">
+    <a th:href="@{{basePath}(basePath=${basePath})}">
         <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
     </a>
     <div>
         <h2 th:text="#{collabEmail.greeting}"></h2>
         <p th:text="#{collabEmail.user(${username}, ${listname})}"></p>
         <span th:text="#{collabEmail.optionsBefore}"></span>
-        <a th:href="@{http://localhost:8080/webapp_war/user/{username}/requests(username=${toUsername})}">
+        <a th:href="@{{basePath}/user/{username}/requests(username=${toUsername}, basePath=${basePath})}">
             <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
                     th:text="#{collabEmail.panel}"></button>
         </a>

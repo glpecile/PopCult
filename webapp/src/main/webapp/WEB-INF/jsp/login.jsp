@@ -48,7 +48,7 @@
                     </div>
                     <button class="btn btn-secondary my-2 w-full" type="submit"><spring:message code="login.login"/></button>
                     <a class="text-purple-900 text-sm hover:text-yellow-500 uppercase" href="<c:url value="/forgotPassword"/>"><spring:message
-                            code="login.forgotPassword"/></a>
+                            code="forgotPassword"/></a>
                 </div>
             </form>
         </div>
