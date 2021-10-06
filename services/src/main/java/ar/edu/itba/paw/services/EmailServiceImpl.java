@@ -161,13 +161,13 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendModRequestApprovedEmail(User to) {
         final String subject = messageSource.getMessage("email.mod.approved.subject", null, Locale.getDefault());
-        sendEmail(to.getEmail(), subject, "ModRequestApproved.html", null);
+        sendEmail(to.getEmail(), subject, "modRequestApproved.html", null);
     }
 
     @Async
     @Override
     public void sendModRoleRemovedEmail(User to) {
         final String subject = messageSource.getMessage("email.mod.removed.subject", null, Locale.getDefault());
-        sendEmail(to.getEmail(), subject, "ModRoleRemoved.html", null);
+        sendEmail(to.getEmail(), subject, "modRoleRemoved.html", null);
     }
 }
