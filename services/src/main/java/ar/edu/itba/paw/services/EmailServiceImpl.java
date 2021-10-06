@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,6 +25,10 @@ import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+    @Autowired
+    @Qualifier("basePath")
+    private String basePath;
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -61,6 +66,7 @@ public class EmailServiceImpl implements EmailService {
 
     private String getHtmlBody(String template, Map<String, Object> variables) {
         Context thymeleafContext = new Context();
+        variables.put("basePath", basePath);
         thymeleafContext.setVariables(variables);
         return templateEngine.process(template, thymeleafContext);
     }

@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -37,10 +40,20 @@ import java.nio.charset.StandardCharsets;
         "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"})
 @Configuration
+@PropertySource({ "classpath:/config/mail-config-develop.properties" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Value("classpath:schema.sql")
     private Resource schema;
+
+    @Autowired
+    private Environment environment;
+
+    @Bean(name = "basePath")
+    public String basePath() {
+        System.out.println(environment.getProperty("base_path"));
+        return environment.getProperty("base_path");
+    }
 
     @Bean
     public ViewResolver viewResolver() {
