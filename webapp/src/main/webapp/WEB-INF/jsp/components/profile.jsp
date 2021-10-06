@@ -35,24 +35,8 @@
             </div>
             <h4>
                 <!-- Or as we like to call you: Username -->
-                <spring:message code="profile.description"/><b><c:out value="${param.username}"/></b>
+                <spring:message code="profile.description" arguments="${param.username}"/>
             </h4>
-<%--            <div class="flex flex-row space-x-2">--%>
-<%--                <a href=${requests}>--%>
-<%--                    <button type="button"--%>
-<%--                            class="justify-end btn btn-rounded btn-secondary bg-gray-300 group hover:bg-purple-500 text-gray-700 font-semibold hover:text-white">--%>
-<%--                        <!-- Requests -->--%>
-<%--                        <i class="fas fa-tasks text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.requests"/>--%>
-<%--                    </button>--%>
-<%--                </a>--%>
-<%--                <a href=<c:url value="/logout"/>>--%>
-<%--                    <button type="button"--%>
-<%--                            class="justify-end btn btn-rounded btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold group hover:text-white">--%>
-<%--                        <!-- Log out -->--%>
-<%--                        <i class="fas fa-sign-out-alt text-gray-700 group-hover:text-white pr-2"></i><spring:message code="profile.signOut"/>--%>
-<%--                    </button>--%>
-<%--                </a>--%>
-<%--            </div>--%>
             <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
@@ -89,7 +73,7 @@
                  src="<c:url value="/user/image/${param.imageId}"/>">
             <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
             <h4>
-                <spring:message code="profile.otherDescription"/><b><c:out value="${param.username}"/></b>
+                <spring:message code="profile.otherDescription" arguments="${param.username}"/>
             </h4>
         </c:otherwise>
     </c:choose>
