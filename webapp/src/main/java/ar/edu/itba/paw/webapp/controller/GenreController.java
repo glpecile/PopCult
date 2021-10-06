@@ -27,7 +27,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class GenreController {
-    private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenreController.class);
 
     @Autowired
     MediaService mediaService;

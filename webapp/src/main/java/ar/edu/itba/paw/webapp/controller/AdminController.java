@@ -27,7 +27,7 @@ import java.util.Locale;
 
 @Controller
 public class AdminController {
-    private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private ReportService reportService;
