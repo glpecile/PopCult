@@ -19,6 +19,7 @@
 <c:url value="/media/${mediaId}" var="mediaPath"/>
 <c:url value="/media/${mediaId}" var="commentPath"/>
 <c:url value="/media/${mediaId}/comments" var="commentsDetailPath"/>
+<c:url value="/media/${mediaId}/lists" var="viewAllListsPath"/>
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -152,9 +153,16 @@
         </div>
         <div class="row">
             <c:if test="${fn:length(relatedLists) > 0}">
-                <h2 class="font-bold text-2xl py-2">
-                    <spring:message code="lists.popular"/>
-                </h2>
+                <div class="flex justify-between">
+                    <h2 class="font-bold text-2xl py-2">
+                        <spring:message code="lists.contain.media" arguments="${media.title}"/>
+                    </h2>
+                    <a href="${viewAllListsPath}">
+                        <div class="flex rounded-full p-3.5 my-1 h-6 w-auto justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
+                            <spring:message code="home.viewAll"/>
+                        </div>
+                    </a>
+                </div>
                 <c:forEach var="cover" items="${relatedLists}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-3">
                         <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
@@ -167,11 +175,6 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
-                <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                    <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
-                    <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
-                </jsp:include>
             </c:if>
         </div>
         <!-- Comments Section -->

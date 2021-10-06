@@ -85,14 +85,14 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.GET})
-    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page, @ModelAttribute("commentForm") CommentForm commentForm) {
+    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @ModelAttribute("commentForm") CommentForm commentForm) {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
         final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
-        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
+        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
         final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, defaultValue - 1, itemsPerPage);
         final Map<String, String> map = new HashMap<>();
@@ -118,6 +118,17 @@ public class MediaController {
 
         return mav;
     }
+    @RequestMapping(value = "/media/{mediaId}/lists")
+    public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
+        final ModelAndView mav = new ModelAndView("mediaRelatedLists");
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, itemsPerPage);
+        final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
+        mav.addObject("media", media);
+        mav.addObject("relatedLists", relatedListsCover);
+        mav.addObject("mediaListContainer", mediaList);
+        return mav;
+    }
 
     @RequestMapping(value = "/media/{mediaId}/comments")
     public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
@@ -134,7 +145,7 @@ public class MediaController {
     public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors())
-            return mediaDescription(defaultValue, mediaId, form);
+            return mediaDescription(mediaId, form);
         commentService.addCommentToMedia(user.getUserId(), mediaId, form.getBody());
         return new ModelAndView("redirect:/media/" + mediaId);
     }

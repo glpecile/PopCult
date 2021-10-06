@@ -24,7 +24,7 @@
     <br>
     <div class="col-8 offset-2 flex-grow">
         <div class="row">
-            <div class="flex flex-wrap justify-between">
+            <div class="flex flex-wrap justify-between p-2.5 pb-0">
                 <%-- Title --%>
                 <h2 class="text-3xl fw-bolder py-2">
                     <spring:message code="editable.title"/>
