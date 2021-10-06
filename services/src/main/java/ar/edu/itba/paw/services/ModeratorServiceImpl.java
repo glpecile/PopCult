@@ -14,6 +14,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ModeratorServiceImpl implements ModeratorService {
@@ -26,11 +27,13 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Autowired
     private RoleHierarchy roleHierarchy;
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<User> getModerators(int page, int pageSize) {
         return moderatorDao.getModerators(page, pageSize);
     }
 
+    @Transactional
     @Override
     public void promoteToMod(int userId) {
         moderatorDao.promoteToMod(userId);
@@ -41,6 +44,7 @@ public class ModeratorServiceImpl implements ModeratorService {
 
     }
 
+    @Transactional
     @Override
     public void removeMod(int userId) {
         moderatorDao.removeMod(userId);
@@ -49,11 +53,13 @@ public class ModeratorServiceImpl implements ModeratorService {
         });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<User> getModRequesters(int page, int pageSize) {
         return moderatorDao.getModRequesters(page, pageSize);
     }
 
+    @Transactional
     @Override
     public void addModRequest(int userId) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
         if(principalIsMod()) {
@@ -62,11 +68,13 @@ public class ModeratorServiceImpl implements ModeratorService {
         moderatorDao.addModRequest(userId);
     }
 
+    @Transactional
     @Override
     public void removeRequest(int userId) {
         moderatorDao.removeRequest(userId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean principalIsMod() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

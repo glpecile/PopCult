@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,21 +45,25 @@ public class UserServiceImpl implements UserService {
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
     /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> getById(int userId) {
         return userDao.getById(userId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> getByEmail(String email) {
         return userDao.getByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> getByUsername(String username) {
         return userDao.getByUsername(username);
     }
 
+    @Transactional
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
@@ -70,6 +75,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     @Override
     public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         Optional<User> user = userDao.getById(userId);
@@ -79,6 +85,7 @@ public class UserServiceImpl implements UserService {
         return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
     }
 
+    @Transactional
     @Override
     public void forgotPassword(String email) throws EmailNotExistsException {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
@@ -86,6 +93,7 @@ public class UserServiceImpl implements UserService {
         emailService.sendResetPasswordEmail(user, token);
     }
 
+    @Transactional
     @Override
     public boolean resetPassword(Token token, String newPassword) {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.RESET_PASS.ordinal());
@@ -96,6 +104,7 @@ public class UserServiceImpl implements UserService {
         return isValidToken;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> getCurrentUser() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
@@ -105,6 +114,7 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    @Transactional
     @Override
     public boolean confirmRegister(Token token) {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
@@ -125,6 +135,7 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    @Transactional
     @Override
     public void resendToken(String token) {
         tokenService.renewToken(token);
@@ -139,6 +150,7 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException {
         if(imageId == User.DEFAULT_IMAGE) {
@@ -147,6 +159,7 @@ public class UserServiceImpl implements UserService {
         return imageService.getImage(imageId);
     }
 
+    @Transactional
     @Override
     public void uploadUserProfileImage(int userId, byte[] photoBlob) {
         imageService.uploadImage(photoBlob).ifPresent(image -> {
@@ -154,6 +167,7 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
     @Override
     public void updateUserData(int userId, String email, String username, String name) {
         userDao.updateUserData(userId, email, username, name);

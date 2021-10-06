@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
 import ar.edu.itba.paw.models.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,11 +20,13 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     ImageDao imageDao;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Image> getImage(int imageId) {
         return imageDao.getImage(imageId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Image> getImage(String imagePath) throws ImageConversionException {
         try {
@@ -35,6 +38,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Transactional
     @Override
     public Optional<Image> uploadImage(byte[] photoBlob) {
         return imageDao.uploadImage(photoBlob);

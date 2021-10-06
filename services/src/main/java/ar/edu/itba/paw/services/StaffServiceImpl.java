@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -19,51 +20,61 @@ public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffDao staffDao;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<StaffMember> getById(int staffMemberId) {
         return staffDao.getById(staffMemberId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<StaffMember> getPersonList() {
         return staffDao.getPersonList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByDirector(staffMemberId, page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByActor(staffMemberId,page,pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMedia(int staffMemberId, int page, int pageSize) {
         return staffDao.getMedia(staffMemberId,page,pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Director> getDirectorsByMedia(int mediaId) {
         return staffDao.getDirectorsByMedia(mediaId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Actor> getActorsByMedia(int mediaId) {
         return staffDao.getActorsByMedia(mediaId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Integer> getMediaCount(int staffMemberId) {
         return staffDao.getMediaCount(staffMemberId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
         return staffDao.getMediaCountByDirector(staffMemberId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Integer> getMediaCountByActor(int staffMemberId) {
         return staffDao.getMediaCountByActor(staffMemberId);
