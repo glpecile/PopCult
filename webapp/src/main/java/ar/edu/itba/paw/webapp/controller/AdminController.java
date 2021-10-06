@@ -41,7 +41,6 @@ public class AdminController {
     @RequestMapping("/admin")
     public ModelAndView adminPanel() {
         ModelAndView mav = new ModelAndView("admin/adminPanel");
-
         return mav;
     }
 

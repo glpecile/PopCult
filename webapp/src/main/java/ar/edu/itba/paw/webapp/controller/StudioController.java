@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.webapp.exceptions.StudioNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +27,12 @@ public class StudioController {
     StudioService studioService;
 
     private static final int itemsPerPage = 12;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudioController.class);
 
     @RequestMapping("/studio/{studioId}")
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access studio {}", studioId);
         final ModelAndView mav = new ModelAndView("studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
         final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
@@ -38,6 +42,7 @@ public class StudioController {
         map.put("studioId", studioId);
         String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("Studio {} accessed", studioId);
         return mav;
     }
 }

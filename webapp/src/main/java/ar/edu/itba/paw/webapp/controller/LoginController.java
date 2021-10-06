@@ -21,13 +21,14 @@ public class LoginController {
 
     @RequestMapping("/login")
     public ModelAndView login() {
+        LOGGER.debug("Accessing login page.");
         return new ModelAndView("login");
     }
 
     @RequestMapping("/loginFailed")
     public void loginFailed(HttpServletRequest request) {
         AuthenticationException authenticationException = (AuthenticationException) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-
+        LOGGER.warn("Someone failed to login.");
         if (authenticationException != null) {
             if(authenticationException.getCause() != null) {
                 throw (AuthenticationException) authenticationException.getCause();

@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,6 +41,8 @@ public class EmailServiceImpl implements EmailService {
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
+
     @Async
     @Override
     public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
@@ -54,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException messagingException) {
-            //TODO LOG error
+            LOGGER.error("Sending email failed");
         }
 
     }

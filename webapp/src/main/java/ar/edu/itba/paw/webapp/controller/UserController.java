@@ -69,8 +69,8 @@ public class UserController {
                                     @PathVariable("username") final String username,
                                     @RequestParam(value = "page", defaultValue = "1") final int page) {
         ModelAndView mav = new ModelAndView("userProfile");
+        LOGGER.debug("Trying to access {} profile", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-//        List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
         mav.addObject("user", user);
@@ -81,11 +81,12 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
-        //
+
         PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
         final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicListCover);
         mav.addObject("userPublicLists", userPublicLists);
+        LOGGER.info("{} profile accessed.", username);
         return mav;
     }
 
@@ -93,6 +94,7 @@ public class UserController {
     public ModelAndView userFavoriteMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                           @PathVariable("username") final String username,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access {} favorite media.", username);
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
@@ -105,6 +107,8 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+
+        LOGGER.info("{} favorite media accessed.", username);
         return mav;
     }
 
@@ -112,13 +116,12 @@ public class UserController {
     public ModelAndView userToWatchMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                          @PathVariable("username") final String username,
                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access {} to watch media.", username);
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user.getUserId(), page - 1, itemsPerPage);
         PageContainer<Media> suggestedMedia = favoriteService.getMostLikedMedia(page - 1, itemsPerPage);
-        // List<Media> toWatchMedia = toWatchMediaIds.getElements();
-//        mav.addObject("title", "Watchlist");
-        // mav.addObject("mediaList", toWatchMedia);
+
         mav.addObject("user", user);
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
@@ -127,6 +130,7 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/toWatchMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("{} to watch media accessed.", username);
         return mav;
     }
 
@@ -135,11 +139,11 @@ public class UserController {
     public ModelAndView userWatchedMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
                                          @PathVariable("username") final String username,
                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access {} watched media.", username);
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(user.getUserId(), page - 1, itemsPerPage);
-//        List<Media> watchedMedia = mediaService.getById(watchedMediaIds.getElements());
-//        mav.addObject("mediaList", watchedMedia);
+
         mav.addObject("user", user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
 
@@ -147,6 +151,8 @@ public class UserController {
         map.put("username", username);
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/watchedMedia").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+
+        LOGGER.info("{} watched media accessed.", username);
         return mav;
     }
 
@@ -155,10 +161,11 @@ public class UserController {
     public ModelAndView userFavoriteLists(@ModelAttribute("imageForm") final ImageForm imageForm,
                                           @PathVariable("username") final String username,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access {} favorite lists.", username);
         ModelAndView mav = new ModelAndView("userFavoriteLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
-//        List<Integer> userFavListsId = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+
         PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
         mav.addObject("favoriteLists", favoriteCovers);
@@ -173,22 +180,29 @@ public class UserController {
         final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicFavListCover);
         mav.addObject("userPublicLists", userPublicFavLists);
+
+        LOGGER.info("{} favorite lists accessed.", username);
         return mav;
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.GET})
     public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserDataForm form) {
         ModelAndView mav = new ModelAndView("userSettings");
+        LOGGER.debug("Trying to access {} details.", form.getUsername());
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        LOGGER.info("{} getting details.", user.getUsername());
         mav.addObject("user", user);
         return mav;
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
-        if (errors.hasErrors())
+        if (errors.hasErrors()) {
+            LOGGER.error("Form used for user details has errors.");
             return editUserDetails(form);
+        }
         userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
+        LOGGER.info("User {}'s details updated.", form.getUsername());
         return new ModelAndView("redirect:/user/" + form.getUsername());
     }
 
@@ -202,18 +216,20 @@ public class UserController {
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
     public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors) {
+        LOGGER.debug("Trying to change password");
         if (errors.hasErrors()) {
+            LOGGER.error("Change password form has errors.");
             return changeUserPassword(form);
         }
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-
         try {
             userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword());
         } catch (InvalidCurrentPasswordException e) {
+            LOGGER.error("Changing password failed.");
             errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
             return changeUserPassword(form);
         }
-
+        LOGGER.info("{} changed password.", user.getUsername());
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
@@ -225,15 +241,19 @@ public class UserController {
     @RequestMapping(value = "/forgotPassword", method = {RequestMethod.POST})
     public ModelAndView forgotPassword(@Valid @ModelAttribute("emailForm") final EmailForm emailForm,
                                        final BindingResult errors) {
+        LOGGER.debug("{} initializing process to recover password.", emailForm.getEmail());
         if (errors.hasErrors()) {
+            LOGGER.error("Email form has errors.");
             return forgotPasswordForm(emailForm);
         }
         try {
             userService.forgotPassword(emailForm.getEmail());
         } catch (EmailNotExistsException e) {
+            LOGGER.info("{} does not exist. Recovery failed.", emailForm.getEmail());
             errors.rejectValue("email", "forgotPassword.emailNotExists");
             return forgotPasswordForm(emailForm);
         }
+        LOGGER.info("Forgot password email sent to {}.", emailForm.getEmail());
         return new ModelAndView("sentEmail");
     }
 
@@ -247,13 +267,17 @@ public class UserController {
     public ModelAndView resetPassword(@Valid @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
                                       final BindingResult errors,
                                       @RequestParam(value = "token", defaultValue = "") final String token) {
+        LOGGER.debug("Trying to rest password.");
         if (errors.hasErrors()) {
+            LOGGER.error("Reset password form has errors.");
             return resetPasswordForm(resetPasswordForm, token);
         }
         Token resetPasswordToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
         if (userService.resetPassword(resetPasswordToken, resetPasswordForm.getNewPassword())) {
+            LOGGER.info("Password reset was successful.");
             return new ModelAndView("redirect:/login");
         }
+        LOGGER.info("Token timed out.");
         return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
     }
 
@@ -261,58 +285,71 @@ public class UserController {
     @RequestMapping(value = "/user/{username}", method = {RequestMethod.POST}, params = "uploadImage")
     public ModelAndView uploadProfilePicture(@PathVariable("username") final String username, @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
                                              final BindingResult error) throws IOException {
+        LOGGER.debug("{} trying to upload profile picture", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         if (error.hasErrors()) {
+            LOGGER.error("Uploading profile picture failed.");
             return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
         }
-
         userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes());
+        LOGGER.info("{} profile picture uploaded successfully", username);
         return new ModelAndView("redirect:/user/" + username);
     }
 
     @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
     byte[] getProfileImage(@PathVariable("imageId") final int imageId) {
+        LOGGER.debug("Trying to access profile image");
         byte[] profileImage = new byte[0];
         try {
             profileImage = userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
         } catch (ImageConversionException e) {
             LOGGER.error("Error loading image {}", imageId);
         }
+        LOGGER.info("Profile image accessed.");
         return profileImage;
     }
 
     @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
     public ModelAndView editWatchedDate(@PathVariable("username") final String username, @RequestParam("watchedDate") String watchedDate, @RequestParam("userId") int userId, @RequestParam("mediaId") int mediaId) throws ParseException {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        LOGGER.debug("{} is trying to edit watch date", username);
         watchService.updateWatchedMediaDate(mediaId, userId, f.parse(watchedDate));
+        LOGGER.info("{} updated successfully watched date", username);
         return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
 
     @RequestMapping("/user/{username}/requests")
     public ModelAndView userCollabRequests(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("{} trying to access collaborations requests", username);
         ModelAndView mav = new ModelAndView("userRequests");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user.getUserId(), page - 1, itemsPerPage * 4);
         mav.addObject("username", username);
         mav.addObject("requestContainer", requestContainer);
+        LOGGER.info("{} accessed succesfully to collaborations requests", username);
         return mav;
     }
 
     @RequestMapping("/user/{username}/requests/accept")
     public ModelAndView acceptCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        LOGGER.debug("{} trying to accept collab request", username);
         collaborativeListService.acceptRequest(collabId);
+        LOGGER.info("{} collab request accepted", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
     }
 
     @RequestMapping("/user/{username}/requests/reject")
     public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+        LOGGER.debug("{} trying to reject collab request", username);
         collaborativeListService.rejectRequest(collabId);
+        LOGGER.info("{} collab request rejected", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
     }
 
     @RequestMapping("user/{username}/lists")
     public ModelAndView userEditableLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("{} trying to access editable lists", username);
         ModelAndView mav = new ModelAndView("userEditableLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user.getUserId(), page - 1, editablePerPage);
@@ -320,16 +357,19 @@ public class UserController {
         mav.addObject("user", user);
         mav.addObject("listContainer", editableLists);
         mav.addObject("covers", editableCovers);
+        LOGGER.info("{} accessed editable lists", username);
         return mav;
     }
 
     @RequestMapping("user/{username}/notifications")
     public ModelAndView userNotifications(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("{} trying to access notifications", username);
         ModelAndView mav = new ModelAndView("userNotifications");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         PageContainer<Comment> notificationContainer = commentService.getUserListsCommentsNotifications(user.getUserId(), page - 1, itemsPerPage * 4);
         mav.addObject("username", username);
         mav.addObject("notifications", notificationContainer);
+        LOGGER.info("{} accessed notifications", username);
         return mav;
     }
 
@@ -342,8 +382,10 @@ public class UserController {
 
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "deleteNotifications")
     public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
+        LOGGER.debug("{} trying to delete all notifications", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         commentService.deleteUserListsCommentsNotifications(user.getUserId());
+        LOGGER.info("{} deleted all notifications successfully ", username);
         return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 }
