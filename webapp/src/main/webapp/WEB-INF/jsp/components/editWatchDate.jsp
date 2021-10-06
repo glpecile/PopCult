@@ -33,7 +33,7 @@
             <div class="modal-body">
                 <c:url value="/user/${param.listOwner}/watchedMedia" var="editDatePath"/>
                 <form:form method="POST" action="${editDatePath}">
-                    <label for="watchedDate"><spring:message code="editWatch.watched" arguments="${param.lastWatched}"/> - </label>
+                    <label for="watchedDate"><spring:message code="editWatch.watched" arguments="${param.lastWatched}"/> -> </label>
                     <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${localDate}">
                     <span class="validity"></span>
                     <input type="hidden" name="username" value="<c:out value="${param.listOwner}"/>">
