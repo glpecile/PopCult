@@ -21,6 +21,7 @@ La versión usada de Tomcat es 7.0.76
 Las tablas de la base de Datos serán creadas automáticamente al inicar la aplicación.
 Además, se deben ejecutar los siguientes scripts de sql para popular la base de datos por única vez:
 ```bash
+user.sql
 genre.sql
 media.sql
 lists.sql
