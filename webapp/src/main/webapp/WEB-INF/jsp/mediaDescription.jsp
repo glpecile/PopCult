@@ -182,7 +182,7 @@
                 </h2>
                 <a href="${commentsDetailPath}">
                     <div class="flex rounded-full p-3.5 my-1 h-6 w-auto justify-center items-center text-white bg-purple-500 hover:bg-purple-900">
-                        <spring:message code="home.viewAll"/> (<c:out value="${mediaListContainer.totalCount}"/>)
+                        <spring:message code="home.viewAll"/> (<c:out value="${mediaCommentsContainer.totalCount}"/>)
                     </div>
                 </a>
             </div>
