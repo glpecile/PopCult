@@ -15,6 +15,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -31,6 +32,7 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ModeratorService moderatorService;
 
+    @Transactional
     @Override
     public void reportList(int listId, String report) {
         if (moderatorService.principalIsMod()) {
@@ -46,6 +48,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Transactional
     @Override
     public void reportListComment(int listId, int commentId, String report) {
         if (moderatorService.principalIsMod()) {
@@ -61,6 +64,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Transactional
     @Override
     public void reportMediaComment(int mediaId, int commentId, String report) {
         if (moderatorService.principalIsMod()) {
@@ -80,21 +84,25 @@ public class ReportServiceImpl implements ReportService {
         emailService.sendReportCreatedEmail(user, report);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<ListReport> getListReports(int page, int pageSize) {
         return reportDao.getListReports(page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
         return reportDao.getListCommentReports(page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
         return reportDao.getMediaCommentReports(page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void deleteListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(report -> {
@@ -104,6 +112,7 @@ public class ReportServiceImpl implements ReportService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void deleteListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(report -> {
@@ -112,6 +121,7 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void deleteMediaCommentReport(int reportId) {
         reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
@@ -126,6 +136,7 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
+    @Transactional
     @Override
     public void approveListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(report -> {
@@ -137,6 +148,7 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
+    @Transactional
     @Override
     public void approveListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(report -> {
@@ -148,6 +160,7 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
+    @Transactional
     @Override
     public void approveMediaCommentReport(int reportId) {
         reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface SearchDAO {
+public interface SearchDao {
     PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int sort);
 
     Optional<Integer> getCountSearchMediaByTitle(String title, int mediaType);
