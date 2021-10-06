@@ -40,7 +40,7 @@
                     <form:label path="username" cssClass="form-label">
                         <spring:message code="profile.settings.username"/>
                     </form:label>
-                    <form:input type="text" cssClass="form-control" path="username" value="${user.username}"/>
+                    <form:input type="text" cssClass="form-control" path="username" value="${user.username}" disabled="true"/>
                     <form:errors path="username" cssClass="formError text-red-500" element="p"/>
                 </div>
                     <%-- Email Form --%>
@@ -48,7 +48,7 @@
                     <form:label path="email" cssClass="form-label">
                         <spring:message code="profile.settings.email"/>
                     </form:label>
-                    <form:input type="text" cssClass="form-control" path="email" value="${user.email}"/>
+                    <form:input type="text" cssClass="form-control" path="email" value="${user.email}" disabled="true"/>
                     <form:errors path="email" cssClass="formError text-red-500" element="p"/>
                 </div>
             </div>

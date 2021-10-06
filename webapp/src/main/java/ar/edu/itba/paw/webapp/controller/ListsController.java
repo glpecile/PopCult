@@ -45,9 +45,9 @@ public class ListsController {
     @Autowired
     private CollaborativeListService collaborativeListService;
 
-    private static final int itemsPerPage = 6;
-    private static final int discoveryListsAmount = 4;
-    private static final int lastAddedAmount = 6;
+    private static final int itemsPerPage = 4;
+    private static final int scrollerAmount = 6;
+    private static final int listsPerPage = 8;
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;
@@ -56,11 +56,9 @@ public class ListsController {
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("lists");
-        final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, itemsPerPage);
-        final List<ListCover> discoveryCovers = generateCoverList(listsService.getDiscoveryMediaLists(discoveryListsAmount));
-        final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, lastAddedAmount).getElements());
+        final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, listsPerPage);
+        final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
-        mav.addObject("discovery", discoveryCovers);
         mav.addObject("mostLikedLists", mostLikedLists);
         mav.addObject("allLists", allListsCovers);
         mav.addObject("allListContainer", allLists);

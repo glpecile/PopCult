@@ -70,11 +70,9 @@
         </c:when>
         <c:otherwise>
             <c:if test="${userPublicLists.totalCount == 0}">
-                <div>
-                    <h3 class="text-center text-gray-400">
-                        <spring:message code="profile.otherNoLists"/>
-                    </h3>
-                </div>
+                <h3 class="text-center text-gray-400">
+                    <spring:message code="profile.otherNoLists"/>
+                </h3>
             </c:if>
             <c:forEach var="cover" items="${userPublicListCover}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
@@ -97,7 +95,7 @@
         </c:otherwise>
         </c:choose>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
