@@ -18,9 +18,11 @@
     </div>
     <div class="flex justify-between p-3 text-center justify-center items-center">
         <jsp:include page="/WEB-INF/jsp/components/promoteMod.jsp">
+            <jsp:param name="id" value="${param.userId}"/>
             <jsp:param name="promoteModPath" value="/admin/mods/requests/${param.userId}"/>
         </jsp:include>
         <jsp:include page="/WEB-INF/jsp/components/rejectMod.jsp">
+            <jsp:param name="id" value="${param.userId}"/>
             <jsp:param name="removeRequestPath" value="/admin/mods/requests/${param.userId}"/>
         </jsp:include>
     </div>
