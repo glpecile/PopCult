@@ -3,9 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
-import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoJdbcImpl.class);
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
@@ -64,9 +63,11 @@ public class UserDaoJdbcImpl implements UserDao {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
         } catch (DuplicateKeyException e) {
             if (e.getMessage().contains("users_email_key")) {
+                LOGGER.error("Email {} already in use by another user", email);
                 throw new EmailAlreadyExistsException();
             }
             if (e.getMessage().contains("users_username_key")) {
+                LOGGER.error("Username {} already in use by another user", userName);
                 throw new UsernameAlreadyExistsException();
             }
         }
@@ -81,8 +82,9 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public void confirmRegister(int userId, boolean enabled) {
+    public Optional<User> confirmRegister(int userId, boolean enabled) {
         jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
+        return getById(userId);
     }
 
     @Override

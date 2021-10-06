@@ -18,7 +18,7 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     TokenDao tokenDao;
 
-    private static final int EXPIRATION = 60 * 24;
+    /* default */ static final int EXPIRATION = 60 * 24;
 
     @Transactional
     @Override
@@ -51,7 +51,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean isValidToken(Token token, int type) {
         Calendar calendar = Calendar.getInstance();
-        return token.getType() == type && token.getExpiryDate().getTime() > calendar.getTime().getTime();
+        return token.getType() == type && token.getExpiryDate().getTime() >= calendar.getTime().getTime();
     }
 
     @Transactional

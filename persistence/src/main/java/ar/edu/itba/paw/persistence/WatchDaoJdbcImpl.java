@@ -20,8 +20,6 @@ public class WatchDaoJdbcImpl implements WatchDao {
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
-
     private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     private static final RowMapper<WatchedMedia> WATCHED_MEDIA_ROW_MAPPER = RowMappers.WATCHED_MEDIA_ROW_MAPPER;

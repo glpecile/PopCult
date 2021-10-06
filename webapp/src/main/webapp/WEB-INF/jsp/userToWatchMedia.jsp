@@ -81,12 +81,6 @@
                             </div>
                         </c:forEach>
                     </div>
-                    <br>
-                    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                        <jsp:param name="mediaPages" value="${suggestedMediaContainer.totalPages}"/>
-                        <jsp:param name="currentPage" value="${suggestedMediaContainer.currentPage + 1}"/>
-                        <jsp:param name="url" value="${urlBase}"/>
-                    </jsp:include>
                 </c:if>
             </c:otherwise>
         </c:choose>

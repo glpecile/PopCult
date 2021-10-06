@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +29,8 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModeratorDaoJdbcImpl.class);
 
     @Autowired
     public ModeratorDaoJdbcImpl(final DataSource ds) {
@@ -69,6 +73,7 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
         try {
             jdbcInsert.execute(args);
         } catch (DuplicateKeyException e) {
+            LOGGER.error("Mod request was already sent.");
             throw new ModRequestAlreadyExistsException();
         }
     }

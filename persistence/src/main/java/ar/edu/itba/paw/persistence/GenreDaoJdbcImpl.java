@@ -20,11 +20,9 @@ import java.util.Optional;
 public class GenreDaoJdbcImpl implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert genrejdbcInsert;
-    private final SimpleJdbcInsert mediaGenrejdbcInsert;
 
     private static final RowMapper<String> STRING_NAME_ROW_MAPPER = RowMappers.STRING_NAME_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
 
     private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
@@ -34,7 +32,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
     public GenreDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         genrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("genre").usingGeneratedKeyColumns("genreId");
-        mediaGenrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaGenre");
     }
 
     @Override
