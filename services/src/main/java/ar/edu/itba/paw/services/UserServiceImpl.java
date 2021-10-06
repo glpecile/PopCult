@@ -109,8 +109,7 @@ public class UserServiceImpl implements UserService {
     public boolean confirmRegister(Token token) {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
         if (isValidToken) {
-            userDao.confirmRegister(token.getUserId(), ENABLED_USER);
-            getById(token.getUserId()).ifPresent(this::authWithoutPassword);
+            userDao.confirmRegister(token.getUserId(), ENABLED_USER).ifPresent(this::authWithoutPassword);
             tokenService.deleteToken(token);
         }
         return isValidToken;
