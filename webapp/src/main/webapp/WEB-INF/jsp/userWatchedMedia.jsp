@@ -46,15 +46,13 @@
                     </jsp:include>
                         <%--                <jsp:param name="lastWatched" value="${media.lastWatched}"/>--%>
                         <%--                <jsp:param name="listOwner" value="${username}"/>--%>
-                    <div class="pt-4">
-                        <jsp:include page="/WEB-INF/jsp/components/editWatchDate.jsp">
-                            <jsp:param name="lastWatched" value="${media.lastWatched}"/>
-                            <jsp:param name="listOwner" value="${username}"/>
-                            <jsp:param name="mediaTitle" value="${media.title}"/>
-                            <jsp:param name="id" value="${media.mediaId}"/>
-                            <jsp:param name="listOwnerId" value="${user.userId}"/>
-                        </jsp:include>
-                    </div>
+                    <jsp:include page="/WEB-INF/jsp/components/editWatchDate.jsp">
+                        <jsp:param name="lastWatched" value="${media.lastWatched}"/>
+                        <jsp:param name="listOwner" value="${username}"/>
+                        <jsp:param name="mediaTitle" value="${media.title}"/>
+                        <jsp:param name="id" value="${media.mediaId}"/>
+                        <jsp:param name="listOwnerId" value="${user.userId}"/>
+                    </jsp:include>
                 </div>
             </c:forEach>
         </div>

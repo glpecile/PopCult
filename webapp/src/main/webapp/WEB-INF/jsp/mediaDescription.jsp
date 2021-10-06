@@ -56,16 +56,16 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 <spring:message code="media.addToList"/>
                             </button>
-                            <ul class="dropdown-menu py-2 rounded-lg" aria-labelledby="Add Media to List">
+                            <ul class="dropdown-menu rounded-lg" aria-labelledby="Add Media to List">
                                 <c:forEach var="list" items="${userLists}">
                                     <form action="${mediaPath}" method="POST">
-                                        <button class="dropdown-item py-0" type="submit"><c:out
+                                        <button class="dropdown-item p-1.5" type="submit"><c:out
                                                 value="${list.listName}"/></button>
                                         <input type="hidden" id="mediaListId" name="mediaListId"
                                                value="<c:out value = "${list.mediaListId}"/>">
                                     </form>
                                 </c:forEach>
-                                <a class="dropdown-item py-0" href=${createListPath}>
+                                <a class="dropdown-item p-1.5" href=${createListPath}>
                                     <spring:message code="lists.create"/>
                                 </a>
                             </ul>
