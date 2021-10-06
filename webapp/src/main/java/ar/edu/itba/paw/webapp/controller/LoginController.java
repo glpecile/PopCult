@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginController {
-    private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     UserService userService;
