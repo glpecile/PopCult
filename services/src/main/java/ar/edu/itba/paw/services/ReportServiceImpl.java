@@ -102,7 +102,7 @@ public class ReportServiceImpl implements ReportService {
         return reportDao.getMediaCommentReports(page, pageSize);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public void deleteListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(report -> {
@@ -112,7 +112,7 @@ public class ReportServiceImpl implements ReportService {
 
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public void deleteListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(report -> {
@@ -121,7 +121,7 @@ public class ReportServiceImpl implements ReportService {
         });
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public void deleteMediaCommentReport(int reportId) {
         reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
