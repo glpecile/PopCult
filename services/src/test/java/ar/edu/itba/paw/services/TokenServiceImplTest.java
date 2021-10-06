@@ -3,9 +3,10 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 import static ar.edu.itba.paw.services.TokenServiceImpl.EXPIRATION;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TokenServiceImplTest {
     private static final int USER_ID = 1;
     private static final String TOKEN = "Token";
@@ -23,7 +25,7 @@ public class TokenServiceImplTest {
     private final TokenServiceImpl tokenService = new TokenServiceImpl();
 
     @Test
-    public void isValidTokenTest() {
+    public void testIsValidToken() {
         //1 - Setup
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Timestamp(calendar.getTime().getTime()));
@@ -39,7 +41,7 @@ public class TokenServiceImplTest {
     }
 
     @Test
-    public void isInvalidTokenTest() {
+    public void testIsInvalidToken() {
         //1 - Setup
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Timestamp(calendar.getTime().getTime()));

@@ -51,10 +51,6 @@ public class UserServiceImplTest {
     @Mock
     private TokenServiceImpl mockTokenService;
 
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         //1 - Setup - Preconditions
@@ -72,7 +68,7 @@ public class UserServiceImplTest {
     }
 
     @Test(expected = InvalidCurrentPasswordException.class)
-    public void incorrectChangePasswordTest() throws InvalidCurrentPasswordException {
+    public void testIncorrectChangePassword() throws InvalidCurrentPasswordException {
         //1 - Setup
         when(mockDao.getById(eq(USER_ID)))
                 .thenReturn(Optional.of(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE)));
