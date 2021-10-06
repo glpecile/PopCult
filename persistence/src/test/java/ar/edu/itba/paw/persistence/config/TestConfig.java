@@ -60,10 +60,10 @@ public class TestConfig {
 
         dp.addScript(hsqldb);
         dp.addScript(schema);
-        dp.addScript(inserts);
         dp.addScript(genre);
         dp.addScript(media);
         dp.addScript(lists);
+        dp.addScript(inserts);
 
         return dp;
     }
