@@ -24,16 +24,14 @@ import java.util.Optional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class UserJdbcDaoTest {
+public class UserDaoJdbcTest {
 
-    private static final int USER_ID = 1;
     private static final String EMAIL = "test@popcult.com";
     private static final String USERNAME = "test";
     private static final String PASSWORD = "password";
     private static final String NAME = "PopCult Test";
     private static final boolean NOT_ENABLED_USER = false;
     private static final boolean ENABLED_USER = true;
-    private static final int DEFAULT_IMAGE_ID = 1;
     private static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
     private static final int ALREADY_EXISTS_USER_ID = 2;

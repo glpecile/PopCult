@@ -27,6 +27,12 @@ public class TestConfig {
     private Resource schema;
     @Value("classpath:inserts.sql")
     private Resource inserts;
+    @Value("classpath:genre.sql")
+    private Resource genre;
+    @Value("classpath:media.sql")
+    private Resource media;
+    @Value("classpath:lists.sql")
+    private Resource lists;
 
     @Bean
     public DataSource dataSource() {
@@ -55,6 +61,9 @@ public class TestConfig {
         dp.addScript(hsqldb);
         dp.addScript(schema);
         dp.addScript(inserts);
+        dp.addScript(genre);
+        dp.addScript(media);
+        dp.addScript(lists);
 
         return dp;
     }
