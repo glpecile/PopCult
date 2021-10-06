@@ -3,6 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,19 +32,6 @@ public class UserDaoJdbcImpl implements UserDao {
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId SERIAL PRIMARY KEY," +
-                "email TEXT NOT NULL," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL," +
-                "name VARCHAR(100)," +
-                "enabled BOOLEAN NOT NULL," +
-                "imageId INT," +
-                "role INT NOT NULL," +
-                "UNIQUE(email)," +
-                "UNIQUE(username)," +
-                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
     }
 
     @Override
@@ -60,14 +50,14 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, boolean enabled, int imageId, int role) {
+    public User register(String email, String userName, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
         args.put("enabled", enabled);
-        args.put("imageid", imageId);
+//        args.put("imageid", imageId);
         args.put("role", role);
         int userId = 0;
         try {
@@ -80,7 +70,7 @@ public class UserDaoJdbcImpl implements UserDao {
                 throw new UsernameAlreadyExistsException();
             }
         }
-        return new User(userId, email, userName, password, name, enabled, imageId, role);
+        return new User(userId, email, userName, password, name, enabled, null, role);
 
     }
 

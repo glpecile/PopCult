@@ -2,9 +2,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -13,9 +16,9 @@
     </title>
 </head>
 <body class="bg-gray-50">
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 flex-col offset-2 flex h-screen">
-    <div class="flex-grow">
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 flex-col offset-2 flex flex-grow">
         <div class="row m-0">
             <h1 class="display-5 fw-bolder py-8"><c:out value="${genreName}"/>
                 <spring:message code="media.genre"/>
@@ -62,7 +65,7 @@
             </jsp:include>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

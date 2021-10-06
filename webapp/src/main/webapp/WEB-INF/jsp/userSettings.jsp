@@ -3,8 +3,12 @@
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -20,7 +24,7 @@
         <form:form cssClass="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" modelAttribute="userSettings" action="${postPath}" method="post">
             <div class="flex flex-col justify-center items-center">
                 <h2 class="text-3xl">
-                    <c:out value="${user.username}"/><spring:message code="profile.settings.header"/>
+                    <spring:message code="profile.settings.header" arguments="${user.username}"/>
                 </h2>
                 <br>
                     <%-- Name Form --%>
@@ -52,20 +56,26 @@
             <div class="flex justify-between">
                     <%-- Change password --%>
                 <a href=<c:url value="/changePassword"/>>
-                    <button type="button" class="btn btn-dark my-2">
+                    <button type="button"
+                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
                         <spring:message code="profile.settings.passwordChange"/>
                     </button>
                 </a>
                 <div class="flex space-x-3">
                         <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>
-                        <button type="button" class="btn btn-light my-2">
+                        <button type="button"
+                                class="btn btn-warning bg-gray-300 group hover:bg-yellow-400 text-gray-700 font-semibold hover:text-white my-2">
+                            <i class="fas fa-undo group-hover:text-white pr-2"></i>
                             <spring:message code="general.revert"/>
                         </button>
                     </a>
                         <%-- Save changes --%>
                     <input type="hidden" name="userId" id="userId" value="<c:out value="${user.userId}"/>">
-                    <button class="btn btn-secondary my-2" id="editUser" name="editUser" type="submit">
+                    <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white my-2"
+                            id="editUser" name="editUser" type="submit">
+                        <i class="fas fa-save group-hover:text-white pr-2"></i>
                         <spring:message code="general.save"/>
                     </button>
                 </div>

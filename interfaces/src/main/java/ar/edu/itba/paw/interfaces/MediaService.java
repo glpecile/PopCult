@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 
 import java.util.List;
@@ -26,8 +27,5 @@ public interface MediaService {
 
     Optional<Integer> getCountSearchMediaByTitle(String title);
 
-    PageContainer<Media> getMostLikedMedia(int page, int pageSize);
-
-    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
 
 }

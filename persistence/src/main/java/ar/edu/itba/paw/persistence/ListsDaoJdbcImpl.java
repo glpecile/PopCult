@@ -22,6 +22,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert mediaListjdbcInsert;
     private final SimpleJdbcInsert listElementjdbcInsert;
+    private final SimpleJdbcInsert forkedListsjdbcInsert;
 
     private static final int discoveryUserId = 1;
 
@@ -41,36 +42,11 @@ public class ListsDaoJdbcImpl implements ListsDao {
         jdbcTemplate = new JdbcTemplate(ds);
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("medialist").usingGeneratedKeyColumns("medialistid");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
-        //forkedListsjdbcInsert = new SimpleJdbcInsert(ds).withTableName("forkedlists");
+        forkedListsjdbcInsert = new SimpleJdbcInsert(ds).withTableName("forkedlists");
 
 //        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
 //        jdbcTemplate.execute("ALTER TABLE mediaList ADD collaborative BOOLEAN NOT NULL default FALSE");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaList(" +
-                "mediaListId SERIAL PRIMARY KEY," +
-                "userId INT NOT NULL," +
-                "listname TEXT NOT NULL," +
-                "description TEXT NOT NULL," +
-                "creationDate DATE," +
-                "visibility BOOLEAN," +
-                "collaborative BOOLEAN," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listElement(" +
-                "mediaId INT NOT NULL," +
-                "mediaListId INT NOT NULL, " +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-                "UNIQUE(mediaId, mediaListId))");
-
-//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS forkedLists(" +
-//                "mediaListId INT NOT NULL, " +
-//                "originalOwnerId INT NOT NULL,"+
-//                "forkerId INT NOT NULL,"+
-//                "FOREIGN KEY (mediaListId) REFERENCES medialist(medialistid) ON DELETE CASCADE," +
-//                "FOREIGN KEY(originalOwnerId) REFERENCES users(userId) ON DELETE CASCADE," +
-//                "FOREIGN KEY(forkerId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override
@@ -128,19 +104,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         return jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ROW_MAPPER);
     }
 
-//    @Override
-//    public List<Integer> getMediaIdInListIds(int mediaListId) {
-//        return jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, MEDIA_ID_ROW_MAPPER);
-//    }
-
-//    @Override
-//    public PageContainer<Integer> getMediaIdInListIds(int mediaListId, int page, int pageSize) {
-//        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM listelement WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize*page, pageSize}, MEDIA_ID_ROW_MAPPER);
-//        int totalCount = jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaListId = ?", new Object[]{mediaListId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst().orElse(0);
-//        return new PageContainer<>(elements,page,pageSize,totalCount);
-//    }
-
     @Override
     public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ? OFFSET ? LIMIT ?", new Object[]{mediaListId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
@@ -171,24 +134,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
-//    @Override
-//    public Optional<Integer> getListCount() {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE visibility = ?", COUNT_ROW_MAPPER, new Object[]{true})
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromUserId(int userId) {
-//        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM medialist WHERE userId = ?", new Object[]{userId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Integer> getListCountFromMedia(int mediaId) {
-//        return jdbcTemplate.query("SELECT DISTINCT COUNT(*) AS count FROM listelement WHERE mediaId = ?", new Object[]{mediaId}, COUNT_ROW_MAPPER)
-//                .stream().findFirst();
-//    }
-
     @Override
     public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
         return jdbcTemplate.query("SELECT DISTINCT medialist.medialistid, medialist.userid, listname, description, creationdate, visibility, collaborative FROM mediaGenre NATURAL JOIN " +
@@ -211,7 +156,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, int mediaId) {
+    public void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("mediaListId", mediaListId);
@@ -223,7 +168,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) {
+    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException {
         for (int mediaId : mediaIdList) {
             addToMediaList(mediaListId, mediaId);
         }
@@ -248,6 +193,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     public Optional<MediaList> createMediaListCopy(int userId, int toCopyListId) {
         Map<String, Object> data = new HashMap<>();
         List<MediaList> fork = new ArrayList<>();
+        //add to medialist table
         getMediaListById(toCopyListId).ifPresent((toCopy) -> {
             Date localDate = new Date();
             data.put("userid", userId);
@@ -262,14 +208,20 @@ public class ListsDaoJdbcImpl implements ListsDao {
             for (Media media : mediaList) {
                 mediaIdList.add(media.getMediaId());
             }
-            addToMediaList((int) key.getKey(), mediaIdList);
+            try {
+                addToMediaList((int) key.getKey(), mediaIdList);
+            } catch (MediaAlreadyInListException e) {
+                //TODO log
+            }
+
+            //add to forkedLists table
             Map<String, Object> forkData = new HashMap<>();
-        /*
-        forkData.put("mediaListId", (int) key.getKey());
-        forkData.put("originalOwnerId", toCopy.getUserId());
-        forkData.put("forkerId", userId);
-        forkedListsjdbcInsert.execute(forkData)
-        */
+            forkData.put("originalistId", toCopyListId);
+            forkData.put("forkedlistId", (int) key.getKey());
+            forkData.put("originalOwnerId", toCopy.getUserId());
+            forkData.put("forkerId", userId);
+            forkedListsjdbcInsert.execute(forkData);
+
             fork.add(new MediaList((int) key.getKey(), userId, toCopy.getListName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative()));
         });
         if (fork.isEmpty())
@@ -283,14 +235,33 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        List<MediaList> mostLikedLists = jdbcTemplate.query("SELECT medialist.* FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = ? GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET ? LIMIT ?", new Object[]{true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
-        int listCount = jdbcTemplate.query("SELECT COUNT(*) FROM medialist WHERE visibility = ?", new Object[]{true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(mostLikedLists, page, pageSize, listCount);
-    }
-
-    @Override
     public boolean canEditList(int userId, int listId) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM medialist LEFT JOIN collaborative c on medialist.medialistid = c.listid WHERE medialistid = ? AND ((userid = ?) OR (collaboratorid = ? AND accepted = ?))", new Object[]{listId, userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0) > 0;
     }
+
+    @Override
+    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
+        List<MediaList> editableLists = jdbcTemplate.query("((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) OFFSET ? LIMIT ?", new Object[]{userId, userId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(*) FROM ((SELECT * FROM medialist WHERE userId = ?) UNION (SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = ? AND accepted = ?)) AS aux ", new Object[]{userId, userId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(editableLists, page, pageSize, count);
+    }
+
+    @Override
+    public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
+        List<MediaList> forks = jdbcTemplate.query("SELECT m.* FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? AND m.visibility = ? OFFSET ? LIMIT ?", new Object[]{listId, true, page * pageSize, pageSize}, MEDIA_LIST_ROW_MAPPER);
+        int count = jdbcTemplate.query("SELECT COUNT(m.*) FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid WHERE f.originalistid = ? AND m.visibility = ?", new Object[]{listId, true}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(forks, page, pageSize, count);
+    }
+
+    /* users that forked a list
+    List<User> users = jdbcTemplate.query("SELECT u.* FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?) OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, USER_ROW_MAPPER);
+    int count = jdbcTemplate.query("SELECT COUNT(u.*) FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?)", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
+        return new PageContainer<>(users, page, pageSize, count);*/
+
+    @Override
+    public Optional<MediaList> getForkedFrom(int listId) {
+        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ? AND visibility = ?", new Object[]{listId, true}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
+    }
+
+
 }

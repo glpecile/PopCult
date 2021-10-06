@@ -35,30 +35,11 @@ public class GenreDaoJdbcImpl implements GenreDao {
         jdbcTemplate = new JdbcTemplate(ds);
         genrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("genre").usingGeneratedKeyColumns("genreId");
         mediaGenrejdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaGenre");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS genre(" +
-                "genreId SERIAL PRIMARY KEY," +
-                "name TEXT NOT NULL)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaGenre(" +
-                "mediaId INT NOT NULL," +
-                "genreId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaid) ON DELETE CASCADE ," +
-                "FOREIGN KEY(genreId) REFERENCES genre(genreId) ON DELETE CASCADE )");
-
     }
 
     @Override
     public List<String> getGenreByMediaId(int mediaId) {
         return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_NAME_ROW_MAPPER);
-    }
-
-    @Override
-    public PageContainer<Integer> getMediaByGenreIds(int genreId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaGenre WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
-                .stream().findFirst().orElse(0);
-        return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
     @Override

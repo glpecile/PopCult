@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,16 +29,6 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public MediaDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("media").usingGeneratedKeyColumns("mediaId");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS media (" +
-                "mediaId SERIAL PRIMARY KEY," +
-                "type INT NOT NULL," +
-                "title VARCHAR(100) NOT NULL, " +
-                "description TEXT," +
-                "image TEXT," +
-                "length INT," +
-                "releaseDate DATE," +
-                "seasons INT," +
-                "country INT)");
     }
 
     @Override
@@ -105,20 +96,5 @@ public class MediaDaoJdbcImpl implements MediaDao {
     @Override
     public Optional<Integer> getCountSearchMediaByTitle(String title) {
         return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title}, COUNT_ROW_MAPPER).stream().findFirst();
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
-        List<Media> mediaList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
-        int mediaListCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(mediaList, page, pageSize, mediaListCount);
-
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
-        List<Media> likedMoviesList = jdbcTemplate.query("SELECT media.* FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = ? GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET ? LIMIT ?", new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
-        int moviesCunt = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(likedMoviesList, page, pageSize, moviesCunt);
     }
 }

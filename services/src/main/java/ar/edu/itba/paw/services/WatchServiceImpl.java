@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -17,69 +18,58 @@ public class WatchServiceImpl implements WatchService {
     @Autowired
     private WatchDao watchDao;
 
+    @Transactional
     @Override
     public void addWatchedMedia(int mediaId, int userId) {
         watchDao.addWatchMedia(mediaId, userId, new Date());
     }
 
+    @Transactional
     @Override
     public void addMediaToWatch(int mediaId, int userId) {
         watchDao.addWatchMedia(mediaId, userId, null);
     }
 
+    @Transactional
     @Override
     public void deleteWatchedMedia(int mediaId, int userId) {
         watchDao.deleteWatchedMedia(mediaId, userId);
     }
 
+    @Transactional
     @Override
     public void deleteToWatchMedia(int mediaId, int userId) {
         watchDao.deleteToWatchMedia(mediaId, userId);
     }
 
+    @Transactional
     @Override
     public void updateWatchedMediaDate(int mediaId, int userId, Date date) {
         watchDao.updateWatchedMediaDate(mediaId, userId, date);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean isWatched(int mediaId, int userId) {
         return watchDao.isWatched(mediaId, userId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean isToWatch(int mediaId, int userId) {
         return watchDao.isToWatch(mediaId, userId);
     }
 
-//    @Override
-//    public PageContainer<Integer> getWatchedMediaIdIds(int userId, int page, int pageSize) {
-//        return watchDao.getWatchedMediaIdIds(userId, page, pageSize);
-//    }
-
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize) {
         return watchDao.getWatchedMediaId(userId, page, pageSize);
     }
 
-//    @Override
-//    public Optional<Integer> getWatchedMediaCount(int userId) {
-//        return watchDao.getWatchedMediaCount(userId);
-//    }
-
-//    @Override
-//    public PageContainer<Integer> getToWatchMediaIdIds(int userId, int page, int pageSize) {
-//        return watchDao.getToWatchMediaIdIds(userId, page, pageSize);
-//    }
-
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize) {
         return watchDao.getToWatchMediaId(userId, page, pageSize);
 
     }
-
-//    @Override
-//    public Optional<Integer> getToWatchMediaCount(int userId) {
-//        return watchDao.getToWatchMediaCount(userId);
-//    }
 }

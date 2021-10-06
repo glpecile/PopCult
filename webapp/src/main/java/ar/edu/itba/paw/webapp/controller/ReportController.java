@@ -45,7 +45,10 @@ public class ReportController {
             return reportList(listId, reportForm);
         }
         reportService.reportList(listId, reportForm.getReport());
-        return new ModelAndView("redirect:/lists/" + listId);
+
+        return listsService.getMediaListById(listId).isPresent() ?
+                new ModelAndView("redirect:/lists/" + listId) :
+                new ModelAndView("redirect:/lists");
     }
 
     @RequestMapping(value = "/report/lists/{listId}/comment/{commentId}", method = RequestMethod.GET)
@@ -69,7 +72,7 @@ public class ReportController {
             return reportList(listId, reportForm);
         }
         reportService.reportListComment(listId, commentId, reportForm.getReport());
-        return new ModelAndView("redirect:/lists/"+ listId);
+        return new ModelAndView("redirect:/lists/" + listId);
     }
 
     @RequestMapping(value = "/report/media/{mediaId}/comment/{commentId}", method = RequestMethod.GET)

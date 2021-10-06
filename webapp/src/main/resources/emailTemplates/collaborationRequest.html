@@ -11,7 +11,12 @@
     <div>
         <h2 th:text="#{collabEmail.greeting}"></h2>
         <p th:text="#{collabEmail.user(${username}, ${listname})}"></p>
-        <p th:text="#{collabEmail.options}"></p>
+        <span th:text="#{collabEmail.optionsBefore}"></span>
+        <a th:href="@{http://localhost:8080/webapp_war/user/{username}/requests(username=${toUsername})}">
+            <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
+                    th:text="#{collabEmail.panel}"></button>
+        </a>
+        <span th:text="#{collabEmail.optionsAfter}"></span>
         <p th:text="#{collabEmail.closing}"></p>
         <br><br>
         <p th:text="#{collabEmail.close}"></p>

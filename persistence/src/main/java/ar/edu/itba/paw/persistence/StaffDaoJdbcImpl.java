@@ -41,25 +41,6 @@ public class StaffDaoJdbcImpl implements StaffDao {
         staffMemberjdbcInsert = new SimpleJdbcInsert(ds).withTableName("staffMember").usingGeneratedKeyColumns("staffMemberId");
         directorjdbcInsert = new SimpleJdbcInsert(ds).withTableName("director");
         castjdbcInsert = new SimpleJdbcInsert(ds).withTableName("cast");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS staffMember (" +
-                "staffMemberId SERIAL PRIMARY KEY," +
-                "name VARCHAR(100) NOT NULL," +
-                "description TEXT," +
-                "image TEXT)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS director (" +
-                "mediaId INT NOT NULL," +
-                "staffMemberId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE )");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS crew (" +
-                "mediaId INT NOT NULL," +
-                "staffMemberId INT NOT NULL," +
-                "characterName VARCHAR(100) NOT NULL," +
-                "FOREIGN KEY(mediaId) References media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(staffMemberId) References staffMember(staffMemberId) ON DELETE CASCADE)");
     }
 
     @Override
@@ -74,34 +55,13 @@ public class StaffDaoJdbcImpl implements StaffDao {
     }
 
     @Override
-    public PageContainer<Integer> getMediaByDirectorIds(int staffMemberId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM staffMember NATURAL JOIN director " +
-                "WHERE staffMemberId = ? " +
-                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
-                        "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER)
-                .stream().findFirst().orElse(0);
-        return new PageContainer<>(elements, page, pageSize, totalCount);
-    }
-
-    @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
-                                                List<Media> elements = jdbcTemplate.query("SELECT * FROM director NATURAL JOIN media " +
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM director NATURAL JOIN media " +
                                                         "WHERE staffMemberId = ? " +
                                                         "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
                         "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
-        return new PageContainer<>(elements, page, pageSize, totalCount);
-    }
-
-    @Override
-    public PageContainer<Integer> getMediaByActorIds(int staffMemberId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaid FROM staffMember NATURAL JOIN crew " +
-                "WHERE staffMemberId = ? " +
-                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
-                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
@@ -112,19 +72,6 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "OFFSET ? LIMIT ?", new Object[]{staffMemberId, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
                 "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(elements, page, pageSize, totalCount);
-    }
-
-    @Override
-    public PageContainer<Integer> getMediaIds(int staffMemberId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("(SELECT director.mediaId FROM director WHERE staffMemberId = ?)" +
-                "UNION" +
-                "(SELECT crew.mediaId FROM crew WHERE staffMemberId = ?)" +
-                "OFFSET ? LIMIT ?", new Object[]{staffMemberId, staffMemberId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
-                "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
-                "UNION" +
-                "(SELECT crew.mediaId FROM crew WHERE staffmemberid = ?)) AS aux", new Object[]{staffMemberId, staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 

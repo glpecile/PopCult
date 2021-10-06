@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,19 +60,27 @@ public class MediaController {
     private static final int defaultValue = 1;
 
     @RequestMapping("/")
-    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
-        mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
+        mav.addObject("scrollItemsAmount", itemsPerContainer);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        userService.getCurrentUser().ifPresent(user -> {
+            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user.getUserId(), defaultValue - 1, lastAddedAmount);
+            final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
+            mav.addObject("discoveryFilmContainer", discoveryFilmContainer);
+            mav.addObject("discoverySeriesContainer", discoverySeriesContainer);
+            mav.addObject("discoveryListsCovers", discoveryListsCovers);
+        });
         return mav;
     }
 
@@ -103,25 +112,37 @@ public class MediaController {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
-            final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
+            final List<MediaList> userLists = listsService.getUserEditableLists(user.getUserId(), defaultValue-1, itemsPerPage).getElements();
             mav.addObject("userLists", userLists);
         });
 
         return mav;
     }
 
-    @RequestMapping(value = "/media/{mediaId}/comment", method = {RequestMethod.POST})
-    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+    @RequestMapping(value = "/media/{mediaId}/comments")
+    public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
+        final ModelAndView mav = new ModelAndView("mediaCommentDetails");
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, page - 1, itemsPerPage);
+        userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
+        mav.addObject("media", media);
+        mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
+        return mav;
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
+    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors())
             return mediaDescription(defaultValue, mediaId, form);
-        commentService.addCommentToMedia(userId, mediaId, form.getBody());
+        commentService.addCommentToMedia(user.getUserId(), mediaId, form.getBody());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId) {
+    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId,  @RequestParam("currentURL") final String currentURL) {
         commentService.deleteCommentFromMedia(commentId);
-        return new ModelAndView("redirect:/media/" + mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId + currentURL);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
@@ -179,8 +200,8 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("films");
-        final PageContainer<Media> mostLikedFilms = mediaService.getMostLikedMedia(MediaType.MOVIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.MOVIE.ordinal(), page - 1, itemsPerPage);
+        final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS.ordinal(), page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();
@@ -192,8 +213,7 @@ public class MediaController {
     @RequestMapping("/media/series")
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("series");
-        final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
-        final PageContainer<Media> mostLikedSeries = mediaService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);

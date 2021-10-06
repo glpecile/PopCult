@@ -79,7 +79,7 @@ public class RowMappers {
                     rs.getString("image")),
                     rs.getString("characterName"));
     /**
-     * Staff RowMappers.
+     * Studio RowMappers.
      */
     public static final RowMapper<Studio> STUDIO_ROW_MAPPER = (rs, rowNum) -> new Studio(
             rs.getInt("studioId"),
@@ -94,16 +94,18 @@ public class RowMappers {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"), //TODO
+                    rs.getString("name"),
                     rs.getBoolean("enabled"),
                     rs.getInt("imageId"),
                     rs.getInt("role"));
+
     /**
      * Token RowMappers.
      */
     public static final RowMapper<Token> TOKEN_ROW_MAPPER =
             (rs, rowNum) -> new Token(
                     rs.getInt("userId"),
+                    rs.getInt("type"),
                     rs.getString("token"),
                     rs.getDate("expiryDate"));
 
@@ -129,9 +131,7 @@ public class RowMappers {
     public static final RowMapper<Image> IMAGE_ROW_MAPPER =
             (rs, rowNum) -> new Image(
                     rs.getInt("imageId"),
-                    rs.getBytes("photoBlob"),
-                    rs.getInt("imageContentLength"),
-                    rs.getString("imageContentType"));
+                    rs.getBytes("photoBlob"));
 
     /**
      * Comment RowMappers.
@@ -142,6 +142,19 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("username"),
                     rs.getString("description"));
+
+    /**
+     * Comment Notifications RowMappers.
+     */
+    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
+            (rs, rowNum) -> new Comment(
+                    rs.getInt("commentId"),
+                    rs.getInt("userId"),
+                    rs.getString("username"),
+                    rs.getString("description"),
+                    rs.getString("listname"),
+                    rs.getInt("listid"),
+                    rs.getBoolean("opened"));
 
     /**
      * Request RowMappers.
@@ -162,6 +175,7 @@ public class RowMappers {
     public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("listId"),
@@ -173,6 +187,7 @@ public class RowMappers {
     public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new ListCommentReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),
@@ -184,6 +199,7 @@ public class RowMappers {
     public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
             (rs, rowNum) -> new MediaCommentReport(
                     rs.getInt("reportId"),
+                    rs.getInt("reporteeId"),
                     rs.getString("report"),
                     rs.getDate("date"),
                     rs.getInt("commentId"),

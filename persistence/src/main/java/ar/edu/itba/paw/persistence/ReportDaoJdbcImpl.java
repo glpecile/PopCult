@@ -32,57 +32,35 @@ public class ReportDaoJdbcImpl implements ReportDao {
         jdbcInsertListReport = new SimpleJdbcInsert(ds).withTableName("listReport").usingGeneratedKeyColumns("reportId");
         jdbcInsertListCommentReport = new SimpleJdbcInsert(ds).withTableName("listCommentReport").usingGeneratedKeyColumns("reportId");
         jdbcInsertMediaCommentReport = new SimpleJdbcInsert(ds).withTableName("mediaCommentReport").usingGeneratedKeyColumns("reportId");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "listId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS listCommentReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "listId INT NOT NULL," +
-                "commentId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (listId) REFERENCES mediaList(mediaListId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES listComment(commentId) ON DELETE CASCADE)");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaCommentReport (" +
-                "reportId SERIAL PRIMARY KEY," +
-                "mediaId INT NOT NULL," +
-                "commentId INT NOT NULL," +
-                "report TEXT NOT NULL," +
-                "date DATE NOT NULL," +
-                "FOREIGN KEY (mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY (commentId) REFERENCES mediaComment(commentId) ON DELETE CASCADE)");
     }
 
     @Override
-    public void reportList(int listId, String report) {
+    public void reportList(int listId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertListReport.execute(data);
     }
 
     @Override
-    public void reportListComment(int listId, int commentId, String report) {
+    public void reportListComment(int listId, int commentId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("listId", listId);
         data.put("commentId", commentId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertListCommentReport.execute(data);
     }
 
     @Override
-    public void reportMediaComment(int mediaId, int commentId, String report) {
+    public void reportMediaComment(int mediaId, int commentId, int reporteeId, String report) {
         Map<String, Object> data = new HashMap<>();
         data.put("mediaId", mediaId);
         data.put("commentId", commentId);
+        data.put("reporteeId", reporteeId);
         data.put("report", report);
         data.put("date", new Date());
         jdbcInsertMediaCommentReport.execute(data);
@@ -118,7 +96,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
-        List<ListCommentReport> listCommentReportList = jdbcTemplate.query("SELECT * FROM listCommentReport NATURAL JOIN listComment ORDER BY date DESC OFFSET ? LIMIT ?",
+        List<ListCommentReport> listCommentReportList = jdbcTemplate.query("SELECT lcr.*, lc.userid, lc.description FROM listCommentReport lcr JOIN listComment lc ON lcr.commentid = lc.commentid ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 LIST_COMMENT_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM listCommentReport", COUNT_ROW_MAPPER)
@@ -128,7 +106,7 @@ public class ReportDaoJdbcImpl implements ReportDao {
 
     @Override
     public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
-        List<MediaCommentReport> mediaCommentReportList = jdbcTemplate.query("SELECT * FROM mediaCommentReport NATURAL JOIN mediaComment ORDER BY date DESC OFFSET ? LIMIT ?",
+        List<MediaCommentReport> mediaCommentReportList = jdbcTemplate.query("SELECT mcr.*, mc.userid, mc.description FROM mediaCommentReport mcr JOIN mediaComment mc ON mcr.commentid = mc.commentid ORDER BY date DESC OFFSET ? LIMIT ?",
                 new Object[]{page * pageSize, pageSize},
                 MEDIA_COMMENT_REPORT_ROW_MAPPER);
         int listReportCount = jdbcTemplate.query("SELECT COUNT(*) FROM mediaCommentReport", COUNT_ROW_MAPPER)

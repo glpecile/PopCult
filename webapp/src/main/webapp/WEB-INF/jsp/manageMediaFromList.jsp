@@ -2,8 +2,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -18,18 +22,20 @@
 <c:url value="/lists/edit/${list.mediaListId}/update" var="editListPath"/>
 <c:url value="/lists/edit/${list.mediaListId}/addMedia" var="addMediaPath"/>
 <c:url value="/lists/${list.mediaListId}/cancelCollab" var="deleteCollabPath"/>
+<c:url value="/lists/${listId}/collaborators" var="collaboratorsPath"/>
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <c:set var="isOwner" value="${currentUser.userId == list.userId}"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
-            <div class="flex justify-between m-0">
+            <div class="flex flex-wrap justify-between m-0">
                 <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
                 <c:if test="${isOwner}">
                     <button class="btn btn-link my-3.5 px-2.5 group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                             data-bs-toggle="modal" data-bs-target="#editListDetailsModal">
-                        <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i><spring:message code="lists.editDetails"/>
+                        <i class="fas fa-pencil-alt text-gray-500 group-hover:text-white pr-2"></i><spring:message
+                            code="lists.editDetails"/>
                     </button>
                 </c:if>
             </div>
@@ -84,17 +90,15 @@
             </jsp:include>
             <div class="flex justify-between mb-2">
                 <c:if test="${isOwner}">
-                    <jsp:include page="/WEB-INF/jsp/components/confirmDelete.jsp">
+                    <jsp:include page="/WEB-INF/jsp/components/confirmationDeleteListModal.jsp">
                         <jsp:param name="mediaListId" value="${mediaListId}"/>
                         <jsp:param name="deleteListPath" value="/lists/edit/${mediaListId}/delete"/>
-                        <jsp:param name="title" value="Delete this list"/>
-                        <jsp:param name="message" value="Are you sure you want to delete this list?"/>
                     </jsp:include>
                 </c:if>
                 <a href=${listPath}>
                     <button type="button"
                             class="btn btn-warning btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white">
-                        <i class="fas fa-save group-hover:text-white pr-2"></i>
+                        <i class="fas fa-check group-hover:text-white pr-2"></i>
                         <spring:message code="general.done"/>
                     </button>
                 </a>
@@ -172,7 +176,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer flex space-x-2 pb-0">
+                    <div class="modal-footer flex space-x-2">
                         <button type="submit" value="save" name="save"
                                 class="btn btn-success bg-gray-300 hover:bg-green-500 text-gray-700 font-semibold hover:text-white">
                             <i class="fas fa-save group-hover:text-white pr-2"></i><spring:message code="general.save"/>
@@ -219,7 +223,7 @@
                         </h2>
                         <!-- Search Results of every Media -->
                         <div class="row">
-                            <div class="overflow-y-auto h-32">
+                            <div class="overflow-y-auto h-50">
                                 <div class="flex flex-col space-y-2.5">
                                     <form:checkboxes path="media" items="${searchResults}"/>
                                     <form:errors path="media" cssClass="error text-red-400"/>
@@ -245,9 +249,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="manageCollaboratorsModalLabel">
-                        <spring:message code="lists.collab.manage"/>
-                    </h5>
+                    <div class="flex justify-between">
+                        <h5 class="modal-title font-bold text-2xl" id="manageCollaboratorsModalLabel">
+                            <spring:message code="lists.collab.manage"/>
+                        </h5>
+                        <a href="${collaboratorsPath}">
+                            <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
+                                <spring:message code="home.viewAll"/>
+                            </button>
+                        </a>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -259,24 +270,12 @@
                                 </h3>
                             </c:if>
                             <c:forEach var="collaborators" items="${collaboratorsContainer.elements}">
-                                <c:url value="/user/${collaborators.collaboratorUsername}" var="userProfilePath"/>
-                                <div class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between">
-                                    <div class="flex">
-                                        <h4 class="pl-3 py-4 text-xl font-normal tracking-tight">
-                                            <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900">
-                                                <c:out value="${collaborators.collaboratorUsername}"/></a>
-                                            <spring:message code="lists.collab"/>.
-                                        </h4>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <form:form cssClass="m-0" action="${deleteCollabPath}" method="DELETE">
-                                            <input type="hidden" name="collabId" value="${collaborators.collabId}">
-                                            <button type="submit"><i
-                                                    class="fas fa-times text-xl text-gray-800 justify-end p-4 hover:text-red-400 cursor-pointer"
-                                                    title="<spring:message code="lists.collab.cancel"/>"></i></button>
-                                        </form:form>
-                                    </div>
-                                </div>
+                                <jsp:include page="/WEB-INF/jsp/components/collaborator.jsp">
+                                    <jsp:param name="username" value="${collaborators.collaboratorUsername}"/>
+                                    <jsp:param name="collabId" value="${collaborators.collabId}"/>
+                                    <jsp:param name="returnURL" value="/lists/edit/${listId}/manageMedia"/>
+                                    <jsp:param name="deleteCollabPath" value="${deleteCollabPath}"/>
+                                </jsp:include>
                             </c:forEach>
                         </div>
                     </div>

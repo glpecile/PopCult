@@ -38,28 +38,11 @@ public class StudioDaoJdbcImpl implements StudioDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.studioJdbcInsert = new SimpleJdbcInsert(ds).withTableName("studio").usingGeneratedKeyColumns("studioId");
         this.mediaStudioJdbcInsert = new SimpleJdbcInsert(ds).withTableName("mediaStudio");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS studio (" +
-                "studioId SERIAL PRIMARY KEY," +
-                "name TEXT," +
-                "image TEXT)");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS mediaStudio (" +
-                "mediaId INT NOT NULL," +
-                "studioId INT NOT NULL," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId)," +
-                "FOREIGN KEY(studioId) REFERENCES studio(studioId))");
     }
 
     @Override
     public List<Studio> getStudioByMediaId(int mediaId) {
         return jdbcTemplate.query("SELECT studioid, name, image FROM studio NATURAL JOIN mediaStudio WHERE mediaId = ?", new Object[]{mediaId}, STUDIO_ROW_MAPPER);
-    }
-
-    @Override
-    public PageContainer<Integer> getMediaByStudioIds(int studioId, int page, int pageSize) {
-        List<Integer> elements = jdbcTemplate.query("SELECT mediaId FROM mediaStudio WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize}, MEDIA_ID_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
-                .stream().findFirst().orElse(0);
-        return new PageContainer<>(elements, page, pageSize, totalCount);
     }
 
     @Override

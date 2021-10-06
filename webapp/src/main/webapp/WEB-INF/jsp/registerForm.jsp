@@ -2,8 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -46,7 +50,7 @@
                             <spring:message code="register.repeatPassword"/>
                         </form:label>
                         <form:input type="password" cssClass="form-control" path="repeatPassword"/>
-                        <form:errors path="password" cssClass="formError text-sm text-red-500" element="p"/>
+                        <form:errors path="repeatPassword" cssClass="formError text-sm text-red-500" element="p"/>
                     </div>
                     <div class="py-1 px-2.5 text-semibold w-full">
                         <form:label path="username" cssClass="form-label">
