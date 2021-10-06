@@ -8,14 +8,6 @@ public class Token {
     private final String token;
     private final Date expiryDate;
 
-    @Deprecated
-    public Token(int userId, String token, Date expiryDate) {
-        this.userId = userId;
-        this.token = token;
-        this.expiryDate = expiryDate;
-        this.type = TokenType.VERIFICATION.ordinal();
-    }
-
     public Token(int userId, int type, String token, Date expiryDate) {
         this.userId = userId;
         this.type = type;
