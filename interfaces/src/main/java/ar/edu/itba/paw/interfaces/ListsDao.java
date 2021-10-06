@@ -16,7 +16,7 @@ public interface ListsDao {
 
     PageContainer<MediaList> getAllLists(int page, int pageSize);
 
-    List<MediaList> getMediaListByUserId(int userId);//TODO BORRAR -> no, se usa para el dropdown para agregar una media a una lista desde media descr
+    List<MediaList> getMediaListByUserId(int userId);
 
     PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
 
@@ -24,17 +24,17 @@ public interface ListsDao {
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-    List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
+    List<Media> getMediaIdInList(int mediaListId);
 
     PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
 
-    PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
+    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
-    List<MediaList> getNLastAddedList(int amount);//TODO BORRAR. reemplaza la de arriba
+    List<MediaList> getNLastAddedList(int amount);
 
     PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
 
-    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches); //TODO paginar
+    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
 
     MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative);
 

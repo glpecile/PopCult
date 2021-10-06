@@ -24,7 +24,7 @@ public interface ListsService {
 
     List<MediaList> getDiscoveryMediaLists(int pageSize);
 
-    List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
+    List<Media> getMediaIdInList(int mediaListId);
 
     PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
 

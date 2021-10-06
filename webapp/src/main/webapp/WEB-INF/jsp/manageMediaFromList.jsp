@@ -198,7 +198,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <%--           TODO REPLACE WITH COMPONENT WITH VARIABLE URL--%>
+
                     <!-- Search input -->
                     <form class="space-y-2" action="${searchUrl}" method="get"
                           enctype="application/x-www-form-urlencoded">
