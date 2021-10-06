@@ -15,7 +15,7 @@ La compilación se realiza con el siguiente comando:
 mvn clean package
 ```
 
-La versión de Java utilizada en 1.8.0_77.
+La versión de Java utilizada es 1.8.0_77.
 La versión usada de Tomcat es 7.0.76
 
 Las tablas de la base de Datos serán creadas automáticamente al inicar la aplicación.
@@ -30,23 +30,23 @@ Los scripts se encuentran en /persistence/src/main/resources.
 
 ## Credenciales de acceso
 Emails:
-- Admin
+- Admin:
     - popcult.paw@gmail.com
     - 18bf48221da84df80dbe0580a68cf064
-- Mod
+- Mod:
     - popcult.mod@gmail.com
     - 5f6ccd90e2b0932d1fc83c3b1638dbe2
-- User
+- User:
     - popcult.user@gmail.com
     - b1ca0f521dcdfdefc4581207b5581565
 
 Usuarios registrados:
-- Admin
+- Admin:
     - PopCult
     - 123456789
-- Mod
+- Mod:
     - PopMod
     - 123456789
-- User
+- User:
     - PopUser
     - 123456789
