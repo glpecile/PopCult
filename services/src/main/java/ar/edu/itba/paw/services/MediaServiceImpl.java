@@ -45,31 +45,8 @@ public class MediaServiceImpl implements MediaService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Integer> getMediaCount() {
-        return mediaDao.getMediaCount();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
-        return mediaDao.getMediaCountByMediaType(mediaType);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Media> searchMediaByTitle(String title, int page, int pageSize) {
-        return mediaDao.searchMediaByTitle(title, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Integer> getCountSearchMediaByTitle(String title) {
-        return mediaDao.getCountSearchMediaByTitle(title);
-    }
 }

@@ -17,14 +17,7 @@ public interface MediaDao {
 
     PageContainer<Media> getMediaList(int mediaType, int page, int pageSize);
 
-    Optional<Integer> getMediaCount();
-
-    Optional<Integer> getMediaCountByMediaType(int mediaType);
-
     PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize);
 
-    List<Media> searchMediaByTitle(String title, int page, int pageSize);
-
-    Optional<Integer> getCountSearchMediaByTitle(String title);
 
 }

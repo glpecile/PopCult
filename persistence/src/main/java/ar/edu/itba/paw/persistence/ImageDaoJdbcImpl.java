@@ -25,14 +25,6 @@ public class ImageDaoJdbcImpl implements ImageDao {
     public ImageDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("image").usingGeneratedKeyColumns("imageid");
-//        if(jdbcTemplate.query("SELECT COUNT(*) FROM image", COUNT_ROW_MAPPER).stream().findFirst().orElse(0) != 0 ){
-//            final Map<String, Object> data = new HashMap<>();
-//            data.put("photoBlob", null);
-//            data.put("imageContentLength", null);
-//            data.put("imageContentType", null);
-//            jdbcInsert.executeAndReturnKeyHolder(data);
-//        }
-
     }
 
     @Override
