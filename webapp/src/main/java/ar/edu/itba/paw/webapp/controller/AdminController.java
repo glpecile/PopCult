@@ -163,12 +163,14 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/mods/requests", method = {RequestMethod.GET})
     public ModelAndView getModRequests(@RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.info("Moderators requests panel accessed");
+
         ModelAndView mav = new ModelAndView("admin/modsRequests");
         PageContainer<User> requestersContainer = moderatorService.getModRequesters(page - 1, itemsPerPage);
         int moderators = moderatorService.getModerators(0, 1).getTotalCount();
         mav.addObject("requestersContainer", requestersContainer);
         mav.addObject("moderators", moderators);
+        LOGGER.info("Moderators requests panel accessed");
+
         return mav;
     }
 
