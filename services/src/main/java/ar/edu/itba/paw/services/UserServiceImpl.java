@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,8 @@ public class UserServiceImpl implements UserService {
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
     /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getById(int userId) {
@@ -80,6 +84,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         Optional<User> user = userDao.getById(userId);
         if(user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
+            LOGGER.error("userId: {} changing password failed.", userId);
             throw new InvalidCurrentPasswordException();
         }
         return userDao.changePassword(userId, passwordEncoder.encode(newPassword));

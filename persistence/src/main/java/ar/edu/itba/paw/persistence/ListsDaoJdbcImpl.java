@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,13 +31,13 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
     private static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER = RowMappers.MEDIA_LIST_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
-
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
     private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListsDaoJdbcImpl.class);
 
     @Autowired
     public ListsDaoJdbcImpl(final DataSource ds) {
@@ -43,10 +45,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         mediaListjdbcInsert = new SimpleJdbcInsert(ds).withTableName("medialist").usingGeneratedKeyColumns("medialistid");
         listElementjdbcInsert = new SimpleJdbcInsert(ds).withTableName("listelement");
         forkedListsjdbcInsert = new SimpleJdbcInsert(ds).withTableName("forkedlists");
-
-//        jdbcTemplate.execute("ALTER TABLE mediaList DROP COLUMN image");
-//        jdbcTemplate.execute("ALTER TABLE mediaList ADD visibility BOOLEAN NOT NULL default TRUE");
-//        jdbcTemplate.execute("ALTER TABLE mediaList ADD collaborative BOOLEAN NOT NULL default FALSE");
     }
 
     @Override
@@ -163,6 +161,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
         try {
             listElementjdbcInsert.execute(data);
         } catch (DuplicateKeyException e) {
+            LOGGER.error("Media already exists in MediaList");
             throw new MediaAlreadyInListException();
         }
     }
@@ -211,7 +210,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
             try {
                 addToMediaList((int) key.getKey(), mediaIdList);
             } catch (MediaAlreadyInListException e) {
-                //TODO log
+               LOGGER.error("Media already exists in MediaList");
             }
 
             //add to forkedLists table
@@ -253,10 +252,6 @@ public class ListsDaoJdbcImpl implements ListsDao {
         return new PageContainer<>(forks, page, pageSize, count);
     }
 
-    /* users that forked a list
-    List<User> users = jdbcTemplate.query("SELECT u.* FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?) OFFSET ? LIMIT ?", new Object[]{listId, page * pageSize, pageSize}, USER_ROW_MAPPER);
-    int count = jdbcTemplate.query("SELECT COUNT(u.*) FROM users u WHERE userid IN (SELECT userid FROM forkedlists JOIN medialist ON forkedlists.forkedlistid = medialist.medialistid WHERE originalistid = ?)", new Object[]{listId}, COUNT_ROW_MAPPER).stream().findFirst().orElse(0);
-        return new PageContainer<>(users, page, pageSize, count);*/
 
     @Override
     public Optional<MediaList> getForkedFrom(int listId) {
