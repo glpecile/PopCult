@@ -31,7 +31,7 @@
                     <%-- Forked From --%>
                     <c:if test="${forkedFrom != null}">
                         <h4 class="py-2 pb-2.5">
-                            , <spring:message code="lists.forkedFrom"/> <a
+                            <spring:message code="lists.forkedFrom"/> <a
                                 class="text-purple-500 hover:text-purple-900"
                                 href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out
                                 value="${forkedFrom.listName}"/></b></a>
@@ -50,14 +50,7 @@
                             <c:out value="${forks.totalCount}"/>
                         </a>
                         <h4 class="py-2 pb-2.5">
-                            <c:choose>
-                                <c:when test="${forks.totalCount == 1}">
-                                    <spring:message code="lists.forkedTime"/>.
-                                </c:when>
-                                <c:otherwise>
-                                    <spring:message code="lists.forkedTimes"/>.
-                                </c:otherwise>
-                            </c:choose>
+                            <spring:message code="lists.forkedTimes" arguments="${forks.totalCount}"/>
                         </h4>
                     </div>
                 </c:if>

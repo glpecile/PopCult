@@ -5,14 +5,14 @@
 </head>
 <body>
 <div>
-    <a th:href="@{http://pawserver.it.itba.edu.ar/paw-2021b-2/}">
+    <a th:href="@{{basePath}(basePath=${basePath})}">
         <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
     </a>
     <div>
         <h2 th:text="#{email.greeting}"></h2>
         <p th:text="#{email.welcome (${username})}"></p>
         <p th:text="#{email.confirm}"></p>
-        <a th:href="@{http://pawserver.it.itba.edu.ar/paw-2021b-2/register/confirm(token=${token})}">
+        <a th:href="@{{basePath}/register/confirm(token=${token}, basePath=${basePath})}">
             <button style="background-color: #b23cfd;border: none;color: white;padding: 10px;text-align: center;border-radius: 20px;" th:text="#{email.verify}"></button>
         </a>
 

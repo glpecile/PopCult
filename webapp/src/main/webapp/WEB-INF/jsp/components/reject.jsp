@@ -4,16 +4,16 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div>
     <button class="btn btn-danger bg-gray-300 hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
-            data-bs-toggle="modal" data-bs-target="#rejectReportModal">
+            data-bs-toggle="modal" data-bs-target="#reject${param.reportId}ReportModal">
         <i class="far fa-thumbs-down group-hover:text-white pr-2"></i>
         <spring:message code="report.reject"/>
     </button>
-    <div class="modal fade" id="rejectReportModal" tabindex="-1" aria-labelledby="rejectReportModalLabel"
+    <div class="modal fade" id="reject${param.reportId}ReportModal" tabindex="-1" aria-labelledby="reject${param.reportId}ReportModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="rejectReportModalLabel">
+                    <h5 class="modal-title font-bold text-2xl" id="reject${param.reportId}ReportModalLabel">
                         <spring:message code="modal.rejectReport.header"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

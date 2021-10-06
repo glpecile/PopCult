@@ -23,7 +23,7 @@
     <div class="col-8 offset-2 flex-grow">
         <!-- Comments Section -->
         <div class="flex flex-wrap justify-between p-2.5 pb-0">
-            <h1 class="font-bold display-5 pt-2">
+            <h1 class="text-3xl fw-bolder py-2 pt-2">
                 <spring:message code="comments.main.title"/><a class="text-purple-500 hover:text-purple-900"
                                                                href="<c:url value="/media/${mediaId}"/>"> <c:out
                     value="${media.title}"/></a>

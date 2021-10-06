@@ -57,12 +57,12 @@
             <c:choose>
                 <c:when test="${roleType == 'actor'}">
                     <h4 class="font-bold text-2xl">
-                        <spring:message code="staff.starring"/> ${member.name}
+                        <spring:message code="staff.starring" arguments="${member.name}"/>
                     </h4>
                 </c:when>
                 <c:when test="${roleType == 'director'}">
                     <h4 class="font-bold text-2xl">
-                        <spring:message code="staff.directing"/> ${member.name}
+                        <spring:message code="staff.directing" arguments="${member.name}"/>
                     </h4>
                 </c:when>
                 <c:otherwise>

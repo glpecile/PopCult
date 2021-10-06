@@ -3,16 +3,16 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div>
-    <button data-bs-toggle="modal" data-bs-target="#approveModModal"><i
+    <button data-bs-toggle="modal" data-bs-target="#approve${param.id}ModModal"><i
                 class="fas fa-check text-xl text-gray-600 hover:text-green-400 cursor-pointer pl-3"
                 title="<spring:message code="mods.promote"/>"></i>
     </button>
-    <div class="modal fade" id="approveModModal" tabindex="-1" aria-labelledby="approveModModalLabel"
+    <div class="modal fade" id="approve${param.id}ModModal" tabindex="-1" aria-labelledby="approve${param.id}ModModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="approveModModalLabel">
+                    <h5 class="modal-title font-bold text-2xl" id="approve${param.id}ModModalLabel">
                         <spring:message code="mods.promote"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

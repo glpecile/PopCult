@@ -1,6 +1,3 @@
-INSERT INTO users(userid, email, username, password, enabled, imageid, name, role) VALUES (1, 'popcult.hci@gmail.com', 'PopCult', '$2a$10$iAO5lwuBGAQbdfxwvjEd9.eWW9x98MVFriWXoeRgzxJdsweatjuCW',
-                                                                                           true, null, 'PopCult Company', 2);
-
 INSERT INTO medialist(userid, listname, description, creationdate, visibility, collaborative) VALUES (1, 'Kids Movies', 'Movies for the whole family. Enjoy with the kids.', current_date, true, false);
 INSERT INTO listelement(mediaid, medialistid) VALUES (29,1);
 INSERT INTO listelement(mediaid, medialistid) VALUES (30,1);

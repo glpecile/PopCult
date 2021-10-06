@@ -35,7 +35,7 @@ public class ExceptionHandlingController {
             UserNotFoundException.class,
             ImageNotFoundException.class,
             CommentNotFoundException.class,
-            IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
+            IllegalArgumentException.class})
     public ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));

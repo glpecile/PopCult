@@ -34,6 +34,7 @@ public class StaffMemberController {
     @RequestMapping("/staff/{staffMemberId}")
     public ModelAndView staffMemberProfile(@PathVariable("staffMemberId") final int staffMemberId,
                                            @RequestParam(value = "page", defaultValue = "1") final int page){
+        LOGGER.debug("Trying to access staff {}.", staffMemberId);
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final PageContainer<Media> media = staffService.getMedia(staffMemberId, page-1, itemsPerPage);
@@ -43,6 +44,7 @@ public class StaffMemberController {
         map.put("staffMemberId",staffMemberId);
         String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("Staff {} accessed.", staffMemberId);
         return mav;
     }
     @RequestMapping("/staff/{staffMemberId}/{roleType}")
@@ -50,6 +52,7 @@ public class StaffMemberController {
                                      @PathVariable("roleType") final String roleType,
                                      @RequestParam(value = "page", defaultValue = "1") final int page){
 
+        LOGGER.debug("Trying to access staff {} as {}",staffMemberId,roleType);
         final ModelAndView mav = new ModelAndView("staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizerRole = RoleType.valueOf(roleType.toUpperCase());
@@ -63,6 +66,7 @@ public class StaffMemberController {
         map.put("roleType", normalizerRole.getRoleType());
         String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}/{roleType}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("Staff {} as {} accessed.",staffMemberId,roleType);
         return mav;
     }
 

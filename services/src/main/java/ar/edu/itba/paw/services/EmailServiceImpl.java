@@ -6,8 +6,12 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +29,10 @@ import java.util.Map;
 @Service
 public class EmailServiceImpl implements EmailService {
     @Autowired
+    @Qualifier("basePath")
+    private String basePath;
+
+    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
@@ -38,6 +46,8 @@ public class EmailServiceImpl implements EmailService {
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String FROM = "noreply@popcult.com";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     @Async
     @Override
@@ -54,13 +64,14 @@ public class EmailServiceImpl implements EmailService {
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException messagingException) {
-            //TODO LOG error
+            LOGGER.error("Sending email failed");
         }
 
     }
 
     private String getHtmlBody(String template, Map<String, Object> variables) {
-        Context thymeleafContext = new Context();
+        Context thymeleafContext = new Context(LocaleContextHolder.getLocale());
+        variables.put("basePath", basePath);
         thymeleafContext.setVariables(variables);
         return templateEngine.process(template, thymeleafContext);
     }
@@ -71,7 +82,7 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("token", token);
-        final String subject = messageSource.getMessage("email.confirmation.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.confirmation.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "registerConfirmation.html", mailMap);
     }
 
@@ -81,7 +92,7 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("token", token);
-        final String subject = messageSource.getMessage("email.resetPassword", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.resetPassword", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "resetPassword.html", mailMap);
     }
 
@@ -90,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendReportCreatedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
-        final String subject = messageSource.getMessage("email.report.created.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.report.created.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "reportCreated.html", mailMap);
     }
 
@@ -99,7 +110,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendReportApprovedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
-        final String subject = messageSource.getMessage("email.report.approved.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.report.approved.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "reportApproved.html", mailMap);
     }
 
@@ -108,7 +119,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendReportRejectedEmail(User to, String report) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
-        final String subject = messageSource.getMessage("email.report.rejected.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.report.rejected.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "reportRejected.html", mailMap);
     }
 
@@ -118,7 +129,7 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("comment", comment.getCommentBody());
         mailMap.put("report", report);
-        final String subject = messageSource.getMessage("email.deleted.comment.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.deleted.comment.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap);
     }
 
@@ -129,7 +140,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("list", mediaList.getListName());
         mailMap.put("listDescription", mediaList.getDescription());
         mailMap.put("report", report);
-        final String subject = messageSource.getMessage("email.deleted.list.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.deleted.list.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
     }
 
@@ -141,7 +152,7 @@ public class EmailServiceImpl implements EmailService {
             mailMap.put("listname", list.getListName());
             mailMap.put("username", requester.getUsername());
             mailMap.put("toUsername", listOwner.getUsername());
-            final String subject = messageSource.getMessage("collabEmail.subject", null, Locale.getDefault());
+            final String subject = messageSource.getMessage("collabEmail.subject", null, LocaleContextHolder.getLocale());
             sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
         });
     }
@@ -153,21 +164,21 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("listname", collaboration.getListname());
         mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
         mailMap.put("listId", collaboration.getListId());
-        final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
     }
 
     @Async
     @Override
     public void sendModRequestApprovedEmail(User to) {
-        final String subject = messageSource.getMessage("email.mod.approved.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.mod.approved.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "modRequestApproved.html", null);
     }
 
     @Async
     @Override
     public void sendModRoleRemovedEmail(User to) {
-        final String subject = messageSource.getMessage("email.mod.removed.subject", null, Locale.getDefault());
+        final String subject = messageSource.getMessage("email.mod.removed.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "modRoleRemoved.html", null);
     }
 }

@@ -12,14 +12,13 @@
                        value=""/>
         <form:errors path="report" cssClass="formError text-red-500" element="p"/>
     </div>
+    <sec:authorize access="hasRole('MOD')">
+        <p class="text-red-400 tracking-tight text-lg py-2">
+            <spring:message code="report.mod.warning"/>
+        </p>
+    </sec:authorize>
     <br>
     <div class="flex justify-end">
-            <%--discard changes--%>
-            <%--                <a href=--%>
-            <%--                        <c:url value="/"/>>--%>
-            <%--                    <button class="btn btn-light my-2" type="button">Discard</button>--%>
-            <%--                </a>--%>
-            <%--save changes--%>
         <button class="btn btn-secondary my-2" id="addReport" name="addReport" type="submit">
             <i class="far fa-flag pr-2 text-white"></i>
             <spring:message code="report"/>

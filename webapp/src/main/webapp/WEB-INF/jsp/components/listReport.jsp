@@ -18,9 +18,11 @@
         <c:url value="/admin/reports/lists/${param.reportId}" var="path"/>
         <jsp:include page="/WEB-INF/jsp/components/reject.jsp">
             <jsp:param name="rejectPath" value="${path}"/>
+            <jsp:param name="reportId" value="${param.reportId}"/>
         </jsp:include>
         <jsp:include page="/WEB-INF/jsp/components/approve.jsp">
             <jsp:param name="approvePath" value="${path}"/>
+            <jsp:param name="reportId" value="${param.reportId}"/>
         </jsp:include>
     </div>
 

@@ -17,9 +17,11 @@
     <div class="flex justify-between py-2">
         <c:url value="/admin/reports/${param.type}/comments/${param.reportId}" var="path"/>
         <jsp:include page="/WEB-INF/jsp/components/reject.jsp">
+            <jsp:param name="reportId" value="${param.reportId}"/>
             <jsp:param name="rejectPath" value="${path}"/>
         </jsp:include>
         <jsp:include page="/WEB-INF/jsp/components/approve.jsp">
+            <jsp:param name="reportId" value="${param.reportId}"/>
             <jsp:param name="approvePath" value="${path}"/>
         </jsp:include>
     </div>

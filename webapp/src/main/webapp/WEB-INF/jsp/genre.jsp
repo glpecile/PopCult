@@ -12,7 +12,7 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>
-        <c:out value="${genreName}"/> &#8226; PopCult
+        <spring:message code="${genreName}"/> &#8226; PopCult
     </title>
 </head>
 <body class="bg-gray-50">
@@ -20,8 +20,8 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 flex-col offset-2 flex flex-grow">
         <div class="row m-0">
-            <h1 class="display-5 fw-bolder py-8"><c:out value="${genreName}"/>
-                <spring:message code="media.genre"/>
+            <h1 class="display-5 fw-bolder py-8">
+                <spring:message code="${genreName}"/>
             </h1>
             <c:if test="${fn:length(genreLists) > 0}">
                 <h4 class="font-bold text-2xl">
@@ -43,8 +43,7 @@
         </div>
         <div class="row m-0">
             <h4 class="font-bold text-2xl">
-                <spring:message code="genre.thereAre"/> <c:out value="${mediaPageContainer.totalCount}"/> <c:out value="${genreName}"/>
-                <spring:message code="general.Films&Series"/>
+                <spring:message code="genre.thereAre" arguments="${mediaPageContainer.totalCount}"/>
             </h4>
             <c:forEach var="media" items="${mediaPageContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 pt-4">

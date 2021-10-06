@@ -16,20 +16,20 @@
         </h4>
     </div>
     <div class="flex justify-between p-3 text-center justify-center items-center">
-        <button data-bs-toggle="modal" data-bs-target="#acceptCollabModal"><i class="fas fa-check text-xl text-gray-600 hover:text-green-400 cursor-pointer"
+        <button data-bs-toggle="modal" data-bs-target="#accept${param.collabId}CollabModal"><i class="fas fa-check text-xl text-gray-600 hover:text-green-400 cursor-pointer"
                 title="Make collaborator"></i></button>
-        <button data-bs-toggle="modal" data-bs-target="#rejectCollabModal"><i class="fas fa-times text-xl text-gray-600 hover:text-red-400 cursor-pointer pl-3"
+        <button data-bs-toggle="modal" data-bs-target="#reject${param.collabId}CollabModal"><i class="fas fa-times text-xl text-gray-600 hover:text-red-400 cursor-pointer pl-3"
                    title="Reject collaboration"></i></button>
     </div>
 </div>
 <%--Modal to decline collaboration--%>
 <div>
-    <div class="modal fade" id="rejectCollabModal" tabindex="-1" aria-labelledby="rejectCollabModalLabel"
+    <div class="modal fade" id="reject${param.collabId}CollabModal" tabindex="-1" aria-labelledby="reject${param.collabId}CollabModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="rejectCollabModalLabel">
+                    <h5 class="modal-title font-bold text-2xl" id="reject${param.collabId}CollabModalLabel">
                         <spring:message code="modal.rejectCollab.header"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -53,12 +53,12 @@
 </div>
 <%--Modal to accept collaboration--%>
 <div>
-    <div class="modal fade" id="acceptCollabModal" tabindex="-1" aria-labelledby="acceptCollabModalLabel"
+    <div class="modal fade" id="accept${param.collabId}CollabModal" tabindex="-1" aria-labelledby="accept${param.collabId}CollabModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-bold text-2xl" id="acceptCollabModalLabel">
+                    <h5 class="modal-title font-bold text-2xl" id="accept${param.collabId}CollabModalLabel">
                         <spring:message code="modal.acceptCollab.header"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
