@@ -58,7 +58,7 @@ public class UserController {
     @Autowired
     private CommentService commentService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaffMemberController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int editablePerPage = 6;
@@ -197,13 +197,15 @@ public class UserController {
 
     @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
     public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
+        LOGGER.debug("{} trying to update settings", form.getUsername());
         if (errors.hasErrors()) {
             LOGGER.error("Form used for user details has errors.");
             return editUserDetails(form);
         }
-        userService.updateUserData(userId, form.getEmail(), form.getUsername(), form.getName());
-        LOGGER.info("User {}'s details updated.", form.getUsername());
-        return new ModelAndView("redirect:/user/" + form.getUsername());
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        userService.updateUserData(userId, user.getEmail(), user.getUsername(), form.getName());
+        LOGGER.info("User {}'s details updated.", user.getUsername());
+        return new ModelAndView("redirect:/user/" + user.getUsername());
     }
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
