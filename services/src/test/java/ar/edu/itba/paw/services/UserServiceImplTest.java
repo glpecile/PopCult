@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
@@ -16,8 +17,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
+import java.util.Optional;
 
-import static ar.edu.itba.paw.services.UserServiceImpl.*;
+import static ar.edu.itba.paw.services.UserServiceImpl.DEFAULT_USER_ROLE;
+import static ar.edu.itba.paw.services.UserServiceImpl.NOT_ENABLED_USER;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -47,10 +51,6 @@ public class UserServiceImplTest {
     @Mock
     private TokenServiceImpl mockTokenService;
 
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         //1 - Setup - Preconditions
@@ -67,5 +67,18 @@ public class UserServiceImplTest {
         Assert.assertEquals(EMAIL, user.getEmail());
     }
 
+    @Test(expected = InvalidCurrentPasswordException.class)
+    public void testIncorrectChangePassword() throws InvalidCurrentPasswordException {
+        //1 - Setup
+        when(mockDao.getById(eq(USER_ID)))
+                .thenReturn(Optional.of(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE)));
+        when(mockPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+        //2
+        userService.changePassword(USER_ID, "incorrectPassword", "newPassword");
+
+        //3 - Asserts
+        Assert.fail();
+    }
 
 }
