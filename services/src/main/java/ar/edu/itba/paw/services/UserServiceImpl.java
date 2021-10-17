@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,10 +71,9 @@ public class UserServiceImpl implements UserService {
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
-        String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
+//        String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
 
-        emailService.sendVerificationEmail(user, token);
-
+//        emailService.sendVerificationEmail(user, token);
         return user;
     }
 
@@ -83,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         Optional<User> user = userDao.getById(userId);
-        if(user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
+        if (user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
             LOGGER.error("userId: {} changing password failed.", userId);
             throw new InvalidCurrentPasswordException();
         }
@@ -157,7 +155,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException {
-        if(imageId == User.DEFAULT_IMAGE) {
+        if (imageId == User.DEFAULT_IMAGE) {
             return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
         }
         return imageService.getImage(imageId);
