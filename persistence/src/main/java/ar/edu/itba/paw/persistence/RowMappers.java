@@ -102,12 +102,12 @@ public class RowMappers {
     /**
      * Token RowMappers.
      */
-    public static final RowMapper<Token> TOKEN_ROW_MAPPER =
-            (rs, rowNum) -> new Token(
-                    rs.getInt("userId"),
-                    rs.getInt("type"),
-                    rs.getString("token"),
-                    rs.getDate("expiryDate"));
+//    public static final RowMapper<Token> TOKEN_ROW_MAPPER =
+//            (rs, rowNum) -> new Token(
+//                    rs.getInt("userId"),
+//                    rs.getInt("type"),
+//                    rs.getString("token"),
+//                    rs.getDate("expiryDate"));
 
     /**
      * Watched Media RowMappers.

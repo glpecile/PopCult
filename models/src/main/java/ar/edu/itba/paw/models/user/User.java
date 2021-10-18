@@ -84,7 +84,7 @@ public class User {
     }
 
     public Integer getImageId() {
-        return imageId;
+        return imageId == null ? 0 : imageId;
     }
 
     public int getRole() {

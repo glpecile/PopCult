@@ -225,7 +225,7 @@ public class UserController {
         }
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         try {
-            userService.changePassword(user.getUserId(), form.getCurrentPassword(), form.getNewPassword());
+            userService.changePassword(user, form.getCurrentPassword(), form.getNewPassword());
         } catch (InvalidCurrentPasswordException e) {
             LOGGER.error("Changing password failed.");
             errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
@@ -293,14 +293,14 @@ public class UserController {
             LOGGER.error("Uploading profile picture failed.");
             return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
         }
-        userService.uploadUserProfileImage(user.getUserId(), imageForm.getImage().getBytes());
+        userService.uploadUserProfileImage(user, imageForm.getImage().getBytes());
         LOGGER.info("{} profile picture uploaded successfully", username);
         return new ModelAndView("redirect:/user/" + username);
     }
 
     @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody
-    byte[] getProfileImage(@PathVariable("imageId") final int imageId) {
+    byte[] getProfileImage(@PathVariable("imageId") final Integer imageId) {
         LOGGER.debug("Trying to access profile image");
         byte[] profileImage = new byte[0];
         try {

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.interfaces.exceptions.*;
-import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
@@ -17,7 +16,7 @@ public interface UserService {
 
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
-    Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException;
+    Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException;
 
     void forgotPassword(String email) throws EmailNotExistsException;
 
@@ -27,11 +26,11 @@ public interface UserService {
 
     boolean confirmRegister(Token token);
 
-    void resendToken(String token);
+    void resendToken(Token token);
 
-    Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
+    Optional<Image> getUserProfileImage(Integer imageId) throws ImageConversionException;
 
-    void uploadUserProfileImage(int userId, byte[] photoBlob);
+    void uploadUserProfileImage(User user, byte[] photoBlob);
 
     void updateUserData(int userId, String email, String username, String name);
 }

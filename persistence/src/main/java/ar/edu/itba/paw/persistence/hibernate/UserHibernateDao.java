@@ -4,11 +4,9 @@ import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.persistence.UserDaoJdbcImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,7 +21,7 @@ public class UserHibernateDao implements UserDao {
     @PersistenceContext
     private EntityManager em;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoJdbcImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserHibernateDao.class);
 
     @Override
     public Optional<User> getById(int userId) {
@@ -53,25 +51,25 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Optional<User> changePassword(int userId, String password) {
-        //TODO
+        //TODO borrar
         return Optional.empty();
     }
 
     @Override
     public Optional<User> confirmRegister(int userId, boolean enabled) {
-        //TODO
+        //TODO borrar
         return Optional.empty();
     }
 
     @Override
     public void updateUserProfileImage(int userId, int imageId) {
-        //TODO
+        //TODO borrar
 
     }
 
     @Override
     public void updateUserData(int userId, String email, String username, String name) {
-        //TODO
+        //TODO borrar
 
     }
 }

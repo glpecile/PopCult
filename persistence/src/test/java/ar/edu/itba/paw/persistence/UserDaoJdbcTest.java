@@ -141,18 +141,18 @@ public class UserDaoJdbcTest {
         Assert.assertEquals(newPassword, user.get().getPassword());
     }
 
-    @Rollback
-    @Test
-    public void testConfirmRegister() {
-        //1 - Setup
-
-        //2
-        final Optional<User> user = userDaoJdbc.confirmRegister(ALREADY_EXISTS_USER_ID, ENABLED_USER);
-
-        //3 - Asserts
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(ALREADY_EXISTS_EMAIL, user.get().getEmail());
-        Assert.assertTrue(user.get().isEnabled());
-    }
+//    @Rollback
+//    @Test
+//    public void testConfirmRegister() {
+//        //1 - Setup
+//
+//        //2
+//        final Optional<User> user = userDaoJdbc.confirmRegister(ALREADY_EXISTS_USER_ID, ENABLED_USER);
+//
+//        //3 - Asserts
+//        Assert.assertTrue(user.isPresent());
+//        Assert.assertEquals(ALREADY_EXISTS_EMAIL, user.get().getEmail());
+//        Assert.assertTrue(user.get().isEnabled());
+//    }
 
 }
