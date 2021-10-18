@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.user;
 import ar.edu.itba.paw.models.image.Image;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -33,14 +34,15 @@ public class User {
     @JoinColumn(name = "imageid")
     private Image image;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private int role;
+    private UserRole role;
 
     /* default */ User() {
         //Just for Hibernate, we love you!
     }
 
-    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, int role) {
+    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, UserRole role) {
         this.userId = userId;
         this.email = email;
         this.username = username;
@@ -90,7 +92,7 @@ public class User {
         return image == null ? DEFAULT_IMAGE : image.getImageId();
     }
 
-    public int getRole() {
+    public UserRole getRole() {
         return role;
     }
 
@@ -122,7 +124,7 @@ public class User {
         this.image = image;
     }
 
-    public void setRole(int role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -136,7 +138,7 @@ public class User {
         private Integer userId = null;
         private boolean enabled = false;
         private Image image = null;
-        private int role = Roles.USER.ordinal();
+        private UserRole role = UserRole.USER;
 
         public Builder(String email, String username, String password, String name) {
             this.email = email;
@@ -160,7 +162,7 @@ public class User {
             return this;
         }
 
-        public Builder role(int role) {
+        public Builder role(UserRole role) {
             this.role = role;
             return this;
         }

@@ -3,7 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ModeratorDao;
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.models.user.ModRequest;
+import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ModeratorDaoJdbcImpl implements ModeratorDao {
@@ -40,20 +38,20 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
 
     @Override
     public PageContainer<User> getModerators(int page, int pageSize) {
-        List<User> moderators = jdbcTemplate.query("SELECT * FROM users WHERE role = ? OFFSET ? LIMIT ?", new Object[]{Roles.MOD.ordinal(), page * pageSize, pageSize}, USER_ROW_MAPPER);
-        int moderatorsCount = jdbcTemplate.query("SELECT COUNT(*) FROM users WHERE role = ?", new Object[]{Roles.MOD.ordinal()}, COUNT_ROW_MAPPER)
+        List<User> moderators = jdbcTemplate.query("SELECT * FROM users WHERE role = ? OFFSET ? LIMIT ?", new Object[]{UserRole.MOD.ordinal(), page * pageSize, pageSize}, USER_ROW_MAPPER);
+        int moderatorsCount = jdbcTemplate.query("SELECT COUNT(*) FROM users WHERE role = ?", new Object[]{UserRole.MOD.ordinal()}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<User>(moderators, page, pageSize, moderatorsCount);
     }
 
     @Override
     public void promoteToMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.MOD.ordinal(), userId);
+        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", UserRole.MOD.ordinal(), userId);
     }
 
     @Override
     public void removeMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", Roles.USER.ordinal(), userId);
+        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", UserRole.USER.ordinal(), userId);
     }
 
     @Override
@@ -66,9 +64,9 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
     }
 
     @Override
-    public void addModRequest(int userId) throws ModRequestAlreadyExistsException {
+    public ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
-        args.put("userId", userId);
+        args.put("userId", user.getUserId());
         args.put("date", new Date());
         try {
             jdbcInsert.execute(args);
@@ -76,10 +74,11 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
             LOGGER.error("Mod request was already sent.");
             throw new ModRequestAlreadyExistsException();
         }
+        return new ModRequest(null, user, new Date());
     }
 
     @Override
-    public void removeRequest(int userId) {
-        jdbcTemplate.update("DELETE FROM modRequests WHERE userId = ?", userId);
+    public void removeRequest(User user) {
+        jdbcTemplate.update("DELETE FROM modRequests WHERE userId = ?", user.getUserId());
     }
 }
