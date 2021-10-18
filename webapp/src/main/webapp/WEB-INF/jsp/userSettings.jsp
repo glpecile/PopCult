@@ -72,7 +72,6 @@
                         </button>
                     </a>
                         <%-- Save changes --%>
-                    <input type="hidden" name="userId" id="userId" value="<c:out value="${user.userId}"/>">
                     <button class="btn btn-success bg-gray-300 hover:bg-green-400 text-gray-700 font-semibold hover:text-white my-2"
                             id="editUser" name="editUser" type="submit">
                         <i class="fas fa-save group-hover:text-white pr-2"></i>

@@ -33,11 +33,11 @@ public class ImageDaoJdbcImpl implements ImageDao {
     }
 
     @Override
-    public Optional<Image> uploadImage(byte[] photoBlob) {
+    public Image uploadImage(byte[] photoBlob) {
         final Map<String, Object> data = new HashMap<>();
         data.put("photoBlob", photoBlob);
         KeyHolder key = jdbcInsert.executeAndReturnKeyHolder(data);
-        return Optional.of(new Image((int) key.getKey(), photoBlob));
+        return new Image((int) key.getKey(), photoBlob);
     }
 
 }

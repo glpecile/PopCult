@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.TokenDao;
 import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.models.user.Token;
+import ar.edu.itba.paw.models.user.TokenType;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +24,9 @@ public class TokenServiceImpl implements TokenService {
 
     @Transactional
     @Override
-    public String createToken(int userId, int type) {
+    public Token createToken(User user, TokenType type) {
         String token = UUID.randomUUID().toString();
-        tokenDao.createToken(userId, type, token, calculateExpiryDate(EXPIRATION));
-        return token;
+        return tokenDao.createToken(user, type, token, calculateExpiryDate(EXPIRATION));
     }
 
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
@@ -49,14 +50,14 @@ public class TokenServiceImpl implements TokenService {
 
     @Transactional(readOnly = true)
     @Override
-    public boolean isValidToken(Token token, int type) {
+    public boolean isValidToken(Token token, TokenType type) {
         Calendar calendar = Calendar.getInstance();
         return token.getType() == type && token.getExpiryDate().getTime() >= calendar.getTime().getTime();
     }
 
     @Transactional
     @Override
-    public void renewToken(String token) {
-        tokenDao.renewToken(token, calculateExpiryDate(EXPIRATION));
+    public void renewToken(Token token) {
+        token.setExpiryDate(calculateExpiryDate(EXPIRATION));
     }
 }

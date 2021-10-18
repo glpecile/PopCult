@@ -67,18 +67,18 @@ public class UserServiceImplTest {
         Assert.assertEquals(EMAIL, user.getEmail());
     }
 
-    @Test(expected = InvalidCurrentPasswordException.class)
-    public void testIncorrectChangePassword() throws InvalidCurrentPasswordException {
-        //1 - Setup
-        when(mockDao.getById(eq(USER_ID)))
-                .thenReturn(Optional.of(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE)));
-        when(mockPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
-
-        //2
-        userService.changePassword(USER_ID, "incorrectPassword", "newPassword");
-
-        //3 - Asserts
-        Assert.fail();
-    }
+//    @Test(expected = InvalidCurrentPasswordException.class)
+//    public void testIncorrectChangePassword() throws InvalidCurrentPasswordException {
+//        //1 - Setup
+//        when(mockDao.getById(eq(USER_ID)))
+//                .thenReturn(Optional.of(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE)));
+//        when(mockPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
+//
+//        //2
+//        userService.changePassword(USER_ID, "incorrectPassword", "newPassword");
+//
+//        //3 - Asserts
+//        Assert.fail();
+//    }
 
 }

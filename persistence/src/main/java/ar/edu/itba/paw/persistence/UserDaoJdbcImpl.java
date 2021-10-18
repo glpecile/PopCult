@@ -49,10 +49,10 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    public User register(String email, String username, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
-        args.put("username", userName);
+        args.put("username", username);
         args.put("password", password);
         args.put("name", name);
         args.put("enabled", enabled);
@@ -67,12 +67,12 @@ public class UserDaoJdbcImpl implements UserDao {
                 throw new EmailAlreadyExistsException();
             }
             if (e.getMessage().contains("users_username_key")) {
-                LOGGER.error("Username {} already in use by another user", userName);
+                LOGGER.error("Username {} already in use by another user", username);
                 throw new UsernameAlreadyExistsException();
             }
         }
-        return new User(userId, email, userName, password, name, enabled, null, role);
-
+//        return new User(userId, email, username, password, name, enabled, null, role);
+        return new User.Builder(email, username, password, name).userId(userId).build();
     }
 
     @Override

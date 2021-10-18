@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,38 +71,37 @@ public class UserServiceImpl implements UserService {
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
 
-        String token = tokenService.createToken(user.getUserId(), TokenType.VERIFICATION.ordinal());
+        Token token = tokenService.createToken(user, TokenType.VERIFICATION);
 
-        emailService.sendVerificationEmail(user, token);
-
+        emailService.sendVerificationEmail(user, token.getToken());
         return user;
     }
 
     @Transactional
     @Override
-    public Optional<User> changePassword(int userId, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
-        Optional<User> user = userDao.getById(userId);
-        if(user.isPresent() && !passwordEncoder.matches(currentPassword, user.get().getPassword())) {
-            LOGGER.error("userId: {} changing password failed.", userId);
+    public Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            LOGGER.error("userId: {} changing password failed.", user.getUserId());
             throw new InvalidCurrentPasswordException();
         }
-        return userDao.changePassword(userId, passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return Optional.of(user);
     }
 
     @Transactional
     @Override
     public void forgotPassword(String email) throws EmailNotExistsException {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
-        String token = tokenService.createToken(user.getUserId(), TokenType.RESET_PASS.ordinal());
-        emailService.sendResetPasswordEmail(user, token);
+        Token token = tokenService.createToken(user, TokenType.RESET_PASS);
+        emailService.sendResetPasswordEmail(user, token.getToken());
     }
 
     @Transactional
     @Override
     public boolean resetPassword(Token token, String newPassword) {
-        boolean isValidToken = tokenService.isValidToken(token, TokenType.RESET_PASS.ordinal());
+        boolean isValidToken = tokenService.isValidToken(token, TokenType.RESET_PASS);
         if (isValidToken) {
-            userDao.changePassword(token.getUserId(), passwordEncoder.encode(newPassword));
+            token.getUser().setPassword(passwordEncoder.encode(newPassword));
             tokenService.deleteToken(token);
         }
         return isValidToken;
@@ -122,9 +120,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public boolean confirmRegister(Token token) {
-        boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION.ordinal());
+        boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION);
         if (isValidToken) {
-            userDao.confirmRegister(token.getUserId(), ENABLED_USER).ifPresent(this::authWithoutPassword);
+            final User user = token.getUser();
+            user.setEnabled(ENABLED_USER);
+            authWithoutPassword(user);
             tokenService.deleteToken(token);
         }
         return isValidToken;
@@ -141,23 +141,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void resendToken(String token) {
+    public void resendToken(Token token) {
         tokenService.renewToken(token);
-        tokenService.getToken(token).ifPresent(validToken -> {
-            getById(validToken.getUserId()).ifPresent(user -> {
-                if (validToken.getType() == TokenType.VERIFICATION.ordinal()) {
-                    emailService.sendVerificationEmail(user, validToken.getToken());
-                } else if (validToken.getType() == TokenType.RESET_PASS.ordinal()) {
-                    emailService.sendResetPasswordEmail(user, validToken.getToken());
-                }
-            });
-        });
+        if (token.getType() == TokenType.VERIFICATION) {
+            emailService.sendVerificationEmail(token.getUser(), token.getToken());
+        } else if (token.getType() == TokenType.RESET_PASS) {
+            emailService.sendResetPasswordEmail(token.getUser(), token.getToken());
+        }
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException {
-        if(imageId == User.DEFAULT_IMAGE) {
+        if (imageId == User.DEFAULT_IMAGE) {
             return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
         }
         return imageService.getImage(imageId);
@@ -165,15 +161,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void uploadUserProfileImage(int userId, byte[] photoBlob) {
-        imageService.uploadImage(photoBlob).ifPresent(image -> {
-            userDao.updateUserProfileImage(userId, image.getImageId());
-        });
+    public void uploadUserProfileImage(User user, byte[] photoBlob) {
+        final Image image = imageService.uploadImage(photoBlob);
+        user.setImage(image);
     }
 
     @Transactional
     @Override
-    public void updateUserData(int userId, String email, String username, String name) {
-        userDao.updateUserData(userId, email, username, name);
+    public void updateUserData(User user, String name) {
+        user.setName(name);
     }
 }
