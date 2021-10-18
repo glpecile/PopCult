@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Image> getUserProfileImage(Integer imageId) throws ImageConversionException {
+    public Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException {
         if (imageId == User.DEFAULT_IMAGE) {
             return imageService.getImage(DEFAULT_PROFILE_IMAGE_PATH);
         }
@@ -163,12 +163,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void uploadUserProfileImage(User user, byte[] photoBlob) {
         final Image image = imageService.uploadImage(photoBlob);
-        user.setImageId(image.getImageId());
+        user.setImage(image);
     }
 
     @Transactional
     @Override
-    public void updateUserData(int userId, String email, String username, String name) {
-        userDao.updateUserData(userId, email, username, name);
+    public void updateUserData(User user, String name) {
+        user.setName(name);
     }
 }

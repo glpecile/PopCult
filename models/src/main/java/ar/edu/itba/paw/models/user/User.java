@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.models.user;
 
+import ar.edu.itba.paw.models.image.Image;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
-    public static final Integer DEFAULT_IMAGE = null;
+    public static final int DEFAULT_IMAGE = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
@@ -27,8 +29,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled;
 
-    @Column()
-    private Integer imageId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imageid")
+    private Image image;
 
     @Column(nullable = false)
     private int role;
@@ -37,14 +40,14 @@ public class User {
         //Just for Hibernate, we love you!
     }
 
-    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Integer imageId, int role) {
+    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, int role) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.password = password;
         this.name = name;
         this.enabled = enabled;
-        this.imageId = imageId;
+        this.image = image;
         this.role = role;
     }
 
@@ -55,7 +58,7 @@ public class User {
         this.password = builder.password;
         this.name = builder.name;
         this.enabled = builder.enabled;
-        this.imageId = builder.imageId;
+        this.image = builder.image;
         this.role =  builder.role;
     }
 
@@ -83,8 +86,8 @@ public class User {
         return enabled;
     }
 
-    public Integer getImageId() {
-        return imageId == null ? 0 : imageId;
+    public int getImageId() {
+        return image == null ? DEFAULT_IMAGE : image.getImageId();
     }
 
     public int getRole() {
@@ -115,8 +118,8 @@ public class User {
         this.enabled = enabled;
     }
 
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public void setRole(int role) {
@@ -132,7 +135,7 @@ public class User {
         //Initialized to default values
         private Integer userId = null;
         private boolean enabled = false;
-        private Integer imageId = DEFAULT_IMAGE;
+        private Image image = null;
         private int role = Roles.USER.ordinal();
 
         public Builder(String email, String username, String password, String name) {
@@ -152,8 +155,8 @@ public class User {
             return this;
         }
 
-        public Builder imageId(Integer imageId) {
-            this.imageId = imageId;
+        public Builder image(Image image) {
+            this.image = image;
             return this;
         }
 

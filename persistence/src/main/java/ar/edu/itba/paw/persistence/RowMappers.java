@@ -96,7 +96,7 @@ public class RowMappers {
                     rs.getString("password"),
                     rs.getString("name"),
                     rs.getBoolean("enabled"),
-                    rs.getInt("imageId"),
+                    null,
                     rs.getInt("role"));
 
     /**

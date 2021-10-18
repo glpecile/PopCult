@@ -28,9 +28,9 @@ public interface UserService {
 
     void resendToken(Token token);
 
-    Optional<Image> getUserProfileImage(Integer imageId) throws ImageConversionException;
+    Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
 
     void uploadUserProfileImage(User user, byte[] photoBlob);
 
-    void updateUserData(int userId, String email, String username, String name);
+    void updateUserData(User user, String name);
 }

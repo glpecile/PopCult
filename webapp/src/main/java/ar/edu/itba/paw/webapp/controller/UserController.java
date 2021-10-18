@@ -196,14 +196,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors, @RequestParam("userId") final int userId) {
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors) {
         LOGGER.debug("{} trying to update settings", form.getUsername());
         if (errors.hasErrors()) {
             LOGGER.error("Form used for user details has errors.");
             return editUserDetails(form);
         }
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        userService.updateUserData(userId, user.getEmail(), user.getUsername(), form.getName());
+        userService.updateUserData(user, form.getName());
         LOGGER.info("User {}'s details updated.", user.getUsername());
         return new ModelAndView("redirect:/user/" + user.getUsername());
     }
