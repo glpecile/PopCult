@@ -27,11 +27,10 @@ public class ImageDaoJdbcTest {
     @Test
     public void testUploadImage() {
         //2
-        Optional<Image> image = imageDaoJdbc.uploadImage(byteblob);
+        Image image = imageDaoJdbc.uploadImage(byteblob);
 
         //3
-        Assert.assertTrue(image.isPresent());
-        Assert.assertArrayEquals(byteblob, image.get().getImageBlob());
+        Assert.assertArrayEquals(byteblob, image.getImageBlob());
     }
 
 }

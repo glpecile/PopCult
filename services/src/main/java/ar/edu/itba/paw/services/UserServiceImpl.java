@@ -162,9 +162,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void uploadUserProfileImage(User user, byte[] photoBlob) {
-        imageService.uploadImage(photoBlob).ifPresent(image -> {
-            user.setImageId(image.getImageId());
-        });
+        final Image image = imageService.uploadImage(photoBlob);
+        user.setImageId(image.getImageId());
     }
 
     @Transactional
