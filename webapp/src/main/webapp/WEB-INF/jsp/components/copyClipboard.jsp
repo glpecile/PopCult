@@ -4,7 +4,7 @@
 <share>
     <div class="flex flex-col justify-center items-center">
         <div class="rounded-full bg-purple-400 hover:bg-purple-300 w-20 h-20 flex items-center justify-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-            <a class="stretched-link" href="javascript:copyToClipboard()">
+            <a class="cursor-pointer stretched-link" href="javascript:copyToClipboard()">
                 <p class="fas fa-link text-center text-4xl text-white"></p>
             </a>
         </div>
@@ -18,4 +18,12 @@
         </div>
     </div>
 </share>
-<script type="text/javascript" src="<c:url value="/resources/js/components/share.js"/>"></script>
+<script>
+    function copyToClipboard() {
+        navigator.clipboard.writeText(window.location.href);
+        $('#notification-container').show();
+        setTimeout(() => {
+            $('#notification-container').hide();
+        }, 3000);
+    }
+</script>
