@@ -54,8 +54,8 @@ public class AdminController {
         LOGGER.info("List reports accessed");
         ModelAndView mav = new ModelAndView("admin/listReports");
         PageContainer<ListReport> listReportPageContainer = reportService.getListReports(page - 1, itemsPerPage);
-        int listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
-        int mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
+        long listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
+        long mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
         mav.addObject("listReportPageContainer", listReportPageContainer);
         mav.addObject("listCommentsReports", listCommentsReports);
         mav.addObject("mediaCommentsReports", mediaCommentsReports);
@@ -85,8 +85,8 @@ public class AdminController {
         LOGGER.info("List comments reports accessed");
         ModelAndView mav = new ModelAndView("admin/listCommentReports");
         PageContainer<ListCommentReport> listCommentReportPageContainer = reportService.getListCommentReports(page - 1, itemsPerPage);
-        int listReports = reportService.getListReports(0, 1).getTotalCount();
-        int mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
+        long listReports = reportService.getListReports(0, 1).getTotalCount();
+        long mediaCommentsReports = reportService.getMediaCommentReports(0, 1).getTotalCount();
         mav.addObject("listCommentReportPageContainer", listCommentReportPageContainer);
         mav.addObject("listReports", listReports);
         mav.addObject("mediaCommentsReports", mediaCommentsReports);
@@ -116,8 +116,8 @@ public class AdminController {
         LOGGER.info("Media comments reports accessed");
         ModelAndView mav = new ModelAndView("admin/mediaCommentReports");
         PageContainer<MediaCommentReport> mediaCommentReportPageContainer = reportService.getMediaCommentReports(page - 1, itemsPerPage);
-        int listReports = reportService.getListReports(0, 1).getTotalCount();
-        int listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
+        long listReports = reportService.getListReports(0, 1).getTotalCount();
+        long listCommentsReports = reportService.getListCommentReports(0, 1).getTotalCount();
         mav.addObject("mediaCommentReportPageContainer", mediaCommentReportPageContainer);
         mav.addObject("listReports", listReports);
         mav.addObject("listCommentsReports", listCommentsReports);
@@ -147,7 +147,7 @@ public class AdminController {
         LOGGER.info("Moderators panel accessed");
         ModelAndView mav = new ModelAndView("admin/modsPanel");
         PageContainer<User> moderatorsContainer = moderatorService.getModerators(page - 1, itemsPerPage);
-        int modRequests = moderatorService.getModRequesters(0, 1).getTotalCount();
+        long modRequests = moderatorService.getModRequesters(0, 1).getTotalCount();
         mav.addObject("moderatorsContainer", moderatorsContainer);
         mav.addObject("modRequests", modRequests);
         return mav;
@@ -168,7 +168,7 @@ public class AdminController {
 
         ModelAndView mav = new ModelAndView("admin/modsRequests");
         PageContainer<User> requestersContainer = moderatorService.getModRequesters(page - 1, itemsPerPage);
-        int moderators = moderatorService.getModerators(0, 1).getTotalCount();
+        long moderators = moderatorService.getModerators(0, 1).getTotalCount();
         mav.addObject("requestersContainer", requestersContainer);
         mav.addObject("moderators", moderators);
         LOGGER.info("Moderators requests panel accessed");
