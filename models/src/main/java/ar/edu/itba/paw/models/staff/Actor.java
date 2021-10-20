@@ -6,7 +6,7 @@ import javax.persistence.*;
 @AssociationOverrides({
         @AssociationOverride(name = "staffMember",
                 joinTable = @JoinTable(name = "crew",
-                        joinColumns = @JoinColumn(name="staffmemberid"),
+                        joinColumns = @JoinColumn(name = "staffmemberid"),
                         inverseJoinColumns = @JoinColumn(name = "mediaid")
                 )
         )
@@ -16,9 +16,10 @@ public class Actor extends Role {
     @Column(length = 100, nullable = false)
     private String characterName;
 
-    public Actor(){
+    public Actor() {
 
     }
+
     public Actor(StaffMember staffMember, String characterName) {
         super(staffMember);
         this.characterName = characterName;

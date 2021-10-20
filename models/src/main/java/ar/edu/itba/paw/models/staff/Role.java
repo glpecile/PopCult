@@ -14,9 +14,10 @@ public abstract class Role {
     @JoinColumn(name = "staffmemberid")
     private StaffMember staffMember;
 
-    public Role(){
+    public Role() {
 
     }
+
     public Role(StaffMember staffMember) {
         super();
         this.staffMember = staffMember;
