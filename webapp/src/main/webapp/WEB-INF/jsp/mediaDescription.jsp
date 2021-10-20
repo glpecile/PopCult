@@ -104,12 +104,12 @@
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(studioList) > 0}">
+                <c:if test="${fn:length(media.studios) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.studio"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="studio" items="${studioList}">
+                        <c:forEach var="studio" items="${media.studios}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${studio.name}"/>
                                 <jsp:param name="tooltip" value=""/>
