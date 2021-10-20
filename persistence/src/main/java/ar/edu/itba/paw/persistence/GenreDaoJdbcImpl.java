@@ -11,10 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class GenreDaoJdbcImpl implements GenreDao {
@@ -34,31 +31,12 @@ public class GenreDaoJdbcImpl implements GenreDao {
     }
 
     @Override
-    public List<String> getGenreByMediaId(int mediaId) {
-        return jdbcTemplate.query("SELECT name FROM mediaGenre NATURAL JOIN genre WHERE mediaId = ?", new Object[]{mediaId}, STRING_NAME_ROW_MAPPER);
-    }
-
-    @Override
-    public PageContainer<Media> getMediaByGenre(int genreId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaGenre NATURAL JOIN media WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genreId, pageSize * page, pageSize},
+    public PageContainer<Media> getMediaByGenre(Genre genre, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaGenre NATURAL JOIN media WHERE genreId = ? OFFSET ? LIMIT ?", new Object[] {genre, pageSize * page, pageSize},
                 MEDIA_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genre}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements,page,pageSize,totalCount);
     }
 
-    @Override
-    public Optional<Integer> getMediaCountByGenre(int genreId) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaGenre WHERE genreId = ?", new Object[] {genreId}, COUNT_ROW_MAPPER)
-                .stream().findFirst();
-    }
-
-    public void loadGenres() {
-        Map<String, Object> data = new HashMap<>();
-        jdbcTemplate.execute("TRUNCATE genre CASCADE");
-        for (Genre genre : Genre.values()) {
-            data.put("name", genre.getGenre());
-            genrejdbcInsert.execute(data);
-        }
-    }
 }
