@@ -17,12 +17,15 @@
             <div class="relative inline-block">
                 <img class="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src="<c:url value="/user/image/${param.imageId}"/>">
+                <!-- Edit button -->
                 <button type="button"
                         class="absolute top-0 right-0 inline-block btn btn-white w-10 h-10 p-0 text-gray-400 hover:text-gray-900 btn-rounded rounded-full"
                         data-bs-toggle="modal"
                         data-bs-target="#uploadModal">
                     <i class="fas fa-pencil-alt text-gray-500"></i>
                 </button>
+                <!-- Role badge -->
+                <jsp:include page="/WEB-INF/jsp/components/profileRoleBadge.jsp"/>
             </div>
             <!-- Username and edit -->
             <div class="flex justify-center items-center space-x-3">
@@ -69,8 +72,11 @@
             </div>
         </c:when>
         <c:otherwise>
-            <img class="rounded-full h-40 w-40 flex items-center" alt="profile_image"
-                 src="<c:url value="/user/image/${param.imageId}"/>">
+            <div class="relative inline-block">
+                <img class="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
+                     src="<c:url value="/user/image/${param.imageId}"/>">
+                <!-- TODO: Add other user badge -->
+            </div>
             <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
             <h4>
                 <spring:message code="profile.otherDescription" arguments="${param.username}"/>
