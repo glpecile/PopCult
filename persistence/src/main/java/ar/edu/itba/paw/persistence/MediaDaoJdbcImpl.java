@@ -2,8 +2,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,13 +38,13 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public List<Media> getById(List<Integer> mediaIds) {
-        if (mediaIds.size() == 0)
+    public List<Media> getById(List<Integer> mediaList) {
+        if (mediaList.size() == 0)
             return new ArrayList<>();
-        String inSql = String.join(",", Collections.nCopies(mediaIds.size(), "?"));
+        String inSql = String.join(",", Collections.nCopies(mediaList.size(), "?"));
         return jdbcTemplate.query(
                 String.format("SELECT * FROM media WHERE mediaId IN (%s)", inSql),
-                mediaIds.toArray(), MEDIA_ROW_MAPPER);
+                mediaList.toArray(), MEDIA_ROW_MAPPER);
 
     }
 
@@ -58,7 +58,7 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public PageContainer<Media> getMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE type = ? OFFSET ? LIMIT ?",
                 new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
         int mediaCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?",
@@ -67,7 +67,7 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE type = ? " +
                         "ORDER BY releasedate DESC OFFSET ? LIMIT ?  ",
                 new Object[]{mediaType, pageSize * page, pageSize}, MEDIA_ROW_MAPPER);
