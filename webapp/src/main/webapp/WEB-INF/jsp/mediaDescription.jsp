@@ -85,7 +85,7 @@
                 <div class="text-xl py-2">
                     <span><c:out value="${media.releaseYear}"/></span>
                     <span class="mx-3 mt-3">&#8226;</span>
-                    <span><c:out value="${media.country}"/></span>
+                    <span><c:out value="${media.country.countryName}"/></span>
                 </div>
                 <p class="lead text-justify"><c:out value="${media.description}"/></p>
                 <br>
