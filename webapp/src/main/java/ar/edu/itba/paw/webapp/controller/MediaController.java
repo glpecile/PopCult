@@ -67,8 +67,8 @@ public class MediaController {
     public ModelAndView home() {
         LOGGER.debug("Trying to access home.");
         final ModelAndView mav = new ModelAndView("home");
-        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS, 0, itemsPerContainer);
+        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE, 0, itemsPerContainer);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
@@ -244,7 +244,7 @@ public class MediaController {
         LOGGER.debug("Trying to access films");
         final ModelAndView mav = new ModelAndView("films");
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS.ordinal(), page - 1, itemsPerPage);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();
@@ -259,7 +259,7 @@ public class MediaController {
         LOGGER.debug("Trying to access series");
         final ModelAndView mav = new ModelAndView("series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();

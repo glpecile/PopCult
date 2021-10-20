@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,13 +37,13 @@ public class MediaServiceImpl implements MediaService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {
         return mediaDao.getMediaList(mediaType, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
     }
 
