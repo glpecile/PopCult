@@ -91,16 +91,12 @@ public class MediaController {
         LOGGER.debug("Trying to access media {} description", mediaId);
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
-        final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
         final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, defaultValue - 1, itemsPerPage);
         final Map<String, String> map = new HashMap<>();
         map.put("mediaId", Integer.toString(mediaId));
         mav.addObject("media", media);
-        mav.addObject("directorList", directorList);
-        mav.addObject("actorList", actorList);
         mav.addObject("relatedLists", relatedListsCover);
         mav.addObject("mediaListContainer", mediaList);
         String urlBase = UriComponentsBuilder.newInstance().path("/media/{mediaId}").buildAndExpand(map).toUriString();

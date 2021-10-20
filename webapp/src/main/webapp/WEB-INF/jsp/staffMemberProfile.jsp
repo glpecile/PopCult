@@ -35,7 +35,7 @@
                         aria-expanded="false">
                     <c:choose>
                         <c:when test="${roleType == 'actor'}">
-                            <spring:message code="staff.director"/>
+                            <spring:message code="staff.actor"/>
                         </c:when>
                         <c:when test="${roleType == 'director'}">
                             <spring:message code="staff.director"/>
