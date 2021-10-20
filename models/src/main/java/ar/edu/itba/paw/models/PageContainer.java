@@ -6,9 +6,9 @@ public class PageContainer<T> {
     private final List<T> elements;
     private final int currentPage;
     private final int pageSize;
-    private final int totalCount;
+    private final long totalCount;
 
-    public PageContainer(List<T> elements, int currentPage, int pageSize, int totalCount) {
+    public PageContainer(List<T> elements, int currentPage, int pageSize, long totalCount) {
         this.elements = elements;
         this.currentPage = currentPage;
         this.pageSize = pageSize;
@@ -27,7 +27,7 @@ public class PageContainer<T> {
         return pageSize;
     }
 
-    public int getTotalCount() {
+    public long getTotalCount() {
         return totalCount;
     }
 

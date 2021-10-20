@@ -12,7 +12,7 @@ public interface StudioDao {
 
     List<Studio> getStudioByMediaId(int mediaId);
 
-    PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize);
+    PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize);
 
     Optional<Integer> getMediaCountByStudio(int studioId);
 

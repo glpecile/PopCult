@@ -31,8 +31,8 @@ public class StudioServiceImpl implements StudioService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize) {
-        return studioDao.getMediaByStudio(studioId, page, pageSize);
+    public PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize) {
+        return studioDao.getMediaByStudio(studio, page, pageSize);
     }
 
     @Transactional(readOnly = true)

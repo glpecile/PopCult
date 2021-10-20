@@ -96,7 +96,7 @@ public class MediaController {
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
-        final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
+        final List<Studio> studioList = media.getStudios();
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
