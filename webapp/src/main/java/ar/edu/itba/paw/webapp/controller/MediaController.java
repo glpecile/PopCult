@@ -41,10 +41,6 @@ public class MediaController {
     @Autowired
     private StaffService staffService;
     @Autowired
-    private GenreService genreService;
-    @Autowired
-    private StudioService studioService;
-    @Autowired
     private ListsService listsService;
     @Autowired
     private UserService userService;
@@ -67,8 +63,8 @@ public class MediaController {
     public ModelAndView home() {
         LOGGER.debug("Trying to access home.");
         final ModelAndView mav = new ModelAndView("home");
-        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS, 0, itemsPerContainer);
+        final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE, 0, itemsPerContainer);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
@@ -95,8 +91,6 @@ public class MediaController {
         LOGGER.debug("Trying to access media {} description", mediaId);
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        final List<String> genreList = genreService.getGenreByMediaId(mediaId);
-        final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
@@ -105,8 +99,6 @@ public class MediaController {
         final Map<String, String> map = new HashMap<>();
         map.put("mediaId", Integer.toString(mediaId));
         mav.addObject("media", media);
-        mav.addObject("genreList", genreList);
-        mav.addObject("studioList", studioList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
         mav.addObject("relatedLists", relatedListsCover);
@@ -244,7 +236,7 @@ public class MediaController {
         LOGGER.debug("Trying to access films");
         final ModelAndView mav = new ModelAndView("films");
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS.ordinal(), page - 1, itemsPerPage);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();
@@ -259,7 +251,7 @@ public class MediaController {
         LOGGER.debug("Trying to access series");
         final ModelAndView mav = new ModelAndView("series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final Map<String, String> map = new HashMap<>();

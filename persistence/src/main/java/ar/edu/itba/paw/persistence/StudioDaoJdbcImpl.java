@@ -46,10 +46,10 @@ public class StudioDaoJdbcImpl implements StudioDao {
     }
 
     @Override
-    public PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize) {
-        List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaStudio NATURAL JOIN media WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studioId, pageSize * page, pageSize},
+    public PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize) {
+        List<Media> elements = jdbcTemplate.query("SELECT * FROM mediaStudio NATURAL JOIN media WHERE studioId = ? OFFSET ? LIMIT ?", new Object[]{studio.getStudioId(), pageSize * page, pageSize},
                 MEDIA_ROW_MAPPER);
-        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studioId}, COUNT_ROW_MAPPER)
+        int totalCount = jdbcTemplate.query("SELECT COUNT(*) AS count FROM mediaStudio where studioId = ?", new Object[]{studio}, COUNT_ROW_MAPPER)
                 .stream().findFirst().orElse(0);
         return new PageContainer<>(elements, page, pageSize, totalCount);
     }

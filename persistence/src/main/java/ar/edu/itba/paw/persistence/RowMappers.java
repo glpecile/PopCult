@@ -4,7 +4,9 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Country;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
@@ -29,14 +31,13 @@ public class RowMappers {
     public static final RowMapper<Media> MEDIA_ROW_MAPPER =
             (rs, rowNum) -> new Media(
                     rs.getInt("mediaId"),
-                    rs.getInt("type"),
+                    MediaType.FILMS,
                     rs.getString("title"),
                     rs.getString("description"),
                     rs.getString("image"),
                     rs.getInt("length"),
                     rs.getDate("releaseDate"),
-                    rs.getInt("seasons"),
-                    rs.getInt("country"));
+                    Country.ZW);
 
     public static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
@@ -97,7 +98,7 @@ public class RowMappers {
                     rs.getString("name"),
                     rs.getBoolean("enabled"),
                     null,
-                    rs.getInt("role"));
+                    null);
 
     /**
      * Token RowMappers.

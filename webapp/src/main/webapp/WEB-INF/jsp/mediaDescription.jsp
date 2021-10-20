@@ -85,31 +85,31 @@
                 <div class="text-xl py-2">
                     <span><c:out value="${media.releaseYear}"/></span>
                     <span class="mx-3 mt-3">&#8226;</span>
-                    <span><c:out value="${media.country}"/></span>
+                    <span><c:out value="${media.country.countryName}"/></span>
                 </div>
                 <p class="lead text-justify"><c:out value="${media.description}"/></p>
                 <br>
-                <c:if test="${fn:length(genreList) > 0}">
+                <c:if test="${fn:length(media.genres) > 0}">
                     <h5 class="font-bold text-2xl py-2">
                         <spring:message code="media.genre"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="genre" items="${genreList}">
+                        <c:forEach var="genre" items="${media.genres}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                                <jsp:param name="text" value="${genre}"/>
+                                <jsp:param name="text" value="${genre.genre}"/>
                                 <jsp:param name="tooltip" value=""/>
-                                <jsp:param name="url" value="/genre/${genre}/"/>
+                                <jsp:param name="url" value="/genre/${genre.genre}/"/>
                             </jsp:include>
                         </c:forEach>
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(studioList) > 0}">
+                <c:if test="${fn:length(media.studios) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.studio"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="studio" items="${studioList}">
+                        <c:forEach var="studio" items="${media.studios}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${studio.name}"/>
                                 <jsp:param name="tooltip" value=""/>

@@ -43,7 +43,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final User user = new User.Builder(email, username, password, name).build();
         em.persist(user);
         return user;

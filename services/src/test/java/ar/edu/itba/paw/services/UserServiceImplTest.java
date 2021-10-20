@@ -54,8 +54,7 @@ public class UserServiceImplTest {
     @Test
     public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         //1 - Setup - Preconditions
-        when(mockDao.register(eq(EMAIL), eq(USERNAME), eq(PASSWORD), eq(NAME),
-                eq(NOT_ENABLED_USER), eq(DEFAULT_USER_ROLE)))
+        when(mockDao.register(eq(EMAIL), eq(USERNAME), eq(PASSWORD), eq(NAME)))
                 .thenReturn(new User(USER_ID, EMAIL, USERNAME, PASSWORD, NAME, NOT_ENABLED_USER, null, DEFAULT_USER_ROLE));
         when(mockPasswordEncoder.encode(Mockito.anyString())).thenReturn(PASSWORD);
 
