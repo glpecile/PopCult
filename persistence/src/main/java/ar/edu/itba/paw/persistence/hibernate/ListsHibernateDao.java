@@ -107,7 +107,7 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public List<Media> getMediaIdInList(int mediaListId) {
         //SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?
-        return em.createQuery("FROM Media NATURAL JOIN ListElement WHERE mediaListId = :listId", Media.class)
+        return em.createQuery("FROM Media m JOIN ListElement le ON m.mediaId = le.mediaId WHERE le.mediaListId = :listId", Media.class)
                 .setParameter("listId", mediaListId).getResultList();
     }
 
@@ -140,7 +140,7 @@ public class ListsHibernateDao implements ListsDao {
         final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE m.visible = :visibility")
                 .setParameter("visibility", true);
         long count = (long) countQuery.getSingleResult();
-        return new PageContainer<>(list, page, pageSize, count);
+        return new PageContainer<>(list,page, pageSize, count);
     }
 
     @Override
