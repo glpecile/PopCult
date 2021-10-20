@@ -135,7 +135,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public Optional<MediaList> createMediaListCopy(int userId, int toCopy) {
+    public MediaList createMediaListCopy(int userId, int toCopy) {
         return listsDao.createMediaListCopy(userId, toCopy);
     }
 

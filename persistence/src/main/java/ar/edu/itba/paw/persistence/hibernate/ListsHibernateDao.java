@@ -210,7 +210,7 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public Optional<MediaList> createMediaListCopy(int userId, int toCopyListId) {
+    public MediaList createMediaListCopy(int userId, int toCopyListId) {
         final MediaList toCopy = em.find(MediaList.class, toCopyListId);
         MediaList fork = new MediaList(userId, toCopy.getListName(), toCopy.getDescription(), toCopy.isVisible(), toCopy.isCollaborative());
         em.persist(fork);
@@ -218,7 +218,7 @@ public class ListsHibernateDao implements ListsDao {
         for (ListElement elem : toCopyMedia) {
             em.persist(new ListElement(fork.getMediaListId(), elem.getMediaId()));
         }
-        return Optional.of(fork);
+        return fork;
     }
 
     @Override
@@ -229,7 +229,8 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public boolean canEditList(int userId, int listId) {
-        return false;
+        return !em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR (collaboratorid = :userid AND accepted = :accepted))").setParameter("userid", userId).setParameter("accepted", true).setParameter("medialistid", listId).getSingleResult()
+                .equals(0);
     }
 
     @Override

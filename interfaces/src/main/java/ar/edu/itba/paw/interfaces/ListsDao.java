@@ -48,7 +48,7 @@ public interface ListsDao {
 
     void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative);
 
-    Optional<MediaList> createMediaListCopy(int userId, int toCopyListId);
+    MediaList createMediaListCopy(int userId, int toCopyListId);
 
     Optional<User> getListOwner(int listId);
 

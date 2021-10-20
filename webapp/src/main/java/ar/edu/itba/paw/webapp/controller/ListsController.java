@@ -237,7 +237,7 @@ public class ListsController {
     public ModelAndView createListCopy(@PathVariable("listId") final int listId) {
         LOGGER.debug("Forking list {}", listId);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
-        final MediaList newList = listsService.createMediaListCopy(user.getUserId(), listId).orElseThrow(ListNotFoundException::new);
+        final MediaList newList = listsService.createMediaListCopy(user.getUserId(), listId);
         LOGGER.info("List {} forked.", listId);
         return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
     }

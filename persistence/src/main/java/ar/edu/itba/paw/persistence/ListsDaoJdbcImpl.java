@@ -189,7 +189,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
     }
 
     @Override
-    public Optional<MediaList> createMediaListCopy(int userId, int toCopyListId) {
+    public MediaList createMediaListCopy(int userId, int toCopyListId) {
         Map<String, Object> data = new HashMap<>();
         List<MediaList> fork = new ArrayList<>();
         //add to medialist table
@@ -223,9 +223,7 @@ public class ListsDaoJdbcImpl implements ListsDao {
 
             fork.add(new MediaList((int) key.getKey(), userId, toCopy.getListName(), toCopy.getDescription(), localDate, toCopy.isVisible(), toCopy.isCollaborative()));
         });
-        if (fork.isEmpty())
-            return Optional.empty();
-        return Optional.of(fork.get(0));
+        return fork.get(0);
     }
 
     @Override
