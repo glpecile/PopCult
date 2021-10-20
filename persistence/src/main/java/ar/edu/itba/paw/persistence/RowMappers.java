@@ -98,7 +98,7 @@ public class RowMappers {
                     rs.getString("name"),
                     rs.getBoolean("enabled"),
                     null,
-                    rs.getInt("role"));
+                    null);
 
     /**
      * Token RowMappers.

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.image.Image;
-import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     /* default */ static final boolean NOT_ENABLED_USER = false;
     /* default */ static final boolean ENABLED_USER = true;
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
-    /* default */ static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
+    /* default */ static final UserRole DEFAULT_USER_ROLE = UserRole.USER;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        User user = userDao.register(email, username, passwordEncoder.encode(password), name, NOT_ENABLED_USER, DEFAULT_USER_ROLE);
+        User user = userDao.register(email, username, passwordEncoder.encode(password), name);
 
         Token token = tokenService.createToken(user, TokenType.VERIFICATION);
 
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     private void authWithoutPassword(User user) {
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Roles.values()[user.getRole()].getRoleType()));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
         org.springframework.security.core.userdetails.User userDetails =
                 new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);

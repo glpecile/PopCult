@@ -13,7 +13,7 @@ public interface UserDao {
 
     Optional<User> getByUsername(String username);
 
-    User register(String email, String username, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException;
+    User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException;
 
     Optional<User> changePassword(int userId, String password);
 

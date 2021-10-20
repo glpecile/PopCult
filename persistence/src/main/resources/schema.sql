@@ -142,7 +142,8 @@ CREATE TABLE IF NOT EXISTS mediaGenre
 -- ModeratorDao
 CREATE TABLE IF NOT EXISTS modRequests
 (
-    userId INT PRIMARY KEY,
+    requestId SERIAL PRIMARY KEY,
+    userId INT,
     date   DATE NOT NULL,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );

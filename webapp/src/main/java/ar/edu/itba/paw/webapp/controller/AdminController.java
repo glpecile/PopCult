@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -155,8 +156,9 @@ public class AdminController {
     @RequestMapping(value = "/admin/mods/{userId}", method = {RequestMethod.POST, RequestMethod.DELETE}, params = "removeMod")
     public ModelAndView removeMod(HttpServletRequest request,
                                   @PathVariable("userId") final int userId) {
+        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
         LOGGER.debug("Trying to remove moderator {}", userId);
-        moderatorService.removeMod(userId);
+        moderatorService.removeMod(user);
         LOGGER.info("Moderator {} removed", userId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -177,8 +179,9 @@ public class AdminController {
     @RequestMapping(value = "/admin/mods/requests/{userId}", method = {RequestMethod.POST}, params = "addMod")
     public ModelAndView promoteToMod(HttpServletRequest request,
                                      @PathVariable("userId") final int userId) {
+        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
         LOGGER.debug("Trying to promote moderator {}", userId);
-        moderatorService.promoteToMod(userId);
+        moderatorService.promoteToMod(user);
         LOGGER.info("Moderator {} promoted", userId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -186,8 +189,9 @@ public class AdminController {
     @RequestMapping(value = "/admin/mods/requests/{userId}", method = {RequestMethod.POST, RequestMethod.DELETE}, params = "rejectRequest")
     public ModelAndView rejectModRequest(HttpServletRequest request,
                                          @PathVariable("userId") final int userId) {
+        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
         LOGGER.debug("Trying to reject moderator {} request", userId);
-        moderatorService.removeRequest(userId);
+        moderatorService.removeRequest(user);
         LOGGER.info("Moderator {} request rejected", userId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -198,7 +202,7 @@ public class AdminController {
         LOGGER.debug("Trying to generate a new moderator {} request", user.getUserId());
 
         try {
-            moderatorService.addModRequest(user.getUserId());
+            moderatorService.addModRequest(user);
         } catch (UserAlreadyIsModException e) {
             LOGGER.info("User {} is already a moderator", user.getUserId());
             ModelAndView mav = new ModelAndView("error");

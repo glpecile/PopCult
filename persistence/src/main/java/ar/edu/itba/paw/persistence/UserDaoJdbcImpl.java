@@ -49,15 +49,15 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String username, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", username);
         args.put("password", password);
         args.put("name", name);
-        args.put("enabled", enabled);
+        args.put("enabled", false);
 //        args.put("imageid", imageId);
-        args.put("role", role);
+        args.put("role", 0);
         int userId = 0;
         try {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
