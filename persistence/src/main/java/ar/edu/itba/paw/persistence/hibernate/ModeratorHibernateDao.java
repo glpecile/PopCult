@@ -6,8 +6,6 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import org.postgresql.core.NativeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -17,11 +15,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Primary
 @Repository
