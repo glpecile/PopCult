@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommentDaoJdbcTest {
 
-    private static final int ALREADY_EXISTS_USER_ID = 2;
+    private static final int ALREADY_EXISTS_USER_ID = 4;
     private static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIST_ID = 1;
     private static final String COMMENT = "Comment";

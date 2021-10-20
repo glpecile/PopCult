@@ -1,16 +1,3 @@
-function copyToClipboard() {
-    const inputc = document.body.appendChild(document.createElement("input"));
-    inputc.value = window.location.href;
-    inputc.focus();
-    inputc.select();
-    document.execCommand('copy');
-    inputc.parentNode.removeChild(inputc);
-    $('#notification-container').show();
-    setTimeout(() => {
-        $('#notification-container').hide();
-    }, 3000);
-}
-
 function tweetCurrentPage() {
     let url = removeCookies(encodeURIComponent(window.location.href))
     window.open("https://twitter.com/share?url=" + url + "&text=" + document.title, '_blank');
@@ -23,7 +10,7 @@ function whatsappCurrentPage() {
     window.open("https://api.whatsapp.com/send/?phone&text=Hey!%20check%20this%20content%20out!%20" + document.title + "%20in%20" + url + "&app_absent=0")
 }
 
-function removeCookies(originalURL){
+function removeCookies(originalURL) {
     let trimmedURL = originalURL.substring(0, originalURL.indexOf("%3B"))
-    return trimmedURL?trimmedURL:originalURL;
+    return trimmedURL ? trimmedURL : originalURL;
 }

@@ -34,7 +34,7 @@ public class UserDaoJdbcTest {
     private static final boolean ENABLED_USER = true;
     private static final int DEFAULT_USER_ROLE = Roles.USER.ordinal();
 
-    private static final int ALREADY_EXISTS_USER_ID = 2;
+    private static final int ALREADY_EXISTS_USER_ID = 4;
     private static final String ALREADY_EXISTS_EMAIL = "email@email.com";
     private static final String ALREADY_EXISTS_USERNAME = "username";
 

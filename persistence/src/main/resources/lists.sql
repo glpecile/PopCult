@@ -1,12 +1,3 @@
-INSERT INTO users(userid, email, username, password, enabled, imageid, name, role)
-VALUES (1, 'popcult.paw@gmail.com', 'PopCult', '$2a$10$2bIvv3x2294iOaRlE9XS8ep..aKgkSvCVpuHxYS1/3w32hXU8xgaC', true, null, 'PopCult', 2);
-
-INSERT INTO users(userid, email, username, password, enabled, imageid, name, role)
-VALUES (10, 'popcult.mods@gmail.com', 'PopMod', '$2a$10$2bIvv3x2294iOaRlE9XS8ep..aKgkSvCVpuHxYS1/3w32hXU8xgaC', true, null, 'PopCult Mod', 1);
-
-INSERT INTO users(userid, email, username, password, enabled, imageid, name, role)
-VALUES (11, 'popcult.user@gmail.com', 'PopUser', '$2a$10$2bIvv3x2294iOaRlE9XS8ep..aKgkSvCVpuHxYS1/3w32hXU8xgaC', true, null, 'PopCult User', 0);
-
 INSERT INTO medialist(userid, listname, description, creationdate, visibility, collaborative) VALUES (1, 'Kids Movies', 'Movies for the whole family. Enjoy with the kids.', current_date, true, false);
 INSERT INTO listelement(mediaid, medialistid) VALUES (29,1);
 INSERT INTO listelement(mediaid, medialistid) VALUES (30,1);

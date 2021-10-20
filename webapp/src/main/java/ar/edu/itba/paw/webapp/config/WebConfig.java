@@ -52,7 +52,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean(name = "basePath")
     public String basePath() {
-        System.out.println(environment.getProperty("base_path"));
         return environment.getProperty("base_path");
     }
 
