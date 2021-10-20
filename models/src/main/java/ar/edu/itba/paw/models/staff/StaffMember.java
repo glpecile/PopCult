@@ -1,25 +1,30 @@
 package ar.edu.itba.paw.models.staff;
 
 import javax.persistence.*;
-
+@Entity
+@Table(name = "staffmember")
 public class StaffMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "staffmember_staffmemberid_seq")
     @SequenceGenerator(sequenceName = "staffmember_staffmemberid_seq", name="staffmember_staffmemberid_seq", allocationSize = 1)
-    private int staffMemberId;
+    private Integer staffMemberId;
 
     @Column(length = 100, nullable = false)
     private String name;
+
     @Column(length = 100)
     private String description;
+
     @Column(length = 100)
     private String image;
+
+
 
     public StaffMember(){
 
     }
-    public StaffMember(int staffMemberId, String name, String description, String image) {
+    public StaffMember(Integer staffMemberId, String name, String description, String image) {
         super();
         this.staffMemberId = staffMemberId;
         this.name = name;
@@ -28,7 +33,7 @@ public class StaffMember {
                 image;
     }
 
-    public int getStaffMemberId() {
+    public Integer getStaffMemberId() {
         return staffMemberId;
     }
 

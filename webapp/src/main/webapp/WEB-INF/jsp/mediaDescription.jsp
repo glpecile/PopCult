@@ -119,12 +119,12 @@
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(directorList) > 0}">
+                <c:if test="${fn:length(media.directorList) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.director"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="director" items="${directorList}">
+                        <c:forEach var="director" items="${media.directorList}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${director.staffMember.name}"/>
                                 <jsp:param name="tooltip" value=""/>
@@ -134,12 +134,12 @@
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(actorList) > 0}">
+                <c:if test="${fn:length(media.actorList) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.cast"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="actor" items="${actorList}">
+                        <c:forEach var="actor" items="${media.actorList}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${actor.staffMember.name}"/>
                                 <jsp:param name="tooltip" value="${actor.characterName}"/>
