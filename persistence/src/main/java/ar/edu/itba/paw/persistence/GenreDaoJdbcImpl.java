@@ -23,7 +23,6 @@ public class GenreDaoJdbcImpl implements GenreDao {
 
     private static final RowMapper<String> STRING_NAME_ROW_MAPPER = RowMappers.STRING_NAME_ROW_MAPPER;
 
-
     private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
