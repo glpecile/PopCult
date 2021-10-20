@@ -1,19 +1,44 @@
 package ar.edu.itba.paw.models.lists;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "medialist")
 public class MediaList {
-    private final int mediaListId;
-    private final int userId;
-    private final String listName;
-    private final String description;
-    private final Date creationDate;
-    private final boolean visible;
-    private final boolean collaborative;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medialist_listid_seq")
+    @SequenceGenerator(sequenceName = "medialist_listid_seq", name = "medialist_listid_seq", allocationSize = 1)
+    private Integer mediaListId;
+    @Column(nullable = false, unique = true)
+    private Integer userId;
+    @Column(nullable = false, length = 1000)
+    private String listName;
+    @Column(nullable = false, length = 1000)
+    private String description;
+    @Column
+    private Date creationDate;
+    @Column
+    private boolean visible;
+    @Column
+    private boolean collaborative;
 
+    /* default */ MediaList() {
+        //Just for Hibernate, we <3 u!
+    }
 
-    public MediaList(int mediaListId, int userId, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
+    public MediaList(Integer userId, String listName, String description, boolean visible, boolean collaborative) {
+        this.mediaListId = null;
+        this.userId = userId;
+        this.listName = listName;
+        this.description = description;
+        this.creationDate = new Date();
+        this.visible = visible;
+        this.collaborative = collaborative;
+    }
+
+    public MediaList(Integer mediaListId, Integer userId, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
         this.userId = userId;
         this.listName = listName;
@@ -23,7 +48,7 @@ public class MediaList {
         this.collaborative = collaborative;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
@@ -35,7 +60,7 @@ public class MediaList {
         return description;
     }
 
-    public int getMediaListId() {
+    public Integer getMediaListId() {
         return mediaListId;
     }
 
