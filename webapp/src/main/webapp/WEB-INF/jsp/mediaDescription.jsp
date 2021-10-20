@@ -89,16 +89,16 @@
                 </div>
                 <p class="lead text-justify"><c:out value="${media.description}"/></p>
                 <br>
-                <c:if test="${fn:length(genreList) > 0}">
+                <c:if test="${fn:length(media.genres) > 0}">
                     <h5 class="font-bold text-2xl py-2">
                         <spring:message code="media.genre"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="genre" items="${genreList}">
+                        <c:forEach var="genre" items="${media.genres}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                                <jsp:param name="text" value="${genre}"/>
+                                <jsp:param name="text" value="${genre.genre}"/>
                                 <jsp:param name="tooltip" value=""/>
-                                <jsp:param name="url" value="/genre/${genre}/"/>
+                                <jsp:param name="url" value="/genre/${genre.genre}/"/>
                             </jsp:include>
                         </c:forEach>
                     </div>

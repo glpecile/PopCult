@@ -46,6 +46,14 @@ public class Media {
     )
     private List<Studio> studios;
 
+    @ElementCollection(targetClass = Genre.class)
+    @Enumerated(EnumType.ORDINAL)
+    @CollectionTable(name = "mediagenre",
+            joinColumns = {@JoinColumn(name = "mediaid", nullable = false)}
+    )
+    @Column(name="genreid")
+    private List<Genre> genres;
+
     public Media(){
 
     }
@@ -135,6 +143,14 @@ public class Media {
 
     public void setStudios(List<Studio> studios) {
         this.studios = studios;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     @Override

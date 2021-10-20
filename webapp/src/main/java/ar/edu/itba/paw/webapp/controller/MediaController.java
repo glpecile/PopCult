@@ -41,8 +41,6 @@ public class MediaController {
     @Autowired
     private StaffService staffService;
     @Autowired
-    private GenreService genreService;
-    @Autowired
     private ListsService listsService;
     @Autowired
     private UserService userService;
@@ -93,7 +91,6 @@ public class MediaController {
         LOGGER.debug("Trying to access media {} description", mediaId);
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        final List<String> genreList = genreService.getGenreByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
@@ -102,7 +99,6 @@ public class MediaController {
         final Map<String, String> map = new HashMap<>();
         map.put("mediaId", Integer.toString(mediaId));
         mav.addObject("media", media);
-        mav.addObject("genreList", genreList);
         mav.addObject("directorList", directorList);
         mav.addObject("actorList", actorList);
         mav.addObject("relatedLists", relatedListsCover);
