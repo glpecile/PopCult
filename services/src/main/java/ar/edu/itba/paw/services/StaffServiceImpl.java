@@ -28,12 +28,6 @@ public class StaffServiceImpl implements StaffService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<StaffMember> getPersonList() {
-        return staffDao.getPersonList();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize) {
         return staffDao.getMediaByDirector(staffMemberId, page, pageSize);
     }
@@ -60,24 +54,6 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public List<Actor> getActorsByMedia(int mediaId) {
         return staffDao.getActorsByMedia(mediaId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Integer> getMediaCount(int staffMemberId) {
-        return staffDao.getMediaCount(staffMemberId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
-        return staffDao.getMediaCountByDirector(staffMemberId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Integer> getMediaCountByActor(int staffMemberId) {
-        return staffDao.getMediaCountByActor(staffMemberId);
     }
 
 }

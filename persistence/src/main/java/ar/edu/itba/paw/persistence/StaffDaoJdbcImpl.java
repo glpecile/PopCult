@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
-import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,11 +46,6 @@ public class StaffDaoJdbcImpl implements StaffDao {
     public Optional<StaffMember> getById(int staffMemberId) {
         return jdbcTemplate.query("SELECT * FROM staffMember WHERE staffMemberId = ?", new Object[]{staffMemberId}, STAFF_MEMBER_ROW_MAPPER)
                 .stream().findFirst();
-    }
-
-    @Override
-    public List<StaffMember> getPersonList() {
-        return jdbcTemplate.query("SELECT * FROM staffMember", STAFF_MEMBER_ROW_MAPPER);
     }
 
     @Override
@@ -101,25 +95,5 @@ public class StaffDaoJdbcImpl implements StaffDao {
                 "WHERE mediaId = ? ORDER BY name ASC", new Object[]{mediaId}, ACTOR_ROW_MAPPER);
     }
 
-
-    @Override
-    public Optional<Integer> getMediaCountByActor(int staffMemberId) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM crew " +
-                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
-    }
-
-    @Override
-    public Optional<Integer> getMediaCountByDirector(int staffMemberId) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM director " +
-                "WHERE staffMemberId = ?", new Object[]{staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
-    }
-
-    @Override
-    public Optional<Integer> getMediaCount(int staffMemberId) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM (" +
-                "(SELECT director.mediaId FROM director WHERE staffmemberid = ?)" +
-                "UNION" +
-                "(SELECT crew.mediaId FROM crew WHERE staffmemberid = ?)) AS aux", new Object[]{staffMemberId, staffMemberId}, COUNT_ROW_MAPPER).stream().findFirst();
-    }
 
 }

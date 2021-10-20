@@ -13,8 +13,6 @@ public interface StaffDao {
 
     Optional<StaffMember> getById(int staffMemberId);
 
-    List<StaffMember> getPersonList();
-
     PageContainer<Media> getMediaByDirector(int staffMemberId, int page, int pageSize);
 
     PageContainer<Media> getMediaByActor(int staffMemberId, int page, int pageSize);
@@ -25,9 +23,4 @@ public interface StaffDao {
 
     List<Actor> getActorsByMedia(int mediaId);
 
-    Optional<Integer> getMediaCountByDirector(int staffMemberId);
-
-    Optional<Integer> getMediaCountByActor(int staffMemberId);
-
-    Optional<Integer> getMediaCount(int staffMemberId);
 }
