@@ -71,7 +71,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("userProfile");
         LOGGER.debug("Trying to access {} profile", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        PageContainer<MediaList> userLists = listsService.getMediaListByUser(user, page - 1, listsPerPage);
         final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
         mav.addObject("user", user);
         mav.addObject("lists", userListsCover);
@@ -82,7 +82,7 @@ public class UserController {
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
 
-        PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUserId(user.getUserId(), page - 1, listsPerPage);
+        PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page - 1, listsPerPage);
         final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicListCover);
         mav.addObject("userPublicLists", userPublicLists);

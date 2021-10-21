@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 
@@ -12,31 +13,23 @@ import java.util.Optional;
 public interface ListsService {
     Optional<MediaList> getMediaListById(int mediaListId);
 
-    List<MediaList> getMediaListById(List<Integer> mediaListId);
-
     PageContainer<MediaList> getAllLists(int page, int pageSize);
 
-    List<MediaList> getMediaListByUserId(int userId);
+    PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize);
 
-    PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize);
+    PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize);
+    List<Media> getMediaIdInList(MediaList mediaList);//TODO BORRAR
 
-    List<MediaList> getDiscoveryMediaLists(int pageSize);
-
-    List<Media> getMediaIdInList(int mediaListId);//TODO BORRAR
-
-    PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize);
+    PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
-    List<MediaList> getNLastAddedList(int amount);
+    PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 
-    PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize);
+    List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches);
 
-    List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches);
-
-    MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative);
+    MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
     void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException;
 

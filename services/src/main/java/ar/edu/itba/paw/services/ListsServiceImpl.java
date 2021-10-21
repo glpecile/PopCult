@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,50 +28,32 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<MediaList> getMediaListById(List<Integer> mediaListId) {
-        return listsDao.getMediaListById(mediaListId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public PageContainer<MediaList> getAllLists(int page, int pageSize) {
         return listsDao.getAllLists(page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<MediaList> getMediaListByUserId(int userId) {
-        return listsDao.getMediaListByUserId(userId);
+    public PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize) {
+        return listsDao.getMediaListByUser(user, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getMediaListByUserId(int userId, int page, int pageSize) {
-        return listsDao.getMediaListByUserId(userId, page, pageSize);
+    public PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize) {
+        return listsDao.getPublicMediaListByUser(user, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getPublicMediaListByUserId(int userId, int page, int pageSize) {
-        return listsDao.getPublicMediaListByUserId(userId, page, pageSize);
+    public List<Media> getMediaIdInList(MediaList mediaList) {
+        return listsDao.getMediaIdInList(mediaList);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<MediaList> getDiscoveryMediaLists(int pageSize) {
-        return listsDao.getDiscoveryMediaLists(pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Media> getMediaIdInList(int mediaListId) {
-        return listsDao.getMediaIdInList(mediaListId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<Media> getMediaIdInList(int mediaListId, int page, int pageSize) {
-        return listsDao.getMediaIdInList(mediaListId, page, pageSize);
+    public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
+        return listsDao.getMediaIdInList(mediaList, page, pageSize);
     }
 
     @Transactional(readOnly = true)
@@ -81,26 +64,20 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<MediaList> getNLastAddedList(int amount) {
-        return listsDao.getNLastAddedList(amount);
+    public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
+        return listsDao.getListsIncludingMedia(media, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getListsIncludingMediaId(int mediaId, int page, int pageSize) {
-        return listsDao.getListsIncludingMediaId(mediaId, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<MediaList> getListsContainingGenre(int genreId, int pageSize, int minMatches) {
-        return listsDao.getListsContainingGenre(genreId, pageSize, minMatches);
+    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
+        return listsDao.getListsContainingGenre(genre, pageSize, minMatches);
     }
 
     @Transactional
     @Override
-    public MediaList createMediaList(int userId, String title, String description, boolean visibility, boolean collaborative) {
-        return listsDao.createMediaList(userId, title, description, visibility, collaborative);
+    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative) {
+        return listsDao.createMediaList(user, title, description, visibility, collaborative);
     }
 
     @Transactional

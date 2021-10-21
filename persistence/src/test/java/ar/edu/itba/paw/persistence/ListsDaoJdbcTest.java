@@ -22,19 +22,19 @@ public class ListsDaoJdbcTest {
     private static final boolean VISIBILITY  = true;
     private static final boolean COLLABORATIVE = true;
 
-    @Autowired
-    ListsDaoJdbcImpl listsDaoJdbc;
+//    @Autowired
+//    ListsDaoJdbcImpl listsDaoJdbc;
 
-    @Rollback
-    @Test
-    public void testCreateMediaList() {
-        //2
-        MediaList mediaList = listsDaoJdbc.createMediaList(ALREADY_EXISTS_USER_ID, LISTNAME, DESCRIPTION, VISIBILITY, COLLABORATIVE);
-
-        //3
-        Assert.assertNotNull(mediaList);
-        Assert.assertEquals(LISTNAME, mediaList.getListName());
-    }
+//    @Rollback
+//    @Test
+//    public void testCreateMediaList() {
+//        //2
+//        MediaList mediaList = listsDaoJdbc.createMediaList(ALREADY_EXISTS_USER_ID, LISTNAME, DESCRIPTION, VISIBILITY, COLLABORATIVE);
+//
+//        //3
+//        Assert.assertNotNull(mediaList);
+//        Assert.assertEquals(LISTNAME, mediaList.getListName());
+//    }
 
 
 

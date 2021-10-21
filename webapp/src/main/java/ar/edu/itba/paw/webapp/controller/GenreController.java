@@ -46,10 +46,10 @@ public class GenreController {
         LOGGER.info("Genre {} accessed", genre);
         final ModelAndView mav = new ModelAndView("genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
-        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();//TODO eliminar esto.
-        final String genreName = Genre.valueOf(normalizedGenre).getGenre();
+        final Genre gen = Genre.valueOf(normalizedGenre);
+        final String genreName = gen.getGenre();
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(Genre.valueOf(normalizedGenre), page - 1, itemsPerPage);
-        final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
+        final List<MediaList> genreLists = listsService.getListsContainingGenre(gen, listInPage, minimumMediaMatches);
         final List<ListCover> listCovers = getListCover(genreLists, listsService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaPageContainer", mediaPageContainer);

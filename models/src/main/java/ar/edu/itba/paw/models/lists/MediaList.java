@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.lists;
 
+import ar.edu.itba.paw.models.user.User;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -11,26 +13,33 @@ public class MediaList {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medialist_listid_seq")
     @SequenceGenerator(sequenceName = "medialist_listid_seq", name = "medialist_listid_seq", allocationSize = 1)
     private Integer mediaListId;
-    @Column(nullable = false, unique = true)
-    private Integer userId;
-    @Column(nullable = false, length = 1000)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    private User user;
+
+    @Column(nullable = false, length = 100)
     private String listName;
+
     @Column(nullable = false, length = 1000)
     private String description;
+
     @Column
     private Date creationDate;
+
+    @Column(name = "visibility")
+    private Boolean visible;
+
     @Column
-    private boolean visible;
-    @Column
-    private boolean collaborative;
+    private Boolean collaborative;
 
     /* default */ MediaList() {
         //Just for Hibernate, we <3 u!
     }
 
-    public MediaList(Integer userId, String listName, String description, boolean visible, boolean collaborative) {
+    public MediaList(User user, String listName, String description, boolean visible, boolean collaborative) {
         this.mediaListId = null;
-        this.userId = userId;
+        this.user = user;
         this.listName = listName;
         this.description = description;
         this.creationDate = new Date();
@@ -38,9 +47,9 @@ public class MediaList {
         this.collaborative = collaborative;
     }
 
-    public MediaList(Integer mediaListId, Integer userId, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
+    public MediaList(Integer mediaListId, User user, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
-        this.userId = userId;
+        this.user = user;
         this.listName = listName;
         this.description = description;
         this.creationDate = creationDate;
@@ -48,32 +57,60 @@ public class MediaList {
         this.collaborative = collaborative;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getMediaListId() {
+        return mediaListId;
+    }
+
+    public void setMediaListId(Integer mediaListId) {
+        this.mediaListId = mediaListId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getListName() {
         return listName;
     }
 
+    public void setListName(String listName) {
+        this.listName = listName;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public Integer getMediaListId() {
-        return mediaListId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public boolean isVisible() {
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Boolean getVisible() {
         return visible;
     }
 
-    public boolean isCollaborative() {
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getCollaborative() {
         return collaborative;
+    }
+
+    public void setCollaborative(Boolean collaborative) {
+        this.collaborative = collaborative;
     }
 
     @Override
