@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.interfaces.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +17,11 @@ public class TokenController {
     @Autowired
     TokenService tokenService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenController.class);
+
     @RequestMapping(value = "/tokenTimedOut")
     public ModelAndView tokenTimedOut(@RequestParam("token") final String token) {
+        LOGGER.warn("Token timed out.");
         ModelAndView mav = new ModelAndView("tokenTimedOut");
         mav.addObject("token", token);
         return mav;
@@ -26,6 +31,7 @@ public class TokenController {
     public ModelAndView resendToken(@RequestParam("token") final String token) {
         ModelAndView mav = new ModelAndView("sentEmail");
         userService.resendToken(token);
+        LOGGER.info("Token was resent");
         return  mav;
     }
 }

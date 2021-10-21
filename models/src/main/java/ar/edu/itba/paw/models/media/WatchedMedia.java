@@ -54,8 +54,8 @@ public class WatchedMedia {
     public Date getReleaseDate() {
         return releaseDate;
     }
-    
-    public String getReleaseYear(){
+
+    public String getReleaseYear() {
         return String.valueOf(releaseDate).substring(0, 4);
     }
 

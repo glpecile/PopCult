@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,25 +25,12 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final RowMapper<User> USER_ROW_MAPPER = RowMappers.USER_ROW_MAPPER;
 
-    private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoJdbcImpl.class);
 
     @Autowired
     public UserDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId SERIAL PRIMARY KEY," +
-                "email TEXT NOT NULL," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL," +
-                "name VARCHAR(100)," +
-                "enabled BOOLEAN NOT NULL," +
-                "imageId INT," +
-                "role INT NOT NULL," +
-                "UNIQUE(email)," +
-                "UNIQUE(username)," +
-                "FOREIGN KEY(imageId) REFERENCES image(imageId) ON DELETE SET NULL)");
     }
 
     @Override
@@ -60,27 +49,29 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public User register(String email, String userName, String password, String name, boolean enabled, int imageId, int role) {
+    public User register(String email, String userName, String password, String name, boolean enabled, int role) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final Map<String, Object> args = new HashMap<>();
         args.put("email", email);
         args.put("username", userName);
         args.put("password", password);
         args.put("name", name);
         args.put("enabled", enabled);
-        args.put("imageid", imageId);
+//        args.put("imageid", imageId);
         args.put("role", role);
         int userId = 0;
         try {
             userId = jdbcInsert.executeAndReturnKey(args).intValue();
         } catch (DuplicateKeyException e) {
             if (e.getMessage().contains("users_email_key")) {
+                LOGGER.error("Email {} already in use by another user", email);
                 throw new EmailAlreadyExistsException();
             }
             if (e.getMessage().contains("users_username_key")) {
+                LOGGER.error("Username {} already in use by another user", userName);
                 throw new UsernameAlreadyExistsException();
             }
         }
-        return new User(userId, email, userName, password, name, enabled, imageId, role);
+        return new User(userId, email, userName, password, name, enabled, null, role);
 
     }
 
@@ -91,8 +82,9 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public void confirmRegister(int userId, boolean enabled) {
+    public Optional<User> confirmRegister(int userId, boolean enabled) {
         jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
+        return getById(userId);
     }
 
     @Override

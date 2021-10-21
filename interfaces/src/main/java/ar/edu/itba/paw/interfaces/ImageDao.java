@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface ImageDao {
     Optional<Image> getImage(int imageId);
 
-    Optional<Image> uploadImage(byte[] photoBlob, long imageContentLength, String imageContentType);
+    Optional<Image> uploadImage(byte[] photoBlob);
 }

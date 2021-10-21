@@ -14,7 +14,10 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -58,32 +61,45 @@ public class MediaController {
     private static final int lastAddedAmount = 6;
     private static final int defaultValue = 1;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
+
     @RequestMapping("/")
-    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView home() {
+        LOGGER.debug("Trying to access home.");
         final ModelAndView mav = new ModelAndView("home");
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(page - 1, itemsPerPage);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getNLastAddedList(lastAddedAmount), listsService);
         mav.addObject("latestFilmsList", latestFilmsContainer.getElements());
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
-        mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
+        mav.addObject("scrollItemsAmount", itemsPerContainer);
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        userService.getCurrentUser().ifPresent(user -> {
+            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
+            final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user.getUserId(), defaultValue - 1, lastAddedAmount);
+            final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
+            mav.addObject("discoveryFilmContainer", discoveryFilmContainer);
+            mav.addObject("discoverySeriesContainer", discoverySeriesContainer);
+            mav.addObject("discoveryListsCovers", discoveryListsCovers);
+        });
+        LOGGER.info("Home was access successfully");
         return mav;
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.GET})
-    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page, @ModelAttribute("commentForm") CommentForm commentForm) {
+    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @ModelAttribute("commentForm") CommentForm commentForm) {
+        LOGGER.debug("Trying to access media {} description", mediaId);
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<String> genreList = genreService.getGenreByMediaId(mediaId);
         final List<Studio> studioList = studioService.getStudioByMediaId(mediaId);
         final List<Director> directorList = staffService.getDirectorsByMedia(mediaId);
         final List<Actor> actorList = staffService.getActorsByMedia(mediaId);
-        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, listsPerPage);
+        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
         final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, defaultValue - 1, itemsPerPage);
         final Map<String, String> map = new HashMap<>();
@@ -103,81 +119,129 @@ public class MediaController {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
-            final List<MediaList> userLists = listsService.getMediaListByUserId(user.getUserId());
+            final List<MediaList> userLists = listsService.getUserEditableLists(user.getUserId(), defaultValue-1, itemsPerPage).getElements();
             mav.addObject("userLists", userLists);
         });
-
+        LOGGER.info("Access to media {} description was successful", mediaId);
+        return mav;
+    }
+    @RequestMapping(value = "/media/{mediaId}/lists")
+    public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
+        final ModelAndView mav = new ModelAndView("mediaRelatedLists");
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<MediaList> mediaList = listsService.getListsIncludingMediaId(mediaId, page - 1, itemsPerPage);
+        final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
+        mav.addObject("media", media);
+        mav.addObject("relatedLists", relatedListsCover);
+        mav.addObject("mediaListContainer", mediaList);
         return mav;
     }
 
-    @RequestMapping(value = "/media/{mediaId}/comment", method = {RequestMethod.POST})
-    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @RequestParam("userId") int userId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
-        if (errors.hasErrors())
-            return mediaDescription(defaultValue, mediaId, form);
-        commentService.addCommentToMedia(userId, mediaId, form.getBody());
+    @RequestMapping(value = "/media/{mediaId}/comments")
+    public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId ,@RequestParam(value = "page", defaultValue = "1") final int page){
+        LOGGER.debug("Trying to access media {} comments", mediaId);
+        final ModelAndView mav = new ModelAndView("mediaCommentDetails");
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, page - 1, itemsPerPage);
+        userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
+        mav.addObject("media", media);
+        mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
+        LOGGER.info("Access to media {} comments was successful", mediaId);
+        return mav;
+    }
+
+    @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
+    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+        LOGGER.debug("Trying to add a comment to media {}", mediaId);
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        if (errors.hasErrors()) {
+            LOGGER.error("Adding comment to media {} failed.", mediaId);
+            return mediaDescription(mediaId, form);
+        }
+        commentService.addCommentToMedia(user.getUserId(), mediaId, form.getBody());
+        LOGGER.info("Comment added to media {}", mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId) {
+    @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId,  @RequestParam("currentURL") final String currentURL) {
+        LOGGER.debug("Trying to delete comment from media {}", mediaId);
         commentService.deleteCommentFromMedia(commentId);
-        return new ModelAndView("redirect:/media/" + mediaId);
+        LOGGER.info("Comment from media {} deleted", mediaId);
+        return new ModelAndView("redirect:/media/" + mediaId + currentURL);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
     public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
+        LOGGER.debug("Trying to add media {} to list {}", mediaId, mediaListId);
         try {
             listsService.addToMediaList(mediaListId, mediaId);
         } catch (MediaAlreadyInListException e) {
+            LOGGER.error("Media {} is already in list {}.", mediaId, mediaListId);
             return new ModelAndView("redirect:/media/" + mediaId).addObject("alreadyInList", true);//TODO mostrar el mensaje
         }
+        LOGGER.error("Media {} was added to list {} successfully", mediaId, mediaListId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
+
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to add media {} to favorites", user.getUsername(), mediaId);
         favoriteService.addMediaToFav(mediaId, user.getUserId());
+        LOGGER.info("{} added media {} to favorites", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to delete media {} from favorites", user.getUsername(), mediaId);
         favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
+        LOGGER.info("{} deleted media {} from favorites", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatched")
     public ModelAndView addMediaToWatched(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to add media {} to watched", user.getUsername(), mediaId);
         watchService.addWatchedMedia(mediaId, user.getUserId());
+        LOGGER.info("{} added media {} to watched", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatched")
     public ModelAndView deleteMediaFromWatched(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to delete media {} from watched", user.getUsername(), mediaId);
         watchService.deleteWatchedMedia(mediaId, user.getUserId());
+        LOGGER.info("{} deleted media {} from watched", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addWatchlist")
     public ModelAndView addMediaToWatchlist(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to add media {} to watch list", user.getUsername(), mediaId);
         watchService.addMediaToWatch(mediaId, user.getUserId());
+        LOGGER.info("{} added media {} to watch list", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteWatchlist")
     public ModelAndView deleteMediaFromWatchlist(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        LOGGER.debug("{} is trying to delete media {} from watch list", user.getUsername(), mediaId);
         watchService.deleteToWatchMedia(mediaId, user.getUserId());
+        LOGGER.info("{} deleted media {} from watch list", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access films");
         final ModelAndView mav = new ModelAndView("films");
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS.ordinal(), page - 1, itemsPerPage);
@@ -186,13 +250,14 @@ public class MediaController {
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("Access to films successfully");
         return mav;
     }
 
     @RequestMapping("/media/series")
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.debug("Trying to access series");
         final ModelAndView mav = new ModelAndView("series");
-        final Integer mediaCount = mediaService.getMediaCountByMediaType(MediaType.SERIE.ordinal()).orElse(0);
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE.ordinal(), page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
@@ -200,6 +265,7 @@ public class MediaController {
         final Map<String, String> map = new HashMap<>();
         String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
+        LOGGER.info("Access to series successfully");
         return mav;
     }
 }

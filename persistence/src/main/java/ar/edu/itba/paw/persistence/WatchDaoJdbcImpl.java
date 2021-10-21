@@ -20,8 +20,6 @@ public class WatchDaoJdbcImpl implements WatchDao {
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = RowMappers.COUNT_ROW_MAPPER;
 
-    private static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER = RowMappers.MEDIA_ID_ROW_MAPPER;
-
     private static final RowMapper<Media> MEDIA_ROW_MAPPER = RowMappers.MEDIA_ROW_MAPPER;
 
     private static final RowMapper<WatchedMedia> WATCHED_MEDIA_ROW_MAPPER = RowMappers.WATCHED_MEDIA_ROW_MAPPER;
@@ -31,13 +29,6 @@ public class WatchDaoJdbcImpl implements WatchDao {
     public WatchDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         toWatchMediaJdbcInsert = new SimpleJdbcInsert(ds).withTableName("towatchmedia");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS towatchmedia(" +
-                "userId INT NOT NULL," +
-                "mediaId INT NOT NULL," +
-                "watchDate DATE," +
-                "FOREIGN KEY(mediaId) REFERENCES media(mediaId) ON DELETE CASCADE," +
-                "FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE)");
     }
 
     @Override

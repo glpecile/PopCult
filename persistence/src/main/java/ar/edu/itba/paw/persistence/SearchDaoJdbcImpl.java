@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.SearchDAO;
+import ar.edu.itba.paw.interfaces.SearchDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
-import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +14,7 @@ import javax.sql.DataSource;
 import java.util.*;
 
 @Repository
-public class SearchDaoJdbcImpl implements SearchDAO {
+public class SearchDaoJdbcImpl implements SearchDao {
     private final JdbcTemplate jdbcTemplate;
 
 

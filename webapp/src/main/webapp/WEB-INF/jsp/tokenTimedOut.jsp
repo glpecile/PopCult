@@ -1,11 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
-    <title>Log-in &#8226; PopCult</title></head>
+    <title><spring:message code="login.title"/> &#8226; PopCult</title></head>
 <body class="bg-gradient-to-r from-yellow-500 to-purple-900">
 <%-- Variables --%>
 <c:url value="/login" var="loginUrl"/>

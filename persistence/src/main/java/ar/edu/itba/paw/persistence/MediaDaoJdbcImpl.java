@@ -29,16 +29,6 @@ public class MediaDaoJdbcImpl implements MediaDao {
     public MediaDaoJdbcImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("media").usingGeneratedKeyColumns("mediaId");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS media (" +
-                "mediaId SERIAL PRIMARY KEY," +
-                "type INT NOT NULL," +
-                "title VARCHAR(100) NOT NULL, " +
-                "description TEXT," +
-                "image TEXT," +
-                "length INT," +
-                "releaseDate DATE," +
-                "seasons INT," +
-                "country INT)");
     }
 
     @Override
@@ -77,18 +67,6 @@ public class MediaDaoJdbcImpl implements MediaDao {
     }
 
     @Override
-    public Optional<Integer> getMediaCount() {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media", COUNT_ROW_MAPPER)
-                .stream().findFirst();
-    }
-
-    @Override
-    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
-        return jdbcTemplate.query("SELECT COUNT(*) AS count FROM media WHERE type = ?", new Object[]{mediaType}, COUNT_ROW_MAPPER)
-                .stream().findFirst();
-    }
-
-    @Override
     public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
         List<Media> elements = jdbcTemplate.query("SELECT * FROM media WHERE type = ? " +
                         "ORDER BY releasedate DESC OFFSET ? LIMIT ?  ",
@@ -98,13 +76,4 @@ public class MediaDaoJdbcImpl implements MediaDao {
         return new PageContainer<>(elements, page, pageSize, mediaCount);
     }
 
-    @Override
-    public List<Media> searchMediaByTitle(String title, int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM media WHERE title ILIKE CONCAT('%', ?, '%') ORDER BY title OFFSET ? LIMIT ?", new Object[]{title, page, pageSize}, MEDIA_ROW_MAPPER);
-    }//TODO CHECK page*pageSize
-
-    @Override
-    public Optional<Integer> getCountSearchMediaByTitle(String title) {
-        return jdbcTemplate.query("SELECT COUNT(*) FROM media WHERE title ILIKE CONCAT('%', ?, '%')", new Object[]{title}, COUNT_ROW_MAPPER).stream().findFirst();
-    }
 }

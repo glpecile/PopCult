@@ -3,8 +3,12 @@
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -36,7 +40,7 @@
                     <form:label path="username" cssClass="form-label">
                         <spring:message code="profile.settings.username"/>
                     </form:label>
-                    <form:input type="text" cssClass="form-control" path="username" value="${user.username}"/>
+                    <form:input type="text" cssClass="form-control" path="username" value="${user.username}" disabled="true"/>
                     <form:errors path="username" cssClass="formError text-red-500" element="p"/>
                 </div>
                     <%-- Email Form --%>
@@ -44,7 +48,7 @@
                     <form:label path="email" cssClass="form-label">
                         <spring:message code="profile.settings.email"/>
                     </form:label>
-                    <form:input type="text" cssClass="form-control" path="email" value="${user.email}"/>
+                    <form:input type="text" cssClass="form-control" path="email" value="${user.email}" disabled="true"/>
                     <form:errors path="email" cssClass="formError text-red-500" element="p"/>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.media;
 
 import java.util.Date;
+import java.util.Objects;
 
 
 public class Media {
@@ -54,7 +55,7 @@ public class Media {
         return releaseDate;
     }
 
-    public String getReleaseYear(){
+    public String getReleaseYear() {
         return String.valueOf(releaseDate).substring(0, 4);
     }
 
@@ -66,4 +67,16 @@ public class Media {
         return country;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Media media = (Media) o;
+        return mediaId == media.mediaId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mediaId);
+    }
 }

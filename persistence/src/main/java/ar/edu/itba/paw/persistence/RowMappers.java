@@ -79,7 +79,7 @@ public class RowMappers {
                     rs.getString("image")),
                     rs.getString("characterName"));
     /**
-     * Staff RowMappers.
+     * Studio RowMappers.
      */
     public static final RowMapper<Studio> STUDIO_ROW_MAPPER = (rs, rowNum) -> new Studio(
             rs.getInt("studioId"),
@@ -94,10 +94,11 @@ public class RowMappers {
                     rs.getString("email"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getString("name"), //TODO
+                    rs.getString("name"),
                     rs.getBoolean("enabled"),
                     rs.getInt("imageId"),
                     rs.getInt("role"));
+
     /**
      * Token RowMappers.
      */
@@ -130,9 +131,7 @@ public class RowMappers {
     public static final RowMapper<Image> IMAGE_ROW_MAPPER =
             (rs, rowNum) -> new Image(
                     rs.getInt("imageId"),
-                    rs.getBytes("photoBlob"),
-                    rs.getInt("imageContentLength"),
-                    rs.getString("imageContentType"));
+                    rs.getBytes("photoBlob"));
 
     /**
      * Comment RowMappers.
@@ -143,6 +142,19 @@ public class RowMappers {
                     rs.getInt("userId"),
                     rs.getString("username"),
                     rs.getString("description"));
+
+    /**
+     * Comment Notifications RowMappers.
+     */
+    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
+            (rs, rowNum) -> new Comment(
+                    rs.getInt("commentId"),
+                    rs.getInt("userId"),
+                    rs.getString("username"),
+                    rs.getString("description"),
+                    rs.getString("listname"),
+                    rs.getInt("listid"),
+                    rs.getBoolean("opened"));
 
     /**
      * Request RowMappers.

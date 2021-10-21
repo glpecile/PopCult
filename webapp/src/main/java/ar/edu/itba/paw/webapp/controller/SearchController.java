@@ -55,7 +55,7 @@ public class SearchController {
                                final BindingResult errors,
                                @RequestParam(value = "page", defaultValue = "1") final int page
                                ) throws ParseException {
-        LOGGER.info("Search term: {}", searchForm.getTerm());
+        LOGGER.info("Searching for term: {}", searchForm.getTerm());
         if(errors.hasErrors()) {
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));

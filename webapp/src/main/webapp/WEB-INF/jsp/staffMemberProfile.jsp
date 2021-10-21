@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -56,12 +57,12 @@
             <c:choose>
                 <c:when test="${roleType == 'actor'}">
                     <h4 class="font-bold text-2xl">
-                        <spring:message code="staff.starring"/> ${member.name}
+                        <spring:message code="staff.starring" arguments="${member.name}"/>
                     </h4>
                 </c:when>
                 <c:when test="${roleType == 'director'}">
                     <h4 class="font-bold text-2xl">
-                        <spring:message code="staff.directing"/> ${member.name}
+                        <spring:message code="staff.directing" arguments="${member.name}"/>
                     </h4>
                 </c:when>
                 <c:otherwise>

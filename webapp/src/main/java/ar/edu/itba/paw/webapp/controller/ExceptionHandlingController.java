@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +35,8 @@ public class ExceptionHandlingController {
             UserNotFoundException.class,
             ImageNotFoundException.class,
             CommentNotFoundException.class,
-            IllegalArgumentException.class})// TODO Cambiar por una excepcion un poco mas especifica
-    ModelAndView notFoundException() {
+            IllegalArgumentException.class})
+    public ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
         mav.addObject("description", messageSource.getMessage("exception.notFound", null, Locale.getDefault()));

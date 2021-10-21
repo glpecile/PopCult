@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.models.user.Roles;
-import ar.edu.itba.paw.webapp.auth.DeleteCommentVoter;
-import ar.edu.itba.paw.webapp.auth.EditListVoter;
-import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
-import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
+import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -47,12 +44,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private EditListVoter editListVoter;
-
     @Autowired
-    private RequestsManagerVoter requestsManagerVoter;
-
+    private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
+    @Autowired
+    private ListsVoter listsVoter;
 
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
@@ -76,8 +73,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 new RoleVoter(),
                 new AuthenticatedVoter(),
                 editListVoter,
-                requestsManagerVoter,
-                deleteCommentVoter
+                userPanelManagerVoter,
+                deleteCommentVoter,
+                listsVoter
         );
         return new UnanimousBased(decisionVoters);
     }
@@ -138,6 +136,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
                 .antMatchers("/lists/new/**", "lists/edit/**", "/report/**").hasRole("USER")
+                .antMatchers("/admin/mods/**").hasRole("ADMIN")
                 .antMatchers("/admin/**").hasRole("MOD")
                 .antMatchers(HttpMethod.POST).hasRole("USER")
                 .antMatchers(HttpMethod.DELETE).hasRole("USER")

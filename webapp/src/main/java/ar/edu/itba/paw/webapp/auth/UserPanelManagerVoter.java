@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.CollaborativeListService;
-import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -11,12 +9,10 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
-public class RequestsManagerVoter implements AccessDecisionVoter<FilterInvocation> {
+public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocation> {
     @Autowired
     private UserService userService;
 
@@ -35,21 +31,18 @@ public class RequestsManagerVoter implements AccessDecisionVoter<FilterInvocatio
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
-        if (URL.startsWith("/user/") && URL.contains("/requests")) {
-            try {
-                String username = URL.substring(URL.indexOf("/user/") + ("/user/").length(), URL.indexOf("/requests"));
-                userService.getCurrentUser().ifPresent(user -> {
-                    if ((user.getUsername().equals(username))) {
-                        vote.set(ACCESS_GRANTED);
-                    } else {
-                        vote.set(ACCESS_DENIED);
-                    }
-                });
 
-            } catch (NumberFormatException e) {
-                vote.set(ACCESS_ABSTAIN);
-            }
+        if (URL.startsWith("/user/") && ((URL.contains("/requests")) || URL.contains("/notifications"))) {
+            String username = URL.replaceFirst("/user/", "").replaceFirst("(/requests|/notifications).*", "");
+            userService.getCurrentUser().ifPresent(user -> {
+                if ((user.getUsername().equals(username))) {
+                    vote.set(ACCESS_GRANTED);
+                } else {
+                    vote.set(ACCESS_DENIED);
+                }
+            });
         }
+
         return vote.get();
     }
 }

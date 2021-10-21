@@ -4,8 +4,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta property="og:image" content="<c:url value="/resources/images/PopCultCompleteLogo.png"/>">
     <jsp:include page="/resources/externalResources.jsp"/>
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
@@ -28,6 +32,7 @@
             <jsp:param name="name" value="${user.name}"/>
             <jsp:param name="username" value="${username}"/>
             <jsp:param name="imageId" value="${user.imageId}"/>
+            <jsp:param name="errorUploadingImage" value="${errorUploadingImage}"/>
         </jsp:include>
         <%--    tabs     --%>
         <jsp:include page="/WEB-INF/jsp/components/userTabs.jsp">
@@ -65,7 +70,7 @@
         </c:when>
         <c:otherwise>
             <c:if test="${userPublicLists.totalCount == 0}">
-                <h3 class="text-center text-grey-400">
+                <h3 class="text-center text-gray-400">
                     <spring:message code="profile.otherNoLists"/>
                 </h3>
             </c:if>
@@ -90,7 +95,7 @@
         </c:otherwise>
         </c:choose>
     </div>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
+<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
