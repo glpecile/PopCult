@@ -354,7 +354,7 @@ public class UserController {
         LOGGER.debug("{} trying to access editable lists", username);
         ModelAndView mav = new ModelAndView("userEditableLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user.getUserId(), page - 1, editablePerPage);
+        PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user, page - 1, editablePerPage);
         final List<ListCover> editableCovers = getListCover(editableLists.getElements(), listsService);
         mav.addObject("user", user);
         mav.addObject("listContainer", editableLists);

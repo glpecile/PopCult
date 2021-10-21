@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Optional;
 
 @Service
 public class CollaborativeListsServiceImpl implements CollaborativeListService {
@@ -23,7 +23,11 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Transactional
     @Override
     public Request makeNewRequest(int listId, int userId) {
-        userDao.getById(userId).ifPresent(user -> listsDao.getMediaListById(listId).ifPresent(list -> userDao.getById(list.getUserId()).ifPresent(listOwner -> emailService.sendNewRequestEmail(list, user, listOwner))));
+        userDao.getById(userId).ifPresent(user -> listsDao.getMediaListById(listId).ifPresent(list -> {
+            userDao.getById(list.getUser().getUserId()).ifPresent(listOwner -> {
+                emailService.sendNewRequestEmail(list, user, listOwner);
+            });
+        }));
         return collaborativeListsDao.makeNewRequest(listId, userId);
     }
 

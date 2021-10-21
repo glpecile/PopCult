@@ -32,8 +32,8 @@ public class ReportServiceImpl implements ReportService {
     public void reportList(int listId, String report) {
         if (moderatorService.principalIsMod()) {
             listsService.getMediaListById(listId).ifPresent(mediaList -> {
-                listsService.deleteList(mediaList.getMediaListId());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList, report);
+                listsService.deleteList(mediaList);
+                sendDeletedListEmail(mediaList.getUser().getUserId(), mediaList, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -136,9 +136,9 @@ public class ReportServiceImpl implements ReportService {
     public void approveListReport(int reportId) {
         reportDao.getListReportById(reportId).ifPresent(report -> {
             listsService.getMediaListById(report.getMediaListId()).ifPresent(mediaList -> {
-                listsService.deleteList(mediaList.getMediaListId());
+                listsService.deleteList(mediaList);
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList, report.getReport());
+                sendDeletedListEmail(mediaList.getUser().getUserId(), mediaList, report.getReport());
             });
         });
     }

@@ -53,8 +53,8 @@ public class RowMappers {
      */
     public static final RowMapper<MediaList> MEDIA_LIST_ROW_MAPPER =
             (rs, rowNum) -> new MediaList(
-                    rs.getInt("mediaListId"),
-                    rs.getInt("userId"),
+                    null,
+                    null,
                     rs.getString("listname"),
                     rs.getString("description"),
                     rs.getDate("creationDate"),

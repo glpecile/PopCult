@@ -12,6 +12,7 @@ import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
@@ -38,6 +39,8 @@ public class ListsController {
     private UserService userService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private MediaService mediaService;
     @Autowired
     private FavoriteService favoriteService;
     @Autowired
@@ -78,22 +81,22 @@ public class ListsController {
         LOGGER.info("List {} accesed.", listId);
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final User u = listsService.getListOwner(mediaList.getMediaListId()).orElseThrow(UserNotFoundException::new);
+        final User u = mediaList.getUser();
         final List<Media> mediaFromList = listsService.getMediaIdInList(mediaList);
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
-        final PageContainer<MediaList> forks = listsService.getListForks(listId, defaultValue - 1, itemsPerPage);
+        final PageContainer<MediaList> forks = listsService.getListForks(mediaList, defaultValue - 1, itemsPerPage);
         mav.addObject("forks", forks);
         mav.addObject("collaborators", collaborators);
         mav.addObject("list", mediaList);
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
         mav.addObject("listCommentsContainer", listCommentsContainer);
-        listsService.getForkedFrom(listId).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
+        listsService.getForkedFrom(mediaList).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
-            mav.addObject("canEdit", listsService.canEditList(user.getUserId(), listId));
+            mav.addObject("canEdit", listsService.canEditList(user, mediaList));
         });
         return mav;
     }
@@ -175,7 +178,9 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/edit/{listId}/deleteMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
     public ModelAndView deleteFromList(@PathVariable("listId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
-        listsService.deleteMediaFromList(mediaListId, mediaId);
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        listsService.deleteMediaFromList(mediaList, media);
         return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
     }
 
@@ -205,8 +210,10 @@ public class ListsController {
             LOGGER.warn("Media form has errors for list {}", mediaListId);
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
         }
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        List<Media> media = mediaService.getById(mediaForm.getMedia());
         try {
-            listsService.addToMediaList(mediaListId, mediaForm.getMedia());
+            listsService.addToMediaList(mediaList, media);
         } catch (MediaAlreadyInListException e) {
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("alreadyInList", true);
         }
@@ -217,7 +224,8 @@ public class ListsController {
     @RequestMapping(value = "/lists/edit/{listId}/delete", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "delete")
     public ModelAndView deleteList(@PathVariable("listId") final int listId) {
         LOGGER.debug("Trying to delete list {}", listId);
-        listsService.deleteList(listId);
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        listsService.deleteList(mediaList);
         LOGGER.info("List {} deleted.", listId);
         return new ModelAndView("redirect:/lists");
     }
@@ -229,7 +237,8 @@ public class ListsController {
             LOGGER.warn("List {} form for update has errors", listId);
             return manageMediaFromList(listId, defaultValue, form, mediaForm).addObject("editDetailsErrors", errors.hasErrors());
         }
-        listsService.updateList(listId, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        listsService.updateList(mediaList, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         LOGGER.info("List {} updated.", listId);
         return new ModelAndView("redirect:/lists/edit/" + listId + "/manageMedia");
     }
@@ -239,7 +248,8 @@ public class ListsController {
     public ModelAndView createListCopy(@PathVariable("listId") final int listId) {
         LOGGER.debug("Forking list {}", listId);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
-        final MediaList newList = listsService.createMediaListCopy(user.getUserId(), listId);
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final MediaList newList = listsService.createMediaListCopy(user, mediaList);
         LOGGER.info("List {} forked.", listId);
         return new ModelAndView("redirect:/lists/" + newList.getMediaListId());
     }

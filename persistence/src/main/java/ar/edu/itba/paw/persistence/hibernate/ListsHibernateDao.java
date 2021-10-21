@@ -30,7 +30,7 @@ public class ListsHibernateDao implements ListsDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ListsHibernateDao.class);
 
     @Override
-    public Optional<MediaList> getMediaListById(int mediaListId) {
+    public Optional<MediaList> getMediaListById(long mediaListId) {
         return Optional.ofNullable(em.find(MediaList.class, mediaListId));
     }
 
@@ -95,25 +95,35 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public List<Media> getMediaIdInList(MediaList mediaList) {
-        //SELECT * FROM listelement NATURAL JOIN media WHERE mediaListId = ?
-        return em.createQuery("FROM Media m JOIN ListElement le ON m.mediaId = le.mediaId WHERE le.mediaListId = :listId", Media.class)
-                .setParameter("listId", mediaList).getResultList();
+        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId")
+                .setParameter("mediaListId", mediaList.getMediaListId());
+        @SuppressWarnings("unchecked")
+        List<Long> mediaIds = nativeQuery.getResultList();
+
+        return getMedias(mediaIds);
+
     }
 
     @Override
     public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
-        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement NATURAL JOIN media WHERE medialistid = :listid OFFSET (:offset) LIMIT (:limit)");
+        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", page * pageSize);
         nativeQuery.setParameter("limit", pageSize);
-        nativeQuery.setParameter("listid", mediaList);
+        nativeQuery.setParameter("mediaListId", mediaList.getMediaListId());
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
-        List<Media> list = em.createQuery("FROM Media WHERE mediaId IN (:mediaIds)", Media.class)
-                .setParameter("mediaIds", mediaIds).getResultList();
-        final Query countQuery = em.createQuery("SELECT COUNT(mediaId) FROM ListElement WHERE mediaListId = :listid")
-                .setParameter("listid", mediaList);
-        long count = (long) countQuery.getSingleResult();
-        return new PageContainer<>(list, page, pageSize, count);
+
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaid) FROM listelement WHERE medialistid = :mediaListId")
+                .setParameter("mediaListId", mediaList.getMediaListId());
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return new PageContainer<>(getMedias(mediaIds), page, pageSize, count);
+    }
+
+    private List<Media> getMedias(List<Long> mediaIds) {
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaIds", Media.class);
+        query.setParameter("mediaIds", mediaIds);
+        return mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
     }
 
     @Override
@@ -124,27 +134,31 @@ public class ListsHibernateDao implements ListsDao {
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
-        List<MediaList> list = em.createQuery("FROM MediaList WHERE mediaListId IN (:listIds)", MediaList.class)
-                .setParameter("listIds", listIds).getResultList();
+
         final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE m.visible = :visibility")
                 .setParameter("visibility", true);
         long count = (long) countQuery.getSingleResult();
+
+        List<MediaList> list = getMediaLists(listIds);
+
         return new PageContainer<>(list, page, pageSize, count);
     }
 
     @Override
     public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM listelement WHERE mediaid = :mediaid OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("mediaid", media);
+        nativeQuery.setParameter("mediaid", media.getMediaId());
         nativeQuery.setParameter("offset", page * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
-        List<MediaList> list = em.createQuery("FROM MediaList WHERE mediaListId IN (:listIds)", MediaList.class)
-                .setParameter("listIds", listIds).getResultList();
-        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM ListElement m WHERE m.mediaId = :mediaid")
-                .setParameter("mediaid", media);
-        long count = (long) countQuery.getSingleResult();
+
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaListId) FROM listelement WHERE mediaid = :mediaId")
+                .setParameter("mediaId", media.getMediaId());
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        List<MediaList> list = getMediaLists(listIds);
+
         return new PageContainer<>(list, page, pageSize, count);
     }
 
@@ -162,67 +176,112 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException {
-        final ListElement listElement = new ListElement(mediaListId, mediaId);
-        em.persist(listElement);
+    public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
+        em.createNativeQuery("INSERT INTO listelement (mediaid, medialistid) VALUES (:mediaId, :mediaListId)")
+                .setParameter("mediaId", media.getMediaId())
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .executeUpdate();
     }
 
     @Override
-    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException {
-        mediaIdList.forEach(mediaId -> em.persist(new ListElement(mediaListId, mediaId)));
+    public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
+        for (Media media : medias) {
+            addToMediaList(mediaList, media);
+        }
     }
 
     @Override
-    public void deleteMediaFromList(int mediaListId, int mediaId) {
-        em.remove(new ListElement(mediaListId, mediaId));
+    public void deleteMediaFromList(MediaList mediaList, Media media) {
+        em.createNativeQuery("DELETE FROM listelement WHERE medialistid = :mediaListId AND mediaid = :mediaId")
+                .setParameter("mediaId", media.getMediaId())
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .executeUpdate();
     }
 
     @Override
-    public void deleteList(int mediaListId) {
-        //TODO
+    public void deleteList(MediaList mediaList) {
+        em.remove(mediaList);
     }
 
     @Override
-    public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
-        //TODO
-    }
-
-    @Override
-    public MediaList createMediaListCopy(int userId, int toCopyListId) {
-        final MediaList toCopy = em.find(MediaList.class, toCopyListId);
-        MediaList fork = new MediaList(userId, toCopy.getListName(), toCopy.getDescription(), toCopy.isVisible(), toCopy.isCollaborative());
+    public MediaList createMediaListCopy(User user, MediaList toCopy) {
+        MediaList fork = new MediaList(user, "Copy from " + toCopy.getListName(), toCopy.getDescription(), toCopy.getVisible(), toCopy.getCollaborative());
         em.persist(fork);
-        List<ListElement> toCopyMedia = em.createQuery("FROM ListElement WHERE mediaListId = :toCopyId", ListElement.class).setParameter("toCopyId", toCopyListId).getResultList();
-        for (ListElement elem : toCopyMedia) {
-            em.persist(new ListElement(fork.getMediaListId(), elem.getMediaId()));
+        @SuppressWarnings("unchecked")
+        List<Long> toCopyMediaIds = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :toCopyId")
+                .setParameter("toCopyId", toCopy)
+                .getResultList();
+        List<Media> toCopyMedia = getMedias(toCopyMediaIds);
+        try {
+            addToMediaList(fork, toCopyMedia);
+        } catch (MediaAlreadyInListException e) {
+            LOGGER.error("Media already exists in MediaList");
         }
         return fork;
     }
 
     @Override
-    public Optional<User> getListOwner(int listId) {
-        final MediaList list = em.find(MediaList.class, listId);
-        return Optional.of(em.find(User.class, list.getUserId()));
-    }
-
-    @Override
-    public boolean canEditList(int userId, int listId) {
-        return !em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR (collaboratorid = :userid AND accepted = :accepted))").setParameter("userid", userId).setParameter("accepted", true).setParameter("medialistid", listId).getSingleResult()
+    public boolean canEditList(User user, MediaList mediaList) {
+        return !em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR (collaboratorid = :userid AND accepted = :accepted))")
+                .setParameter("userid", user.getUserId())
+                .setParameter("accepted", true)
+                .setParameter("medialistid", mediaList.getMediaListId())
+                .getSingleResult()
                 .equals(0);
     }
 
     @Override
-    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
-        return null;
+    public PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize) {
+        @SuppressWarnings("unchecked")
+        List<Long> listIds = em.createNativeQuery("(SELECT medialistid FROM medialist WHERE userid = :userId) UNION " +
+                        "(SELECT m.medialistid FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = :userId AND accepted = :accepted) " +
+                        "OFFSET :offset LIMIT :limit")
+                .setParameter("userId", user.getUserId())
+                .setParameter("accepted", true)
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize)
+                .getResultList();
+
+        long count = ((Number) em.createNativeQuery("SELECT COUNT(*) FROM ((SELECT * FROM medialist WHERE userid = :userId) UNION " +
+                        "(SELECT m.* FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = :userId AND accepted = :accepted)) AS aux")
+                .setParameter("userId", user.getUserId())
+                .setParameter("accepted", true)
+                .getSingleResult()).longValue();
+
+        return new PageContainer<>(getMediaLists(listIds), page, pageSize, count);
     }
 
     @Override
-    public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
-        return null;
+    public PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize) {
+        @SuppressWarnings("unchecked")
+        List<Long> listIds = em.createNativeQuery("SELECT m.medialistid FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid " +
+                        "WHERE f.originalistid = :mediaListId AND m.visibility = :visibility " +
+                        "OFFSET :offset LIMIT :limit")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("visibility", true)
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize)
+                .getResultList();
+
+        long count = ((Number) em.createNativeQuery("SELECT COUNT(m.medialistid) FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid " +
+                        "WHERE f.originalistid = :mediaListId AND m.visibility = :visibility")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("visibility", true)
+                .getResultList()).longValue();
+
+        return new PageContainer<>(getMediaLists(listIds), page, pageSize, count);
     }
 
     @Override
-    public Optional<MediaList> getForkedFrom(int listId) {
-        return Optional.empty();
+    public Optional<MediaList> getForkedFrom(MediaList mediaList) {
+        //        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ? AND visibility = ?", new Object[]{listId, true}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
+        @SuppressWarnings("unchecked")
+        long listId = ((Number) em.createNativeQuery("SELECT medialistid FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid " +
+                        "WHERE forkedlistid = :mediaListId AND visibility = :visibility")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("visibility", true)
+                .getSingleResult()).longValue();
+
+        return getMediaListById(listId);
     }
 }

@@ -26,9 +26,9 @@ public class MediaHibernateDao implements MediaDao {
     }
 
     @Override
-    public List<Media> getById(List<Integer> mediaList) {
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaids", Media.class);
-        query.setParameter("mediaids", mediaList);
+    public List<Media> getById(List<Integer> mediaIds) {
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaIds", Media.class);
+        query.setParameter("mediaIds", mediaIds);
         return query.getResultList();
     }
 

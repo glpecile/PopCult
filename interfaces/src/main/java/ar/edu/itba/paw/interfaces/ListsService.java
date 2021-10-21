@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ListsService {
-    Optional<MediaList> getMediaListById(int mediaListId);
+    Optional<MediaList> getMediaListById(long mediaListId);
 
     PageContainer<MediaList> getAllLists(int page, int pageSize);
 
@@ -31,26 +31,24 @@ public interface ListsService {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
-    void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
 
-    void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException;
 
-    void deleteMediaFromList(int mediaListId, int mediaId);
+    void deleteMediaFromList(MediaList mediaList, Media media);
 
-    void deleteList(int mediaListId);
+    void deleteList(MediaList mediaList);
 
-    void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative);
+    void updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative);
 
-    MediaList createMediaListCopy(int userId, int toCopy);
+    MediaList createMediaListCopy(User user, MediaList toCopy);
 
-    Optional<User> getListOwner(int listId);
+    boolean canEditList(User user, MediaList mediaList);
 
-    boolean canEditList(int userId, int listId);
+    PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize);
 
-    PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize);
+    PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize);
 
-    PageContainer<MediaList> getListForks(int listId, int page, int pageSize);
-
-    Optional<MediaList> getForkedFrom(int listId);
+    Optional<MediaList> getForkedFrom(MediaList mediaList);
 
 }

@@ -22,7 +22,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<MediaList> getMediaListById(int mediaListId) {
+    public Optional<MediaList> getMediaListById(long mediaListId) {
         return listsDao.getMediaListById(mediaListId);
     }
 
@@ -82,67 +82,64 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public void addToMediaList(int mediaListId, int mediaId) throws MediaAlreadyInListException {
-        listsDao.addToMediaList(mediaListId, mediaId);
+    public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
+        listsDao.addToMediaList(mediaList, media);
     }
 
     @Transactional
     @Override
-    public void addToMediaList(int mediaListId, List<Integer> mediaIdList) throws MediaAlreadyInListException {
-        listsDao.addToMediaList(mediaListId, mediaIdList);
+    public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
+        listsDao.addToMediaList(mediaList, medias);
     }
 
     @Transactional
     @Override
-    public void deleteMediaFromList(int mediaListId, int mediaId) {
-        listsDao.deleteMediaFromList(mediaListId, mediaId);
+    public void deleteMediaFromList(MediaList mediaList, Media media) {
+        listsDao.deleteMediaFromList(mediaList, media);
     }
 
     @Transactional
     @Override
-    public void deleteList(int mediaListId) {
-        listsDao.deleteList(mediaListId);
+    public void deleteList(MediaList mediaList) {
+        listsDao.deleteList(mediaList);
     }
 
     @Transactional
     @Override
-    public void updateList(int mediaListId, String title, String description, boolean visibility, boolean collaborative) {
-        listsDao.updateList(mediaListId, title, description, visibility, collaborative);
+    public void updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative) {
+        mediaList.setListName(title);
+        mediaList.setDescription(description);
+        mediaList.setVisible(visibility);
+        mediaList.setCollaborative(collaborative);
     }
 
     @Transactional
     @Override
-    public MediaList createMediaListCopy(int userId, int toCopy) {
-        return listsDao.createMediaListCopy(userId, toCopy);
+    public MediaList createMediaListCopy(User user, MediaList toCopy) {
+        return listsDao.createMediaListCopy(user, toCopy);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<User> getListOwner(int listId) {
-        return listsDao.getListOwner(listId);
+    public boolean canEditList(User user, MediaList mediaList) {
+        return listsDao.canEditList(user, mediaList);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public boolean canEditList(int userId, int listId) {
-        return listsDao.canEditList(userId, listId);
+    public PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize) {
+        return listsDao.getUserEditableLists(user, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getUserEditableLists(int userId, int page, int pageSize) {
-        return listsDao.getUserEditableLists(userId, page, pageSize);
+    public PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize) {
+        return listsDao.getListForks(mediaList, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getListForks(int listId, int page, int pageSize) {
-        return listsDao.getListForks(listId, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<MediaList> getForkedFrom(int listId) {
-        return listsDao.getForkedFrom(listId);
+    public Optional<MediaList> getForkedFrom(MediaList mediaList) {
+        return listsDao.getForkedFrom(mediaList);
     }
 }

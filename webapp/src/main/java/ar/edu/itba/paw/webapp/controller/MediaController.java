@@ -104,7 +104,7 @@ public class MediaController {
             mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
-            final List<MediaList> userLists = listsService.getUserEditableLists(user.getUserId(), defaultValue - 1, itemsPerPage).getElements();
+            final List<MediaList> userLists = listsService.getUserEditableLists(user, defaultValue - 1, itemsPerPage).getElements();
             mav.addObject("userLists", userLists);
         });
         LOGGER.info("Access to media {} description was successful", mediaId);
@@ -160,8 +160,10 @@ public class MediaController {
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
     public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
         LOGGER.debug("Trying to add media {} to list {}", mediaId, mediaListId);
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(MediaNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         try {
-            listsService.addToMediaList(mediaListId, mediaId);
+            listsService.addToMediaList(mediaList, media);
         } catch (MediaAlreadyInListException e) {
             LOGGER.error("Media {} is already in list {}.", mediaId, mediaListId);
             return new ModelAndView("redirect:/media/" + mediaId).addObject("alreadyInList", true);//TODO mostrar el mensaje

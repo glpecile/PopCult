@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.GenreDao;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import org.springframework.context.annotation.Primary;
@@ -41,6 +42,12 @@ public class GenreHibernateDao implements GenreDao {
         List<Media> mediaList = query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
+    }
+
+    @Override
+    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
+        //todo lo moveria a genreDAO la hace rober despues.
+        return null;
     }
 
 }
