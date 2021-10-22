@@ -113,18 +113,18 @@ public class RowMappers {
     /**
      * Watched Media RowMappers.
      */
-    public static final RowMapper<WatchedMedia> WATCHED_MEDIA_ROW_MAPPER =
-            (rs, rowNum) -> new WatchedMedia(
-                    rs.getInt("mediaId"),
-                    rs.getInt("type"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("image"),
-                    rs.getInt("length"),
-                    rs.getDate("releaseDate"),
-                    rs.getInt("seasons"),
-                    rs.getInt("country"),
-                    rs.getDate("watchdate"));
+//    public static final RowMapper<WatchedMedia> WATCHED_MEDIA_ROW_MAPPER =
+//            (rs, rowNum) -> new WatchedMedia(
+//                    rs.getInt("mediaId"),
+//                    rs.getInt("type"),
+//                    rs.getString("title"),
+//                    rs.getString("description"),
+//                    rs.getString("image"),
+//                    rs.getInt("length"),
+//                    rs.getDate("releaseDate"),
+//                    rs.getInt("seasons"),
+//                    rs.getInt("country"),
+//                    rs.getDate("watchdate"));
 
     /**
      * Image RowMappers.

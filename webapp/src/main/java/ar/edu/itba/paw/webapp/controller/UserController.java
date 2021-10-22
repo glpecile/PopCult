@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -119,7 +120,7 @@ public class UserController {
         LOGGER.debug("Trying to access {} to watch media.", username);
         ModelAndView mav = new ModelAndView("userToWatchMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user, page - 1, itemsPerPage);
         PageContainer<Media> suggestedMedia = favoriteService.getMostLikedMedia(page - 1, itemsPerPage);
 
         mav.addObject("user", user);
@@ -142,7 +143,7 @@ public class UserController {
         LOGGER.debug("Trying to access {} watched media.", username);
         ModelAndView mav = new ModelAndView("userWatchedMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(user, page - 1, itemsPerPage);
 
         mav.addObject("user", user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
@@ -316,7 +317,9 @@ public class UserController {
     public ModelAndView editWatchedDate(@PathVariable("username") final String username, @RequestParam("watchedDate") String watchedDate, @RequestParam("userId") int userId, @RequestParam("mediaId") int mediaId) throws ParseException {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         LOGGER.debug("{} is trying to edit watch date", username);
-        watchService.updateWatchedMediaDate(mediaId, userId, f.parse(watchedDate));
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
+        watchService.updateWatchedMediaDate(media, user, f.parse(watchedDate));
         LOGGER.info("{} updated successfully watched date", username);
         return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
