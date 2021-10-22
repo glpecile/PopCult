@@ -97,7 +97,7 @@ public class UserController {
         LOGGER.debug("Trying to access {} favorite media.", username);
         ModelAndView mav = new ModelAndView("userFavoriteMedia");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page - 1, itemsPerPage);
         PageContainer<Media> suggestedMedia = favoriteService.getMostLikedMedia(page - 1, itemsPerPage);
         mav.addObject("user", user);
         mav.addObject("favoriteMediaContainer", favoriteMedia);
@@ -166,7 +166,7 @@ public class UserController {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         mav.addObject(user);
 
-        PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user.getUserId(), page - 1, itemsPerPage);
+        PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user, page - 1, itemsPerPage);
         List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("userFavListsContainer", userFavLists);
@@ -176,7 +176,7 @@ public class UserController {
         String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
 
-        PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user.getUserId(), page - 1, listsPerPage);
+        PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user, page - 1, listsPerPage);
         final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicFavListCover);
         mav.addObject("userPublicLists", userPublicFavLists);

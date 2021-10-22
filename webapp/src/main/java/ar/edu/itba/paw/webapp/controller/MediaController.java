@@ -71,9 +71,9 @@ public class MediaController {
         String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
         mav.addObject("urlBase", urlBase);
         userService.getCurrentUser().ifPresent(user -> {
-            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS.ordinal(), user.getUserId(), 0, itemsPerContainer);
-            final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE.ordinal(), user.getUserId(), 0, itemsPerContainer);
-            final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user.getUserId(), defaultValue - 1, lastAddedAmount);
+            final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS, user, 0, itemsPerContainer);
+            final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE, user, 0, itemsPerContainer);
+            final PageContainer<MediaList> discoveryListsContainer = favoriteService.getRecommendationsBasedOnFavLists(user, defaultValue - 1, lastAddedAmount);
             final List<ListCover> discoveryListsCovers = getListCover(discoveryListsContainer.getElements(), listsService);
             mav.addObject("discoveryFilmContainer", discoveryFilmContainer);
             mav.addObject("discoverySeriesContainer", discoverySeriesContainer);
@@ -101,7 +101,7 @@ public class MediaController {
         mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
-            mav.addObject("isFavoriteMedia", favoriteService.isFavorite(mediaId, user.getUserId()));
+            mav.addObject("isFavoriteMedia", favoriteService.isFavorite(media, user));
             mav.addObject("isWatchedMedia", watchService.isWatched(mediaId, user.getUserId()));
             mav.addObject("isToWatchMedia", watchService.isToWatch(mediaId, user.getUserId()));
             final List<MediaList> userLists = listsService.getUserEditableLists(user, defaultValue - 1, itemsPerPage).getElements();
@@ -174,10 +174,10 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "addFav")
     public ModelAndView addMediaToFav(@PathVariable("mediaId") final int mediaId) {
-
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         LOGGER.debug("{} is trying to add media {} to favorites", user.getUsername(), mediaId);
-        favoriteService.addMediaToFav(mediaId, user.getUserId());
+        favoriteService.addMediaToFav(media, user);
         LOGGER.info("{} added media {} to favorites", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
@@ -185,8 +185,9 @@ public class MediaController {
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "deleteFav")
     public ModelAndView deleteMediaFromFav(@PathVariable("mediaId") final int mediaId) {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         LOGGER.debug("{} is trying to delete media {} from favorites", user.getUsername(), mediaId);
-        favoriteService.deleteMediaFromFav(mediaId, user.getUserId());
+        favoriteService.deleteMediaFromFav(media, user);
         LOGGER.info("{} deleted media {} from favorites", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
@@ -231,7 +232,7 @@ public class MediaController {
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access films");
         final ModelAndView mav = new ModelAndView("films");
-        final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
@@ -246,7 +247,7 @@ public class MediaController {
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access series");
         final ModelAndView mav = new ModelAndView("series");
-        final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE.ordinal(), 0, itemsPerContainer);
+        final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);

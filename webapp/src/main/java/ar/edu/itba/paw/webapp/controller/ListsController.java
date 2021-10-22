@@ -95,7 +95,7 @@ public class ListsController {
         listsService.getForkedFrom(mediaList).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
-            mav.addObject("isFavoriteList", favoriteService.isFavoriteList(listId, user.getUserId()));
+            mav.addObject("isFavoriteList", favoriteService.isFavoriteList(mediaList, user));
             mav.addObject("canEdit", listsService.canEditList(user, mediaList));
         });
         return mav;
@@ -258,7 +258,8 @@ public class ListsController {
     public ModelAndView addListToFav(@PathVariable("listId") final int listId) {
         LOGGER.debug("Trying to add list {} to favorties.", listId);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
-        favoriteService.addListToFav(listId, user.getUserId());
+        MediaList list = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        favoriteService.addListToFav(list, user);
         LOGGER.info("List {} added to favorites.", listId);
         return new ModelAndView("redirect:/lists/" + listId);
     }
@@ -267,7 +268,8 @@ public class ListsController {
     public ModelAndView deleteListFromFav(@PathVariable("listId") final int listId) {
         LOGGER.debug("Trying to delete list {} from favorites.", listId);
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
-        favoriteService.deleteListFromFav(listId, user.getUserId());
+        MediaList list = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        favoriteService.deleteListFromFav(list, user);
         LOGGER.info("List {} deleted from favorites.", listId);
         return new ModelAndView("redirect:/lists/" + listId);
     }
