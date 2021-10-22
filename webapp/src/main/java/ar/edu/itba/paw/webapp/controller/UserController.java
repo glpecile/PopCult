@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -61,6 +62,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
+    private static final int notificationsPerPage = 16;
     private static final int editablePerPage = 6;
 
 
@@ -368,7 +370,7 @@ public class UserController {
         LOGGER.debug("{} trying to access notifications", username);
         ModelAndView mav = new ModelAndView("userNotifications");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Comment> notificationContainer = commentService.getUserListsCommentsNotifications(user.getUserId(), page - 1, itemsPerPage * 4);
+        PageContainer<ListComment> notificationContainer = commentService.getUserListsCommentsNotifications(user, page - 1, notificationsPerPage);
         mav.addObject("username", username);
         mav.addObject("notifications", notificationContainer);
         LOGGER.info("{} accessed notifications", username);
@@ -378,7 +380,7 @@ public class UserController {
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
     public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.setUserListsCommentsNotificationsAsOpened(user.getUserId());
+        commentService.setUserListsCommentsNotificationsAsOpened(user);
         return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 
@@ -386,7 +388,7 @@ public class UserController {
     public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
         LOGGER.debug("{} trying to delete all notifications", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.deleteUserListsCommentsNotifications(user.getUserId());
+        commentService.deleteUserListsCommentsNotifications(user);
         LOGGER.info("{} deleted all notifications successfully ", username);
         return new ModelAndView("redirect:/user/" + username + "/notifications");
     }

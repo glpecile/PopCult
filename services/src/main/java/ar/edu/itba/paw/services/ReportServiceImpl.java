@@ -48,8 +48,8 @@ public class ReportServiceImpl implements ReportService {
     public void reportListComment(int listId, int commentId, String report) {
         if (moderatorService.principalIsMod()) {
             commentService.getListCommentById(commentId).ifPresent(comment -> {
-                commentService.deleteCommentFromList(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report);
+                commentService.deleteCommentFromList(comment);
+                sendDeletedCommentEmail(comment.getUser().getUserId(), comment, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -64,8 +64,8 @@ public class ReportServiceImpl implements ReportService {
     public void reportMediaComment(int mediaId, int commentId, String report) {
         if (moderatorService.principalIsMod()) {
             commentService.getMediaCommentById(commentId).ifPresent(comment -> {
-                commentService.deleteCommentFromMedia(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report);
+                commentService.deleteCommentFromMedia(comment);
+                sendDeletedCommentEmail(comment.getUser().getUserId(), comment, report);
             });
         } else {
             userService.getCurrentUser().ifPresent(user -> {
@@ -148,9 +148,9 @@ public class ReportServiceImpl implements ReportService {
     public void approveListCommentReport(int reportId) {
         reportDao.getListCommentReportById(reportId).ifPresent(report -> {
             commentService.getListCommentById(report.getCommentId()).ifPresent(comment -> {
-                commentService.deleteCommentFromList(comment.getCommentId());
+                commentService.deleteCommentFromList(comment);
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
+                sendDeletedCommentEmail(comment.getUser().getUserId(), comment, report.getReport());
             });
         });
     }
@@ -160,9 +160,9 @@ public class ReportServiceImpl implements ReportService {
     public void approveMediaCommentReport(int reportId) {
         reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
             commentService.getMediaCommentById(report.getCommentId()).ifPresent(comment -> {
-                commentService.deleteCommentFromMedia(comment.getCommentId());
+                commentService.deleteCommentFromMedia(comment);
                 sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
+                sendDeletedCommentEmail(comment.getUser().getUserId(), comment, report.getReport());
             });
         });
     }

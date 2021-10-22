@@ -25,29 +25,29 @@ public class CommentDaoJdbcTest {
     @Autowired
     private CommentDaoJdbcImpl commentDaoJdbc;
 
-    @Rollback
-    @Test
-    public void testAddCommentToMedia() {
-        //1
+//    @Rollback
+//    @Test
+//    public void testAddCommentToMedia() {
+//        //1
+//
+//        //2
+//        Comment comment = commentDaoJdbc.addCommentToMedia(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_MEDIA_ID, COMMENT);
+//
+//        //3
+//        Assert.assertNotNull(comment);
+//        Assert.assertEquals(COMMENT, comment.getCommentBody());
+//    }
 
-        //2
-        Comment comment = commentDaoJdbc.addCommentToMedia(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_MEDIA_ID, COMMENT);
-
-        //3
-        Assert.assertNotNull(comment);
-        Assert.assertEquals(COMMENT, comment.getCommentBody());
-    }
-
-    @Rollback
-    @Test
-    public void testAddCommentToList() {
-        //1
-
-        //2
-        Comment comment = commentDaoJdbc.addCommentToList(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_LIST_ID, COMMENT);
-
-        //3
-        Assert.assertNotNull(comment);
-        Assert.assertEquals(COMMENT, comment.getCommentBody());
-    }
+//    @Rollback
+//    @Test
+//    public void testAddCommentToList() {
+//        //1
+//
+//        //2
+//        Comment comment = commentDaoJdbc.addCommentToList(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_LIST_ID, COMMENT);
+//
+//        //3
+//        Assert.assertNotNull(comment);
+//        Assert.assertEquals(COMMENT, comment.getCommentBody());
+//    }
 }
