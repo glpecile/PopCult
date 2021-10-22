@@ -14,12 +14,11 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <!-- Local CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
-    <style type="text/css">
-        button.my-active {
-            background: none;
-            background-color: #F9FAFB !important;
-            color: #8B5CF6 !important;
-            border-color: #8B5CF6 !important;
+    <style>
+        .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            background: #F9FAFB none;
+            color: #8B5CF6;
+            border-color: #8B5CF6;
         }
     </style>
     <!-- Local Scripts -->
@@ -131,7 +130,7 @@
                 <!-- Tabs -->
                 <ul class="nav nav-tabs justify-center mb-3" id="ex1" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="bg-gray-50 nav-link my-active hover:text-purple-500" id="pills-media-tab" data-bs-toggle="pill"
+                        <button class="bg-gray-50 nav-link active hover:text-purple-500" id="pills-media-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-media"
                                 type="button"
                                 role="tab" aria-controls="pills-media" aria-selected="true">
@@ -232,15 +231,4 @@
     </jsp:include>
 </div>
 </body>
-<script>
-    // https://stackoverflow.com/questions/18332324/not-able-to-overwrite-bootstrap-active-class-in-the-navbar
-    // Click on any button in li in ul with class 'navbar-tabs'
-    $('ul.nav-tabs li.nav-item button').click(function (e) {
-        var $this = $(this); // declare variable for current li that we click
-        $('ul.nav-tabs').find('li.nav-item').find('button.my-active').last().removeClass('my-active');
-        $('ul.nav-tabs').find('li.nav-item').find('button.active').last().removeClass('active');
-        // find all li that class class active and remove.
-        $this.addClass('my-active'); //add 'active' class to current li.
-    });
-</script>
 </html>
