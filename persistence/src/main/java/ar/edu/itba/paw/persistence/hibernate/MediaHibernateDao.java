@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty()? new ArrayList<>() : query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
     }
@@ -78,7 +79,7 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty()? new ArrayList<>() : query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
     }
