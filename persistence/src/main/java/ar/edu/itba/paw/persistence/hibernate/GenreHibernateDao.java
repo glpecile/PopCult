@@ -17,9 +17,9 @@ import java.util.List;
 @Primary
 @Repository
 public class GenreHibernateDao implements GenreDao {
+
     @PersistenceContext
     private EntityManager em;
-
 
     @Override
     public PageContainer<Media> getMediaByGenre(Genre genre, int page, int pageSize) {

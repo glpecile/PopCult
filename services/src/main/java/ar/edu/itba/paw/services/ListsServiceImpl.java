@@ -106,11 +106,12 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public void updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative) {
+    public MediaList updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative) {
         mediaList.setListName(title);
         mediaList.setDescription(description);
         mediaList.setVisible(visibility);
         mediaList.setCollaborative(collaborative);
+        return mediaList;
     }
 
     @Transactional

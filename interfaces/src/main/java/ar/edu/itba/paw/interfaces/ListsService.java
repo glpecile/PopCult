@@ -39,7 +39,7 @@ public interface ListsService {
 
     void deleteList(MediaList mediaList);
 
-    void updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative);
+    MediaList updateList(MediaList mediaList, String title, String description, boolean visibility, boolean collaborative);
 
     MediaList createMediaListCopy(User user, MediaList toCopy);
 
