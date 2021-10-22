@@ -45,9 +45,34 @@ public class GenreHibernateDao implements GenreDao {
     }
 
     @Override
-    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
-        //todo lo moveria a genreDAO la hace rober despues.
-        return null;
+    public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility) {
+        //Para paginacion
+        //Pedimos el contenido paginado.
+        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM (SELECT DISTINCT  medialist.medialistid, medialist.creationdate FROM mediaGenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY mediaList.medialistid " +
+                ",creationdate  HAVING COUNT(mediaId) >= :minMatches ORDER BY creationdate DESC) AS aux OFFSET :offset LIMIT :pageSize");
+        nativeQuery.setParameter("genreid",genre.ordinal());
+        nativeQuery.setParameter("offset",page*pageSize);
+        nativeQuery.setParameter("pageSize",pageSize);
+        nativeQuery.setParameter("minMatches", minMatches);
+        nativeQuery.setParameter("visibility", visibility);
+        @SuppressWarnings("unchecked")
+        List<Integer> mediaListIds = nativeQuery.getResultList();
+        //Obtenemos la cantidad total de elementos.
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(DISTINCT medialist.medialistid) FROM mediaGenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY mediaList.medialistid " +
+                "HAVING COUNT(mediaId) >= :minMatches ");
+        countQuery.setParameter("genreid", genre.ordinal());
+        countQuery.setParameter("visibility", visibility);
+        countQuery.setParameter("minMatches", minMatches);
+        final long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        //Query que se pide con los ids ya paginados
+        final TypedQuery<MediaList> query = em.createQuery("from MediaList where mediaListId in (:mediaListIds)", MediaList.class);
+        query.setParameter("mediaListIds", mediaListIds);
+        List<MediaList> mediaList = query.getResultList();
+
+        return new PageContainer<>(mediaList,page,pageSize,count);
     }
 
 }

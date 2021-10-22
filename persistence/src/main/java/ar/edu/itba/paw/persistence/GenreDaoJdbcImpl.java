@@ -41,7 +41,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
     }
 
     @Override
-    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
+    public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility) {
         return null;
     }
 }
