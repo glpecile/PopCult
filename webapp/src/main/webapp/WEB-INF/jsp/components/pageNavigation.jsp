@@ -1,6 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<style>
+    .page-item.active .page-link {
+        background-color: #8B5CF6;
+    }
+</style>
 <nav>
     <ul class="pagination pagination-circle justify-content-center">
         <c:if test="${param.mediaPages > 1}">

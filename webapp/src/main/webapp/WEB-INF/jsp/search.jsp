@@ -14,12 +14,19 @@
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <!-- Local CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
+    <style>
+        .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            background: #F9FAFB none;
+            color: #8B5CF6;
+            border-color: #8B5CF6;
+        }
+    </style>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
     <title><spring:message code="search.title"/> &#8226; PopCult</title>
 </head>
 <c:url value="/search" var="searchUrl"/>
-<body class="bg-gray-50">
+<body class="bg-gray-50" id="asdf">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
@@ -120,44 +127,76 @@
                         </div>
                     </div>
                 </form:form>
-                <!-- Film and series results -->
-                <c:if test="${searchFilmsContainer.totalCount > 0}">
-                    <div class="row">
-                        <c:forEach var="media" items="${searchFilmsContainer.elements}">
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                                    <jsp:param name="image" value="${media.image}"/>
-                                    <jsp:param name="title" value="${media.title}"/>
-                                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                                    <jsp:param name="mediaId" value="${media.mediaId}"/>
-                                </jsp:include>
-                            </div>
-                        </c:forEach>
-                        <br>
-                    </div>
-                </c:if>
-                <!-- Lists results -->
-                <c:if test="${listCoversContainer.totalCount > 0}">
-                    <!-- Search Results of every List -->
-                    <div class="row">
-                        <h2 class="font-bold text-2xl py-3">
+                <!-- Tabs -->
+                <ul class="nav nav-tabs justify-center mb-3" id="ex1" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="bg-gray-50 nav-link active hover:text-purple-500" id="pills-media-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-media"
+                                type="button"
+                                role="tab" aria-controls="pills-media" aria-selected="true">
+                            <spring:message code="search.media.results"/>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="bg-gray-50 nav-link hover:text-purple-500" id="pills-lists-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-lists"
+                                type="button"
+                                role="tab" aria-controls="pills-lists" aria-selected="false">
                             <spring:message code="search.list.results"/>
-                        </h2>
-                        <c:forEach var="cover" items="${listCoversContainer.elements}">
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                                <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
-                                    <jsp:param name="title" value="${cover.name}"/>
-                                    <jsp:param name="listId" value="${cover.listId}"/>
-                                    <jsp:param name="image1" value="${cover.image1}"/>
-                                    <jsp:param name="image2" value="${cover.image2}"/>
-                                    <jsp:param name="image3" value="${cover.image3}"/>
-                                    <jsp:param name="image4" value="${cover.image4}"/>
-                                </jsp:include>
-                            </div>
-                        </c:forEach>
+                        </button>
+                    </li>
+                </ul>
+                <!-- Tabs content -->
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-media" role="tabpanel" aria-labelledby="pills-media-tab">
+                        <!-- Media results -->
+                        <c:choose>
+                            <c:when test="${searchFilmsContainer.totalCount > 0}">
+                                <div class="row">
+                                    <c:forEach var="media" items="${searchFilmsContainer.elements}">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                                                <jsp:param name="image" value="${media.image}"/>
+                                                <jsp:param name="title" value="${media.title}"/>
+                                                <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                                                <jsp:param name="mediaId" value="${media.mediaId}"/>
+                                            </jsp:include>
+                                        </div>
+                                    </c:forEach>
+                                    <br>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                    <br>
-                </c:if>
+                    <div class="tab-pane fade" id="pills-lists" role="tabpanel" aria-labelledby="pills-lists-tab">
+                        <!-- Lists results -->
+                        <c:choose>
+                            <c:when test="${listCoversContainer.totalCount > 0}">
+                                <!-- Search Results of every List -->
+                                <div class="row">
+                                    <c:forEach var="cover" items="${listCoversContainer.elements}">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                                            <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                                                <jsp:param name="title" value="${cover.name}"/>
+                                                <jsp:param name="listId" value="${cover.listId}"/>
+                                                <jsp:param name="image1" value="${cover.image1}"/>
+                                                <jsp:param name="image2" value="${cover.image2}"/>
+                                                <jsp:param name="image3" value="${cover.image3}"/>
+                                                <jsp:param name="image4" value="${cover.image4}"/>
+                                            </jsp:include>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
             </c:when>
             <c:otherwise>
                 <h1 class="font-bold text-2xl py-2">
@@ -181,12 +220,12 @@
                 </c:choose>
             </c:forEach>
         </c:url>
-        <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-            <jsp:param name="mediaPages" value="${searchFilmsContainer.totalPages}"/>
-            <jsp:param name="currentPage" value="${searchFilmsContainer.currentPage + 1}"/>
-            <jsp:param name="url" value="${urlBase2}"/>
-        </jsp:include>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+        <jsp:param name="mediaPages" value="${searchFilmsContainer.totalPages}"/>
+        <jsp:param name="currentPage" value="${searchFilmsContainer.currentPage + 1}"/>
+        <jsp:param name="url" value="${urlBase2}"/>
+    </jsp:include>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp">
         <jsp:param name="url" value="${urlBase2}"/>
     </jsp:include>
