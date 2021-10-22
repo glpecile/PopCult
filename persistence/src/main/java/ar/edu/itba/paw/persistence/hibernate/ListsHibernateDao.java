@@ -59,8 +59,8 @@ public class ListsHibernateDao implements ListsDao {
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE User.userId = :userid")
-                .setParameter("userid", user.getUserId());
+        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE user = :user")
+                .setParameter("user", user);
         long count = (long) countQuery.getSingleResult();
 
         List<MediaList> list = getMediaLists(listIds);
@@ -78,8 +78,8 @@ public class ListsHibernateDao implements ListsDao {
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE User.userId = :userid  AND m.visible = :visibility")
-                .setParameter("userid", user).setParameter("visibility", true);
+        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE user = :user  AND m.visible = :visibility")
+                .setParameter("user", user).setParameter("visibility", true);
         long count = (long) countQuery.getSingleResult();
 
         List<MediaList> list = getMediaLists(listIds);
