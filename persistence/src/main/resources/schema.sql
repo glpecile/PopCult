@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS listcomment
 
 CREATE TABLE IF NOT EXISTS commentNotifications
 (
+    notificationId SERIAL PRIMARY KEY,
     commentId INT NOT NULL,
     opened    BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (commentId) REFERENCES listcomment (commentid) ON DELETE CASCADE

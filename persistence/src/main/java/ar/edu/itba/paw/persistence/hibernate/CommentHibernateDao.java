@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.CommentDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +42,10 @@ public class CommentHibernateDao implements CommentDao {
     }
 
     @Override
-    public void addCommentNotification(ListComment comment) {
-
+    public Notification addCommentNotification(ListComment comment) {
+        Notification notification = new Notification(null, comment);
+        em.persist(notification);
+        return notification;
     }
 
     @Override
@@ -69,36 +73,55 @@ public class CommentHibernateDao implements CommentDao {
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
         final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment c WHERE c.commentId = :commentId", MediaComment.class);
-
+        //TODO fix
+        return null;
     }
 
     @Override
     public PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize) {
-        return null;
+        return null; //TODO
     }
 
     @Override
     public void deleteCommentFromMedia(MediaComment comment) {
-
+        em.remove(comment);
     }
 
     @Override
     public void deleteCommentFromList(ListComment comment) {
-
+        em.remove(comment);
     }
 
     @Override
-    public PageContainer<ListComment> getUserListsCommentsNotifications(User user, int page, int pageSize) {
-        return null;
+    public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
+        final Query nativeQuery = em.createNativeQuery("SELECT notificationid FROM commentnotifications NATURAL JOIN listcomment " +
+                        "WHERE userid = :userId ORDER BY date DESC " +
+                        "OFFSET :offset LIMIT :limit")
+                .setParameter("userId", user.getUserId())
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> notificationIds = nativeQuery.getResultList();
+
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(notificationid)  FROM commentnotifications NATURAL JOIN listcomment" +
+                        " WHERE userid = :userId")
+                .setParameter("userId", user.getUserId());
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        final TypedQuery<Notification> query = em.createQuery("FROM Notification WHERE notificationId IN (:notificationIds)", Notification.class);
+        query.setParameter("notificationIds", notificationIds);
+        List<Notification> notifications = notificationIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+
+        return new PageContainer<>(notifications, page, pageSize, count);
     }
 
     @Override
     public void setUserListsCommentsNotificationsAsOpened(User user) {
-
+        //TODO
     }
 
     @Override
     public void deleteUserListsCommentsNotifications(User user) {
-
+        //TODO
     }
 }

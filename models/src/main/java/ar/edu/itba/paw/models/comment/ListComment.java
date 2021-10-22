@@ -22,4 +22,12 @@ public class ListComment extends Comment {
         super(commentId, user, commentBody, creationDate);
         this.mediaList = mediaList;
     }
+
+    public MediaList getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(MediaList mediaList) {
+        this.mediaList = mediaList;
+    }
 }

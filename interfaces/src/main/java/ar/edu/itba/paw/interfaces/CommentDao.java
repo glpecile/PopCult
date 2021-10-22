@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
@@ -15,7 +16,7 @@ public interface CommentDao {
 
     ListComment addCommentToList(User user, MediaList mediaList, String comment);
 
-    void addCommentNotification(ListComment comment);
+    Notification addCommentNotification(ListComment comment);
 
     Optional<MediaComment> getMediaCommentById(int commentId);
 
@@ -29,7 +30,7 @@ public interface CommentDao {
 
     void deleteCommentFromList(ListComment comment);
 
-    PageContainer<ListComment> getUserListsCommentsNotifications(User user, int page, int pageSize);
+    PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
 
     void setUserListsCommentsNotificationsAsOpened(User user);
 

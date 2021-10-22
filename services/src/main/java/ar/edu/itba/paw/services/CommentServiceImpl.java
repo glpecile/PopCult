@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
@@ -74,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<ListComment> getUserListsCommentsNotifications(User user, int page, int pageSize) {
+    public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
         return commentDao.getUserListsCommentsNotifications(user, page, pageSize);
     }
 
