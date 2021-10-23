@@ -137,25 +137,25 @@ public class RowMappers {
     /**
      * Comment RowMappers.
      */
-    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
-            (rs, rowNum) -> new Comment(
-                    rs.getInt("commentId"),
-                    rs.getInt("userId"),
-                    rs.getString("username"),
-                    rs.getString("description"));
+//    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
+//            (rs, rowNum) -> new Comment(
+//                    rs.getInt("commentId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("username"),
+//                    rs.getString("description"));
 
     /**
      * Comment Notifications RowMappers.
      */
-    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
-            (rs, rowNum) -> new Comment(
-                    rs.getInt("commentId"),
-                    rs.getInt("userId"),
-                    rs.getString("username"),
-                    rs.getString("description"),
-                    rs.getString("listname"),
-                    rs.getInt("listid"),
-                    rs.getBoolean("opened"));
+//    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
+//            (rs, rowNum) -> new Comment(
+//                    rs.getInt("commentId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("username"),
+//                    rs.getString("description"),
+//                    rs.getString("listname"),
+//                    rs.getInt("listid"),
+//                    rs.getBoolean("opened"));
 
     /**
      * Request RowMappers.

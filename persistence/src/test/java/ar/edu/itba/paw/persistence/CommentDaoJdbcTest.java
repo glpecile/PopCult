@@ -21,9 +21,9 @@ public class CommentDaoJdbcTest {
     private static final int ALREADY_EXISTS_LIST_ID = 1;
     private static final String COMMENT = "Comment";
 
-
-    @Autowired
-    private CommentDaoJdbcImpl commentDaoJdbc;
+//
+//    @Autowired
+//    private CommentDaoJdbcImpl commentDaoJdbc;
 
 //    @Rollback
 //    @Test

@@ -12,10 +12,7 @@ public class Notification {
     private Integer notificationId;
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "listcomment",
-            joinColumns = @JoinColumn(name = "commentid")
-    )
+    @JoinColumn(name = "commentid")
     private ListComment listComment;
 
     @Column(name = "opened", nullable = false)

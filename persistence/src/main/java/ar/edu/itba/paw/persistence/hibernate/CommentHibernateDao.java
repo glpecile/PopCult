@@ -72,14 +72,32 @@ public class CommentHibernateDao implements CommentDao {
                 .setParameter("mediaId", media.getMediaId());
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment c WHERE c.commentId = :commentId", MediaComment.class);
-        //TODO fix
-        return null;
+        final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment WHERE commentId IN (:commentIds)", MediaComment.class)//It works, ignore intellij
+                .setParameter("commentIds", commentIds);
+        List<MediaComment> mediaComments = commentIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+
+        return new PageContainer<>(mediaComments, page, pageSize, count);
     }
 
     @Override
     public PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize) {
-        return null; //TODO
+        final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM listcomment WHERE listid = :listId " +
+                        "OFFSET :offset LIMIT :limit")
+                .setParameter("listId", mediaList.getMediaListId())
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> commentIds = nativeQuery.getResultList();
+
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(commentid) FROM listcomment WHERE listid = :listId")
+                .setParameter("listId", mediaList.getMediaListId());
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        final TypedQuery<ListComment> query = em.createQuery("FROM ListComment WHERE commentId IN (:commentIds)", ListComment.class)//It works, ignore intellij
+                .setParameter("commentIds", commentIds);
+        List<ListComment> mediaComments = commentIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+
+        return new PageContainer<>(mediaComments, page, pageSize, count);
     }
 
     @Override
