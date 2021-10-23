@@ -132,7 +132,8 @@ public class CommentHibernateDao implements CommentDao {
     public void deleteUserListsCommentsNotifications(User user) {
         em.createNativeQuery("DELETE FROM commentnotifications " +
                         "WHERE commentid IN " +
-                        "(SELECT commentid FROM (commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
+                        "(SELECT commentid FROM " +
+                        "(commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
                 .setParameter("userId", user.getUserId())
                 .executeUpdate();
     }
