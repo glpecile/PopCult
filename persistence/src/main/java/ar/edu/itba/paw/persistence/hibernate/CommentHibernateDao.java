@@ -95,7 +95,8 @@ public class CommentHibernateDao implements CommentDao {
     @Override
     public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT notificationid FROM commentnotifications NATURAL JOIN listcomment " +
-                        "WHERE userid = :userId ORDER BY date DESC " +
+                        "WHERE commentid IN (SELECT lc.commentid FROM listcomment lc JOIN medialist ml ON lc.listid = ml.medialistid WHERE ml.userid = :userId)" +
+                        "ORDER BY date DESC " +
                         "OFFSET :offset LIMIT :limit")
                 .setParameter("userId", user.getUserId())
                 .setParameter("offset", page * pageSize)
@@ -103,8 +104,8 @@ public class CommentHibernateDao implements CommentDao {
         @SuppressWarnings("unchecked")
         List<Long> notificationIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(notificationid)  FROM commentnotifications NATURAL JOIN listcomment" +
-                        " WHERE userid = :userId")
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(notificationid) FROM commentnotifications " +
+                        "WHERE commentid IN (SELECT lc.commentid FROM listcomment lc JOIN medialist ml ON lc.listid = ml.medialistid WHERE ml.userid = :userId)")
                 .setParameter("userId", user.getUserId());
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
@@ -117,11 +118,22 @@ public class CommentHibernateDao implements CommentDao {
 
     @Override
     public void setUserListsCommentsNotificationsAsOpened(User user) {
-        //TODO
+        em.createNativeQuery("UPDATE commentnotifications SET opened = :opened " +
+                        "WHERE commentid IN " +
+                        "(SELECT commentid FROM " +
+                        "(commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
+                .setParameter("opened", true)
+                .setParameter("userId", user.getUserId())
+                .executeUpdate();
+
     }
 
     @Override
     public void deleteUserListsCommentsNotifications(User user) {
-        //TODO
+        em.createNativeQuery("DELETE FROM commentnotifications " +
+                        "WHERE commentid IN " +
+                        "(SELECT commentid FROM (commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
+                .setParameter("userId", user.getUserId())
+                .executeUpdate();
     }
 }
