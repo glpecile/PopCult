@@ -84,7 +84,7 @@ public class ListsController {
         final User u = mediaList.getUser();
         final List<Media> mediaFromList = listsService.getMediaIdInList(mediaList);
         final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
-        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(listId, defaultValue - 1, collaboratorsAmount);
+        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, defaultValue - 1, collaboratorsAmount);
         final PageContainer<MediaList> forks = listsService.getListForks(mediaList, defaultValue - 1, itemsPerPage);
         mav.addObject("forks", forks);
         mav.addObject("collaborators", collaborators);
@@ -137,8 +137,9 @@ public class ListsController {
     public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId) {
 
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        MediaList list = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         LOGGER.debug("User: {} requesting collaboration level for list {}", user.getUserId(), listId);
-        collaborativeListService.makeNewRequest(listId, user.getUserId());
+        collaborativeListService.makeNewRequest(list, user);
         LOGGER.info("User: {} send a request to collaborate to list {}", user.getUserId(), listId);
         return new ModelAndView("redirect:/lists/" + listId);
     }
@@ -146,7 +147,8 @@ public class ListsController {
     @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
     public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") final int collabId, @RequestParam("returnURL") final String returnURL) {
         LOGGER.debug("Cancelling colaborration permission for list {}", listId);
-        collaborativeListService.deleteCollaborator(collabId);
+        Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO CUSTOM EXCEPTION
+        collaborativeListService.deleteCollaborator(collab);
         LOGGER.info("Cancelling colaborration permission for list {} completed.", listId);
         return new ModelAndView("redirect:" + returnURL);
     }
@@ -278,8 +280,9 @@ public class ListsController {
     public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId, @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access list {} collaborators", listId);
         final ModelAndView mav = new ModelAndView("manageCollaboratorsFromList");
-        mav.addObject("list", listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new));
-        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(listId, page - 1, collaboratorsAmount));
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        mav.addObject("list", mediaList);
+        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaList, page - 1, collaboratorsAmount));
         LOGGER.info("List collaborators from {} accessed.", listId);
         return mav;
     }
@@ -290,7 +293,7 @@ public class ListsController {
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);
-        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaListId, defaultValue - 1, collaboratorsAmount));
+        mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaList, defaultValue - 1, collaboratorsAmount));
         mav.addObject("currentUser", userService.getCurrentUser().orElseThrow(UserNotFoundException::new));
         return mav;
     }

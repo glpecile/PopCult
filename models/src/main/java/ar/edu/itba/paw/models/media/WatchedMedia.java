@@ -59,15 +59,6 @@ public class WatchedMedia {
         return String.valueOf(releaseDate).substring(0, 4);
     }
 
-
-    public int getSeasons() {
-        return seasons;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
     public Date getLastWatched() {
         return lastWatched;
     }

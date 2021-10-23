@@ -160,14 +160,14 @@ public class RowMappers {
     /**
      * Request RowMappers.
      */
-    public static final RowMapper<Request> REQUEST_ROW_MAPPER =
-            (rs, rowNum) -> new Request(
-                    rs.getInt("collabId"),
-                    rs.getInt("collaboratorId"),
-                    rs.getString("username"),
-                    rs.getInt("listId"),
-                    rs.getString("listname"),
-                    rs.getBoolean("accepted"));
+//    public static final RowMapper<Request> REQUEST_ROW_MAPPER =
+//            (rs, rowNum) -> new Request(
+//                    rs.getInt("collabId"),
+//                    rs.getInt("collaboratorId"),
+//                    rs.getString("username"),
+//                    rs.getInt("listId"),
+//                    rs.getString("listname"),
+//                    rs.getBoolean("accepted"));
 
 
     /**

@@ -329,7 +329,7 @@ public class UserController {
         LOGGER.debug("{} trying to access collaborations requests", username);
         ModelAndView mav = new ModelAndView("userRequests");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user.getUserId(), page - 1, itemsPerPage * 4);
+        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user, page - 1, itemsPerPage * 4);
         mav.addObject("username", username);
         mav.addObject("requestContainer", requestContainer);
         LOGGER.info("{} accessed succesfully to collaborations requests", username);
@@ -339,7 +339,8 @@ public class UserController {
     @RequestMapping("/user/{username}/requests/accept")
     public ModelAndView acceptCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to accept collab request", username);
-        collaborativeListService.acceptRequest(collabId);
+        Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO EXCEPTION
+        collaborativeListService.acceptRequest(collab);
         LOGGER.info("{} collab request accepted", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
     }
@@ -347,7 +348,8 @@ public class UserController {
     @RequestMapping("/user/{username}/requests/reject")
     public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to reject collab request", username);
-        collaborativeListService.rejectRequest(collabId);
+        Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO CUSTOM EXCEPTION
+        collaborativeListService.rejectRequest(collab);
         LOGGER.info("{} collab request rejected", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
     }

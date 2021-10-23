@@ -1,43 +1,76 @@
 package ar.edu.itba.paw.models.collaborative;
 
-public class Request {
-    private final int collabId;
-    private final int collaboratorId;
-    private final String collaboratorUsername;
-    private final int listId;
-    private final String listname;
-    private final boolean accepted;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.user.User;
 
-    public Request(int collabId, int collaboratorId, String collaboratorUsername, int listId, String listname, boolean accepted) {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "collaborative")
+public class Request {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collaborative_collabId_seq")
+    @SequenceGenerator(sequenceName = "collaborative_collabId_seq", name="collaborative_collabId_seq", allocationSize = 1)
+    private Integer collabId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "collaboratorId")
+    private User collaborator;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "listId")
+    private MediaList mediaList;
+
+    @Column
+    private boolean accepted;
+
+    public Request(int collabId, User user, MediaList mediaList, boolean accepted) {
         this.collabId = collabId;
-        this.collaboratorId = collaboratorId;
-        this.collaboratorUsername = collaboratorUsername;
-        this.listId = listId;
-        this.listname = listname;
+        this.collaborator = user;
+        this.mediaList = mediaList;
         this.accepted = accepted;
     }
 
-    public int getCollabId() {
+    public Request() {
+        //hibernate!!!!!
+    }
+
+    public Request(User collaborator, MediaList mediaList) {
+        this.collabId = null;
+        this.collaborator = collaborator;
+        this.mediaList = mediaList;
+        this.accepted = false;
+    }
+
+    public Integer getCollabId() {
         return collabId;
     }
 
-    public int getCollaboratorId() {
-        return collaboratorId;
+    public void setCollabId(Integer collabId) {
+        this.collabId = collabId;
     }
 
-    public String getCollaboratorUsername() {
-        return collaboratorUsername;
+    public User getCollaborator() {
+        return collaborator;
     }
 
-    public int getListId() {
-        return listId;
+    public void setCollaborator(User collaborator) {
+        this.collaborator = collaborator;
     }
 
-    public String getListname() {
-        return listname;
+    public MediaList getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(MediaList mediaList) {
+        this.mediaList = mediaList;
     }
 
     public boolean isAccepted() {
         return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }
