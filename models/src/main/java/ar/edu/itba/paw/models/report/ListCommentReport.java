@@ -1,34 +1,39 @@
 package ar.edu.itba.paw.models.report;
 
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.user.User;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "listcommentreport")
 public class ListCommentReport extends Report {
-    private final int commentId;
-    private final int mediaListId;
-    private final int userId;
-    private final String commentBody;
 
-    public ListCommentReport(int reportId, int reporteeId, String report, Date date, int commentId, int mediaListId, int userId, String commentBody) {
-        super(reportId, reporteeId, report, date);
-        this.commentId = commentId;
-        this.mediaListId = mediaListId;
-        this.userId = userId;
-        this.commentBody = commentBody;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentid")
+    private ListComment comment;
+
+//    private int mediaListId; Esto no hace falta
+
+//    private int userId; Esto no se por que esta xd
+
+//    private String commentBody;
+
+    /* default */ ListCommentReport() {
+
     }
 
-    public int getCommentId() {
-        return commentId;
+    public ListCommentReport(Integer reportId, User reportee, String report, Date date, ListComment comment) {
+        super(reportId, reportee, report, date);
+        this.comment = comment;
     }
 
-    public int getMediaListId() {
-        return mediaListId;
+    public ListComment getComment() {
+        return comment;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public String getCommentBody() {
-        return commentBody;
+    public void setComment(ListComment comment) {
+        this.comment = comment;
     }
 }

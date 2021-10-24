@@ -1,34 +1,33 @@
 package ar.edu.itba.paw.models.report;
 
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.user.User;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "mediacommentreport")
 public class MediaCommentReport extends Report {
-    private final int commentId;
-    private final int mediaId;
-    private final int userId;
-    private final String commentBody;
 
-    public MediaCommentReport(int reportId, int reporteeId, String report, Date date, int commentId, int mediaId, int userId, String commentBody) {
-        super(reportId, reporteeId, report, date);
-        this.commentId = commentId;
-        this.mediaId = mediaId;
-        this.userId = userId;
-        this.commentBody = commentBody;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentid")
+    private MediaComment comment;
+
+    /* default */ MediaCommentReport() {
+
     }
 
-    public int getCommentId() {
-        return commentId;
+    public MediaCommentReport(Integer reportId, User reportee, String report, Date date, MediaComment comment) {
+        super(reportId, reportee, report, date);
+        this.comment = comment;
     }
 
-    public int getMediaId() {
-        return mediaId;
+    public MediaComment getComment() {
+        return comment;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public String getCommentBody() {
-        return commentBody;
+    public void setComment(MediaComment comment) {
+        this.comment = comment;
     }
 }

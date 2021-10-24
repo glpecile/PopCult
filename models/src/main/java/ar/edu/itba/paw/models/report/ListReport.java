@@ -1,34 +1,33 @@
 package ar.edu.itba.paw.models.report;
 
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.user.User;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "listreport")
 public class ListReport extends Report {
-    private final int mediaListId;
-    private final int userId;
-    private final String listName;
-    private final String description;
 
-    public ListReport(int reportId, int reporteeId, String report, Date date, int mediaListId, int userId, String listName, String description) {
-        super(reportId, reporteeId, report, date);
-        this.mediaListId = mediaListId;
-        this.userId = userId;
-        this.listName = listName;
-        this.description = description;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "listid")
+    private MediaList mediaList;
+
+    /* default */ ListReport() {
+
     }
 
-    public int getMediaListId() {
-        return mediaListId;
+    public ListReport(Integer reportId, User reportee, String report, Date date, MediaList mediaList) {
+        super(reportId, reportee, report, date);
+        this.mediaList = mediaList;
     }
 
-    public int getUserId() {
-        return userId;
+    public MediaList getMediaList() {
+        return mediaList;
     }
 
-    public String getListName() {
-        return listName;
-    }
-
-    public String getDescription() {
-        return description;
+    public void setMediaList(MediaList mediaList) {
+        this.mediaList = mediaList;
     }
 }
