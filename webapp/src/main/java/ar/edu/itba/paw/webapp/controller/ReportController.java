@@ -77,7 +77,7 @@ public class ReportController {
             LOGGER.warn("post /report/lists/{}/comment/{} : Comment report has errors.", listId, commentId);
             return reportList(listId, reportForm);
         }
-        reportService.reportListComment(listId, commentId, reportForm.getReport());
+        reportService.reportListComment(commentId, reportForm.getReport());
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
@@ -103,7 +103,7 @@ public class ReportController {
             LOGGER.warn("/report/media/{}/comment/{} : Comment report has errors.", mediaId, commentId);
             return reportMediaComment(mediaId, commentId, reportForm);
         }
-        reportService.reportMediaComment(mediaId, commentId, reportForm.getReport());
+        reportService.reportMediaComment(commentId, reportForm.getReport());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
