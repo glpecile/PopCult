@@ -29,12 +29,12 @@
                             value="${user.username}"/></b></a>
                     </h4>
                     <%-- Forked From --%>
-                    <c:if test="${forkedFrom != null}">
+                    <c:if test="${list.forkedFrom != null}">
                         <h4 class="py-2 pb-2.5">
                             <spring:message code="lists.forkedFrom"/> <a
                                 class="text-purple-500 hover:text-purple-900"
-                                href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out
-                                value="${forkedFrom.listName}"/></b></a>
+                                href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
+                                value="${list.forkedFrom.listName}"/></b></a>
                         </h4>
                     </c:if>
                 </div>

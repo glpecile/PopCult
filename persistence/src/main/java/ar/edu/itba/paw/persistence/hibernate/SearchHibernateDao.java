@@ -28,18 +28,20 @@ public class SearchHibernateDao implements SearchDao {
     public PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        String orderBy = " ORDER BY " + sort.nameMediaList;
-        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE title ILIKE CONCAT('%', :title, '%') AND type = ?  AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = :mediaListId)" + orderBy + " OFFSET :offset LIMIT :limit");
+        String orderBy = " ORDER BY " + sort.nameMedia;
+        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE title ILIKE CONCAT('%', :title, '%') AND type IN (:mediaType) AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = :mediaListId)" + orderBy + " OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("title", title);
         nativeQuery.setParameter("mediaListId", mediaList.getMediaListId());
+        nativeQuery.setParameter("mediaType", mediaType.stream().map(MediaType::ordinal).collect(Collectors.toList()));
         nativeQuery.setParameter("offset", page * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaid) FROM media WHERE title ILIKE CONCAT('%', :title, '%') AND type = ?  AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = :mediaListId)");
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaid) FROM media WHERE title ILIKE CONCAT('%', :title, '%') AND type IN (:mediaType)  AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = :mediaListId)");
         countQuery.setParameter("title", title);
-        nativeQuery.setParameter("mediaListId", mediaList.getMediaListId());
+        countQuery.setParameter("mediaListId", mediaList.getMediaListId());
+        countQuery.setParameter("mediaType", mediaType.stream().map(MediaType::ordinal).collect(Collectors.toList()));
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados

@@ -33,6 +33,13 @@ public class MediaList {
     @Column
     private Boolean collaborative;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "forkedlists",
+            joinColumns = {@JoinColumn(name = "originallistid")},
+            inverseJoinColumns = {@JoinColumn(name = "medialistid")}
+    )
+    private MediaList forkedFrom;
+
     /* default */ MediaList() {
         //Just for Hibernate, we <3 u!
     }
@@ -111,6 +118,14 @@ public class MediaList {
 
     public void setCollaborative(Boolean collaborative) {
         this.collaborative = collaborative;
+    }
+
+    public MediaList getForkedFrom() {
+        return forkedFrom;
+    }
+
+    public void setForkedFrom(MediaList forkedFrom) {
+        this.forkedFrom = forkedFrom;
     }
 
     @Override

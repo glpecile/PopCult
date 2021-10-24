@@ -267,7 +267,7 @@ public class ListsHibernateDao implements ListsDao {
                         "WHERE f.originalistid = :mediaListId AND m.visibility = :visibility")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("visibility", true)
-                .getResultList()).longValue();
+                .getSingleResult()).longValue();
 
         return new PageContainer<>(getMediaLists(listIds), page, pageSize, count);
     }
