@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -196,8 +197,12 @@ public class ListsController {
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
         }
         LOGGER.info("Searching for term: {}", searchForm.getTerm());
-        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.FILMS.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements();
-        searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaListId, searchForm.getTerm(), defaultValue - 1, searchAmount, MediaType.SERIE.ordinal(), SortType.valueOf(sortType.toUpperCase()).ordinal()).getElements());
+        final MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        final List<MediaType> mediaTypes = new ArrayList<>();
+        mediaTypes.add(MediaType.SERIE);
+        mediaTypes.add(MediaType.FILMS);
+        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements();
+        searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements());
         LOGGER.info("Search process completed.");
         return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults", mediaForm.generateMediaMap(searchResults));
 

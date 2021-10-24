@@ -2,30 +2,21 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
+import ar.edu.itba.paw.models.search.SortType;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 public interface SearchService {
-    PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int sort);
 
-    Optional<Integer> getCountSearchMediaByTitle(String title, int mediaType);
+    PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<MediaType> mediaType, SortType sort, List<Genre> genre, String fromDate, String toDate) throws ParseException;
 
-    PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize);
+    PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches);
 
-    Optional<Integer> getCountSearchMediaByTitle(String title);
-
-    PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, int mediaType, int sort);
-
-    PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort);
-
-    PageContainer<Media> searchMediaByTitle(String title, int page, int pageSize, List<Integer> mediaType, int sort, List<Integer> genre, String fromDate, String toDate) throws ParseException;
-
-    PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, int sort, int genre, int minMatches);
-
-    PageContainer<Media> searchMediaByTitleNotInList(int listId, String title, int page, int pageSize, int mediaType, int sort);
+    PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort);
 
 
 }
