@@ -161,9 +161,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendCollabRequestAcceptedEmail(User to, Request collaboration) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("listname", collaboration.getListname());
-        mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
-        mailMap.put("listId", collaboration.getListId());
+        mailMap.put("listname", collaboration.getMediaList().getListName());
+        mailMap.put("collabUsername", collaboration.getCollaborator().getUsername());
+        mailMap.put("listId", collaboration.getMediaList().getMediaListId());
         final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
     }

@@ -30,7 +30,7 @@ public class ListsHibernateDao implements ListsDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ListsHibernateDao.class);
 
     @Override
-    public Optional<MediaList> getMediaListById(long mediaListId) {
+    public Optional<MediaList> getMediaListById(int mediaListId) {
         return Optional.ofNullable(em.find(MediaList.class, mediaListId));
     }
 
@@ -276,11 +276,11 @@ public class ListsHibernateDao implements ListsDao {
     public Optional<MediaList> getForkedFrom(MediaList mediaList) {
         //        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ? AND visibility = ?", new Object[]{listId, true}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
         @SuppressWarnings("unchecked")
-        long listId = ((Number) em.createNativeQuery("SELECT medialistid FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid " +
+        int listId = ((Number) em.createNativeQuery("SELECT medialistid FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid " +
                         "WHERE forkedlistid = :mediaListId AND visibility = :visibility")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("visibility", true)
-                .getSingleResult()).longValue();
+                .getSingleResult()).intValue();
 
         return getMediaListById(listId);
     }

@@ -22,7 +22,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<MediaList> getMediaListById(long mediaListId) {
+    public Optional<MediaList> getMediaListById(int mediaListId) {
         return listsDao.getMediaListById(mediaListId);
     }
 

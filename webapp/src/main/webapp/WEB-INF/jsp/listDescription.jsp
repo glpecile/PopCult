@@ -75,11 +75,11 @@
         <c:if test="${collaborators.totalCount != 0}">
             <h4 class="font-bold py-2 pb-2.5"><spring:message code="lists.collaborators"/></h4>
             <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                <c:forEach var="collaborator" items="${collaborators.elements}">
+                <c:forEach var="request" items="${collaborators.elements}">
                     <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${collaborator.collaboratorUsername}"/>
-                        <jsp:param name="tooltip" value="${collaborator.collaboratorUsername}"/>
-                        <jsp:param name="url" value="/user/${collaborator.collaboratorUsername}"/>
+                        <jsp:param name="text" value="${request.collaboratorUsername}"/>
+                        <jsp:param name="tooltip" value="${request.collaboratorUsername}"/>
+                        <jsp:param name="url" value="/user/${request.collaboratorUsername}"/>
                     </jsp:include>
                 </c:forEach>
             </div>
