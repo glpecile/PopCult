@@ -48,7 +48,7 @@ public class GenreHibernateDao implements GenreDao {
     public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM (SELECT DISTINCT  medialist.medialistid, medialist.creationdate FROM mediaGenre NATURAL JOIN " +
+        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM (SELECT DISTINCT medialistid, creationdate FROM mediaGenre NATURAL JOIN " +
                 "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY mediaList.medialistid " +
                 ",creationdate  HAVING COUNT(mediaId) >= :minMatches ORDER BY creationdate DESC) AS aux OFFSET :offset LIMIT :pageSize");
         nativeQuery.setParameter("genreid",genre.ordinal());
