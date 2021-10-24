@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -66,7 +67,8 @@ public class AdminController {
     public ModelAndView approveListReport(HttpServletRequest request,
                                           @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to approve list report {}", reportId);
-        reportService.approveListReport(reportId);
+        ListReport listReport = reportService.getListReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.approveListReport(listReport);
         LOGGER.info("List report {} approved", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -75,7 +77,8 @@ public class AdminController {
     public ModelAndView rejectListReport(HttpServletRequest request,
                                          @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to reject list report {}", reportId);
-        reportService.deleteListReport(reportId);
+        ListReport listReport = reportService.getListReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.deleteListReport(listReport);
         LOGGER.info("List report {} rejected", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -97,7 +100,8 @@ public class AdminController {
     public ModelAndView approveListCommentReport(HttpServletRequest request,
                                                  @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to approve list comment report {}", reportId);
-        reportService.approveListCommentReport(reportId);
+        ListCommentReport listCommentReport = reportService.getListCommentReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.approveListCommentReport(listCommentReport);
         LOGGER.info("List comment report {} approved", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -106,7 +110,8 @@ public class AdminController {
     public ModelAndView rejectListCommentReport(HttpServletRequest request,
                                                 @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to reject list comment report {}", reportId);
-        reportService.deleteListCommentReport(reportId);
+        ListCommentReport listCommentReport = reportService.getListCommentReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.deleteListCommentReport(listCommentReport);
         LOGGER.info("List comment report {} rejected", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -128,7 +133,8 @@ public class AdminController {
     public ModelAndView approveMediaCommentReport(HttpServletRequest request,
                                                   @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to approve media comment report {}", reportId);
-        reportService.approveMediaCommentReport(reportId);
+        MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.approveMediaCommentReport(mediaCommentReport);
         LOGGER.info("Media comment report {} approved", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
@@ -137,7 +143,8 @@ public class AdminController {
     public ModelAndView rejectMediaCommentReport(HttpServletRequest request,
                                                  @PathVariable(value = "reportId") final int reportId) {
         LOGGER.debug("Trying to reject media comment report {}", reportId);
-        reportService.deleteMediaCommentReport(reportId);
+        MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(reportId).orElseThrow(ReportNotFoundException::new);
+        reportService.deleteMediaCommentReport(mediaCommentReport);
         LOGGER.info("Media comment report {} rejected", reportId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
