@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ReportServiceImpl implements ReportService {
     @Autowired
@@ -71,8 +73,19 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-    private void sendReportCreatedEmail(User user, String report) {
-        emailService.sendReportCreatedEmail(user, report);
+    @Override
+    public Optional<ListReport> getListReportById(int reportId) {
+        return reportDao.getListReportById(reportId);
+    }
+
+    @Override
+    public Optional<ListCommentReport> getListCommentReportById(int reportId) {
+        return reportDao.getListCommentReportById(reportId);
+    }
+
+    @Override
+    public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
+        return reportDao.getMediaCommentReportById(reportId);
     }
 
     @Transactional(readOnly = true)
@@ -137,6 +150,10 @@ public class ReportServiceImpl implements ReportService {
         commentService.deleteCommentFromMedia(mediaCommentReport.getComment());
         sendReportApprovedEmail(mediaCommentReport.getReportee(), mediaCommentReport.getReport());
         sendDeletedCommentEmail(mediaCommentReport.getComment().getUser(), mediaCommentReport.getComment(), mediaCommentReport.getReport());
+    }
+
+    private void sendReportCreatedEmail(User user, String report) {
+        emailService.sendReportCreatedEmail(user, report);
     }
 
     private void sendReportRejectedEmail(User reportee, String report) {
