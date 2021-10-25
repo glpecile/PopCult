@@ -36,19 +36,19 @@
                     <spring:message code="profile.watchedMedia.noMedia"/>
                 </h3>
             </c:if>
-            <c:forEach var="media" items="${watchedMediaIdsContainer.elements}">
+            <c:forEach var="watched" items="${watchedMediaIdsContainer.elements}">
                 <div class="flex-col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2 mb-6">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                        <jsp:param name="image" value="${media.image}"/>
-                        <jsp:param name="title" value="${media.title}"/>
-                        <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                        <jsp:param name="mediaId" value="${media.mediaId}"/>
+                        <jsp:param name="image" value="${watched.media.image}"/>
+                        <jsp:param name="title" value="${watched.media.title}"/>
+                        <jsp:param name="releaseDate" value="${watched.media.releaseYear}"/>
+                        <jsp:param name="mediaId" value="${watched.media.mediaId}"/>
                     </jsp:include>
                     <jsp:include page="/WEB-INF/jsp/components/editWatchDate.jsp">
-                        <jsp:param name="lastWatched" value="${media.lastWatched}"/>
+                        <jsp:param name="lastWatched" value="${watched.watchDate}"/>
                         <jsp:param name="listOwner" value="${username}"/>
-                        <jsp:param name="mediaTitle" value="${media.title}"/>
-                        <jsp:param name="id" value="${media.mediaId}"/>
+                        <jsp:param name="mediaTitle" value="${watched.media.title}"/>
+                        <jsp:param name="id" value="${watched.media.mediaId}"/>
                         <jsp:param name="listOwnerId" value="${user.userId}"/>
                     </jsp:include>
                 </div>

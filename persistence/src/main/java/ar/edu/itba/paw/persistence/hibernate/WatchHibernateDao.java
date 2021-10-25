@@ -25,11 +25,13 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public void addWatchMedia(Media media, User user, Date date) {
-        em.createNativeQuery("INSERT INTO towatchmedia (userid, mediaid, watchdate) VALUES (:userId, :mediaId, :date)")
-                .setParameter("mediaId", media.getMediaId())
-                .setParameter("userId", user.getUserId())
-                .setParameter("date", date)
-                .executeUpdate();
+//        em.createNativeQuery("INSERT INTO towatchmedia (userid, mediaid, watchdate) VALUES (:userId, :mediaId, :date)")
+//                .setParameter("mediaId", media.getMediaId())
+//                .setParameter("userId", user.getUserId())
+//                .setParameter("date", date)
+//                .executeUpdate();
+        final WatchedMedia watchedMedia = new WatchedMedia(user, media, date);
+        em.persist(watchedMedia);
     }
 
     @Override
@@ -53,7 +55,8 @@ public class WatchHibernateDao implements WatchDao {
         em.createNativeQuery("UPDATE towatchmedia SET watchdate = :date WHERE mediaid = :mediaId AND userid = :userId AND watchdate IS NOT NULL")
                 .setParameter("date", date)
                 .setParameter("userId", user.getUserId())
-                .setParameter("mediaId", media.getMediaId());
+                .setParameter("mediaId", media.getMediaId())
+                .executeUpdate();
     }
 
     @Override
@@ -72,17 +75,17 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize) {
-        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
+        final Query nativeQuery = em.createNativeQuery("SELECT watchedmediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("offset", page*pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaid) FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL");
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(watchedmediaid) FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL");
         countQuery.setParameter("userId", user.getUserId());
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<WatchedMedia> typedQuery = em.createQuery("FROM Media WHERE mediaId IN (:mediaIds)", WatchedMedia.class)
+        final TypedQuery<WatchedMedia> typedQuery = em.createQuery("FROM WatchedMedia WHERE watchedMediaId IN (:mediaIds)", WatchedMedia.class)
                 .setParameter("mediaIds", mediaIds);
         List<WatchedMedia> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
         return new PageContainer<>(mediaList, page, pageSize, count);
