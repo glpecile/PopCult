@@ -33,10 +33,10 @@ public class MediaList {
     @Column
     private Boolean collaborative;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(name = "forkedlists",
-            joinColumns = {@JoinColumn(name = "originallistid")},
-            inverseJoinColumns = {@JoinColumn(name = "medialistid")}
+            joinColumns = {@JoinColumn(name = "originalistid")},
+            inverseJoinColumns = {@JoinColumn(name = "forkedlistid")}
     )
     private MediaList forkedFrom;
 

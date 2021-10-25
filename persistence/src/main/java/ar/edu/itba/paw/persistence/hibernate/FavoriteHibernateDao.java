@@ -90,7 +90,9 @@ public class FavoriteHibernateDao implements FavoriteDao {
         List<Long> listIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(medialistid) FROM favoritelists WHERE userId = :userId");
         countQuery.setParameter("userId", user.getUserId());
-        return getMediaListPageContainer(page, pageSize, listIds, countQuery);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return getMediaListPageContainer(page, pageSize, listIds, count);
     }
 
     @Override
@@ -104,7 +106,9 @@ public class FavoriteHibernateDao implements FavoriteDao {
         List<Long> listIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(medialist.medialistid) FROM favoritelists NATURAL JOIN medialist WHERE userId = :userId AND visibility = :visibility");
         countQuery.setParameter("userId", user.getUserId()).setParameter("visibility", true);
-        return getMediaListPageContainer(page, pageSize, listIds, countQuery);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return getMediaListPageContainer(page, pageSize, listIds, count);
     }
 
     @Override
@@ -117,7 +121,9 @@ public class FavoriteHibernateDao implements FavoriteDao {
         List<Long> listIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(medialistid) FROM (medialist NATURAL JOIN (SELECT medialistid FROM favoritelists WHERE userid IN (SELECT l.userid FROM favoritelists f JOIN favoritelists l ON f.medialistid = l.medialistid WHERE f.userid = :userId) EXCEPT SELECT medialistId FROM favoritelists WHERE userid = :userId) as AUX)");
         countQuery.setParameter("userId", user.getUserId());
-        return getMediaListPageContainer(page, pageSize, listIds, countQuery);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return getMediaListPageContainer(page, pageSize, listIds, count);
     }
 
     @Override
@@ -128,9 +134,11 @@ public class FavoriteHibernateDao implements FavoriteDao {
         nativeQuery.setParameter("visibility", true);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(medialist.medialistid) FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = :visibility GROUP BY medialist.medialistid");
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(medialist.medialistid) FROM medialist WHERE visibility = :visibility");
         countQuery.setParameter("visibility", true);
-        return getMediaListPageContainer(page, pageSize, listIds, countQuery);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return getMediaListPageContainer(page, pageSize, listIds, count);
     }
 
     @Override
@@ -194,7 +202,9 @@ public class FavoriteHibernateDao implements FavoriteDao {
         final Query countQuery = em.createNativeQuery("SELECT COUNT(medialistid) FROM medialist WHERE visibility = :visibility AND userid != :userId");
         countQuery.setParameter("visibility", true);
         countQuery.setParameter("userId", user.getUserId());
-        return getMediaListPageContainer(page, pageSize, listIds, countQuery);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        return getMediaListPageContainer(page, pageSize, listIds, count);
     }
 
     private PageContainer<Media> getMediaPageContainer(int page, int pageSize, List<Long> mediaIds, Query countQuery) {
@@ -206,9 +216,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
-    private PageContainer<MediaList> getMediaListPageContainer(int page, int pageSize, List<Long> listIds, Query countQuery) {
-        long count = ((Number) countQuery.getSingleResult()).longValue();
-
+    private PageContainer<MediaList> getMediaListPageContainer(int page, int pageSize, List<Long> listIds, long count) {
         final TypedQuery<MediaList> typedQuery = em.createQuery("FROM MediaList WHERE mediaListId IN (:listIds)", MediaList.class)
                 .setParameter("listIds", listIds);
         List<MediaList> mediaList = listIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();

@@ -31,7 +31,7 @@ public class Request {
         this.accepted = accepted;
     }
 
-    public Request() {
+    /*default*/ Request() {
         //hibernate!!!!!
     }
 

@@ -38,7 +38,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Transactional
     @Override
     public void acceptRequest(Request collaborationRequest) {
-        userDao.getById(collaborationRequest.getCollaborator().getUserId()).ifPresent(user -> emailService.sendCollabRequestAcceptedEmail(user, collaborationRequest));
+        emailService.sendCollabRequestAcceptedEmail( collaborationRequest.getCollaborator(), collaborationRequest);
         collaborationRequest.setAccepted(true);
 //        collaborativeListsDao.acceptRequest(collabId);
     }

@@ -135,7 +135,7 @@ public class ListsHibernateDao implements ListsDao {
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createQuery("SELECT COUNT(m.mediaListId) FROM MediaList m WHERE m.visible = :visibility")
+        final Query countQuery = em.createQuery("SELECT COUNT(mediaListId) FROM MediaList WHERE visible = :visibility")
                 .setParameter("visibility", true);
         long count = (long) countQuery.getSingleResult();
 
