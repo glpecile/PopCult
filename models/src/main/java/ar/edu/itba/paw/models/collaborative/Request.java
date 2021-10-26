@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Table(name = "collaborative")
 public class Request {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collaborative_collabId_seq")
-    @SequenceGenerator(sequenceName = "collaborative_collabId_seq", name="collaborative_collabId_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collaborative_collabid_seq")
+    @SequenceGenerator(sequenceName = "collaborative_collabid_seq", name="collaborative_collabid_seq", allocationSize = 1)
     private Integer collabId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

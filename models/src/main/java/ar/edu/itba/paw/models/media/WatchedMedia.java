@@ -9,8 +9,8 @@ import java.util.Date;
 @Table(name = "towatchmedia")
 public class WatchedMedia {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "towatchmedia_id_seq")
-    @SequenceGenerator(sequenceName = "towatchmedia_id_seq", name = "towatchmedia_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "towatchmedia_watchedmediaid_seq")
+    @SequenceGenerator(sequenceName = "towatchmedia_watchedmediaid_seq", name = "towatchmedia_watchedmediaid_seq", allocationSize = 1)
     private Integer watchedMediaId;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
