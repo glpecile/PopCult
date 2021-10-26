@@ -61,16 +61,16 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public boolean isWatched(Media media, User user) {
-        return !em.createNativeQuery("SELECT COUNT(mediaid) AS count FROM towatchmedia WHERE mediaId = :mediaId AND userid = :userId AND watchDate IS NOT NULL")
+        return !(((Number) em.createNativeQuery("SELECT COUNT(mediaid) AS count FROM towatchmedia WHERE mediaId = :mediaId AND userid = :userId AND watchDate IS NOT NULL")
                 .setParameter("mediaId", media.getMediaId())
-                .setParameter("userId", user.getUserId()).getSingleResult().equals(0);
+                .setParameter("userId", user.getUserId()).getSingleResult()).intValue() == 0);
     }
 
     @Override
     public boolean isToWatch(Media media, User user) {
-        return !em.createNativeQuery("SELECT COUNT(mediaid) AS count FROM towatchmedia WHERE mediaId = :mediaId AND userid = :userId AND watchDate IS NULL")
+        return !(((Number) em.createNativeQuery("SELECT COUNT(mediaid) AS count FROM towatchmedia WHERE mediaId = :mediaId AND userid = :userId AND watchDate IS NULL")
                 .setParameter("mediaId", media.getMediaId())
-                .setParameter("userId", user.getUserId()).getSingleResult().equals(0);
+                .setParameter("userId", user.getUserId()).getSingleResult()).intValue() == 0);
     }
 
     @Override
