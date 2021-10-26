@@ -7,6 +7,8 @@ import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -62,6 +64,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
+    private static final int notificationsPerPage = 16;
     private static final int editablePerPage = 6;
 
 
@@ -197,7 +200,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form, final BindingResult errors) {
+    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form,
+                                         final BindingResult errors) {
         LOGGER.debug("{} trying to update settings", form.getUsername());
         if (errors.hasErrors()) {
             LOGGER.error("Form used for user details has errors.");
@@ -218,7 +222,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
-    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form, final BindingResult errors) {
+    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form,
+                                         final BindingResult errors) {
         LOGGER.debug("Trying to change password");
         if (errors.hasErrors()) {
             LOGGER.error("Change password form has errors.");
@@ -286,7 +291,8 @@ public class UserController {
 
 
     @RequestMapping(value = "/user/{username}", method = {RequestMethod.POST}, params = "uploadImage")
-    public ModelAndView uploadProfilePicture(@PathVariable("username") final String username, @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
+    public ModelAndView uploadProfilePicture(@PathVariable("username") final String username,
+                                             @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
                                              final BindingResult error) throws IOException {
         LOGGER.debug("{} trying to upload profile picture", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -314,7 +320,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
-    public ModelAndView editWatchedDate(@PathVariable("username") final String username, @RequestParam("watchedDate") String watchedDate, @RequestParam("userId") int userId, @RequestParam("mediaId") int mediaId) throws ParseException {
+    public ModelAndView editWatchedDate(@PathVariable("username") final String username,
+                                        @RequestParam("watchedDate") String watchedDate,
+                                        @RequestParam("userId") int userId,
+                                        @RequestParam("mediaId") int mediaId) throws ParseException {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         LOGGER.debug("{} is trying to edit watch date", username);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
@@ -325,7 +334,8 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/requests")
-    public ModelAndView userCollabRequests(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userCollabRequests(@PathVariable("username") final String username,
+                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("{} trying to access collaborations requests", username);
         ModelAndView mav = new ModelAndView("userRequests");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -337,7 +347,8 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/requests/accept")
-    public ModelAndView acceptCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+    public ModelAndView acceptCollabRequests(@PathVariable("username") final String username,
+                                             @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to accept collab request", username);
         Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO EXCEPTION
         collaborativeListService.acceptRequest(collab);
@@ -346,7 +357,8 @@ public class UserController {
     }
 
     @RequestMapping("/user/{username}/requests/reject")
-    public ModelAndView rejectCollabRequests(@PathVariable("username") final String username, @RequestParam("collabId") final int collabId) {
+    public ModelAndView rejectCollabRequests(@PathVariable("username") final String username,
+                                             @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to reject collab request", username);
         Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO CUSTOM EXCEPTION
         collaborativeListService.rejectRequest(collab);
@@ -355,7 +367,8 @@ public class UserController {
     }
 
     @RequestMapping("user/{username}/lists")
-    public ModelAndView userEditableLists(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userEditableLists(@PathVariable("username") final String username,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("{} trying to access editable lists", username);
         ModelAndView mav = new ModelAndView("userEditableLists");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -369,11 +382,12 @@ public class UserController {
     }
 
     @RequestMapping("user/{username}/notifications")
-    public ModelAndView userNotifications(@PathVariable("username") final String username, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView userNotifications(@PathVariable("username") final String username,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("{} trying to access notifications", username);
         ModelAndView mav = new ModelAndView("userNotifications");
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Comment> notificationContainer = commentService.getUserListsCommentsNotifications(user.getUserId(), page - 1, itemsPerPage * 4);
+        PageContainer<Notification> notificationContainer = commentService.getUserListsCommentsNotifications(user, page - 1, notificationsPerPage);
         mav.addObject("username", username);
         mav.addObject("notifications", notificationContainer);
         LOGGER.info("{} accessed notifications", username);
@@ -383,7 +397,7 @@ public class UserController {
     @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
     public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.setUserListsCommentsNotificationsAsOpened(user.getUserId());
+        commentService.setUserListsCommentsNotificationsAsOpened(user);
         return new ModelAndView("redirect:/user/" + username + "/notifications");
     }
 
@@ -391,7 +405,7 @@ public class UserController {
     public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
         LOGGER.debug("{} trying to delete all notifications", username);
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.deleteUserListsCommentsNotifications(user.getUserId());
+        commentService.deleteUserListsCommentsNotifications(user);
         LOGGER.info("{} deleted all notifications successfully ", username);
         return new ModelAndView("redirect:/user/" + username + "/notifications");
     }

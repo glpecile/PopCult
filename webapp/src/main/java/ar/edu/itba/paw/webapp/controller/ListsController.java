@@ -5,16 +5,14 @@ import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.ListForm;
 import ar.edu.itba.paw.webapp.form.ListMediaForm;
@@ -78,13 +76,14 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.GET})
-    public ModelAndView listDescription(@PathVariable("listId") final int listId, @ModelAttribute("commentForm") CommentForm commentForm) {
+    public ModelAndView listDescription(@PathVariable("listId") final int listId,
+                                        @ModelAttribute("commentForm") CommentForm commentForm) {
         LOGGER.info("List {} accesed.", listId);
         final ModelAndView mav = new ModelAndView("listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = mediaList.getUser();
         final List<Media> mediaFromList = listsService.getMediaIdInList(mediaList);
-        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, defaultValue - 1, itemsPerPage);
+        final PageContainer<ListComment> listCommentsContainer = commentService.getListComments(mediaList, defaultValue - 1, itemsPerPage);
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, defaultValue - 1, collaboratorsAmount);
         final PageContainer<MediaList> forks = listsService.getListForks(mediaList, defaultValue - 1, itemsPerPage);
         mav.addObject("forks", forks);
@@ -103,11 +102,12 @@ public class ListsController {
     }
 
     @RequestMapping("/lists/{listId}/comments")
-    public ModelAndView listComments(@PathVariable("listId") final int listId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView listComments(@PathVariable("listId") final int listId,
+                                     @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.info("List {} comments accesed.", listId);
         final ModelAndView mav = new ModelAndView("listCommentDetails");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final PageContainer<Comment> listCommentsContainer = commentService.getListComments(listId, page - 1, commentsAmount);
+        final PageContainer<ListComment> listCommentsContainer = commentService.getListComments(mediaList, page - 1, commentsAmount);
         mav.addObject("list", mediaList);
         mav.addObject("listCommentsContainer", listCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
@@ -115,21 +115,27 @@ public class ListsController {
     }
 
     @RequestMapping(value = {"/lists/{listId}"}, method = {RequestMethod.POST}, params = "comment")
-    public ModelAndView addComment(@PathVariable("listId") final int listId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+    public ModelAndView addComment(@PathVariable("listId") final int listId,
+                                   @Valid @ModelAttribute("searchForm") final CommentForm form,
+                                   final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("List {} adding comment form has errors.", listId);
             return listDescription(listId, form);
         }
-        commentService.addCommentToList(user.getUserId(), listId, form.getBody());
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        commentService.addCommentToList(user, mediaList, form.getBody());
         LOGGER.info("List {} comment added.", listId);
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
     @RequestMapping(value = "/lists/{listId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
-    public ModelAndView deleteComment(@PathVariable("listId") final int listId, @PathVariable("commentId") int commentId, @RequestParam("currentURL") final String currentURL) {
+    public ModelAndView deleteComment(@PathVariable("listId") final int listId,
+                                      @PathVariable("commentId") int commentId,
+                                      @RequestParam("currentURL") final String currentURL) {
         LOGGER.debug("Trying to delete comment {} from list {}", commentId, listId);
-        commentService.deleteCommentFromList(commentId);
+        ListComment listComment = commentService.getListCommentById(commentId).orElseThrow(CommentNotFoundException::new);
+        commentService.deleteCommentFromList(listComment);
         LOGGER.info("Comment {} deleted from list {}", commentId, listId);
         return new ModelAndView("redirect:/lists/" + listId + currentURL);
     }
@@ -146,7 +152,9 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/cancelCollab", method = {RequestMethod.POST})
-    public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId, @RequestParam("collabId") final int collabId, @RequestParam("returnURL") final String returnURL) {
+    public ModelAndView cancelCollabPermissions(@PathVariable("listId") final int listId,
+                                                @RequestParam("collabId") final int collabId,
+                                                @RequestParam("returnURL") final String returnURL) {
         LOGGER.debug("Cancelling colaborration permission for list {}", listId);
         Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO CUSTOM EXCEPTION
         collaborativeListService.deleteCollaborator(collab);
@@ -174,13 +182,17 @@ public class ListsController {
 
     // MANAGE MEDIA IN LIST
     @RequestMapping(value = "/lists/edit/{listId}/manageMedia", method = {RequestMethod.GET})
-    public ModelAndView manageMediaFromList(@PathVariable("listId") Integer mediaListId, @RequestParam(value = "page", defaultValue = "1") final int page, @ModelAttribute("editListDetails") final ListForm form, @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
+    public ModelAndView manageMediaFromList(@PathVariable("listId") Integer mediaListId,
+                                            @RequestParam(value = "page", defaultValue = "1") final int page,
+                                            @ModelAttribute("editListDetails") final ListForm form,
+                                            @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
         final ModelAndView mav = new ModelAndView("manageMediaFromList");
         return addMediaObjects(mediaListId, mediaForm, page, mav);
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/deleteMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public ModelAndView deleteFromList(@PathVariable("listId") Integer mediaListId, @RequestParam("mediaId") Integer mediaId) {
+    public ModelAndView deleteFromList(@PathVariable("listId") Integer mediaListId,
+                                       @RequestParam("mediaId") Integer mediaId) {
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         listsService.deleteMediaFromList(mediaList, media);
@@ -193,7 +205,6 @@ public class ListsController {
                                                final BindingResult errors,
                                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
                                                @ModelAttribute("editListDetails") final ListForm form, @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
-
         if (errors.hasErrors()) {
             LOGGER.warn("Search form has errors for list {}", mediaListId);
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
@@ -211,7 +222,10 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/addMedia", method = {RequestMethod.POST}, params = "add")
-    public ModelAndView insertToList(@PathVariable("listId") Integer mediaListId, @ModelAttribute("editListDetails") final ListForm form, @Valid @ModelAttribute("mediaForm") ListMediaForm mediaForm, final BindingResult errors) {
+    public ModelAndView insertToList(@PathVariable("listId") Integer mediaListId,
+                                     @ModelAttribute("editListDetails") final ListForm form,
+                                     @Valid @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                     final BindingResult errors) {
         LOGGER.debug("Trying to add media to list {}", mediaListId);
         if (errors.hasErrors()) {
             LOGGER.warn("Media form has errors for list {}", mediaListId);
@@ -238,7 +252,10 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/update", method = {RequestMethod.POST}, params = "save")
-    public ModelAndView submitList(@PathVariable("listId") final int listId, @Valid @ModelAttribute("editListDetails") final ListForm form, final BindingResult errors, @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
+    public ModelAndView submitList(@PathVariable("listId") final int listId,
+                                   @Valid @ModelAttribute("editListDetails") final ListForm form,
+                                   final BindingResult errors,
+                                   @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
         LOGGER.debug("Trying to update list {}", listId);
         if (errors.hasErrors()) {
             LOGGER.warn("List {} form for update has errors", listId);
@@ -282,7 +299,8 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/collaborators")
-    public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId,
+                                                @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access list {} collaborators", listId);
         final ModelAndView mav = new ModelAndView("manageCollaboratorsFromList");
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -292,7 +310,9 @@ public class ListsController {
         return mav;
     }
 
-    private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId, @ModelAttribute("mediaForm") ListMediaForm mediaForm, @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
+    private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId,
+                                         @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                         @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaList, page - 1, itemsPerPage);
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));

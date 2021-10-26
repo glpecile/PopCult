@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.ReportService;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.form.ReportForm;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -44,13 +46,13 @@ public class ReportController {
     @RequestMapping(value = "/report/lists/{listId}", method = RequestMethod.POST, params = "addReport")
     public ModelAndView postReportList(@PathVariable("listId") final int listId,
                                        @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
-                                       final BindingResult errors,
-                                       HttpServletRequest request) {
+                                       final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("post /report/lists/{} : List report has errors.", listId);
             return reportList(listId, reportForm);
         }
-        reportService.reportList(listId, reportForm.getReport());
+        MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        reportService.reportList(mediaList, reportForm.getReport());
         return listsService.getMediaListById(listId).isPresent() ?
                 new ModelAndView("redirect:/lists/" + listId) :
                 new ModelAndView("redirect:/lists");
@@ -71,13 +73,13 @@ public class ReportController {
     public ModelAndView postReportListComment(@PathVariable("listId") final int listId,
                                               @PathVariable("commentId") final int commentId,
                                               @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
-                                              final BindingResult errors,
-                                              HttpServletRequest request) {
+                                              final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("post /report/lists/{}/comment/{} : Comment report has errors.", listId, commentId);
             return reportList(listId, reportForm);
         }
-        reportService.reportListComment(listId, commentId, reportForm.getReport());
+        ListComment listComment = commentService.getListCommentById(commentId).orElseThrow(CommentNotFoundException::new);
+        reportService.reportListComment(listComment, reportForm.getReport());
         return new ModelAndView("redirect:/lists/" + listId);
     }
 
@@ -97,13 +99,13 @@ public class ReportController {
     public ModelAndView postReportMediaComment(@PathVariable("mediaId") final int mediaId,
                                                @PathVariable("commentId") final int commentId,
                                                @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
-                                               final BindingResult errors,
-                                               HttpServletRequest request) {
+                                               final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("/report/media/{}/comment/{} : Comment report has errors.", mediaId, commentId);
             return reportMediaComment(mediaId, commentId, reportForm);
         }
-        reportService.reportMediaComment(mediaId, commentId, reportForm.getReport());
+        MediaComment mediaComment = commentService.getMediaCommentById(mediaId).orElseThrow(CommentNotFoundException::new);
+        reportService.reportMediaComment(mediaComment, reportForm.getReport());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 

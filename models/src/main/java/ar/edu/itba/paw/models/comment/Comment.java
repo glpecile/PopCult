@@ -1,59 +1,69 @@
 package ar.edu.itba.paw.models.comment;
 
-public class Comment {
-    private final int commentId;
-    private final int userId;
-    private final String username;
-    private final String commentBody;
-    private final String listname;
-    private final int listId;
-    private final boolean opened;
+import ar.edu.itba.paw.models.user.User;
 
-    public Comment(int commentId, int userId, String username, String commentBody) {
+import javax.persistence.*;
+import java.util.Date;
+
+@MappedSuperclass
+public abstract class Comment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "commentid")
+    protected Integer commentId;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    protected User user;
+
+    @Column(name = "description", length = 1000, nullable = false)
+    private String commentBody;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date", nullable = false)
+    private Date creationDate;
+
+    /* default */ Comment() {
+        //Just for hibernate
+    }
+
+    public Comment(Integer commentId, User user, String commentBody, Date creationDate) {
         this.commentId = commentId;
-        this.userId = userId;
-        this.username = username;
+        this.user = user;
         this.commentBody = commentBody;
-        this.listname = "";
-        this.listId = 0;
-        this.opened = false;
+        this.creationDate = creationDate;
     }
 
-    public Comment(int commentId, int userId, String username, String commentBody, String listname, int listId, boolean opened) {
-        this.commentId = commentId;
-        this.userId = userId;
-        this.username = username;
-        this.commentBody = commentBody;
-        this.listname = listname;
-        this.listId = listId;
-        this.opened = opened;
-    }
-
-    public String getListname() {
-        return listname;
-    }
-
-    public int getCommentId() {
+    public Integer getCommentId() {
         return commentId;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCommentBody() {
         return commentBody;
     }
 
-    public boolean isOpened() {
-        return opened;
+    public void setCommentBody(String commentBody) {
+        this.commentBody = commentBody;
     }
 
-    public int getListId() {
-        return listId;
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

@@ -1,19 +1,23 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.Optional;
 
 public interface ReportDao {
 
-    void reportList(int listId, int reporteeId, String report);
+    ListReport reportList(MediaList mediaList, User reportee, String report);
 
-    void reportListComment(int listId, int commentId, int reporteeId, String report);
+    ListCommentReport reportListComment(ListComment listComment, User reportee, String report);
 
-    void reportMediaComment(int mediaId, int commentId, int reporteeId, String report);
+    MediaCommentReport reportMediaComment(MediaComment mediaComment, User reportee, String report);
 
     Optional<ListReport> getListReportById(int reportId);
 
@@ -27,9 +31,9 @@ public interface ReportDao {
 
     PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize);
 
-    void deleteListReport(int reportId);
+    void deleteListReport(ListReport listReport);
 
-    void deleteListCommentReport(int reportId);
+    void deleteListCommentReport(ListCommentReport listCommentReport);
 
-    void deleteMediaCommentReport(int reportId);
+    void deleteMediaCommentReport(MediaCommentReport mediaCommentReport);
 }

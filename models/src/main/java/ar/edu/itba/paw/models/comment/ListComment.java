@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.models.report;
+package ar.edu.itba.paw.models.comment;
 
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
@@ -7,19 +7,19 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "listreport")
-public class ListReport extends Report {
+@Table(name = "listcomment")
+public class ListComment extends Comment {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "listid")
     private MediaList mediaList;
 
-    /* default */ ListReport() {
-
+    /* default */ ListComment() {
+        //Just for hibernate
     }
 
-    public ListReport(Integer reportId, User reportee, String report, Date date, MediaList mediaList) {
-        super(reportId, reportee, report, date);
+    public ListComment(Integer commentId, User user, String commentBody, Date creationDate, MediaList mediaList) {
+        super(commentId, user, commentBody, creationDate);
         this.mediaList = mediaList;
     }
 

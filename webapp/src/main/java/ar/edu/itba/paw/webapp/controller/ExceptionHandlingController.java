@@ -35,6 +35,7 @@ public class ExceptionHandlingController {
             UserNotFoundException.class,
             ImageNotFoundException.class,
             CommentNotFoundException.class,
+            ReportNotFoundException.class,
             IllegalArgumentException.class})
     public ModelAndView notFoundException() {
         ModelAndView mav = new ModelAndView("error");
