@@ -20,7 +20,8 @@ public class WatchedMedia {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mediaId")
     private Media media;
-    
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date watchDate;
 

@@ -38,6 +38,7 @@ public class Media {
     @Column(nullable = false)
     private Date releaseDate;
 
+    @Column
     private int seasons;
 
     @Enumerated(EnumType.ORDINAL)
