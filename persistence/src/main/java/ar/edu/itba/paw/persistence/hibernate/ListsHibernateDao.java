@@ -222,12 +222,13 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public boolean canEditList(User user, MediaList mediaList) {
-        return !em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR (collaboratorid = :userid AND accepted = :accepted))")
+        return !(((Number)em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR " +
+                        "(collaboratorid = :userid AND accepted = :accepted))")
                 .setParameter("userid", user.getUserId())
                 .setParameter("accepted", true)
                 .setParameter("medialistid", mediaList.getMediaListId())
-                .getSingleResult()
-                .equals(0);
+                .getSingleResult())
+                .intValue() == 0);
     }
 
     @Override
