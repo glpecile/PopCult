@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commentnotifications_notificationid_seq")
+    @SequenceGenerator(sequenceName = "commentnotifications_notificationid_seq", name = "commentnotifications_notificationid_seq", allocationSize =  1)
     @Column(name = "notificationid")
     private Integer notificationId;
 
