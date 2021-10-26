@@ -25,7 +25,7 @@ public class Media {
     @Column(length = 100, nullable = false)
     private String title;
 
-    @Column(length = 100)
+    @Column(length = 1000)
     private String description;
 
     @Column(length = 100)
@@ -34,8 +34,11 @@ public class Media {
     @Column(length = 100)
     private Integer length;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date releaseDate;
+
+    private int seasons;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
@@ -75,7 +78,8 @@ public class Media {
 
     }
 
-    public Media(final Integer mediaId, final MediaType type, final String title, final String description, final String image, final Integer length, final Date releaseDate, final Country country) {
+    public Media(final Integer mediaId, final MediaType type, final String title, final String description, final String image, final Integer length, final Date releaseDate,
+                 final int seasons, final Country country) {
         this.mediaId = mediaId;
         this.type = type;
         this.title = title;
@@ -83,38 +87,7 @@ public class Media {
         this.image = image;
         this.length = length;
         this.releaseDate = releaseDate;
-        this.country = country;
-    }
-
-    public void setMediaId(Integer mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public void setType(MediaType type) {
-        this.type = type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setLength(Integer length) {
-        this.length = length;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public void setCountry(Country country) {
+        this.seasons = seasons;
         this.country = country;
     }
 
@@ -122,36 +95,76 @@ public class Media {
         return mediaId;
     }
 
+    public void setMediaId(Integer mediaId) {
+        this.mediaId = mediaId;
+    }
+
     public MediaType getType() {
         return type;
+    }
+
+    public void setType(MediaType type) {
+        this.type = type;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage() {
         return image;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Integer getLength() {
         return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
     }
 
     public Date getReleaseDate() {
         return releaseDate;
     }
 
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public String getReleaseYear() {
         return String.valueOf(releaseDate).substring(0, 4);
     }
 
+    public int getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(int seasons) {
+        this.seasons = seasons;
+    }
+
     public Country getCountry() {
         return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     public List<Studio> getStudios() {

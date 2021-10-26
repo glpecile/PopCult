@@ -28,16 +28,16 @@ public class RowMappers {
     /**
      * Media RowMappers.
      */
-    public static final RowMapper<Media> MEDIA_ROW_MAPPER =
-            (rs, rowNum) -> new Media(
-                    rs.getInt("mediaId"),
-                    MediaType.FILMS,
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("image"),
-                    rs.getInt("length"),
-                    rs.getDate("releaseDate"),
-                    Country.ZW);
+//    public static final RowMapper<Media> MEDIA_ROW_MAPPER =
+//            (rs, rowNum) -> new Media(
+//                    rs.getInt("mediaId"),
+//                    MediaType.FILMS,
+//                    rs.getString("title"),
+//                    rs.getString("description"),
+//                    rs.getString("image"),
+//                    rs.getInt("length"),
+//                    rs.getDate("releaseDate"),
+//                    Country.ZW);
 
     public static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
