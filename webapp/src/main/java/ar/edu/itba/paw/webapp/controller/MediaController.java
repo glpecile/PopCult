@@ -94,13 +94,9 @@ public class MediaController {
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
         final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, defaultValue - 1, itemsPerPage);
-        final Map<String, String> map = new HashMap<>();
-        map.put("mediaId", Integer.toString(mediaId));
         mav.addObject("media", media);
         mav.addObject("relatedLists", relatedListsCover);
-        mav.addObject("mediaListContainer", mediaList);
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/{mediaId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+        mav.addObject("mediaListContainer", mediaList);//TODO esto me parece que no se usa
         mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
@@ -158,7 +154,9 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId, @RequestParam("currentURL") final String currentURL) {
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId,
+                                      @PathVariable("commentId") int commentId,
+                                      @RequestParam("currentURL") final String currentURL) {
         LOGGER.debug("Trying to delete comment from media {}", mediaId);
         MediaComment comment = commentService.getMediaCommentById(commentId).orElseThrow(CommentNotFoundException::new);
         commentService.deleteCommentFromMedia(comment);
@@ -167,7 +165,8 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
-    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
+    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId,
+                                       @RequestParam("mediaListId") final int mediaListId) {
         LOGGER.debug("Trying to add media {} to list {}", mediaId, mediaListId);
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(MediaNotFoundException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);

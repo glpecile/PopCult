@@ -8,14 +8,9 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "commentid")
-    protected Integer commentId;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
-    protected User user;
+    private User user;
 
     @Column(name = "description", length = 1000, nullable = false)
     private String commentBody;
@@ -28,19 +23,10 @@ public abstract class Comment {
         //Just for hibernate
     }
 
-    public Comment(Integer commentId, User user, String commentBody, Date creationDate) {
-        this.commentId = commentId;
+    public Comment(User user, String commentBody, Date creationDate) {
         this.user = user;
         this.commentBody = commentBody;
         this.creationDate = creationDate;
-    }
-
-    public Integer getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
     }
 
     public User getUser() {
