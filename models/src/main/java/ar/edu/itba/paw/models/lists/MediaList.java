@@ -10,8 +10,8 @@ import java.util.Objects;
 @Table(name = "medialist")
 public class MediaList {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medialist_listid_seq")
-    @SequenceGenerator(sequenceName = "medialist_listid_seq", name = "medialist_listid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medialist_medialistid_seq")
+    @SequenceGenerator(sequenceName = "medialist_medialistid_seq", name = "medialist_medialistid_seq", allocationSize = 1)
     private Integer mediaListId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
