@@ -10,6 +10,12 @@ import java.util.Date;
 @Table(name = "mediacommentreport")
 public class MediaCommentReport extends Report {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mediacommentreport_reportid_seq")
+    @SequenceGenerator(sequenceName = "mediacommentreport_reportid_seq", name = "mediacommentreport_reportid_seq", allocationSize = 1)
+    @Column(name = "reportid")
+    private Integer reportId;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "commentid")
     private MediaComment comment;
@@ -19,8 +25,17 @@ public class MediaCommentReport extends Report {
     }
 
     public MediaCommentReport(Integer reportId, User reportee, String report, Date date, MediaComment comment) {
-        super(reportId, reportee, report, date);
+        super(reportee, report, date);
+        this.reportId = reportId;
         this.comment = comment;
+    }
+
+    public Integer getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
 
     public MediaComment getComment() {

@@ -10,6 +10,12 @@ import java.util.Date;
 @Table(name = "listcommentreport")
 public class ListCommentReport extends Report {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listcommentreport_reportid_seq")
+    @SequenceGenerator(sequenceName = "listcommentreport_reportid_seq", name = "listcommentreport_reportid_seq", allocationSize = 1)
+    @Column(name = "reportid")
+    private Integer reportId;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "commentid")
     private ListComment comment;
@@ -25,8 +31,17 @@ public class ListCommentReport extends Report {
     }
 
     public ListCommentReport(Integer reportId, User reportee, String report, Date date, ListComment comment) {
-        super(reportId, reportee, report, date);
+        super(reportee, report, date);
+        this.reportId = reportId;
         this.comment = comment;
+    }
+
+    public Integer getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
 
     public ListComment getComment() {

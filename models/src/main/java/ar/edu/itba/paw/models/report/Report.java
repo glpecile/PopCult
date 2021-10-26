@@ -8,11 +8,6 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class Report {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "reportid")
-    private Integer reportId;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "reporteeid")
     private User reportee;
@@ -28,19 +23,10 @@ public abstract class Report {
         //Just for hibernate
     }
 
-    public Report(Integer reportId, User reportee, String report, Date date) {
-        this.reportId = reportId;
+    public Report(User reportee, String report, Date date) {
         this.reportee = reportee;
         this.report = report;
         this.date = date;
-    }
-
-    public Integer getReportId() {
-        return reportId;
-    }
-
-    public void setReportId(Integer reportId) {
-        this.reportId = reportId;
     }
 
     public User getReportee() {

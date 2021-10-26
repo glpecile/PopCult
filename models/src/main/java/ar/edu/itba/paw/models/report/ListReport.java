@@ -10,6 +10,12 @@ import java.util.Date;
 @Table(name = "listreport")
 public class ListReport extends Report {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listreport_reportid_seq")
+    @SequenceGenerator(sequenceName = "listreport_reportid_seq", name = "listreport_reportid_seq", allocationSize = 1)
+    @Column(name = "reportid")
+    private Integer reportId;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "listid")
     private MediaList mediaList;
@@ -19,8 +25,17 @@ public class ListReport extends Report {
     }
 
     public ListReport(Integer reportId, User reportee, String report, Date date, MediaList mediaList) {
-        super(reportId, reportee, report, date);
+        super(reportee, report, date);
+        this.reportId = reportId;
         this.mediaList = mediaList;
+    }
+
+    public Integer getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
 
     public MediaList getMediaList() {

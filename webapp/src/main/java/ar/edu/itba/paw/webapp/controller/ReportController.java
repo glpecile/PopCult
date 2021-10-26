@@ -104,7 +104,7 @@ public class ReportController {
             LOGGER.warn("/report/media/{}/comment/{} : Comment report has errors.", mediaId, commentId);
             return reportMediaComment(mediaId, commentId, reportForm);
         }
-        MediaComment mediaComment = commentService.getMediaCommentById(mediaId).orElseThrow(CommentNotFoundException::new);
+        MediaComment mediaComment = commentService.getMediaCommentById(commentId).orElseThrow(CommentNotFoundException::new);
         reportService.reportMediaComment(mediaComment, reportForm.getReport());
         return new ModelAndView("redirect:/media/" + mediaId);
     }
