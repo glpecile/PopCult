@@ -45,7 +45,7 @@ public class Media {
     @Column(nullable = false)
     private Country country;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "mediastudio",
             joinColumns = {@JoinColumn(name = "mediaid")},
             inverseJoinColumns = {@JoinColumn(name = "studioid")}
@@ -60,7 +60,7 @@ public class Media {
     @Column(name="genreid")
     private List<Genre> genres;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "director",
             joinColumns = {@JoinColumn(name="mediaid")},
             inverseJoinColumns = {@JoinColumn(name = "staffmemberid")}
@@ -68,7 +68,7 @@ public class Media {
     private List<Director> directorList;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "crew",
             joinColumns = {@JoinColumn(name="mediaid")},
             inverseJoinColumns = {@JoinColumn(name = "staffmemberid")}

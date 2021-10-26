@@ -73,12 +73,12 @@ public class RowMappers {
                     rs.getString("description"),
                     rs.getString("image"));
 
-    public static final RowMapper<Actor> ACTOR_ROW_MAPPER =
-            (rs, rowNum) -> new Actor(new StaffMember(rs.getInt("staffMemberId"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getString("image")),
-                    rs.getString("characterName"));
+//    public static final RowMapper<Actor> ACTOR_ROW_MAPPER =
+//            (rs, rowNum) -> new Actor(new StaffMember(rs.getInt("staffMemberId"),
+//                    rs.getString("name"),
+//                    rs.getString("description"),
+//                    rs.getString("image")),
+//                    rs.getString("characterName"));
     /**
      * Studio RowMappers.
      */

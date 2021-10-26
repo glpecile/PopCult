@@ -1,8 +1,8 @@
 -- ImageDao
 CREATE TABLE IF NOT EXISTS image
 (
-    imageId            SERIAL PRIMARY KEY,
-    photoBlob          BYTEA
+    imageId   SERIAL PRIMARY KEY,
+    photoBlob BYTEA
 );
 
 -- UserDao
@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS listcomment
 CREATE TABLE IF NOT EXISTS commentNotifications
 (
     notificationId SERIAL PRIMARY KEY,
-    commentId INT NOT NULL,
-    opened    BOOLEAN DEFAULT FALSE,
+    commentId      INT NOT NULL,
+    opened         BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (commentId) REFERENCES listcomment (commentid) ON DELETE CASCADE
 );
 
@@ -144,8 +144,8 @@ CREATE TABLE IF NOT EXISTS mediaGenre
 CREATE TABLE IF NOT EXISTS modRequests
 (
     requestId SERIAL PRIMARY KEY,
-    userId INT,
-    date   TIMESTAMP NOT NULL,
+    userId    INT,
+    date      TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );
 
@@ -153,9 +153,9 @@ CREATE TABLE IF NOT EXISTS modRequests
 CREATE TABLE IF NOT EXISTS listReport
 (
     reportId   SERIAL PRIMARY KEY,
-    listId     INT  NOT NULL,
-    reporteeId INT  NOT NULL,
-    report     TEXT NOT NULL,
+    listId     INT       NOT NULL,
+    reporteeId INT       NOT NULL,
+    report     TEXT      NOT NULL,
     date       TIMESTAMP NOT NULL,
     FOREIGN KEY (listId) REFERENCES mediaList (mediaListId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
@@ -164,12 +164,10 @@ CREATE TABLE IF NOT EXISTS listReport
 CREATE TABLE IF NOT EXISTS listCommentReport
 (
     reportId   SERIAL PRIMARY KEY,
-    listId     INT  NOT NULL,
-    commentId  INT  NOT NULL,
-    reporteeId INT  NOT NULL,
-    report     TEXT NOT NULL,
+    commentId  INT       NOT NULL,
+    reporteeId INT       NOT NULL,
+    report     TEXT      NOT NULL,
     date       TIMESTAMP NOT NULL,
-    FOREIGN KEY (listId) REFERENCES mediaList (mediaListId) ON DELETE CASCADE,
     FOREIGN KEY (commentId) REFERENCES listComment (commentId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
 );
@@ -177,12 +175,10 @@ CREATE TABLE IF NOT EXISTS listCommentReport
 CREATE TABLE IF NOT EXISTS mediaCommentReport
 (
     reportId   SERIAL PRIMARY KEY,
-    mediaId    INT  NOT NULL,
-    commentId  INT  NOT NULL,
-    reporteeId INT  NOT NULL,
-    report     TEXT NOT NULL,
+    commentId  INT       NOT NULL,
+    reporteeId INT       NOT NULL,
+    report     TEXT      NOT NULL,
     date       TIMESTAMP NOT NULL,
-    FOREIGN KEY (mediaId) REFERENCES media (mediaId) ON DELETE CASCADE,
     FOREIGN KEY (commentId) REFERENCES mediaComment (commentId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
 );
@@ -198,6 +194,7 @@ CREATE TABLE IF NOT EXISTS staffMember
 
 CREATE TABLE IF NOT EXISTS director
 (
+    directorId    SERIAL PRIMARY KEY,
     mediaId       INT NOT NULL,
     staffMemberId INT NOT NULL,
     FOREIGN KEY (mediaId) References media (mediaId) ON DELETE CASCADE,
@@ -206,6 +203,7 @@ CREATE TABLE IF NOT EXISTS director
 
 CREATE TABLE IF NOT EXISTS crew
 (
+    crewId        SERIAL PRIMARY KEY,
     mediaId       INT          NOT NULL,
     staffMemberId INT          NOT NULL,
     characterName VARCHAR(100) NOT NULL,
@@ -231,9 +229,9 @@ CREATE TABLE IF NOT EXISTS mediaStudio
 -- TokenDao
 CREATE TABLE IF NOT EXISTS token
 (
-    userId     INT  NOT NULL,
-    type       INT  NOT NULL,
-    token      TEXT NOT NULL,
+    userId     INT       NOT NULL,
+    type       INT       NOT NULL,
+    token      TEXT      NOT NULL,
     expiryDate TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );

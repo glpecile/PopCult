@@ -2,15 +2,10 @@ package ar.edu.itba.paw.models.staff;
 
 import javax.persistence.*;
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@MappedSuperclass
 public abstract class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long roleId;
-
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "staffmemberid")
     private StaffMember staffMember;
 
@@ -28,13 +23,5 @@ public abstract class Role {
 
     public StaffMember getStaffMember() {
         return staffMember;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
     }
 }
