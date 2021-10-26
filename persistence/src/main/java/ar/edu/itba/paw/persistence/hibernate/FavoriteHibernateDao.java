@@ -41,8 +41,8 @@ public class FavoriteHibernateDao implements FavoriteDao {
 
     @Override
     public boolean isFavorite(Media media, User user) {
-        return !em.createNativeQuery("SELECT COUNT(*) FROM favoritemedia WHERE mediaid = :mediaId AND userid = :userId")
-                .setParameter("mediaId", media.getMediaId()).setParameter("userId", user.getUserId()).getSingleResult().equals(0);
+        return !(((Number) em.createNativeQuery("SELECT COUNT(mediaid) FROM favoritemedia WHERE mediaid = :mediaId AND userid = :userId")
+                .setParameter("mediaId", media.getMediaId()).setParameter("userId", user.getUserId()).getSingleResult()).intValue() == 0);
     }
 
     @Override
@@ -76,8 +76,11 @@ public class FavoriteHibernateDao implements FavoriteDao {
 
     @Override
     public boolean isFavoriteList(MediaList mediaList, User user) {
-        return !em.createNativeQuery("SELECT COUNT(medialistid) FROM favoritelists WHERE medialistid = :mediaListId AND userid = :userId")
-                .setParameter("mediaListId", mediaList.getMediaListId()).setParameter("userId", user.getUserId()).getSingleResult().equals(0);
+        return !(((Number) em.createNativeQuery("SELECT COUNT(*) FROM favoritelists WHERE medialistid = :mediaListId AND userid = :userId")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                 .setParameter("userId", user.getUserId())
+                .getSingleResult())
+                .intValue() == 0);
     }
 
     @Override
