@@ -14,7 +14,7 @@ public class MediaList {
     @SequenceGenerator(sequenceName = "medialist_medialistid_seq", name = "medialist_medialistid_seq", allocationSize = 1)
     private Integer mediaListId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userid")
     private User user;
 
