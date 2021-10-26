@@ -19,7 +19,6 @@ public abstract class Role {
     }
 
     public Role(StaffMember staffMember) {
-        super();
         this.staffMember = staffMember;
     }
 

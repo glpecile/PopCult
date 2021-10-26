@@ -35,7 +35,7 @@
             <c:forEach var="mediaCommentReport" items="${mediaCommentReportPageContainer.elements}">
                 <div class="py-2">
                     <jsp:include page="/WEB-INF/jsp/components/commentReport.jsp">
-                        <jsp:param name="comment" value="${mediaCommentReport.commentBody}"/>
+                        <jsp:param name="comment" value="${mediaCommentReport.comment.commentBody}"/>
                         <jsp:param name="report" value="${mediaCommentReport.report}"/>
                         <jsp:param name="type" value="media"/>
                         <jsp:param name="reportId" value="${mediaCommentReport.reportId}"/>

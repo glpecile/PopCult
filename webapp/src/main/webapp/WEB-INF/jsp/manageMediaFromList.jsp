@@ -26,7 +26,7 @@
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <c:set var="isOwner" value="${currentUser.userId == list.userId}"/>
+    <c:set var="isOwner" value="${currentUser == list.user}"/>
     <div class="flex-grow col-8 offset-2">
         <div class="row g-3 p-2 my-8 bg-white shadow-lg rounded-lg">
             <div class="flex flex-wrap justify-between m-0">
@@ -269,10 +269,10 @@
                                     <spring:message code="lists.collab.empty"/>
                                 </h3>
                             </c:if>
-                            <c:forEach var="collaborators" items="${collaboratorsContainer.elements}">
+                            <c:forEach var="request" items="${collaboratorsContainer.elements}">
                                 <jsp:include page="/WEB-INF/jsp/components/collaborator.jsp">
-                                    <jsp:param name="username" value="${collaborators.collaboratorUsername}"/>
-                                    <jsp:param name="collabId" value="${collaborators.collabId}"/>
+                                    <jsp:param name="username" value="${request.collaborator.username}"/>
+                                    <jsp:param name="collabId" value="${request.collabId}"/>
                                     <jsp:param name="returnURL" value="/lists/edit/${listId}/manageMedia"/>
                                     <jsp:param name="deleteCollabPath" value="${deleteCollabPath}"/>
                                 </jsp:include>

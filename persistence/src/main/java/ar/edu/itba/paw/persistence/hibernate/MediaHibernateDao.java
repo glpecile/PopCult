@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +28,10 @@ public class MediaHibernateDao implements MediaDao {
     }
 
     @Override
-    public List<Media> getById(List<Integer> mediaList) {
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaids", Media.class);
-        query.setParameter("mediaids", mediaList);
-        return query.getResultList();
+    public List<Media> getById(List<Integer> mediaIds) {
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaIds", Media.class);
+        query.setParameter("mediaIds", mediaIds);
+        return mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
     }
 
     @Override
@@ -42,9 +44,9 @@ public class MediaHibernateDao implements MediaDao {
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("type",mediaType.ordinal());
-        nativeQuery.setParameter("offset",page*pageSize);
-        nativeQuery.setParameter("limit",pageSize);
+        nativeQuery.setParameter("type", mediaType.ordinal());
+        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
@@ -55,9 +57,9 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
 
-        return new PageContainer<>(mediaList,page,pageSize,count);
+        return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
     @Override
@@ -65,9 +67,9 @@ public class MediaHibernateDao implements MediaDao {
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type ORDER BY releasedate DESC OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("type",mediaType.ordinal());
-        nativeQuery.setParameter("offset",page*pageSize);
-        nativeQuery.setParameter("limit",pageSize);
+        nativeQuery.setParameter("type", mediaType.ordinal());
+        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
@@ -78,8 +80,8 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
 
-        return new PageContainer<>(mediaList,page,pageSize,count);
+        return new PageContainer<>(mediaList, page, pageSize, count);
     }
 }

@@ -29,12 +29,12 @@
                             value="${user.username}"/></b></a>
                     </h4>
                     <%-- Forked From --%>
-                    <c:if test="${forkedFrom != null}">
+                    <c:if test="${list.forkedFrom != null}">
                         <h4 class="py-2 pb-2.5">
                             <spring:message code="lists.forkedFrom"/> <a
                                 class="text-purple-500 hover:text-purple-900"
-                                href="<c:url value="/lists/${forkedFrom.mediaListId}"/>"><b><c:out
-                                value="${forkedFrom.listName}"/></b></a>
+                                href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
+                                value="${list.forkedFrom.listName}"/></b></a>
                         </h4>
                     </c:if>
                 </div>
@@ -75,11 +75,11 @@
         <c:if test="${collaborators.totalCount != 0}">
             <h4 class="font-bold py-2 pb-2.5"><spring:message code="lists.collaborators"/></h4>
             <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                <c:forEach var="collaborator" items="${collaborators.elements}">
+                <c:forEach var="request" items="${collaborators.elements}">
                     <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                        <jsp:param name="text" value="${collaborator.collaboratorUsername}"/>
-                        <jsp:param name="tooltip" value="${collaborator.collaboratorUsername}"/>
-                        <jsp:param name="url" value="/user/${collaborator.collaboratorUsername}"/>
+                        <jsp:param name="text" value="${request.collaborator.username}"/>
+                        <jsp:param name="tooltip" value="${request.collaborator.username}"/>
+                        <jsp:param name="url" value="/user/${request.collaborator.username}"/>
                     </jsp:include>
                 </c:forEach>
             </div>
@@ -113,7 +113,7 @@
                     </div>
                 </c:when>
             </c:choose>
-            <c:if test="${list.userId != currentUser.userId}">
+            <c:if test="${list.user.userId != currentUser.userId}">
                 <div class="flex justify-end py-2">
                     <form:form cssClass="m-0" action="${forkPath}" method="POST">
                         <button type="submit" id="fork" name="fork"
@@ -168,9 +168,9 @@
                 <c:when test="${listCommentsContainer.totalCount != 0}">
                     <c:forEach var="comment" items="${listCommentsContainer.elements}">
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                            <jsp:param name="username" value="${comment.username}"/>
+                            <jsp:param name="username" value="${comment.user.username}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
-                            <jsp:param name="commenterId" value="${comment.userId}"/>
+                            <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                             <jsp:param name="commentId" value="${comment.commentId}"/>
                             <jsp:param name="type" value="lists"/>

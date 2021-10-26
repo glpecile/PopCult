@@ -207,9 +207,9 @@
                 <c:when test="${mediaCommentsContainer.totalCount != 0}">
                     <c:forEach var="comment" items="${mediaCommentsContainer.elements}">
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                            <jsp:param name="username" value="${comment.username}"/>
+                            <jsp:param name="username" value="${comment.user.username}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
-                            <jsp:param name="commenterId" value="${comment.userId}"/>
+                            <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                             <jsp:param name="commentId" value="${comment.commentId}"/>
                             <jsp:param name="type" value="media"/>

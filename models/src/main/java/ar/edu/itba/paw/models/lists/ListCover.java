@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.lists;
 
 public class ListCover {
-    private final int listId;
+    private final long listId;
     private final String name;
     private final String description;
     private String image1;
@@ -9,7 +9,7 @@ public class ListCover {
     private String image3;
     private String image4;
 
-    public ListCover(int listId, String name, String description) {
+    public ListCover(long listId, String name, String description) {
         this.listId = listId;
         this.name = name;
         this.description = description;
@@ -43,7 +43,7 @@ public class ListCover {
         return description;
     }
 
-    public int getListId() {
+    public long getListId() {
         return listId;
     }
 
