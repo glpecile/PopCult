@@ -28,16 +28,16 @@ public class RowMappers {
     /**
      * Media RowMappers.
      */
-    public static final RowMapper<Media> MEDIA_ROW_MAPPER =
-            (rs, rowNum) -> new Media(
-                    rs.getInt("mediaId"),
-                    MediaType.FILMS,
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("image"),
-                    rs.getInt("length"),
-                    rs.getDate("releaseDate"),
-                    Country.ZW);
+//    public static final RowMapper<Media> MEDIA_ROW_MAPPER =
+//            (rs, rowNum) -> new Media(
+//                    rs.getInt("mediaId"),
+//                    MediaType.FILMS,
+//                    rs.getString("title"),
+//                    rs.getString("description"),
+//                    rs.getString("image"),
+//                    rs.getInt("length"),
+//                    rs.getDate("releaseDate"),
+//                    Country.ZW);
 
     public static final RowMapper<Integer> MEDIA_ID_ROW_MAPPER =
             (rs, rowNum) -> rs.getInt("mediaId");
@@ -137,25 +137,25 @@ public class RowMappers {
     /**
      * Comment RowMappers.
      */
-    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
-            (rs, rowNum) -> new Comment(
-                    rs.getInt("commentId"),
-                    rs.getInt("userId"),
-                    rs.getString("username"),
-                    rs.getString("description"));
+//    public static final RowMapper<Comment> COMMENT_ROW_MAPPER =
+//            (rs, rowNum) -> new Comment(
+//                    rs.getInt("commentId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("username"),
+//                    rs.getString("description"));
 
     /**
      * Comment Notifications RowMappers.
      */
-    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
-            (rs, rowNum) -> new Comment(
-                    rs.getInt("commentId"),
-                    rs.getInt("userId"),
-                    rs.getString("username"),
-                    rs.getString("description"),
-                    rs.getString("listname"),
-                    rs.getInt("listid"),
-                    rs.getBoolean("opened"));
+//    public static final RowMapper<Comment> COMMENT_NOTIFICATIONS_ROW_MAPPER =
+//            (rs, rowNum) -> new Comment(
+//                    rs.getInt("commentId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("username"),
+//                    rs.getString("description"),
+//                    rs.getString("listname"),
+//                    rs.getInt("listid"),
+//                    rs.getBoolean("opened"));
 
     /**
      * Request RowMappers.
@@ -173,41 +173,41 @@ public class RowMappers {
     /**
      * Reports RowMappers
      */
-    public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
-            (rs, rowNum) -> new ListReport(
-                    rs.getInt("reportId"),
-                    rs.getInt("reporteeId"),
-                    rs.getString("report"),
-                    rs.getDate("date"),
-                    rs.getInt("listId"),
-                    rs.getInt("userId"),
-                    rs.getString("listName"),
-                    rs.getString("description")
-            );
-
-    public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
-            (rs, rowNum) -> new ListCommentReport(
-                    rs.getInt("reportId"),
-                    rs.getInt("reporteeId"),
-                    rs.getString("report"),
-                    rs.getDate("date"),
-                    rs.getInt("commentId"),
-                    rs.getInt("listId"),
-                    rs.getInt("userId"),
-                    rs.getString("description")
-            );
-
-    public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
-            (rs, rowNum) -> new MediaCommentReport(
-                    rs.getInt("reportId"),
-                    rs.getInt("reporteeId"),
-                    rs.getString("report"),
-                    rs.getDate("date"),
-                    rs.getInt("commentId"),
-                    rs.getInt("mediaId"),
-                    rs.getInt("userId"),
-                    rs.getString("description")
-            );
+//    public static final RowMapper<ListReport> LIST_REPORT_ROW_MAPPER =
+//            (rs, rowNum) -> new ListReport(
+//                    rs.getInt("reportId"),
+//                    rs.getInt("reporteeId"),
+//                    rs.getString("report"),
+//                    rs.getDate("date"),
+//                    rs.getInt("listId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("listName"),
+//                    rs.getString("description")
+//            );
+//
+//    public static final RowMapper<ListCommentReport> LIST_COMMENT_REPORT_ROW_MAPPER =
+//            (rs, rowNum) -> new ListCommentReport(
+//                    rs.getInt("reportId"),
+//                    rs.getInt("reporteeId"),
+//                    rs.getString("report"),
+//                    rs.getDate("date"),
+//                    rs.getInt("commentId"),
+//                    rs.getInt("listId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("description")
+//            );
+//
+//    public static final RowMapper<MediaCommentReport> MEDIA_COMMENT_REPORT_ROW_MAPPER =
+//            (rs, rowNum) -> new MediaCommentReport(
+//                    rs.getInt("reportId"),
+//                    rs.getInt("reporteeId"),
+//                    rs.getString("report"),
+//                    rs.getDate("date"),
+//                    rs.getInt("commentId"),
+//                    rs.getInt("mediaId"),
+//                    rs.getInt("userId"),
+//                    rs.getString("description")
+//            );
 }
 
 

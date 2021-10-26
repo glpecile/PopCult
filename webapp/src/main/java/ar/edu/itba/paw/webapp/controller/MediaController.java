@@ -4,11 +4,13 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
@@ -84,20 +86,17 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.GET})
-    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId, @ModelAttribute("commentForm") CommentForm commentForm) {
+    public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId,
+                                         @ModelAttribute("commentForm") CommentForm commentForm) {
         LOGGER.debug("Trying to access media {} description", mediaId);
         final ModelAndView mav = new ModelAndView("mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
-        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, defaultValue - 1, itemsPerPage);
-        final Map<String, String> map = new HashMap<>();
-        map.put("mediaId", Integer.toString(mediaId));
+        final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, defaultValue - 1, itemsPerPage);
         mav.addObject("media", media);
         mav.addObject("relatedLists", relatedListsCover);
-        mav.addObject("mediaListContainer", mediaList);
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/{mediaId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+        mav.addObject("mediaListContainer", mediaList);//TODO esto me parece que no se usa
         mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
@@ -112,7 +111,8 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}/lists")
-    public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId,
+                                   @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("mediaRelatedLists");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, page - 1, itemsPerPage);
@@ -124,11 +124,12 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}/comments")
-    public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId,
+                                      @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access media {} comments", mediaId);
         final ModelAndView mav = new ModelAndView("mediaCommentDetails");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        final PageContainer<Comment> mediaCommentsContainer = commentService.getMediaComments(mediaId, page - 1, itemsPerPage);
+        final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, page - 1, itemsPerPage);
         userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
         mav.addObject("media", media);
         mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
@@ -137,28 +138,35 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
-    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId, @Valid @ModelAttribute("searchForm") final CommentForm form, final BindingResult errors) {
+    public ModelAndView addComment(@PathVariable("mediaId") final int mediaId,
+                                   @Valid @ModelAttribute("searchForm") final CommentForm form,
+                                   final BindingResult errors) {
         LOGGER.debug("Trying to add a comment to media {}", mediaId);
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         if (errors.hasErrors()) {
             LOGGER.error("Adding comment to media {} failed.", mediaId);
             return mediaDescription(mediaId, form);
         }
-        commentService.addCommentToMedia(user.getUserId(), mediaId, form.getBody());
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        commentService.addCommentToMedia(user, media, form.getBody());
         LOGGER.info("Comment added to media {}", mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
     @RequestMapping(value = "/media/{mediaId}/deleteComment/{commentId}", method = {RequestMethod.DELETE, RequestMethod.POST}, params = "currentURL")
-    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId, @PathVariable("commentId") int commentId, @RequestParam("currentURL") final String currentURL) {
+    public ModelAndView deleteComment(@PathVariable("mediaId") final int mediaId,
+                                      @PathVariable("commentId") int commentId,
+                                      @RequestParam("currentURL") final String currentURL) {
         LOGGER.debug("Trying to delete comment from media {}", mediaId);
-        commentService.deleteCommentFromMedia(commentId);
+        MediaComment comment = commentService.getMediaCommentById(commentId).orElseThrow(CommentNotFoundException::new);
+        commentService.deleteCommentFromMedia(comment);
         LOGGER.info("Comment from media {} deleted", mediaId);
         return new ModelAndView("redirect:/media/" + mediaId + currentURL);
     }
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST})
-    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId, @RequestParam("mediaListId") final int mediaListId) {
+    public ModelAndView addMediaToList(@PathVariable("mediaId") final int mediaId,
+                                       @RequestParam("mediaListId") final int mediaListId) {
         LOGGER.debug("Trying to add media {} to list {}", mediaId, mediaListId);
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(MediaNotFoundException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);

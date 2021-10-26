@@ -17,6 +17,7 @@ public class ModRequest {
     @JoinColumn(name = "userid")
     private User user;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date date;
 

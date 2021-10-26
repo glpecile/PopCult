@@ -18,6 +18,7 @@ public class Token {
     @Column(length = 100, nullable = false)
     private String token;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date expiryDate;
 

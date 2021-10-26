@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS media
     description TEXT,
     image       TEXT,
     length      INT,
-    releaseDate DATE,
+    releaseDate TIMESTAMP,
     seasons     INT,
     country     INT
 );
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS mediaList
     userId        INT  NOT NULL,
     listname      TEXT NOT NULL,
     description   TEXT NOT NULL,
-    creationDate  DATE,
+    creationDate  TIMESTAMP,
     visibility    BOOLEAN,
     collaborative BOOLEAN,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS mediacomment
     userId      INT NOT NULL,
     mediaId     INT NOT NULL,
     description TEXT,
-    date        DATE,
+    date        TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE,
     FOREIGN KEY (mediaId) REFERENCES media (mediaId) ON DELETE CASCADE
 );
@@ -95,13 +95,14 @@ CREATE TABLE IF NOT EXISTS listcomment
     userId      INT NOT NULL,
     listId      INT NOT NULL,
     description TEXT,
-    date        DATE,
+    date        TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE,
     FOREIGN KEY (listId) REFERENCES medialist (medialistid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS commentNotifications
 (
+    notificationId SERIAL PRIMARY KEY,
     commentId INT NOT NULL,
     opened    BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (commentId) REFERENCES listcomment (commentid) ON DELETE CASCADE
@@ -144,7 +145,7 @@ CREATE TABLE IF NOT EXISTS modRequests
 (
     requestId SERIAL PRIMARY KEY,
     userId INT,
-    date   DATE NOT NULL,
+    date   TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );
 
@@ -155,7 +156,7 @@ CREATE TABLE IF NOT EXISTS listReport
     listId     INT  NOT NULL,
     reporteeId INT  NOT NULL,
     report     TEXT NOT NULL,
-    date       DATE NOT NULL,
+    date       TIMESTAMP NOT NULL,
     FOREIGN KEY (listId) REFERENCES mediaList (mediaListId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
 );
@@ -167,7 +168,7 @@ CREATE TABLE IF NOT EXISTS listCommentReport
     commentId  INT  NOT NULL,
     reporteeId INT  NOT NULL,
     report     TEXT NOT NULL,
-    date       DATE NOT NULL,
+    date       TIMESTAMP NOT NULL,
     FOREIGN KEY (listId) REFERENCES mediaList (mediaListId) ON DELETE CASCADE,
     FOREIGN KEY (commentId) REFERENCES listComment (commentId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
@@ -180,7 +181,7 @@ CREATE TABLE IF NOT EXISTS mediaCommentReport
     commentId  INT  NOT NULL,
     reporteeId INT  NOT NULL,
     report     TEXT NOT NULL,
-    date       DATE NOT NULL,
+    date       TIMESTAMP NOT NULL,
     FOREIGN KEY (mediaId) REFERENCES media (mediaId) ON DELETE CASCADE,
     FOREIGN KEY (commentId) REFERENCES mediaComment (commentId) ON DELETE CASCADE,
     FOREIGN KEY (reporteeId) REFERENCES users (userId) ON DELETE CASCADE
@@ -233,7 +234,7 @@ CREATE TABLE IF NOT EXISTS token
     userId     INT  NOT NULL,
     type       INT  NOT NULL,
     token      TEXT NOT NULL,
-    expiryDate DATE NOT NULL,
+    expiryDate TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );
 
@@ -242,7 +243,7 @@ CREATE TABLE IF NOT EXISTS towatchmedia
 (
     userId    INT NOT NULL,
     mediaId   INT NOT NULL,
-    watchDate DATE,
+    watchDate TIMESTAMP,
     FOREIGN KEY (mediaId) REFERENCES media (mediaId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );

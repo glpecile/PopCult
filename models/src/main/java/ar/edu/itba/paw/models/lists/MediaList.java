@@ -24,6 +24,7 @@ public class MediaList {
     @Column(nullable = false, length = 1000)
     private String description;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date creationDate;
 

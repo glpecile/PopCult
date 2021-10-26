@@ -59,20 +59,20 @@
         </c:if>
 
         <c:forEach var="notification" items="${notifications.elements}">
-            <c:if test="${notification.username != username}">
+            <c:if test="${notification.listComment.user.username != username}">
                 <div class="w-full h-30 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2 relative">
                     <div class="flex flex-col inline-flex">
                         <h4 class="text-base pl-3 py-4 text-xl font-normal tracking-tight">
-                            <a href="<c:url value="/user/${notification.username}" />"
+                            <a href="<c:url value="/user/${notification.listComment.user.username}" />"
                                class="text-purple-500 hover:text-purple-900"><c:out
-                                    value="${notification.username}"/></a>
+                                    value="${notification.listComment.user.username}"/></a>
                             <spring:message code="profile.notifications.comment"/> <a
-                                href="<c:url value="/lists/${notification.listId}"/> "
+                                href="<c:url value="/lists/${notification.listComment.mediaList.mediaListId}"/> "
                                 class="text-purple-500 hover:text-purple-900"><c:out
-                                value="${notification.listname}"/></a>.
+                                value="${notification.listComment.mediaList.listName}"/></a>.
                         </h4>
                         <h4 class="text-base pl-3 pb-4 font-normal tracking-tight">"<c:out
-                                value="${notification.commentBody}"/>"</h4>
+                                value="${notification.listComment.commentBody}"/>"</h4>
                         <!-- Notification bubble -->
                         <c:if test="${!notification.opened}">
                         <span class="absolute h-3 w-3 top-0 right-0 mt-2 mr-3">

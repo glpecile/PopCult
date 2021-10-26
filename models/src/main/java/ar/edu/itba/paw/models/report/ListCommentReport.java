@@ -1,34 +1,54 @@
 package ar.edu.itba.paw.models.report;
 
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.user.User;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "listcommentreport")
 public class ListCommentReport extends Report {
-    private final int commentId;
-    private final int mediaListId;
-    private final int userId;
-    private final String commentBody;
 
-    public ListCommentReport(int reportId, int reporteeId, String report, Date date, int commentId, int mediaListId, int userId, String commentBody) {
-        super(reportId, reporteeId, report, date);
-        this.commentId = commentId;
-        this.mediaListId = mediaListId;
-        this.userId = userId;
-        this.commentBody = commentBody;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listcommentreport_reportid_seq")
+    @SequenceGenerator(sequenceName = "listcommentreport_reportid_seq", name = "listcommentreport_reportid_seq", allocationSize = 1)
+    @Column(name = "reportid")
+    private Integer reportId;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentid")
+    private ListComment comment;
+
+//    private int mediaListId; Esto no hace falta
+
+//    private int userId; Esto no se por que esta xd
+
+//    private String commentBody;
+
+    /* default */ ListCommentReport() {
+
     }
 
-    public int getCommentId() {
-        return commentId;
+    public ListCommentReport(Integer reportId, User reportee, String report, Date date, ListComment comment) {
+        super(reportee, report, date);
+        this.reportId = reportId;
+        this.comment = comment;
     }
 
-    public int getMediaListId() {
-        return mediaListId;
+    public Integer getReportId() {
+        return reportId;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
 
-    public String getCommentBody() {
-        return commentBody;
+    public ListComment getComment() {
+        return comment;
+    }
+
+    public void setComment(ListComment comment) {
+        this.comment = comment;
     }
 }
