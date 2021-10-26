@@ -63,7 +63,7 @@ public class Media {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "director",
             joinColumns = {@JoinColumn(name="mediaid")},
-            inverseJoinColumns = {@JoinColumn(name = "staffmemberid")}
+            inverseJoinColumns = {@JoinColumn(name = "directorid")}
     )
     private List<Director> directorList;
 
@@ -71,7 +71,7 @@ public class Media {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "crew",
             joinColumns = {@JoinColumn(name="mediaid")},
-            inverseJoinColumns = {@JoinColumn(name = "staffmemberid")}
+            inverseJoinColumns = {@JoinColumn(name = "crewid")}
     )
     private List<Actor> actorList;
 
