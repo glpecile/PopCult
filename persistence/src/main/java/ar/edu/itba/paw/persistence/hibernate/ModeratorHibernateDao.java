@@ -48,17 +48,6 @@ public class ModeratorHibernateDao implements ModeratorDao {
     }
 
     @Override
-    public void promoteToMod(int userId) {
-        //TODO borrar
-    }
-
-    @Override
-    public void removeMod(int userId) {
-        //TODO borrar
-
-    }
-
-    @Override
     public PageContainer<User> getModRequesters(int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT u.userid FROM modrequests u LIMIT :limit OFFSET :offset");
         nativeQuery.setParameter("limit", pageSize);

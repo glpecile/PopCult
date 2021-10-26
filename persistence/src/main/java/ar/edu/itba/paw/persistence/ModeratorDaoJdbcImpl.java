@@ -45,16 +45,6 @@ public class ModeratorDaoJdbcImpl implements ModeratorDao {
     }
 
     @Override
-    public void promoteToMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", UserRole.MOD.ordinal(), userId);
-    }
-
-    @Override
-    public void removeMod(int userId) {
-        jdbcTemplate.update("UPDATE users SET role = ? WHERE userid = ?", UserRole.USER.ordinal(), userId);
-    }
-
-    @Override
     public PageContainer<User> getModRequesters(int page, int pageSize) {
         List<User> moderators = jdbcTemplate.query("SELECT * FROM users NATURAL JOIN modRequests ORDER BY date DESC OFFSET ? LIMIT ?", new Object[]{page * pageSize, pageSize},
                 USER_ROW_MAPPER);

@@ -81,19 +81,4 @@ public class UserDaoJdbcImpl implements UserDao {
         return getById(userId);
     }
 
-    @Override
-    public Optional<User> confirmRegister(int userId, boolean enabled) {
-        jdbcTemplate.update("UPDATE users SET enabled = ? WHERE userId = ?", enabled, userId);
-        return getById(userId);
-    }
-
-    @Override
-    public void updateUserProfileImage(int userId, int imageId) {
-        jdbcTemplate.update("UPDATE users SET imageid = ? WHERE userid = ? ", imageId, userId);
-    }
-
-    @Override
-    public void updateUserData(int userId, String email, String username, String name) {
-        jdbcTemplate.update("UPDATE users SET name = ?, email = ?, username = ? WHERE userid = ?", name, email, username, userId);
-    }
 }

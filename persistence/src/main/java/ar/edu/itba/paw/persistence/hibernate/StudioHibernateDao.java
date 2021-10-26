@@ -33,11 +33,6 @@ public class StudioHibernateDao implements StudioDao {
     }
 
     @Override
-    public List<Studio> getStudioByMediaId(int mediaId) {
-        return null;// TODO eliminar de la interfaz.
-    }
-
-    @Override
     public PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize) {
         //Para paginacion
         //Pedimos el contenido paginado.
@@ -60,13 +55,4 @@ public class StudioHibernateDao implements StudioDao {
         return new PageContainer<>(mediaList,page,pageSize,count);
     }
 
-    @Override
-    public Optional<Integer> getMediaCountByStudio(int studioId) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Studio> getStudios() {
-        return null;
-    }
 }

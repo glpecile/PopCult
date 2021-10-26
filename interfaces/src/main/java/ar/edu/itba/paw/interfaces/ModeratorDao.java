@@ -10,10 +10,6 @@ import java.util.Optional;
 public interface ModeratorDao {
     PageContainer<User> getModerators(int page, int pageSize);
 
-    void promoteToMod(int userId);
-
-    void removeMod(int userId);
-
     PageContainer<User> getModRequesters(int page, int pageSize);
 
     ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException;

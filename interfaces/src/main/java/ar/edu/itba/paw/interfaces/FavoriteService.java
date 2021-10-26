@@ -15,7 +15,6 @@ public interface FavoriteService {
 
     PageContainer<Media> getUserFavoriteMedia(User user, int page, int pageSize);
 
-
     void addListToFav(MediaList mediaList, User user);
 
     void deleteListFromFav(MediaList mediaList, User user);

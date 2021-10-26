@@ -55,21 +55,4 @@ public class UserHibernateDao implements UserDao {
         return Optional.empty();
     }
 
-    @Override
-    public Optional<User> confirmRegister(int userId, boolean enabled) {
-        //TODO borrar
-        return Optional.empty();
-    }
-
-    @Override
-    public void updateUserProfileImage(int userId, int imageId) {
-        //TODO borrar
-
-    }
-
-    @Override
-    public void updateUserData(int userId, String email, String username, String name) {
-        //TODO borrar
-
-    }
 }
