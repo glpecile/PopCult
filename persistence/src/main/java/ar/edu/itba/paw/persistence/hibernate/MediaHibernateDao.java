@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class MediaHibernateDao implements MediaDao {
     }
 
     @Override
-    public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {//TODO cambiar signature para MediaType
+    public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type OFFSET :offset LIMIT :limit");

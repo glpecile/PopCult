@@ -178,10 +178,20 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
+        if(mediaAlreadyInList(mediaList, media)) {
+            throw new MediaAlreadyInListException();
+        }
         em.createNativeQuery("INSERT INTO listelement (mediaid, medialistid) VALUES (:mediaId, :mediaListId)")
                 .setParameter("mediaId", media.getMediaId())
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .executeUpdate();
+    }
+
+    private boolean mediaAlreadyInList(MediaList mediaList, Media media) {
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM listelement WHERE medialistid = :mediaListId AND mediaid = :mediaId")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("mediaId", media.getMediaId())
+                .getSingleResult()).intValue() != 0;
     }
 
     @Override
@@ -276,8 +286,6 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public Optional<MediaList> getForkedFrom(MediaList mediaList) {
-        //        return jdbcTemplate.query("SELECT * FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid WHERE forkedlistid = ? AND visibility = ?", new Object[]{listId, true}, MEDIA_LIST_ROW_MAPPER).stream().findFirst();
-        @SuppressWarnings("unchecked")
         int listId = ((Number) em.createNativeQuery("SELECT medialistid FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid " +
                         "WHERE forkedlistid = :mediaListId AND visibility = :visibility")
                 .setParameter("mediaListId", mediaList.getMediaListId())

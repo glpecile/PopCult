@@ -26,11 +26,6 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public void addWatchMedia(Media media, User user, Date date) {
-//        em.createNativeQuery("INSERT INTO towatchmedia (userid, mediaid, watchdate) VALUES (:userId, :mediaId, :date)")
-//                .setParameter("mediaId", media.getMediaId())
-//                .setParameter("userId", user.getUserId())
-//                .setParameter("date", date)
-//                .executeUpdate();
         final WatchedMedia watchedMedia = new WatchedMedia(user, media, date);
         em.persist(watchedMedia);
     }
