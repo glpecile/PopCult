@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Primary
@@ -215,14 +216,14 @@ public class FavoriteHibernateDao implements FavoriteDao {
 
         final TypedQuery<Media> typedQuery = em.createQuery("FROM Media WHERE mediaId IN (:mediaIds)", Media.class)
                 .setParameter("mediaIds", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
     private PageContainer<MediaList> getMediaListPageContainer(int page, int pageSize, List<Long> listIds, long count) {
         final TypedQuery<MediaList> typedQuery = em.createQuery("FROM MediaList WHERE mediaListId IN (:listIds)", MediaList.class)
                 .setParameter("listIds", listIds);
-        List<MediaList> mediaList = listIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<MediaList> mediaList = listIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 }

@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,7 +91,7 @@ public class ListsHibernateDao implements ListsDao {
     private List<MediaList> getMediaLists(List<Long> listIds) {
         final TypedQuery<MediaList> query = em.createQuery("FROM MediaList WHERE mediaListId IN (:listIds)", MediaList.class)
                 .setParameter("listIds", listIds);
-        return listIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        return listIds.isEmpty() ? Collections.emptyList() : query.getResultList();
     }
 
     @Override
@@ -123,7 +124,7 @@ public class ListsHibernateDao implements ListsDao {
     private List<Media> getMedias(List<Long> mediaIds) {
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaIds", Media.class);
         query.setParameter("mediaIds", mediaIds);
-        return mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        return mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
     }
 
     @Override

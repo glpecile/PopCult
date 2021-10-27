@@ -15,10 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Primary
 @Repository
@@ -74,7 +71,7 @@ public class CommentHibernateDao implements CommentDao {
 
         final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment WHERE commentId IN (:commentIds)", MediaComment.class)//It works, ignore intellij
                 .setParameter("commentIds", commentIds);
-        List<MediaComment> mediaComments = commentIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<MediaComment> mediaComments = commentIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaComments, page, pageSize, count);
     }
@@ -95,7 +92,7 @@ public class CommentHibernateDao implements CommentDao {
 
         final TypedQuery<ListComment> query = em.createQuery("FROM ListComment WHERE commentId IN (:commentIds)", ListComment.class)//It works, ignore intellij
                 .setParameter("commentIds", commentIds);
-        List<ListComment> mediaComments = commentIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<ListComment> mediaComments = commentIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaComments, page, pageSize, count);
     }
@@ -129,7 +126,7 @@ public class CommentHibernateDao implements CommentDao {
 
         final TypedQuery<Notification> query = em.createQuery("FROM Notification WHERE notificationId IN (:notificationIds)", Notification.class);
         query.setParameter("notificationIds", notificationIds);
-        List<Notification> notifications = notificationIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Notification> notifications = notificationIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(notifications, page, pageSize, count);
     }

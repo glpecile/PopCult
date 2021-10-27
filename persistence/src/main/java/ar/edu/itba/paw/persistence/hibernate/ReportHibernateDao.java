@@ -16,10 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Primary
 @Repository
@@ -79,7 +76,7 @@ public class ReportHibernateDao implements ReportDao {
 
         final TypedQuery<ListReport> query = em.createQuery("FROM ListReport WHERE reportid IN (:reportIds)", ListReport.class)
                 .setParameter("reportIds", reportIds);
-        List<ListReport> listReports = reportIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<ListReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(listReports, page, pageSize, count);
     }
@@ -97,7 +94,7 @@ public class ReportHibernateDao implements ReportDao {
 
         final TypedQuery<ListCommentReport> query = em.createQuery("FROM ListCommentReport WHERE reportid IN (:reportIds)", ListCommentReport.class)
                 .setParameter("reportIds", reportIds);
-        List<ListCommentReport> listReports = reportIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<ListCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(listReports, page, pageSize, count);
     }
@@ -115,7 +112,7 @@ public class ReportHibernateDao implements ReportDao {
 
         final TypedQuery<MediaCommentReport> query = em.createQuery("FROM MediaCommentReport WHERE reportid IN (:reportIds)", MediaCommentReport.class)
                 .setParameter("reportIds", reportIds);
-        List<MediaCommentReport> listReports = reportIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<MediaCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(listReports, page, pageSize, count);
     }

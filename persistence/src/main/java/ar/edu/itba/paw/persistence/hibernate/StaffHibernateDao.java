@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class StaffHibernateDao implements StaffDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaIds)", Media.class);
         query.setParameter("mediaIds", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
@@ -68,7 +69,7 @@ public class StaffHibernateDao implements StaffDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaIds)", Media.class);
         query.setParameter("mediaIds", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
@@ -98,7 +99,7 @@ public class StaffHibernateDao implements StaffDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaIds)", Media.class);
         query.setParameter("mediaIds", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
     }

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class WatchHibernateDao implements WatchDao {
 
         final TypedQuery<WatchedMedia> typedQuery = em.createQuery("FROM WatchedMedia WHERE watchedMediaId IN (:mediaIds)", WatchedMedia.class)
                 .setParameter("mediaIds", mediaIds);
-        List<WatchedMedia> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<WatchedMedia> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
@@ -105,7 +106,7 @@ public class WatchHibernateDao implements WatchDao {
 
         final TypedQuery<Media> typedQuery = em.createQuery("FROM Media WHERE mediaId IN (:mediaIds)", Media.class)
                 .setParameter("mediaIds", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 }

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
         final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", Request.class)
                 .setParameter("collabIds", collabIds);
-        List<Request> requestList = collabIds.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<Request> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
@@ -78,12 +79,12 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         long count = ((Number) countQuery.getSingleResult()).longValue();
         final TypedQuery<User> collaboratorsQuery = em.createQuery("FROM User WHERE userId IN :collaboratorIds", User.class)
                 .setParameter("collaboratorIds", collaboratorsIds);
-        final List<User> collaborators = collaboratorsIds.isEmpty() ? new ArrayList<>() : collaboratorsQuery.getResultList();
+        final List<User> collaborators = collaboratorsIds.isEmpty() ? Collections.emptyList() : collaboratorsQuery.getResultList();
         final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collaborator IN (:collaborators)", Request.class)
                 .setParameter("collaborators", collaborators);
 //        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collaborator IN (FROM User WHERE userId IN :collaboratorIds)", Request.class)
 //                .setParameter("collaboratorIds", collaboratorsIds);
-        List<Request> requestList = collaborators.isEmpty() ? new ArrayList<>() : typedQuery.getResultList();
+        List<Request> requestList = collaborators.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 

@@ -57,7 +57,7 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
@@ -80,7 +80,7 @@ public class MediaHibernateDao implements MediaDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? new ArrayList<>() : query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
