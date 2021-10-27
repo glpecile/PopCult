@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 
 @Primary
@@ -39,7 +40,7 @@ public class GenreHibernateDao implements GenreDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
         query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = query.getResultList();
+        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
     }
@@ -48,8 +49,8 @@ public class GenreHibernateDao implements GenreDao {
     public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM (SELECT DISTINCT medialistid, creationdate FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY mediaList.medialistid " +
+        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM (SELECT DISTINCT medialist.medialistid, creationdate FROM mediagenre NATURAL JOIN " +
+                "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY medialist.medialistid " +
                 ",creationdate  HAVING COUNT(mediaId) >= :minMatches ORDER BY creationdate DESC) AS aux OFFSET :offset LIMIT :pageSize");
         nativeQuery.setParameter("genreid",genre.ordinal());
         nativeQuery.setParameter("offset",page*pageSize);
@@ -59,9 +60,11 @@ public class GenreHibernateDao implements GenreDao {
         @SuppressWarnings("unchecked")
         List<Integer> mediaListIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(DISTINCT medialist.medialistid) FROM mediaGenre NATURAL JOIN " +
-                "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY mediaList.medialistid " +
-                "HAVING COUNT(mediaId) >= :minMatches ");
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(*) FROM medialist " +
+                "WHERE medialistid IN (SELECT medialist.medialistid FROM mediagenre NATURAL JOIN" +
+                "                        listelement NATURAL JOIN medialist WHERE genreid = :genreid AND visibility = :visibility GROUP BY medialist.medialistid " +
+                "HAVING COUNT(mediaId) >= :minMatches" +
+                "    )");
         countQuery.setParameter("genreid", genre.ordinal());
         countQuery.setParameter("visibility", visibility);
         countQuery.setParameter("minMatches", minMatches);
@@ -70,7 +73,7 @@ public class GenreHibernateDao implements GenreDao {
         //Query que se pide con los ids ya paginados
         final TypedQuery<MediaList> query = em.createQuery("from MediaList where mediaListId in (:mediaListIds)", MediaList.class);
         query.setParameter("mediaListIds", mediaListIds);
-        List<MediaList> mediaList = query.getResultList();
+        List<MediaList> mediaList = mediaListIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
     }
