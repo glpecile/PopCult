@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ModeratorHibernateDao implements ModeratorDao {
 
         final TypedQuery<User> query = em.createQuery("from User where userId in (:userIds)", User.class);
         query.setParameter("userIds", userIds);
-        List<User> moderators = query.getResultList();
+        List<User> moderators = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         final Query countQuery = em.createQuery("Select count(u.userId) from User u where role = :role");
         countQuery.setParameter("role", UserRole.MOD);
@@ -57,7 +58,7 @@ public class ModeratorHibernateDao implements ModeratorDao {
 
         final TypedQuery<User> query = em.createQuery("from User where userId in (:userIds)", User.class);
         query.setParameter("userIds", userIds);
-        List<User> moderators = query.getResultList();
+        List<User> moderators = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         final Query countQuery = em.createQuery("Select count(*) from ModRequest u");
         long count = (long)countQuery.getSingleResult();
@@ -67,13 +68,24 @@ public class ModeratorHibernateDao implements ModeratorDao {
 
     @Override
     public ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException {
+        if(modRequestAlreadyExists(user)) {
+            throw new ModRequestAlreadyExistsException();
+        }
         ModRequest modRequest = new ModRequest(null, user, new Date());
         em.persist(modRequest);
         return modRequest;
     }
 
+    private boolean modRequestAlreadyExists(User user) {
+        return ((Number)em.createNativeQuery("SELECT COUNT(*) FROM modrequests WHERE userid = :userId")
+                .setParameter("userId", user.getUserId())
+                .getSingleResult()).intValue() != 0;
+    }
+
     @Override
     public void removeRequest(User user) {
-        //TODO preguntar
+        em.createNativeQuery("DELETE FROM modrequests WHERE userid = :userId")
+                .setParameter("userId", user.getUserId())
+                .executeUpdate();
     }
 }
