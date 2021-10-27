@@ -71,6 +71,9 @@ public class EmailServiceImpl implements EmailService {
 
     private String getHtmlBody(String template, Map<String, Object> variables) {
         Context thymeleafContext = new Context(LocaleContextHolder.getLocale());
+        if(variables == null) {
+            variables = new HashMap<>();
+        }
         variables.put("basePath", basePath);
         thymeleafContext.setVariables(variables);
         return templateEngine.process(template, thymeleafContext);
