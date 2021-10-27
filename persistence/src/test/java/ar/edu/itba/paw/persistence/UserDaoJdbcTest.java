@@ -125,20 +125,20 @@ public class UserDaoJdbcTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", String.format("username = '%s'", ALREADY_EXISTS_USERNAME)));
     }
 
-    @Rollback
-    @Test
-    public void testChangePassword() {
-        //1 - Setup
-        final String newPassword = "newPassword";
-
-        //2
-        final Optional<User> user = userDaoJdbc.changePassword(ALREADY_EXISTS_USER_ID, newPassword);
-
-        //3 - Asserts
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(ALREADY_EXISTS_EMAIL, user.get().getEmail());
-        Assert.assertEquals(newPassword, user.get().getPassword());
-    }
+//    @Rollback
+//    @Test
+//    public void testChangePassword() {
+//        //1 - Setup
+//        final String newPassword = "newPassword";
+//
+//        //2
+//        final Optional<User> user = userDaoJdbc.changePassword(ALREADY_EXISTS_USER_ID, newPassword);
+//
+//        //3 - Asserts
+//        Assert.assertTrue(user.isPresent());
+//        Assert.assertEquals(ALREADY_EXISTS_EMAIL, user.get().getEmail());
+//        Assert.assertEquals(newPassword, user.get().getPassword());
+//    }
 
 //    @Rollback
 //    @Test

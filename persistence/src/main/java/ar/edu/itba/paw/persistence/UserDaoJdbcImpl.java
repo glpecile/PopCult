@@ -75,10 +75,4 @@ public class UserDaoJdbcImpl implements UserDao {
         return new User.Builder(email, username, password, name).userId(userId).build();
     }
 
-    @Override
-    public Optional<User> changePassword(int userId, String password) {
-        jdbcTemplate.update("UPDATE users SET password = ? WHERE userId = ?", password, userId);
-        return getById(userId);
-    }
-
 }

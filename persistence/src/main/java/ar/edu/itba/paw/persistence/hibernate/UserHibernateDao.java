@@ -44,15 +44,15 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+        if(getByEmail(email).isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+        if(getByUsername(username).isPresent()) {
+            throw new UsernameAlreadyExistsException();
+        }
         final User user = new User.Builder(email, username, password, name).build();
         em.persist(user);
         return user;
-    }
-
-    @Override
-    public Optional<User> changePassword(int userId, String password) {
-        //TODO borrar
-        return Optional.empty();
     }
 
 }
