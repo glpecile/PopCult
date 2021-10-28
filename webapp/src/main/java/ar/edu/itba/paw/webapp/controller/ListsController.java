@@ -247,7 +247,7 @@ public class ListsController {
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         listsService.deleteList(mediaList);
         LOGGER.info("List {} deleted.", listId);
-        return new ModelAndView("lists/lists");
+        return new ModelAndView("redirect:/lists");
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/update", method = {RequestMethod.POST}, params = "save")
