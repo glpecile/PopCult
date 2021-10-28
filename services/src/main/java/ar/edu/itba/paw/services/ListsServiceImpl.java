@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,12 +65,6 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
         return listsDao.getListsIncludingMedia(media, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
-        return listsDao.getListsContainingGenre(genre, pageSize, minMatches);
     }
 
     @Transactional
@@ -138,9 +131,4 @@ public class ListsServiceImpl implements ListsService {
         return listsDao.getListForks(mediaList, page, pageSize);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<MediaList> getForkedFrom(MediaList mediaList) {
-        return listsDao.getForkedFrom(mediaList);
-    }
 }

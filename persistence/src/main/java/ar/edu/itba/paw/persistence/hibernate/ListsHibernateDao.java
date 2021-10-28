@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -164,12 +162,6 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches) {
-        //todo lo moveria a genreDAO
-        return null;
-    }
-
-    @Override
     public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative) {
         final MediaList mediaList = new MediaList(user, title, description, visibility, collaborative);
         em.persist(mediaList);
@@ -293,14 +285,4 @@ public class ListsHibernateDao implements ListsDao {
         return new PageContainer<>(getMediaLists(listIds), page, pageSize, count);
     }
 
-    @Override
-    public Optional<MediaList> getForkedFrom(MediaList mediaList) {
-        int listId = ((Number) em.createNativeQuery("SELECT medialistid FROM medialist JOIN forkedlists ON medialist.medialistid = forkedlists.originalistid " +
-                        "WHERE forkedlistid = :mediaListId AND visibility = :visibility")
-                .setParameter("mediaListId", mediaList.getMediaListId())
-                .setParameter("visibility", true)
-                .getSingleResult()).intValue();
-
-        return getMediaListById(listId);
-    }
 }

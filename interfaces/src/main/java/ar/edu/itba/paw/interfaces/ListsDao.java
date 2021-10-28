@@ -27,8 +27,6 @@ public interface ListsDao {
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 
-    List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches); //TODO paginar
-
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
     void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
@@ -47,5 +45,4 @@ public interface ListsDao {
 
     PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize);
 
-    Optional<MediaList> getForkedFrom(MediaList mediaList);
 }
