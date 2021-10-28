@@ -46,7 +46,7 @@ public class GenreController {
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.info("Genre {} accessed", genre);
-        final ModelAndView mav = new ModelAndView("genre");
+        final ModelAndView mav = new ModelAndView("principal/secondary/genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final Genre gen = Genre.valueOf(normalizedGenre);
         final String genreName = gen.getGenre();

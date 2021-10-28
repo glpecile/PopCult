@@ -29,7 +29,7 @@ public class RegisterController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
     @RequestMapping(value = "/register", method = {RequestMethod.GET})
     public ModelAndView registerForm(@ModelAttribute("registerForm") final UserForm form) {
-        return new ModelAndView("registerForm");
+        return new ModelAndView("login/registerForm");
     }
 
     @RequestMapping(value = "/register", method = {RequestMethod.POST})
@@ -52,7 +52,7 @@ public class RegisterController {
             return registerForm(form);
         }
 
-        return new ModelAndView("sentEmail");
+        return new ModelAndView("login/sentEmail");
     }
 
     @RequestMapping(value = "/register/confirm")

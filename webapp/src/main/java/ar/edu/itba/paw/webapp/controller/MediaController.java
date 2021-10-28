@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -61,7 +60,7 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home() {
         LOGGER.debug("Trying to access home.");
-        final ModelAndView mav = new ModelAndView("home");
+        final ModelAndView mav = new ModelAndView("primary/principal/home");
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE, 0, itemsPerContainer);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getLastAddedLists(0, lastAddedAmount).getElements(), listsService);
@@ -89,7 +88,7 @@ public class MediaController {
     public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId,
                                          @ModelAttribute("commentForm") CommentForm commentForm) {
         LOGGER.debug("Trying to access media {} description", mediaId);
-        final ModelAndView mav = new ModelAndView("mediaDescription");
+        final ModelAndView mav = new ModelAndView("media/mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
@@ -113,7 +112,7 @@ public class MediaController {
     @RequestMapping(value = "/media/{mediaId}/lists")
     public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId,
                                    @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("mediaRelatedLists");
+        final ModelAndView mav = new ModelAndView("media/mediaRelatedLists");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, page - 1, itemsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
@@ -127,7 +126,7 @@ public class MediaController {
     public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId,
                                       @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access media {} comments", mediaId);
-        final ModelAndView mav = new ModelAndView("mediaCommentDetails");
+        final ModelAndView mav = new ModelAndView("media/mediaCommentDetails");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, page - 1, itemsPerPage);
         userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
@@ -243,7 +242,7 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access films");
-        final ModelAndView mav = new ModelAndView("films");
+        final ModelAndView mav = new ModelAndView("primary/principal/films");
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
@@ -258,7 +257,7 @@ public class MediaController {
     @RequestMapping("/media/series")
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access series");
-        final ModelAndView mav = new ModelAndView("series");
+        final ModelAndView mav = new ModelAndView("primary/principal/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());

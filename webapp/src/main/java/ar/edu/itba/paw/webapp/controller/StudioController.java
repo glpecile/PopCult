@@ -33,7 +33,7 @@ public class StudioController {
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access studio {}", studioId);
-        final ModelAndView mav = new ModelAndView("studio");
+        final ModelAndView mav = new ModelAndView("principal/secondary/studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
         final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studio, page - 1, itemsPerPage);
         mav.addObject("studio", studio);

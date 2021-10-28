@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
-import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -61,7 +60,7 @@ public class ListsController {
 
     @RequestMapping("/lists")
     public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("lists");
+        final ModelAndView mav = new ModelAndView("lists/lists");
         final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, listsPerPage);
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
@@ -79,7 +78,7 @@ public class ListsController {
     public ModelAndView listDescription(@PathVariable("listId") final int listId,
                                         @ModelAttribute("commentForm") CommentForm commentForm) {
         LOGGER.info("List {} accesed.", listId);
-        final ModelAndView mav = new ModelAndView("listDescription");
+        final ModelAndView mav = new ModelAndView("lists/listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = mediaList.getUser();
         final List<Media> mediaFromList = listsService.getMediaIdInList(mediaList);
@@ -105,7 +104,7 @@ public class ListsController {
     public ModelAndView listComments(@PathVariable("listId") final int listId,
                                      @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.info("List {} comments accesed.", listId);
-        final ModelAndView mav = new ModelAndView("listCommentDetails");
+        final ModelAndView mav = new ModelAndView("lists/listCommentDetails");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final PageContainer<ListComment> listCommentsContainer = commentService.getListComments(mediaList, page - 1, commentsAmount);
         mav.addObject("list", mediaList);
@@ -165,7 +164,7 @@ public class ListsController {
     //CREATE A NEW LIST - PART 1
     @RequestMapping(value = "/lists/new", method = {RequestMethod.GET})
     public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
-        return new ModelAndView("createListForm");
+        return new ModelAndView("lists/createListForm");
     }
 
     @RequestMapping(value = "/lists/new", method = {RequestMethod.POST})
@@ -186,7 +185,7 @@ public class ListsController {
                                             @RequestParam(value = "page", defaultValue = "1") final int page,
                                             @ModelAttribute("editListDetails") final ListForm form,
                                             @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
-        final ModelAndView mav = new ModelAndView("manageMediaFromList");
+        final ModelAndView mav = new ModelAndView("lists/manageMediaFromList");
         return addMediaObjects(mediaListId, mediaForm, page, mav);
     }
 
@@ -248,7 +247,7 @@ public class ListsController {
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         listsService.deleteList(mediaList);
         LOGGER.info("List {} deleted.", listId);
-        return new ModelAndView("redirect:/lists");
+        return new ModelAndView("lists/lists");
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/update", method = {RequestMethod.POST}, params = "save")
@@ -302,7 +301,7 @@ public class ListsController {
     public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId,
                                                 @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access list {} collaborators", listId);
-        final ModelAndView mav = new ModelAndView("manageCollaboratorsFromList");
+        final ModelAndView mav = new ModelAndView("lists/manageCollaboratorsFromList");
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         mav.addObject("list", mediaList);
         mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaList, page - 1, collaboratorsAmount));

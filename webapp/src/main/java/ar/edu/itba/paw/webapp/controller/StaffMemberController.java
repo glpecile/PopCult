@@ -34,7 +34,7 @@ public class StaffMemberController {
     public ModelAndView staffMemberProfile(@PathVariable("staffMemberId") final int staffMemberId,
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access staff {}.", staffMemberId);
-        final ModelAndView mav = new ModelAndView("staffMemberProfile");
+        final ModelAndView mav = new ModelAndView("principal/secondary/staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final PageContainer<Media> media = staffService.getMedia(member, page - 1, itemsPerPage);
         mav.addObject("member", member);
@@ -54,7 +54,7 @@ public class StaffMemberController {
                                      @RequestParam(value = "page", defaultValue = "1") final int page) {
 
         LOGGER.debug("Trying to access staff {} as {}", staffMemberId, roleType);
-        final ModelAndView mav = new ModelAndView("staffMemberProfile");
+        final ModelAndView mav = new ModelAndView("principal/secondary/staffMemberProfile");
         final StaffMember member = staffService.getById(staffMemberId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizerRole = RoleType.valueOf(roleType.toUpperCase());
         final PageContainer<Media> media = staffService.

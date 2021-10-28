@@ -212,13 +212,13 @@ public class AdminController {
             moderatorService.addModRequest(user);
         } catch (UserAlreadyIsModException e) {
             LOGGER.info("User {} is already a moderator", user.getUserId());
-            ModelAndView mav = new ModelAndView("error");
+            ModelAndView mav = new ModelAndView("errors/error");
             mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
             mav.addObject("description", messageSource.getMessage("exception.userAlreadyIsMod", null, Locale.getDefault()));
             return mav;
         } catch (ModRequestAlreadyExistsException e) {
             LOGGER.info("User {} has already a pending request to be a moderator", user.getUserId());
-            ModelAndView mav = new ModelAndView("error");
+            ModelAndView mav = new ModelAndView("errors/error");
             mav.addObject("title", messageSource.getMessage("exception", null, Locale.getDefault()));
             mav.addObject("description", messageSource.getMessage("exception.modRequestAlreadyExists", null, Locale.getDefault()));
             return mav;
