@@ -1,18 +1,19 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.user.Token;
+import ar.edu.itba.paw.models.user.TokenType;
+import ar.edu.itba.paw.models.user.User;
 
-import java.util.Date;
 import java.util.Optional;
 
 public interface TokenService {
-    String createToken(int userId, int type);
+    Token createToken(User user, TokenType type);
 
     Optional<Token> getToken(String token);
 
     void deleteToken(Token token);
 
-    boolean isValidToken(Token token, int type);
+    boolean isValidToken(Token token, TokenType type);
 
-    void renewToken(String token);
+    void renewToken(Token token);
 }

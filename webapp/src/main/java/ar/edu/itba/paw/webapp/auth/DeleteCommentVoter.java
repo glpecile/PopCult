@@ -41,9 +41,7 @@ public class DeleteCommentVoter implements AccessDecisionVoter<FilterInvocation>
                 userService.getCurrentUser().ifPresent(user -> {
                     if (URL.contains("/lists/")) {
                         commentService.getListCommentById(commentId).ifPresent((comment -> {
-                            System.out.println(user.getUserId());
-                            System.out.println(comment.getUserId());
-                            if (user.getUserId() == comment.getUserId()) {
+                            if (user.getUserId() == comment.getUser().getUserId()) {
                                 vote.set(ACCESS_GRANTED);
                             } else {
                                 vote.set(ACCESS_DENIED);
@@ -51,7 +49,7 @@ public class DeleteCommentVoter implements AccessDecisionVoter<FilterInvocation>
                         }));
                     }else if (URL.contains("/media/")) {
                         commentService.getMediaCommentById(commentId).ifPresent((comment -> {
-                            if (user.getUserId() == comment.getUserId()) {
+                            if (user.getUserId() == comment.getUser().getUserId()) {
                                 vote.set(ACCESS_GRANTED);
                             } else {
                                 vote.set(ACCESS_DENIED);

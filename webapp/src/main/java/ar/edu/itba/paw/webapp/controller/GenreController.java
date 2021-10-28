@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +28,7 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class GenreController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenreController.class);
 
     @Autowired
     MediaService mediaService;
@@ -36,17 +40,20 @@ public class GenreController {
     private static final int itemsPerPage = 12;
     private static final int listInPage = 4;
     private static final int minimumMediaMatches = 2; //minimum amount of media on a list that must match for it to be showed
+    private static final int firstPage = 0;
 
     @RequestMapping("/genre/{genre}")
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("genre");
+        LOGGER.info("Genre {} accessed", genre);
+        final ModelAndView mav = new ModelAndView("principal/secondary/genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
-        final int genreOrdinal = Genre.valueOf(normalizedGenre).ordinal();
-        final String genreName = Genre.valueOf(normalizedGenre).getGenre();
-        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(genreOrdinal, page - 1, itemsPerPage);
-        final List<MediaList> genreLists = listsService.getListsContainingGenre(genreOrdinal, listInPage, minimumMediaMatches);
-        final List<ListCover> listCovers = getListCover(genreLists, listsService);
+        final Genre gen = Genre.valueOf(normalizedGenre);
+        final String genreName = gen.getGenre();
+        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(Genre.valueOf(normalizedGenre), page - 1, itemsPerPage);
+        final PageContainer<MediaList> genreLists = genreService.getListsContainingGenre(gen,firstPage,listInPage,minimumMediaMatches,true);
+
+        final List<ListCover> listCovers = getListCover(genreLists.getElements(), listsService);
         mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
         mav.addObject("mediaPageContainer", mediaPageContainer);
         mav.addObject("genreLists", listCovers);

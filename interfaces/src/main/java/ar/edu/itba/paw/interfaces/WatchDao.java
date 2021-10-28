@@ -3,26 +3,25 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public interface WatchDao {
-    void addWatchMedia(int mediaId, int userId, Date date);
+    void addWatchMedia(Media media, User user, Date date);
 
-    void deleteWatchedMedia(int mediaId, int userId);
+    void deleteWatchedMedia(Media media, User user);
 
-    void deleteToWatchMedia(int mediaId, int userId);
+    void deleteToWatchMedia(Media media, User user);
 
-    void updateWatchedMediaDate (int mediaId, int userId, Date date);
+    void updateWatchedMediaDate (Media media, User user, Date date);
 
-    boolean isWatched(int mediaId, int userId);
+    boolean isWatched(Media media, User user);
 
-    boolean isToWatch(int mediaId, int userId);
+    boolean isToWatch(Media media, User user);
 
-    PageContainer<WatchedMedia> getWatchedMediaId(int userId, int page, int pageSize);
+    PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize);
 
-    PageContainer<Media> getToWatchMediaId(int userId, int page, int pageSize);
+    PageContainer<Media> getToWatchMedia(User user, int page, int pageSize);
 
 }

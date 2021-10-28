@@ -3,18 +3,18 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
-import ar.edu.itba.paw.models.report.Report;
-import ar.edu.itba.paw.models.user.Roles;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -31,149 +31,144 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ModeratorService moderatorService;
 
+    @Transactional
     @Override
-    public void reportList(int listId, String report) {
+    public void reportList(MediaList mediaList, String report) {
         if (moderatorService.principalIsMod()) {
-            listsService.getMediaListById(listId).ifPresent(mediaList -> {
-                listsService.deleteList(mediaList.getMediaListId());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList, report);
-            });
+            listsService.deleteList(mediaList);
+            sendDeletedListEmail(mediaList.getUser(), mediaList, report);
         } else {
-            userService.getCurrentUser().ifPresent(user -> {
-                reportDao.reportList(listId, user.getUserId(), report);
-                sendReportCreatedEmail(user, report);
+            userService.getCurrentUser().ifPresent(reportee -> {
+                reportDao.reportList(mediaList, reportee, report);
+                sendReportCreatedEmail(reportee, report);
+            });
+        }
+    }
+
+    @Transactional
+    @Override
+    public void reportListComment(ListComment comment, String report) {
+        if (moderatorService.principalIsMod()) {
+            commentService.deleteCommentFromList(comment);
+            sendDeletedCommentEmail(comment.getUser(), comment, report);
+        } else {
+            userService.getCurrentUser().ifPresent(reportee -> {
+                reportDao.reportListComment(comment, reportee, report);
+                sendReportCreatedEmail(reportee, report);
+            });
+        }
+    }
+
+    @Transactional
+    @Override
+    public void reportMediaComment(MediaComment comment, String report) {
+        if (moderatorService.principalIsMod()) {
+            commentService.deleteCommentFromMedia(comment);
+            sendDeletedCommentEmail(comment.getUser(), comment, report);
+        } else {
+            userService.getCurrentUser().ifPresent(reportee -> {
+                reportDao.reportMediaComment(comment, reportee, report);
+                sendReportCreatedEmail(reportee, report);
             });
         }
     }
 
     @Override
-    public void reportListComment(int listId, int commentId, String report) {
-        if (moderatorService.principalIsMod()) {
-            commentService.getListCommentById(commentId).ifPresent(comment -> {
-                commentService.deleteCommentFromList(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report);
-            });
-        } else {
-            userService.getCurrentUser().ifPresent(user -> {
-                reportDao.reportListComment(listId, commentId, user.getUserId(), report);
-                sendReportCreatedEmail(user, report);
-            });
-        }
+    public Optional<ListReport> getListReportById(int reportId) {
+        return reportDao.getListReportById(reportId);
     }
 
     @Override
-    public void reportMediaComment(int mediaId, int commentId, String report) {
-        if (moderatorService.principalIsMod()) {
-            commentService.getMediaCommentById(commentId).ifPresent(comment -> {
-                commentService.deleteCommentFromMedia(comment.getCommentId());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report);
-            });
-        } else {
-            userService.getCurrentUser().ifPresent(user -> {
-                reportDao.reportMediaComment(mediaId, commentId, user.getUserId(), report);
-                sendReportCreatedEmail(user, report);
-            });
-        }
+    public Optional<ListCommentReport> getListCommentReportById(int reportId) {
+        return reportDao.getListCommentReportById(reportId);
+    }
+
+    @Override
+    public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
+        return reportDao.getMediaCommentReportById(reportId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<ListReport> getListReports(int page, int pageSize) {
+        return reportDao.getListReports(page, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
+        return reportDao.getListCommentReports(page, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
+        return reportDao.getMediaCommentReports(page, pageSize);
+    }
+
+    @Transactional
+    @Override
+    public void deleteListReport(ListReport listReport) {
+        reportDao.deleteListReport(listReport);
+        sendReportRejectedEmail(listReport.getReportee(), listReport.getReport());
+    }
+
+    @Transactional
+    @Override
+    public void deleteListCommentReport(ListCommentReport listCommentReport) {
+        reportDao.deleteListCommentReport(listCommentReport);
+        sendReportRejectedEmail(listCommentReport.getReportee(), listCommentReport.getReport());
+    }
+
+    @Transactional
+    @Override
+    public void deleteMediaCommentReport(MediaCommentReport mediaCommentReport) {
+        reportDao.deleteMediaCommentReport(mediaCommentReport);
+        sendReportRejectedEmail(mediaCommentReport.getReportee(), mediaCommentReport.getReport());
+    }
+
+
+    @Transactional
+    @Override
+    public void approveListReport(ListReport listReport) {
+        listsService.deleteList(listReport.getMediaList());
+        sendReportApprovedEmail(listReport.getReportee(), listReport.getReport());
+        sendDeletedListEmail(listReport.getMediaList().getUser(), listReport.getMediaList(), listReport.getReport());
+    }
+
+    @Transactional
+    @Override
+    public void approveListCommentReport(ListCommentReport listCommentReport) {
+        commentService.deleteCommentFromList(listCommentReport.getComment());
+        sendReportApprovedEmail(listCommentReport.getReportee(), listCommentReport.getReport());
+        sendDeletedCommentEmail(listCommentReport.getComment().getUser(), listCommentReport.getComment(), listCommentReport.getReport());
+    }
+
+    @Transactional
+    @Override
+    public void approveMediaCommentReport(MediaCommentReport mediaCommentReport) {
+        commentService.deleteCommentFromMedia(mediaCommentReport.getComment());
+        sendReportApprovedEmail(mediaCommentReport.getReportee(), mediaCommentReport.getReport());
+        sendDeletedCommentEmail(mediaCommentReport.getComment().getUser(), mediaCommentReport.getComment(), mediaCommentReport.getReport());
     }
 
     private void sendReportCreatedEmail(User user, String report) {
         emailService.sendReportCreatedEmail(user, report);
     }
 
-    @Override
-    public PageContainer<ListReport> getListReports(int page, int pageSize) {
-        return reportDao.getListReports(page, pageSize);
+    private void sendReportRejectedEmail(User reportee, String report) {
+        emailService.sendReportRejectedEmail(reportee, report);
     }
 
-    @Override
-    public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
-        return reportDao.getListCommentReports(page, pageSize);
+    private void sendReportApprovedEmail(User reportee, String report) {
+        emailService.sendReportApprovedEmail(reportee, report);
     }
 
-    @Override
-    public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
-        return reportDao.getMediaCommentReports(page, pageSize);
+    private void sendDeletedListEmail(User user, MediaList mediaList, String report) {
+        emailService.sendDeletedListEmail(user, mediaList, report);
     }
 
-    @Override
-    public void deleteListReport(int reportId) {
-        reportDao.getListReportById(reportId).ifPresent(report -> {
-            reportDao.deleteListReport(reportId);
-            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
-        });
-
-    }
-
-    @Override
-    public void deleteListCommentReport(int reportId) {
-        reportDao.getListCommentReportById(reportId).ifPresent(report -> {
-            reportDao.deleteListCommentReport(reportId);
-            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
-        });
-    }
-
-    @Override
-    public void deleteMediaCommentReport(int reportId) {
-        reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
-            reportDao.deleteMediaCommentReport(reportId);
-            sendReportRejectedEmail(report.getReporteeId(), report.getReport());
-        });
-    }
-
-    private void sendReportRejectedEmail(int reporteeId, String report) {
-        userService.getById(reporteeId).ifPresent(user -> {
-            emailService.sendReportRejectedEmail(user, report);
-        });
-    }
-
-    @Override
-    public void approveListReport(int reportId) {
-        reportDao.getListReportById(reportId).ifPresent(report -> {
-            listsService.getMediaListById(report.getMediaListId()).ifPresent(mediaList -> {
-                listsService.deleteList(mediaList.getMediaListId());
-                sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedListEmail(mediaList.getUserId(), mediaList, report.getReport());
-            });
-        });
-    }
-
-    @Override
-    public void approveListCommentReport(int reportId) {
-        reportDao.getListCommentReportById(reportId).ifPresent(report -> {
-            commentService.getListCommentById(report.getCommentId()).ifPresent(comment -> {
-                commentService.deleteCommentFromList(comment.getCommentId());
-                sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
-            });
-        });
-    }
-
-    @Override
-    public void approveMediaCommentReport(int reportId) {
-        reportDao.getMediaCommentReportById(reportId).ifPresent(report -> {
-            commentService.getMediaCommentById(report.getCommentId()).ifPresent(comment -> {
-                commentService.deleteCommentFromMedia(comment.getCommentId());
-                sendReportApprovedEmail(report.getReporteeId(), report.getReport());
-                sendDeletedCommentEmail(comment.getUserId(), comment, report.getReport());
-            });
-        });
-    }
-
-    private void sendReportApprovedEmail(int reporteeId, String report) {
-        userService.getById(reporteeId).ifPresent(user -> {
-            emailService.sendReportApprovedEmail(user, report);
-        });
-    }
-
-    private void sendDeletedListEmail(int userId, MediaList mediaList, String report) {
-        userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedListEmail(user, mediaList, report);
-        });
-    }
-
-    private void sendDeletedCommentEmail(int userId, Comment comment, String report) {
-        userService.getById(userId).ifPresent(user -> {
-            emailService.sendDeletedCommentEmail(user, comment, report);
-        });
+    private void sendDeletedCommentEmail(User user, Comment comment, String report) {
+        emailService.sendDeletedCommentEmail(user, comment, report);
     }
 }

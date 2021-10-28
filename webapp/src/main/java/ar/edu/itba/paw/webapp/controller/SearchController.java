@@ -21,14 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,16 +52,16 @@ public class SearchController {
                                final BindingResult errors,
                                @RequestParam(value = "page", defaultValue = "1") final int page
                                ) throws ParseException {
-        LOGGER.info("Search term: {}", searchForm.getTerm());
+        LOGGER.info("Searching for term: {}", searchForm.getTerm());
         if(errors.hasErrors()) {
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
-        final ModelAndView mav = new ModelAndView("search");
-        final List<Integer> genres = searchForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).map(Genre::ordinal).collect(Collectors.toList());
-        final List<Integer> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).map(MediaType::ordinal).collect(Collectors.toList());
-        final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), genres, searchForm.getDecade(), searchForm.getLastYear());
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()).ordinal(), 1, minimumMediaMatches);
+        final ModelAndView mav = new ModelAndView("principal/primary/search");
+        final List<Genre> genres = searchForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
+        final List<MediaType> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).collect(Collectors.toList());
+        final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getDecade(), searchForm.getLastYear());
+        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches);
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
         final List<String> decades = new ArrayList<>();

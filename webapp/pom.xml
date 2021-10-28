@@ -122,10 +122,16 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--CommonsMultipartResolver - File Uploading-->
+        <!--    CommonsMultipartResolver - File Uploading-->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+        </dependency>
+
+        <!--    Hibernate & JPA-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
         </dependency>
     </dependencies>
 

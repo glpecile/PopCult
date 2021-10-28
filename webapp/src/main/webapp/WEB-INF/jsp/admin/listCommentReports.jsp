@@ -35,7 +35,7 @@
             <c:forEach var="listCommentReport" items="${listCommentReportPageContainer.elements}">
                 <div class="py-2">
                     <jsp:include page="/WEB-INF/jsp/components/commentReport.jsp">
-                        <jsp:param name="comment" value="${listCommentReport.commentBody}"/>
+                        <jsp:param name="comment" value="${listCommentReport.comment.commentBody}"/>
                         <jsp:param name="report" value="${listCommentReport.report}"/>
                         <jsp:param name="type" value="lists"/>
                         <jsp:param name="reportId" value="${listCommentReport.reportId}"/>

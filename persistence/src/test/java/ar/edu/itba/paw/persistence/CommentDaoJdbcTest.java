@@ -16,38 +16,38 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommentDaoJdbcTest {
 
-    private static final int ALREADY_EXISTS_USER_ID = 2;
+    private static final int ALREADY_EXISTS_USER_ID = 4;
     private static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIST_ID = 1;
     private static final String COMMENT = "Comment";
 
+//
+//    @Autowired
+//    private CommentDaoJdbcImpl commentDaoJdbc;
 
-    @Autowired
-    private CommentDaoJdbcImpl commentDaoJdbc;
+//    @Rollback
+//    @Test
+//    public void testAddCommentToMedia() {
+//        //1
+//
+//        //2
+//        Comment comment = commentDaoJdbc.addCommentToMedia(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_MEDIA_ID, COMMENT);
+//
+//        //3
+//        Assert.assertNotNull(comment);
+//        Assert.assertEquals(COMMENT, comment.getCommentBody());
+//    }
 
-    @Rollback
-    @Test
-    public void testAddCommentToMedia() {
-        //1
-
-        //2
-        Comment comment = commentDaoJdbc.addCommentToMedia(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_MEDIA_ID, COMMENT);
-
-        //3
-        Assert.assertNotNull(comment);
-        Assert.assertEquals(COMMENT, comment.getCommentBody());
-    }
-
-    @Rollback
-    @Test
-    public void testAddCommentToList() {
-        //1
-
-        //2
-        Comment comment = commentDaoJdbc.addCommentToList(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_LIST_ID, COMMENT);
-
-        //3
-        Assert.assertNotNull(comment);
-        Assert.assertEquals(COMMENT, comment.getCommentBody());
-    }
+//    @Rollback
+//    @Test
+//    public void testAddCommentToList() {
+//        //1
+//
+//        //2
+//        Comment comment = commentDaoJdbc.addCommentToList(ALREADY_EXISTS_USER_ID, ALREADY_EXISTS_LIST_ID, COMMENT);
+//
+//        //3
+//        Assert.assertNotNull(comment);
+//        Assert.assertEquals(COMMENT, comment.getCommentBody());
+//    }
 }

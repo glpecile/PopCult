@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.models.user.Roles;
+import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,13 +41,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
-
-    @Autowired
-    private EditListVoter editListVoter;
     @Autowired
     private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
+    @Autowired
+    private ListsManagerVoter listsManagerVoter;
     @Autowired
     private ListsVoter listsVoter;
 
@@ -72,9 +71,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter,
                 userPanelManagerVoter,
                 deleteCommentVoter,
+                listsManagerVoter,
                 listsVoter
         );
         return new UnanimousBased(decisionVoters);
@@ -98,10 +97,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         String hierarchy = String.format("%s > %s and %s > %s",
-                Roles.ADMIN.getRoleType(),
-                Roles.MOD.getRoleType(),
-                Roles.MOD.getRoleType(),
-                Roles.USER.getRoleType());
+                UserRole.ADMIN.getRoleType(),
+                UserRole.MOD.getRoleType(),
+                UserRole.MOD.getRoleType(),
+                UserRole.USER.getRoleType());
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
