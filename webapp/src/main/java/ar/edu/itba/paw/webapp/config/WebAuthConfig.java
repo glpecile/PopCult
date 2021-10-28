@@ -41,17 +41,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
-
-    @Autowired
-    private EditListVoter editListVoter;
     @Autowired
     private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
     @Autowired
-    private ListsVoter listsVoter;
+    private ListsManagerVoter listsManagerVoter;
     @Autowired
-    private PrivateListsVoter privateListsVoter;
+    private ListsVoter listsVoter;
 
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
@@ -74,11 +71,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter,
                 userPanelManagerVoter,
                 deleteCommentVoter,
-                listsVoter,
-                privateListsVoter
+                listsManagerVoter,
+                listsVoter
         );
         return new UnanimousBased(decisionVoters);
     }
