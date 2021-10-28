@@ -50,6 +50,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private DeleteCommentVoter deleteCommentVoter;
     @Autowired
     private ListsVoter listsVoter;
+    @Autowired
+    private PrivateListsVoter privateListsVoter;
 
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
@@ -75,7 +77,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 editListVoter,
                 userPanelManagerVoter,
                 deleteCommentVoter,
-                listsVoter
+                listsVoter,
+                privateListsVoter
         );
         return new UnanimousBased(decisionVoters);
     }
