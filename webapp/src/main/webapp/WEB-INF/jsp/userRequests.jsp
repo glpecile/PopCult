@@ -38,9 +38,9 @@
         </c:if>
         <c:forEach var="request" items="${requestContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/request.jsp">
-                <jsp:param name="username" value="${request.collaboratorUsername}"/>
-                <jsp:param name="listname" value="${request.listname}"/>
-                <jsp:param name="listId" value="${request.listId}"/>
+                <jsp:param name="username" value="${request.collaborator.username}"/>
+                <jsp:param name="listname" value="${request.mediaList.listName}"/>
+                <jsp:param name="listId" value="${request.mediaList.mediaListId}"/>
                 <jsp:param name="collabId" value="${request.collabId}"/>
                 <jsp:param name="currentUsername" value="${username}"/>
             </jsp:include>

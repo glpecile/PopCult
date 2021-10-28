@@ -2,18 +2,17 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
+
+import java.util.Optional;
 
 public interface ModeratorDao {
     PageContainer<User> getModerators(int page, int pageSize);
 
-    void promoteToMod(int userId);
-
-    void removeMod(int userId);
-
     PageContainer<User> getModRequesters(int page, int pageSize);
 
-    void addModRequest(int userId) throws ModRequestAlreadyExistsException;
+    ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException;
 
-    void removeRequest(int userId);
+    void removeRequest(User user);
 }

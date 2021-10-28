@@ -24,35 +24,35 @@ public class TokenServiceImplTest {
     @InjectMocks
     private final TokenServiceImpl tokenService = new TokenServiceImpl();
 
-    @Test
-    public void testIsValidToken() {
-        //1 - Setup
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, EXPIRATION);
-        EXPIRY_DATE = new Date(calendar.getTime().getTime());
-        Token token = new Token(USER_ID, TOKEN_TYPE, TOKEN, EXPIRY_DATE);
+//    @Test
+//    public void testIsValidToken() {
+//        //1 - Setup
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
+//        calendar.add(Calendar.MINUTE, EXPIRATION);
+//        EXPIRY_DATE = new Date(calendar.getTime().getTime());
+//        Token token = new Token(USER_ID, TOKEN_TYPE, TOKEN, EXPIRY_DATE);
+//
+//        //2
+//        boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);
+//
+//        //3 - Asserts
+//        Assert.assertTrue(isValid);
+//    }
 
-        //2
-        boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);
-
-        //3 - Asserts
-        Assert.assertTrue(isValid);
-    }
-
-    @Test
-    public void testIsInvalidToken() {
-        //1 - Setup
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, -EXPIRATION);
-        EXPIRY_DATE = new Date(calendar.getTime().getTime());
-        Token token = new Token(USER_ID, TOKEN_TYPE, TOKEN, EXPIRY_DATE);
-
-        //2
-        boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);
-
-        //3 - Asserts
-        Assert.assertFalse(isValid);
-    }
+//    @Test
+//    public void testIsInvalidToken() {
+//        //1 - Setup
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
+//        calendar.add(Calendar.MINUTE, -EXPIRATION);
+//        EXPIRY_DATE = new Date(calendar.getTime().getTime());
+//        Token token = new Token(USER_ID, TOKEN_TYPE, TOKEN, EXPIRY_DATE);
+//
+//        //2
+//        boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);
+//
+//        //3 - Asserts
+//        Assert.assertFalse(isValid);
+//    }
 }

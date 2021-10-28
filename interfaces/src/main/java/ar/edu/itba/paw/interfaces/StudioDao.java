@@ -10,11 +10,6 @@ import java.util.Optional;
 public interface StudioDao {
     Optional<Studio> getById(int studioId);
 
-    List<Studio> getStudioByMediaId(int mediaId);
+    PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize);
 
-    PageContainer<Media> getMediaByStudio(int studioId, int page, int pageSize);
-
-    Optional<Integer> getMediaCountByStudio(int studioId);
-
-    List<Studio> getStudios();
 }
