@@ -218,6 +218,7 @@ public class ListsHibernateDao implements ListsDao {
     public MediaList createMediaListCopy(User user, MediaList toCopy) {
         MediaList fork = new MediaList(user, "Copy from " + toCopy.getListName(), toCopy.getDescription(), toCopy.getVisible(), toCopy.getCollaborative());
         em.persist(fork);
+
         @SuppressWarnings("unchecked")
         List<Long> toCopyMediaIds = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :toCopyId")
                 .setParameter("toCopyId", toCopy)
@@ -228,7 +229,15 @@ public class ListsHibernateDao implements ListsDao {
         } catch (MediaAlreadyInListException e) {
             LOGGER.error("Media already exists in MediaList");
         }
+        addToForkedLists(toCopy, fork);
         return fork;
+    }
+
+    private void addToForkedLists(MediaList originalList, MediaList forkedList) {
+        em.createNativeQuery("INSERT INTO forkedlists(originalistid, forkedlistid) VALUES (:originalListId, :forkedListId)")
+                .setParameter("originalListId", originalList.getMediaListId())
+                .setParameter("forkedListId", forkedList.getMediaListId())
+                .executeUpdate();
     }
 
     @Override
