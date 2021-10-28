@@ -38,7 +38,7 @@ public class PrivateListsVoter implements AccessDecisionVoter<FilterInvocation> 
             try {
                 int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/", "").replaceFirst("/.*", ""));
                 userService.getCurrentUser().ifPresent(user -> listsService.getMediaListById(mediaListId).ifPresent(list -> {
-                    if (listsService.canEditList(user, list)){
+                    if (list.getVisible() || listsService.canEditList(user, list)){
                         vote.set(ACCESS_GRANTED);
                     }else{
                         vote.set(ACCESS_DENIED);
