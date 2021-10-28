@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.TokenService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.user.Token;
+import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,8 @@ public class TokenController {
     @RequestMapping(value = "/resendToken")
     public ModelAndView resendToken(@RequestParam("token") final String token) {
         ModelAndView mav = new ModelAndView("sentEmail");
-        userService.resendToken(token);
+        Token tkn = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
+        userService.resendToken(tkn);
         LOGGER.info("Token was resent");
         return  mav;
     }

@@ -35,7 +35,7 @@ public class StudioController {
         LOGGER.debug("Trying to access studio {}", studioId);
         final ModelAndView mav = new ModelAndView("studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-        final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studioId, page - 1, itemsPerPage);
+        final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studio, page - 1, itemsPerPage);
         mav.addObject("studio", studio);
         mav.addObject("mediaPageContainer", mediaPageContainer);
         final Map<String, Integer> map = new HashMap<>();

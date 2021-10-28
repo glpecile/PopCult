@@ -35,8 +35,8 @@
             <c:forEach var="listReport" items="${listReportPageContainer.elements}">
                 <div class="py-2">
                     <jsp:include page="/WEB-INF/jsp/components/listReport.jsp">
-                        <jsp:param name="listName" value="${listReport.listName}"/>
-                        <jsp:param name="description" value="${listReport.description}"/>
+                        <jsp:param name="listName" value="${listReport.mediaList.listName}"/>
+                        <jsp:param name="description" value="${listReport.mediaList.description}"/>
                         <jsp:param name="report" value="${listReport.report}"/>
                         <jsp:param name="reportId" value="${listReport.reportId}"/>
                     </jsp:include>

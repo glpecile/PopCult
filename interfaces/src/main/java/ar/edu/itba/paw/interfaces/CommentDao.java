@@ -1,34 +1,39 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.Optional;
 
 public interface CommentDao {
 
-    Comment addCommentToMedia(int userId, int mediaId, String comment);
+    MediaComment addCommentToMedia(User user, Media media, String comment);
 
-    Comment addCommentToList(int userId, int listId, String comment);
+    ListComment addCommentToList(User user, MediaList mediaList, String comment);
 
-    void addCommentNotification(int commentId);
+    Notification addCommentNotification(ListComment comment);
 
-    Optional<Comment> getMediaCommentById(int commentId);
+    Optional<MediaComment> getMediaCommentById(int commentId);
 
-    Optional<Comment> getListCommentById(int commentId);
+    Optional<ListComment> getListCommentById(int commentId);
 
-    PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize);
+    PageContainer<MediaComment> getMediaComments(Media media, int page, int pageSize);
 
-    PageContainer<Comment> getListComments(int listId, int page, int pageSize);
+    PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize);
 
-    void deleteCommentFromList(int commentId);
+    void deleteCommentFromMedia(MediaComment comment);
 
-    void deleteCommentFromMedia(int commentId);
+    void deleteCommentFromList(ListComment comment);
 
-    PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize);
+    PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
 
-    void setUserListsCommentsNotificationsAsOpened(int userId);
+    void setUserListsCommentsNotificationsAsOpened(User user);
 
-    void deleteUserListsCommentsNotifications(int userId);
+    void deleteUserListsCommentsNotifications(User user);
 
 }

@@ -85,31 +85,31 @@
                 <div class="text-xl py-2">
                     <span><c:out value="${media.releaseYear}"/></span>
                     <span class="mx-3 mt-3">&#8226;</span>
-                    <span><c:out value="${media.country}"/></span>
+                    <span><c:out value="${media.country.countryName}"/></span>
                 </div>
                 <p class="lead text-justify"><c:out value="${media.description}"/></p>
                 <br>
-                <c:if test="${fn:length(genreList) > 0}">
+                <c:if test="${fn:length(media.genres) > 0}">
                     <h5 class="font-bold text-2xl py-2">
                         <spring:message code="media.genre"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="genre" items="${genreList}">
+                        <c:forEach var="genre" items="${media.genres}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
-                                <jsp:param name="text" value="${genre}"/>
+                                <jsp:param name="text" value="${genre.genre}"/>
                                 <jsp:param name="tooltip" value=""/>
-                                <jsp:param name="url" value="/genre/${genre}/"/>
+                                <jsp:param name="url" value="/genre/${genre.genre}/"/>
                             </jsp:include>
                         </c:forEach>
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(studioList) > 0}">
+                <c:if test="${fn:length(media.studios) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.studio"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="studio" items="${studioList}">
+                        <c:forEach var="studio" items="${media.studios}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${studio.name}"/>
                                 <jsp:param name="tooltip" value=""/>
@@ -119,12 +119,12 @@
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(directorList) > 0}">
+                <c:if test="${fn:length(media.directorList) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.director"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="director" items="${directorList}">
+                        <c:forEach var="director" items="${media.directorList}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${director.staffMember.name}"/>
                                 <jsp:param name="tooltip" value=""/>
@@ -134,12 +134,12 @@
                     </div>
                 </c:if>
 
-                <c:if test="${fn:length(actorList) > 0}">
+                <c:if test="${fn:length(media.actorList) > 0}">
                     <h5 class="font-bold text-2xl py-2"><br>
                         <spring:message code="media.cast"/>
                     </h5>
                     <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
-                        <c:forEach var="actor" items="${actorList}">
+                        <c:forEach var="actor" items="${media.actorList}">
                             <jsp:include page="/WEB-INF/jsp/components/chip.jsp">
                                 <jsp:param name="text" value="${actor.staffMember.name}"/>
                                 <jsp:param name="tooltip" value="${actor.characterName}"/>
@@ -207,9 +207,9 @@
                 <c:when test="${mediaCommentsContainer.totalCount != 0}">
                     <c:forEach var="comment" items="${mediaCommentsContainer.elements}">
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                            <jsp:param name="username" value="${comment.username}"/>
+                            <jsp:param name="username" value="${comment.user.username}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
-                            <jsp:param name="commenterId" value="${comment.userId}"/>
+                            <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                             <jsp:param name="commentId" value="${comment.commentId}"/>
                             <jsp:param name="type" value="media"/>

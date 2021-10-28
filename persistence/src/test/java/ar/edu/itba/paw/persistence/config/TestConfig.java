@@ -79,7 +79,6 @@ public class TestConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager(final DataSource ds) {
-
         return new DataSourceTransactionManager(ds);
     }
 }

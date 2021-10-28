@@ -44,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     @Override
-    public Optional<Image> uploadImage(byte[] photoBlob) {
+    public Image uploadImage(byte[] photoBlob) {
         return imageDao.uploadImage(photoBlob);
     }
 }

@@ -4,7 +4,12 @@ import ar.edu.itba.paw.interfaces.CommentDao;
 import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,73 +25,69 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Comment addCommentToMedia(int userId, int mediaId, String comment) {
-        return commentDao.addCommentToMedia(userId, mediaId, comment);
+    public MediaComment addCommentToMedia(User user, Media media, String comment) {
+        return commentDao.addCommentToMedia(user, media, comment);
     }
 
     @Transactional
     @Override
-    public Comment addCommentToList(int userId, int listId, String comment) {
-        Comment com = commentDao.addCommentToList(userId, listId, comment);
-        userService.getCurrentUser().ifPresent(user -> {
-            if (com != null) {
-                commentDao.addCommentNotification(com.getCommentId());
-            }
-        });
+    public ListComment addCommentToList(User user, MediaList mediaList, String comment) {
+        ListComment com = commentDao.addCommentToList(user, mediaList, comment);
+        commentDao.addCommentNotification(com);
         return com;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Comment> getMediaCommentById(int commentId) {
+    public Optional<MediaComment> getMediaCommentById(int commentId) {
         return commentDao.getMediaCommentById(commentId);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Comment> getListCommentById(int commentId) {
+    public Optional<ListComment> getListCommentById(int commentId) {
         return commentDao.getListCommentById(commentId);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize) {
-        return commentDao.getMediaComments(mediaId, page, pageSize);
+    public PageContainer<MediaComment> getMediaComments(Media media, int page, int pageSize) {
+        return commentDao.getMediaComments(media, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Comment> getListComments(int listId, int page, int pageSize) {
-        return commentDao.getListComments(listId, page, pageSize);
+    public PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize) {
+        return commentDao.getListComments(mediaList, page, pageSize);
     }
 
     @Transactional
     @Override
-    public void deleteCommentFromList(int commentId) {
-        commentDao.deleteCommentFromList(commentId);
+    public void deleteCommentFromMedia(MediaComment comment) {
+        commentDao.deleteCommentFromMedia(comment);
     }
 
     @Transactional
     @Override
-    public void deleteCommentFromMedia(int commentId) {
-        commentDao.deleteCommentFromMedia(commentId);
+    public void deleteCommentFromList(ListComment comment) {
+        commentDao.deleteCommentFromList(comment);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Comment> getUserListsCommentsNotifications(int userId, int page, int pageSize) {
-        return commentDao.getUserListsCommentsNotifications(userId, page, pageSize);
+    public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
+        return commentDao.getUserListsCommentsNotifications(user, page, pageSize);
     }
 
     @Transactional
     @Override
-    public void setUserListsCommentsNotificationsAsOpened(int userId) {
-        commentDao.setUserListsCommentsNotificationsAsOpened(userId);
+    public void setUserListsCommentsNotificationsAsOpened(User user) {
+        commentDao.setUserListsCommentsNotificationsAsOpened(user);
     }
 
     @Transactional
     @Override
-    public void deleteUserListsCommentsNotifications(int userId) {
-        commentDao.deleteUserListsCommentsNotifications(userId);
+    public void deleteUserListsCommentsNotifications(User user) {
+        commentDao.deleteUserListsCommentsNotifications(user);
     }
 }

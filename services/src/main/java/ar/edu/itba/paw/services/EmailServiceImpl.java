@@ -71,6 +71,9 @@ public class EmailServiceImpl implements EmailService {
 
     private String getHtmlBody(String template, Map<String, Object> variables) {
         Context thymeleafContext = new Context(LocaleContextHolder.getLocale());
+        if(variables == null) {
+            variables = new HashMap<>();
+        }
         variables.put("basePath", basePath);
         thymeleafContext.setVariables(variables);
         return templateEngine.process(template, thymeleafContext);
@@ -147,7 +150,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
-        userDao.getById(list.getUserId()).ifPresent(to -> {
+        userDao.getById(list.getUser().getUserId()).ifPresent(to -> {
             final Map<String, Object> mailMap = new HashMap<>();
             mailMap.put("listname", list.getListName());
             mailMap.put("username", requester.getUsername());
@@ -161,9 +164,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendCollabRequestAcceptedEmail(User to, Request collaboration) {
         final Map<String, Object> mailMap = new HashMap<>();
-        mailMap.put("listname", collaboration.getListname());
-        mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
-        mailMap.put("listId", collaboration.getListId());
+        mailMap.put("listname", collaboration.getMediaList().getListName());
+        mailMap.put("collabUsername", collaboration.getCollaborator().getUsername());
+        mailMap.put("listId", collaboration.getMediaList().getMediaListId());
         final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
     }
