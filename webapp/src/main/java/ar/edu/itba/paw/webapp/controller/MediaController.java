@@ -138,7 +138,7 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
     public ModelAndView addComment(@PathVariable("mediaId") final int mediaId,
-                                   @Valid @ModelAttribute("searchForm") final CommentForm form,
+                                   @Valid @ModelAttribute("commentForm") final CommentForm form,
                                    final BindingResult errors) {
         LOGGER.debug("Trying to add a comment to media {}", mediaId);
         if (errors.hasErrors()) {

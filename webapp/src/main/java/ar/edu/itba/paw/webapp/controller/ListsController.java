@@ -115,7 +115,7 @@ public class ListsController {
 
     @RequestMapping(value = {"/lists/{listId}"}, method = {RequestMethod.POST}, params = "comment")
     public ModelAndView addComment(@PathVariable("listId") final int listId,
-                                   @Valid @ModelAttribute("searchForm") final CommentForm form,
+                                   @Valid @ModelAttribute("commentForm") final CommentForm form,
                                    final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("List {} adding comment form has errors.", listId);
