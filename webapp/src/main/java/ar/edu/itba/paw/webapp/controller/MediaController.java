@@ -60,7 +60,7 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home() {
         LOGGER.debug("Trying to access home.");
-        final ModelAndView mav = new ModelAndView("primary/principal/home");
+        final ModelAndView mav = new ModelAndView("principal/primary/home");
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE, 0, itemsPerContainer);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getLastAddedLists(0, lastAddedAmount).getElements(), listsService);
@@ -242,7 +242,7 @@ public class MediaController {
     @RequestMapping("/media/films")
     public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access films");
-        final ModelAndView mav = new ModelAndView("primary/principal/films");
+        final ModelAndView mav = new ModelAndView("principal/primary/films");
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
@@ -257,7 +257,7 @@ public class MediaController {
     @RequestMapping("/media/series")
     public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access series");
-        final ModelAndView mav = new ModelAndView("primary/principal/series");
+        final ModelAndView mav = new ModelAndView("principal/primary/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
