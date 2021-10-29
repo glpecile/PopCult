@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +50,6 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
-//    @Override
-//    public void acceptRequest(int collabId) {
-//        em.createNativeQuery("UPDATE collaborative SET accepted = :status WHERE collabid = :collabId")
-//                .setParameter("status", true)
-//                .setParameter("collabId", collabId)
-//                .executeUpdate();
-//    }
-
     @Override
     public void rejectRequest(Request request) {
         em.remove(request);
@@ -82,8 +73,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         final List<User> collaborators = collaboratorsIds.isEmpty() ? Collections.emptyList() : collaboratorsQuery.getResultList();
         final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collaborator IN (:collaborators)", Request.class)
                 .setParameter("collaborators", collaborators);
-//        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collaborator IN (FROM User WHERE userId IN :collaboratorIds)", Request.class)
-//                .setParameter("collaboratorIds", collaboratorsIds);
+
         List<Request> requestList = collaborators.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
     }

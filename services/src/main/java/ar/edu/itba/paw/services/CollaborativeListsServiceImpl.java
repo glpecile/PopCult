@@ -17,15 +17,11 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     private CollaborativeListsDao collaborativeListsDao;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private ListsDao listsDao;
 
     @Transactional
     @Override
     public Request makeNewRequest(MediaList mediaList, User user) {
-        userDao.getById(mediaList.getUser().getUserId()).ifPresent(listOwner -> emailService.sendNewRequestEmail(mediaList, user, listOwner));
+        emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser());
         return collaborativeListsDao.makeNewRequest(mediaList, user);
     }
 
@@ -40,7 +36,6 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     public void acceptRequest(Request collaborationRequest) {
         emailService.sendCollabRequestAcceptedEmail( collaborationRequest.getCollaborator(), collaborationRequest);
         collaborationRequest.setAccepted(true);
-//        collaborativeListsDao.acceptRequest(collabId);
     }
 
     @Transactional

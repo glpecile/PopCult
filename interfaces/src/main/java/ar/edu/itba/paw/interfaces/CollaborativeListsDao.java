@@ -12,8 +12,6 @@ public interface CollaborativeListsDao {
 
     PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize);
 
-//    void acceptRequest(Request collabRequest);
-
     void rejectRequest(Request request);
 
     PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
