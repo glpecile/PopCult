@@ -1,31 +1,55 @@
 package ar.edu.itba.paw.models.comment;
 
-public class Comment {
-    final int commentId;
-    final int userId;
-    final String username;
-    final String commentBody;
+import ar.edu.itba.paw.models.user.User;
 
-    public Comment(int commentId, int userId, String username, String commentBody) {
-        this.commentId = commentId;
-        this.userId = userId;
-        this.username = username;
+import javax.persistence.*;
+import java.util.Date;
+
+@MappedSuperclass
+public abstract class Comment {
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    private User user;
+
+    @Column(name = "description", length = 1000, nullable = false)
+    private String commentBody;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date", nullable = false)
+    private Date creationDate;
+
+    /* default */ Comment() {
+        //Just for hibernate
+    }
+
+    public Comment(User user, String commentBody, Date creationDate) {
+        this.user = user;
         this.commentBody = commentBody;
+        this.creationDate = creationDate;
     }
 
-    public int getCommentId() {
-        return commentId;
+    public User getUser() {
+        return user;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public String getUsername() {
-        return username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCommentBody() {
         return commentBody;
+    }
+
+    public void setCommentBody(String commentBody) {
+        this.commentBody = commentBody;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

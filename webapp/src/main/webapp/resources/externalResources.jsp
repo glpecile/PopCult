@@ -16,6 +16,4 @@
 <!--<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">-->
 <link href="https://unpkg.com/tailwindcss@2.2.13/dist/tailwind.min.css" rel="stylesheet">
 <!-- Stimulus -->
-<script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/stimulus@2.0.0/dist/stimulus.umd.js"></script>

@@ -1,23 +1,39 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Comment;
+import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.Optional;
 
 public interface CommentDao {
 
-    Comment addCommentToMedia(int userId, int mediaId, String comment);
+    MediaComment addCommentToMedia(User user, Media media, String comment);
 
-    Comment addCommentToList(int userId, int listId, String comment);
+    ListComment addCommentToList(User user, MediaList mediaList, String comment);
 
-    PageContainer<Comment> getMediaComments(int mediaId, int page, int pageSize);
+    Notification addCommentNotification(ListComment comment);
 
-    PageContainer<Comment> getListComments(int listId, int page, int pageSize);
+    Optional<MediaComment> getMediaCommentById(int commentId);
 
-    void deleteCommentFromList(int commentId);
+    Optional<ListComment> getListCommentById(int commentId);
 
-    void deleteCommentFromMedia(int commentId);
+    PageContainer<MediaComment> getMediaComments(Media media, int page, int pageSize);
 
+    PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize);
+
+    void deleteCommentFromMedia(MediaComment comment);
+
+    void deleteCommentFromList(ListComment comment);
+
+    PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
+
+    void setUserListsCommentsNotificationsAsOpened(User user);
+
+    void deleteUserListsCommentsNotifications(User user);
 
 }

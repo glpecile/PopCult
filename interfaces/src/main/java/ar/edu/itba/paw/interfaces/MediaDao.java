@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,19 +15,9 @@ public interface MediaDao {
 
     PageContainer<Media> getMediaList(int page, int pageSize);
 
-    PageContainer<Media> getMediaList(int mediaType, int page, int pageSize);
+    PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize);
 
-    Optional<Integer> getMediaCount();
+    PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize);
 
-    Optional<Integer> getMediaCountByMediaType(int mediaType);
 
-    PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize);
-
-    List<Media> searchMediaByTitle(String title, int page, int pageSize);
-
-    Optional<Integer> getCountSearchMediaByTitle(String title);
-
-    PageContainer<Media> getMostLikedMedia(int page, int pageSize);
-
-    PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize);
 }

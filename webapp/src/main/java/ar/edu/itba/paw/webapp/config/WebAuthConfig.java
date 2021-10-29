@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.models.user.Roles;
-import ar.edu.itba.paw.webapp.auth.EditListVoter;
-import ar.edu.itba.paw.webapp.auth.RequestsManagerVoter;
-import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
+import ar.edu.itba.paw.models.user.UserRole;
+import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,12 +41,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
-
     @Autowired
-    private EditListVoter editListVoter;
-
+    private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
-    private RequestsManagerVoter requestsManagerVoter;
+    private DeleteCommentVoter deleteCommentVoter;
+    @Autowired
+    private ListsManagerVoter listsManagerVoter;
+    @Autowired
+    private ListsVoter listsVoter;
 
     @Value("classpath:rememberMe.key")
     private Resource rememberMeKeyResource;
@@ -71,8 +71,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter,
-                requestsManagerVoter
+                userPanelManagerVoter,
+                deleteCommentVoter,
+                listsManagerVoter,
+                listsVoter
         );
         return new UnanimousBased(decisionVoters);
     }
@@ -95,10 +97,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         String hierarchy = String.format("%s > %s and %s > %s",
-                Roles.ADMIN.getRoleType(),
-                Roles.MOD.getRoleType(),
-                Roles.MOD.getRoleType(),
-                Roles.USER.getRoleType());
+                UserRole.ADMIN.getRoleType(),
+                UserRole.MOD.getRoleType(),
+                UserRole.MOD.getRoleType(),
+                UserRole.USER.getRoleType());
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
@@ -131,9 +133,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and().authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/register/**", "/login").anonymous()
-                .antMatchers("/createList").hasRole("USER")
-                .antMatchers("/editList/**").hasRole("USER")
+                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
+                .antMatchers("/lists/new/**", "lists/edit/**", "/report/**").hasRole("USER")
+                .antMatchers("/admin/mods/**").hasRole("ADMIN")
+                .antMatchers("/admin/**").hasRole("MOD")
                 .antMatchers(HttpMethod.POST).hasRole("USER")
                 .antMatchers(HttpMethod.DELETE).hasRole("USER")
                 .antMatchers("/**").permitAll()

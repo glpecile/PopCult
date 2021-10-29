@@ -1,20 +1,63 @@
 package ar.edu.itba.paw.models.lists;
 
+import ar.edu.itba.paw.models.user.User;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
+@Entity
+@Table(name = "medialist")
 public class MediaList {
-    private final int mediaListId;
-    private final int userId;
-    private final String listName;
-    private final String description;
-    private final Date creationDate;
-    private final boolean visible;
-    private final boolean collaborative;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medialist_medialistid_seq")
+    @SequenceGenerator(sequenceName = "medialist_medialistid_seq", name = "medialist_medialistid_seq", allocationSize = 1)
+    private Integer mediaListId;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "userid")
+    private User user;
 
-    public MediaList(int mediaListId, int userId, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
+    @Column(nullable = false, length = 100)
+    private String listName;
+
+    @Column(nullable = false, length = 1000)
+    private String description;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    private Date creationDate;
+
+    @Column(name = "visibility")
+    private Boolean visible;
+
+    @Column
+    private Boolean collaborative;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "forkedlists",
+            joinColumns = {@JoinColumn(name = "forkedlistid")},
+            inverseJoinColumns = {@JoinColumn(name = "originalistid")}
+    )
+    private MediaList forkedFrom;
+
+    /* default */ MediaList() {
+        //Just for Hibernate, we <3 u!
+    }
+
+    public MediaList(User user, String listName, String description, boolean visible, boolean collaborative) {
+        this.mediaListId = null;
+        this.user = user;
+        this.listName = listName;
+        this.description = description;
+        this.creationDate = new Date();
+        this.visible = visible;
+        this.collaborative = collaborative;
+    }
+
+    public MediaList(Integer mediaListId, User user, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
-        this.userId = userId;
+        this.user = user;
         this.listName = listName;
         this.description = description;
         this.creationDate = creationDate;
@@ -22,32 +65,80 @@ public class MediaList {
         this.collaborative = collaborative;
     }
 
-    public int getUserId() {
-        return userId;
+    public Integer getMediaListId() {
+        return mediaListId;
+    }
+
+    public void setMediaListId(Integer mediaListId) {
+        this.mediaListId = mediaListId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getListName() {
         return listName;
     }
 
+    public void setListName(String listName) {
+        this.listName = listName;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public int getMediaListId() {
-        return mediaListId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public boolean isVisible() {
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Boolean getVisible() {
         return visible;
     }
 
-    public boolean isCollaborative() {
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getCollaborative() {
         return collaborative;
     }
 
+    public void setCollaborative(Boolean collaborative) {
+        this.collaborative = collaborative;
+    }
+
+    public MediaList getForkedFrom() {
+        return forkedFrom;
+    }
+
+    public void setForkedFrom(MediaList forkedFrom) {
+        this.forkedFrom = forkedFrom;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MediaList mediaList = (MediaList) o;
+        return mediaListId == mediaList.mediaListId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mediaListId);
+    }
 }

@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.FavoriteService;
 import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,58 +17,34 @@ public class MediaServiceImpl implements MediaService {
     @Autowired
     private MediaDao mediaDao;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Media> getById(int mediaId) {
         return mediaDao.getById(mediaId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Media> getById(List<Integer> mediaIds) {
         return mediaDao.getById(mediaIds);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMediaList(int page, int pageSize) {
-        return mediaDao.getMediaList( page,  pageSize);
+        return mediaDao.getMediaList(page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {
         return mediaDao.getMediaList(mediaType, page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Optional<Integer> getMediaCount() {
-        return mediaDao.getMediaCount();
-    }
-
-    @Override
-    public Optional<Integer> getMediaCountByMediaType(int mediaType) {
-        return mediaDao.getMediaCountByMediaType(mediaType);
-    }
-
-    @Override
-    public PageContainer<Media> getLatestMediaList(int mediaType, int page, int pageSize) {
+    public PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize) {
         return mediaDao.getLatestMediaList(mediaType, page, pageSize);
     }
 
-    @Override
-    public List<Media> searchMediaByTitle(String title, int page, int pageSize) {
-        return mediaDao.searchMediaByTitle(title, page, pageSize);
-    }
-
-    @Override
-    public Optional<Integer> getCountSearchMediaByTitle(String title) {
-        return mediaDao.getCountSearchMediaByTitle(title);
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
-        return mediaDao.getMostLikedMedia(page, pageSize);
-    }
-
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int mediaType, int page, int pageSize) {
-        return mediaDao.getMostLikedMedia(mediaType, page, pageSize);
-    }
 }

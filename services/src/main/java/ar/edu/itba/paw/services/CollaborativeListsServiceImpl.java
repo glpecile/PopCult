@@ -6,10 +6,10 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Optional;
 
 @Service
 public class CollaborativeListsServiceImpl implements CollaborativeListService {
@@ -22,67 +22,46 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Autowired
     private ListsDao listsDao;
 
-    private final MessageSource messageSource;
-
-    @Autowired
-    public CollaborativeListsServiceImpl(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
-
+    @Transactional
     @Override
-    public Request makeNewRequest(int listId, int userId) {
-        try {
-            User user = userDao.getById(userId).orElseThrow(RuntimeException::new);
-            MediaList list = listsDao.getMediaListById(listId).orElseThrow(RuntimeException::new);
-            User to = userDao.getById(list.getUserId()).orElseThrow(RuntimeException::new);
-            final Map<String, Object> mailMap = new HashMap<>();
-            mailMap.put("listname", list.getListName());
-            mailMap.put("username", user.getUsername());
-            final String subject = messageSource.getMessage("collabEmail.subject", null, Locale.getDefault());
-            emailService.sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
-        } catch (RuntimeException e) {
-            //TODO log correspondiente
-        }
-        return collaborativeListsDao.makeNewRequest(listId, userId);
+    public Request makeNewRequest(MediaList mediaList, User user) {
+        userDao.getById(mediaList.getUser().getUserId()).ifPresent(listOwner -> emailService.sendNewRequestEmail(mediaList, user, listOwner));
+        return collaborativeListsDao.makeNewRequest(mediaList, user);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public PageContainer<Request> getRequestsByUserId(int userId, int page, int pageSize) {
-        return collaborativeListsDao.getRequestsByUserId(userId, page, pageSize);
+    public PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize) {
+        return collaborativeListsDao.getRequestsByUserId(user, page, pageSize);
     }
 
+    @Transactional
     @Override
-    public void acceptRequest(int collabId) {
-        try {
-            Request collaboration = collaborativeListsDao.getById(collabId).orElseThrow(RuntimeException::new);
-            final Map<String, Object> mailMap = new HashMap<>();
-            mailMap.put("listname", collaboration.getListname());
-            mailMap.put("collabUsername", collaboration.getCollaboratorUsername());
-            mailMap.put("listId", collaboration.getListId());
-            final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, Locale.getDefault());
-            User to = userDao.getById(collaboration.getCollaboratorId()).orElseThrow(RuntimeException::new);
-            emailService.sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
-        }catch (RuntimeException e) {
-            //TODO log correspondiente
-        }
-        collaborativeListsDao.acceptRequest(collabId);
+    public void acceptRequest(Request collaborationRequest) {
+        emailService.sendCollabRequestAcceptedEmail( collaborationRequest.getCollaborator(), collaborationRequest);
+        collaborationRequest.setAccepted(true);
+//        collaborativeListsDao.acceptRequest(collabId);
     }
 
+    @Transactional
     @Override
-    public void rejectRequest(int collabId) {
-        collaborativeListsDao.rejectRequest(collabId);
+    public void rejectRequest(Request request) {
+        collaborativeListsDao.rejectRequest(request);
     }
 
+    @Transactional
     @Override
-    public void deleteCollaborator(int collabId) {
-        collaborativeListsDao.rejectRequest(collabId);
+    public void deleteCollaborator(Request request) {
+        collaborativeListsDao.rejectRequest(request);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public PageContainer<Request> getListCollaborators(int listId, int page, int pageSize) {
-        return collaborativeListsDao.getListCollaborators(listId, page, pageSize);
+    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+        return collaborativeListsDao.getListCollaborators(mediaList, page, pageSize);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Request> getById(int collabId) {
         return collaborativeListsDao.getById(collabId);

@@ -1,19 +1,30 @@
 package ar.edu.itba.paw.models.image;
 
-public class Image {
-    private final int imageId;
-    private final byte[] imageBlob;
-    private final long imageContentLength;
-    private final String imageContentType;
+import javax.persistence.*;
 
-    public Image(int imageId, byte[] imageBlob, long imageContentLength, String imageContentType) {
-        this.imageId = imageId;
-        this.imageBlob = imageBlob;
-        this.imageContentLength = imageContentLength;
-        this.imageContentType = imageContentType;
+@Entity
+@Table(name = "image")
+public class Image {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_imageid_seq")
+    @SequenceGenerator(sequenceName = "image_imageid_seq", name = "image_imageid_seq", allocationSize = 1)
+    private Integer imageId;
+
+    //TODO chequear constraints
+    @Column(name = "photoblob")
+    private byte[] imageBlob;
+
+    /* default */ Image() {
+        //Just for Hibernate, we love you!
     }
 
-    public int getImageId() {
+    public Image(Integer imageId, byte[] imageBlob) {
+        this.imageId = imageId;
+        this.imageBlob = imageBlob;
+    }
+
+    public Integer getImageId() {
         return imageId;
     }
 
@@ -21,11 +32,11 @@ public class Image {
         return imageBlob;
     }
 
-    public long getImageContentLength() {
-        return imageContentLength;
+    public void setImageId(Integer imageId) {
+        this.imageId = imageId;
     }
 
-    public String getImageContentType() {
-        return imageContentType;
+    public void setImageBlob(byte[] imageBlob) {
+        this.imageBlob = imageBlob;
     }
 }
