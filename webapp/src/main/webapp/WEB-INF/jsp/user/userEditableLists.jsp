@@ -54,6 +54,13 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
+<%--                TODO este br no funciona--%>
+                <br>
+                <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                    <jsp:param name="mediaPages" value="${listContainer.totalPages}"/>
+                    <jsp:param name="currentPage" value="${listContainer.currentPage + 1}"/>
+                    <jsp:param name="url" value="/user/${user.username}/lists"/>
+                </jsp:include>
             </div>
         </div>
     </div>

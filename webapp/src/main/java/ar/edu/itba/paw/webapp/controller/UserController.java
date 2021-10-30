@@ -63,7 +63,7 @@ public class UserController {
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int notificationsPerPage = 16;
-    private static final int editablePerPage = 6;
+    private static final int editablePerPage = 12;
 
 
     @RequestMapping("/user/{username}")
