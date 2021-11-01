@@ -40,10 +40,6 @@ public class StaffMemberController {
         mav.addObject("member", member);
         mav.addObject("mediaContainer", media);
 
-        Map<String, Integer> map = new HashMap<>();
-        map.put("staffMemberId", staffMemberId);
-        String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Staff {} accessed.", staffMemberId);
         return mav;
     }
@@ -63,11 +59,6 @@ public class StaffMemberController {
         mav.addObject("member", member);
         mav.addObject("mediaContainer", media);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("staffMemberId", Integer.toString(staffMemberId));
-        map.put("roleType", normalizedRole.getRoleType());
-        String urlBase = UriComponentsBuilder.newInstance().path("/staff/{staffMemberId}/{roleType}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Staff {} as {} accessed.", staffMemberId, roleType);
         return mav;
     }
