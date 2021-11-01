@@ -254,7 +254,8 @@ public class ListsController {
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm);
         }
         LOGGER.info("Searching for term: {}", userSearchForm.getTerm());
-        final List<User> searchResults = searchService.searchUserByUsername(userSearchForm.getTerm(), defaultValue - 1, searchAmount).getElements();
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        final List<User> searchResults = searchService.searchUsersToCollabNotInList(userSearchForm.getTerm(),mediaList , searchAmount, defaultValue - 1).getElements();
         LOGGER.info("User search process completed.");
         return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userSearchTerm", userSearchForm.getTerm()).addObject("userSearchResults", usernameForm.generateUserMap(searchResults));
 
@@ -362,7 +363,8 @@ public class ListsController {
             return manageListCollaborators(mediaListId, defaultValue, usernameForm);
         }
         LOGGER.info("Searching for term: {}", userSearchForm.getTerm());
-        final List<User> searchResults = searchService.searchUserByUsername(userSearchForm.getTerm(), defaultValue - 1, searchAmount).getElements();
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        final List<User> searchResults = searchService.searchUsersToCollabNotInList(userSearchForm.getTerm(), mediaList, searchAmount, defaultValue - 1).getElements();
         LOGGER.info("User search process completed.");
         return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userSearchTerm", userSearchForm.getTerm()).addObject("userSearchResults", usernameForm.generateUserMap(searchResults));
     }

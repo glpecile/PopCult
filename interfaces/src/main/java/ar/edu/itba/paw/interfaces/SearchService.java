@@ -19,6 +19,6 @@ public interface SearchService {
 
     PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort);
 
-    PageContainer<User> searchUserByUsername(String username, int page, int pageSize);
+    PageContainer<User> searchUsersToCollabNotInList(String username, MediaList mediaList, int pageSize, int page);
 
 }

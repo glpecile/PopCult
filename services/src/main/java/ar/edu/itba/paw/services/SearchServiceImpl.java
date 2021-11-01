@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.SearchDao;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired
     private SearchDao searchDao;
+    @Autowired
+    private CollaborativeListsDao collaborativeListsDao;
 
     @Transactional(readOnly = true)
     @Override
@@ -30,11 +35,11 @@ public class SearchServiceImpl implements SearchService {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         Date fDate = null;
         Date tDate = null;
-        if(fromDate != null && toDate != null){
-                fDate = f.parse(fromDate+ "-01-01");
-                tDate = f.parse(toDate + "-12-31");
+        if (fromDate != null && toDate != null) {
+            fDate = f.parse(fromDate + "-01-01");
+            tDate = f.parse(toDate + "-12-31");
         }
-        return searchDao.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
+        return searchDao.searchMediaByTitle(title, page, pageSize, mediaType, sort, genre, fDate, tDate);
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +47,7 @@ public class SearchServiceImpl implements SearchService {
     public PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
 //        if(genre == Genre.ALL)
 //            return searchListMediaByName(name, page, pageSize, sort);
-        return searchDao.searchListMediaByName(name,page,pageSize,sort,genre, minMatches);
+        return searchDao.searchListMediaByName(name, page, pageSize, sort, genre, minMatches);
     }
 
     @Transactional(readOnly = true)
@@ -53,8 +58,13 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<User> searchUserByUsername(String username, int page, int pageSize) {
-        return searchDao.searchUserByUsername(username, pageSize, page);
+    public PageContainer<User> searchUsersToCollabNotInList(String username, MediaList mediaList, int pageSize, int page) {
+        List<User> collaborators = new ArrayList<>();
+        collaborators.add(mediaList.getUser());
+        for (Request request : collaborativeListsDao.getListCollaborators(mediaList, 0, 50).getElements()) {
+            collaborators.add(request.getCollaborator());
+        }
+        return searchDao.searchUserByUsername(username, collaborators, page, pageSize);
     }
 
 }

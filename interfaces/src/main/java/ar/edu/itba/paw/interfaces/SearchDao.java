@@ -19,5 +19,5 @@ public interface SearchDao {
 
     PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches);
 
-    PageContainer<User> searchUserByUsername(String username, int pageSize, int page);
+    PageContainer<User> searchUserByUsername(String username, List<User> excludedUsers, int page, int pageSize);
 }

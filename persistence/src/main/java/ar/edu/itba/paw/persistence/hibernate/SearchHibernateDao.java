@@ -163,18 +163,21 @@ public class SearchHibernateDao implements SearchDao {
     }
 
     @Override
-    public PageContainer<User> searchUserByUsername(String username, int pageSize, int page) {
-        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') OFFSET :offset LIMIT :limit ");
+    public PageContainer<User> searchUserByUsername(String username, List<User> excludedUsers, int page, int pageSize) {
+        List<Integer> excludedUserIds = new ArrayList<>();
+        excludedUsers.forEach( user -> excludedUserIds.add(user.getUserId()));
+        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds OFFSET :offset LIMIT :limit ");
         nativeQuery.setParameter("username", username);
         nativeQuery.setParameter("offset", page*pageSize);
         nativeQuery.setParameter("limit", pageSize);
+        nativeQuery.setParameter("excludedUserIds", excludedUserIds);
         @SuppressWarnings("unchecked")
         final List<Long> userIds = nativeQuery.getResultList();
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(userid) FROM users WHERE users.username ILIKE CONCAT('%', :username, '%')")
-                .setParameter("username", username);
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(userid) FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds")
+                .setParameter("username", username).setParameter("excludedUserIds", excludedUserIds);
         int count = countQuery.getFirstResult();
 
-        final TypedQuery<User> query = em.createQuery("from User where userId in :userIds", User.class);
+        final TypedQuery<User> query = em.createQuery("from User WHERE userId IN :userIds", User.class);
         query.setParameter("userIds", userIds);
         List<User> userLists = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
         return new PageContainer<>(userLists, page, pageSize, count);
