@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -92,4 +91,12 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     public Optional<Request> getById(int collabId) {
         return Optional.ofNullable(em.find(Request.class, collabId));
     }
+
+    @Override
+    public void addCollaborators(MediaList mediaList, List<User> users) {
+        for (User user: users) {
+            em.persist(new Request(user, mediaList, true));
+        }
+    }
+
 }

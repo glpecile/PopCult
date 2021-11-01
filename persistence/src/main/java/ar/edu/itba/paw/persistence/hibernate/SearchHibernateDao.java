@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -159,5 +160,26 @@ public class SearchHibernateDao implements SearchDao {
         List<MediaList> mediaList = mediaListIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
+    }
+
+    @Override
+    public PageContainer<User> searchUserByUsername(String username, List<User> excludedUsers, int page, int pageSize) {
+        List<Integer> excludedUserIds = new ArrayList<>();
+        excludedUsers.forEach( user -> excludedUserIds.add(user.getUserId()));
+        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds OFFSET :offset LIMIT :limit ");
+        nativeQuery.setParameter("username", username);
+        nativeQuery.setParameter("offset", page*pageSize);
+        nativeQuery.setParameter("limit", pageSize);
+        nativeQuery.setParameter("excludedUserIds", excludedUserIds);
+        @SuppressWarnings("unchecked")
+        final List<Long> userIds = nativeQuery.getResultList();
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(userid) FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds")
+                .setParameter("username", username).setParameter("excludedUserIds", excludedUserIds);
+        int count = countQuery.getFirstResult();
+
+        final TypedQuery<User> query = em.createQuery("from User WHERE userId IN :userIds", User.class);
+        query.setParameter("userIds", userIds);
+        List<User> userLists = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
+        return new PageContainer<>(userLists, page, pageSize, count);
     }
 }

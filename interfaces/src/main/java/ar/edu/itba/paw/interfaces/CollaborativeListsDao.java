@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CollaborativeListsDao {
@@ -19,4 +20,7 @@ public interface CollaborativeListsDao {
     PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
 
     Optional<Request> getById(int collabId);
+
+    void addCollaborators(MediaList mediaList, List<User> users);
+
 }

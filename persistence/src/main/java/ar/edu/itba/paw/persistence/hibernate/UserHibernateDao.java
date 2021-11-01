@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.hibernate;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -26,6 +29,13 @@ public class UserHibernateDao implements UserDao {
     @Override
     public Optional<User> getById(int userId) {
         return Optional.ofNullable(em.find(User.class, userId));
+    }
+
+    @Override
+    public List<User> getById(List<Integer> userIds) {
+        final TypedQuery<User> query = em.createQuery("from User where userId in :userIds", User.class);
+        query.setParameter("userIds", userIds);
+        return userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
     }
 
     @Override
