@@ -8,18 +8,22 @@
         </a>
         <div class="flex justify-right space-x-2">
             <c:url var="reportPath" value="/report/${param.type}/${param.id}/comment/${param.commentId}"/>
-            <a href="${reportPath}">
-                <button type="button">
-                    <i class="fas fa-exclamation-circle text-right text-gray-400 justify-end hover:text-yellow-400 cursor-pointer"
-                       title="<spring:message code="report"/>"></i>
-                </button>
-            </a>
-            <c:if test="${param.commenterId == param.currentUserId}">
-                <jsp:include page="/WEB-INF/jsp/components/confirmationDeleteCommentModal.jsp">
-                    <jsp:param name="currentURL" value="${param.currentURL}"/>
-                    <jsp:param name="deleteCommentPath" value="${param.deletePath}"/>
-                </jsp:include>
-            </c:if>
+            <c:choose>
+                <c:when test="${param.commenterId == param.currentUserId}">
+                    <jsp:include page="/WEB-INF/jsp/components/confirmationDeleteCommentModal.jsp">
+                        <jsp:param name="currentURL" value="${param.currentURL}"/>
+                        <jsp:param name="deleteCommentPath" value="${param.deletePath}"/>
+                    </jsp:include>
+                </c:when>
+                <c:otherwise>
+                    <a href="${reportPath}">
+                        <button type="button">
+                            <i class="fas fa-exclamation-circle text-right text-gray-400 justify-end hover:text-yellow-400 cursor-pointer"
+                               title="<spring:message code="report"/>"></i>
+                        </button>
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <p class="max-w-full break-words">
