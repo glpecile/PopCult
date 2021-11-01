@@ -11,8 +11,7 @@
             <a href="${reportPath}">
                 <button type="button">
                     <i class="fas fa-exclamation-circle text-right text-gray-400 justify-end hover:text-yellow-400 cursor-pointer"
-                                              title="<spring:message code="report"/>"></i>
-
+                       title="<spring:message code="report"/>"></i>
                 </button>
             </a>
             <c:if test="${param.commenterId == param.currentUserId}">
@@ -23,8 +22,7 @@
             </c:if>
         </div>
     </div>
-    <p>
+    <p class="max-w-full break-words">
         <c:out value="${param.comment}"/>
     </p>
-
 </div>
