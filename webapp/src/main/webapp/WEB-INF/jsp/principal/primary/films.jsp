@@ -84,7 +84,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
+                <jsp:param name="url" value="/media/films"/>
             </jsp:include>
         </div>
     </c:otherwise>

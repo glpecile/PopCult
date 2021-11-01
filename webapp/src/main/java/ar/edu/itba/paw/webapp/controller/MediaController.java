@@ -68,9 +68,7 @@ public class MediaController {
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         mav.addObject("scrollItemsAmount", itemsPerContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+
         userService.getCurrentUser().ifPresent(user -> {
             final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS, user, 0, itemsPerContainer);
             final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE, user, 0, itemsPerContainer);
@@ -247,9 +245,6 @@ public class MediaController {
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Access to films successfully");
         return mav;
     }
@@ -262,9 +257,6 @@ public class MediaController {
         final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Access to series successfully");
         return mav;
     }
