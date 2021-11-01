@@ -49,9 +49,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-    @Async
-    @Override
-    public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
+    private void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
@@ -66,7 +64,6 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException messagingException) {
             LOGGER.error("Sending email failed");
         }
-
     }
 
     private String getHtmlBody(String template, Map<String, Object> variables) {
