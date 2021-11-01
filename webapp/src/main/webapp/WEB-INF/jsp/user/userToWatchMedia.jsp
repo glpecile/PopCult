@@ -56,7 +56,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${toWatchMediaIdsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${toWatchMediaIdsContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/toWatchMedia"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>

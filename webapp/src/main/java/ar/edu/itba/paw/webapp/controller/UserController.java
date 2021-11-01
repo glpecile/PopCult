@@ -79,11 +79,6 @@ public class UserController {
         mav.addObject("lists", userListsCover);
         mav.addObject("userListsContainer", userLists);
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
-
         PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page - 1, listsPerPage);
         final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
         mav.addObject("userPublicListCover", userPublicListCover);
@@ -105,11 +100,6 @@ public class UserController {
         mav.addObject("favoriteMediaContainer", favoriteMedia);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
-
         LOGGER.info("{} favorite media accessed.", username);
         return mav;
     }
@@ -128,10 +118,6 @@ public class UserController {
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/toWatchMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("{} to watch media accessed.", username);
         return mav;
     }
@@ -148,11 +134,6 @@ public class UserController {
 
         mav.addObject("user", user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/watchedMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
 
         LOGGER.info("{} watched media accessed.", username);
         return mav;
@@ -172,11 +153,6 @@ public class UserController {
         List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("userFavListsContainer", userFavLists);
-
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
 
         PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user, page - 1, listsPerPage);
         final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);

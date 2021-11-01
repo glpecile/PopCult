@@ -56,7 +56,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${favoriteMediaContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${favoriteMediaContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/favoriteMedia"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
