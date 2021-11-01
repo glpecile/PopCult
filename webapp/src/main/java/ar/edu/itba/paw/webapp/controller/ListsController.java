@@ -12,10 +12,7 @@ import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.*;
-import ar.edu.itba.paw.webapp.form.CommentForm;
-import ar.edu.itba.paw.webapp.form.ListForm;
-import ar.edu.itba.paw.webapp.form.ListMediaForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,9 +181,10 @@ public class ListsController {
     public ModelAndView manageMediaFromList(@PathVariable("listId") Integer mediaListId,
                                             @RequestParam(value = "page", defaultValue = "1") final int page,
                                             @ModelAttribute("editListDetails") final ListForm form,
-                                            @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
-        final ModelAndView mav = new ModelAndView("lists/manageMediaFromList");
-        return addMediaObjects(mediaListId, mediaForm, page, mav);
+                                            @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                            @ModelAttribute("usernameForm") UsernameForm usernameForm) {
+        final ModelAndView mav = new ModelAndView("lists/listManagement");
+        return addMediaObjects(mediaListId, mediaForm, usernameForm, page, mav);
     }
 
     @RequestMapping(value = "/lists/edit/{listId}/deleteMedia", method = {RequestMethod.DELETE, RequestMethod.POST})
@@ -203,10 +201,12 @@ public class ListsController {
                                                @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                                final BindingResult errors,
                                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
-                                               @ModelAttribute("editListDetails") final ListForm form, @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
+                                               @ModelAttribute("editListDetails") final ListForm form,
+                                               @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                               @ModelAttribute("usernameForm") UsernameForm usernameForm) {
         if (errors.hasErrors()) {
             LOGGER.warn("Search form has errors for list {}", mediaListId);
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm);
         }
         LOGGER.info("Searching for term: {}", searchForm.getTerm());
         final MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
@@ -216,7 +216,7 @@ public class ListsController {
         final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements();
         searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements());
         LOGGER.info("Search process completed.");
-        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults", mediaForm.generateMediaMap(searchResults));
+        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults", mediaForm.generateMediaMap(searchResults));
 
     }
 
@@ -224,20 +224,61 @@ public class ListsController {
     public ModelAndView insertToList(@PathVariable("listId") Integer mediaListId,
                                      @ModelAttribute("editListDetails") final ListForm form,
                                      @Valid @ModelAttribute("mediaForm") ListMediaForm mediaForm,
-                                     final BindingResult errors) {
+                                     final BindingResult errors,
+                                     @ModelAttribute("usernameForm") UsernameForm usernameForm) {
         LOGGER.debug("Trying to add media to list {}", mediaListId);
         if (errors.hasErrors()) {
             LOGGER.warn("Media form has errors for list {}", mediaListId);
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm);
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm);
         }
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         List<Media> media = mediaService.getById(mediaForm.getMedia());
         try {
             listsService.addToMediaList(mediaList, media);
         } catch (MediaAlreadyInListException e) {
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm).addObject("alreadyInList", true);
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("alreadyInList", true);
         }
         LOGGER.info("Media {} added to list {}", mediaForm.getMedia(), mediaListId);
+        return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
+    }
+
+    @RequestMapping(value = "/lists/edit/{listId}/searchUsers", method = {RequestMethod.GET}, params = "search")
+    public ModelAndView searchUsersToAddToListCollab(@PathVariable("listId") Integer mediaListId,
+                                                     @Valid @ModelAttribute("userSearchForm") UserSearchForm userSearchForm,
+                                                     final BindingResult errors,
+                                                     @ModelAttribute("editListDetails") final ListForm form,
+                                                     @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                                     @ModelAttribute("usernameForm") UsernameForm usernameForm) {
+        if (errors.hasErrors()) {
+            LOGGER.warn("User search form has errors for list {}", mediaListId);
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm);
+        }
+        LOGGER.info("Searching for term: {}", userSearchForm.getTerm());
+        final List<User> searchResults = searchService.searchUserByUsername(userSearchForm.getTerm(), defaultValue - 1, searchAmount).getElements();
+        LOGGER.info("User search process completed.");
+        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userSearchTerm", userSearchForm.getTerm()).addObject("userSearchResults", usernameForm.generateUserMap(searchResults));
+
+    }
+
+    @RequestMapping(value = "/lists/edit/{listId}/addCollaborators", method = {RequestMethod.POST}, params = "add")
+    public ModelAndView addCollaboratorsToList(@PathVariable("listId") Integer mediaListId,
+                                               @ModelAttribute("editListDetails") final ListForm form,
+                                               @Valid @ModelAttribute("usernameForm") UsernameForm usernameForm,
+                                               final BindingResult errors,
+                                               @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
+        LOGGER.debug("Trying to add user collaborator to list {}", mediaListId);
+        if (errors.hasErrors()) {
+            LOGGER.warn("User form has errors for list {}", mediaListId);
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm);
+        }
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        List<User> users = userService.getById(usernameForm.getUser());
+        try {
+            collaborativeListService.addCollaborators(mediaList, users);
+        } catch (RuntimeException e) { //TODO custom exception
+            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userAlreadyCollabsInList", true);
+        }
+        LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
         return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
     }
 
@@ -254,11 +295,12 @@ public class ListsController {
     public ModelAndView submitList(@PathVariable("listId") final int listId,
                                    @Valid @ModelAttribute("editListDetails") final ListForm form,
                                    final BindingResult errors,
-                                   @ModelAttribute("mediaForm") ListMediaForm mediaForm) {
+                                   @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                   @ModelAttribute("usernameForm") UsernameForm usernameForm) {
         LOGGER.debug("Trying to update list {}", listId);
         if (errors.hasErrors()) {
             LOGGER.warn("List {} form for update has errors", listId);
-            return manageMediaFromList(listId, defaultValue, form, mediaForm).addObject("editDetailsErrors", errors.hasErrors());
+            return manageMediaFromList(listId, defaultValue, form, mediaForm, usernameForm).addObject("editDetailsErrors", errors.hasErrors());
         }
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         listsService.updateList(mediaList, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
@@ -311,6 +353,7 @@ public class ListsController {
 
     private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId,
                                          @ModelAttribute("mediaForm") ListMediaForm mediaForm,
+                                         @ModelAttribute("usernameForm") UsernameForm usernameForm,
                                          @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaList, page - 1, itemsPerPage);

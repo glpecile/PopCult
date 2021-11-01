@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import java.util.List;
 public class SearchServiceImpl implements SearchService {
 
     @Autowired
-    private SearchDao searchDAO;
+    private SearchDao searchDao;
 
     @Transactional(readOnly = true)
     @Override
@@ -33,7 +34,7 @@ public class SearchServiceImpl implements SearchService {
                 fDate = f.parse(fromDate+ "-01-01");
                 tDate = f.parse(toDate + "-12-31");
         }
-        return searchDAO.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
+        return searchDao.searchMediaByTitle(title,page,pageSize,mediaType,sort,genre, fDate, tDate);
     }
 
     @Transactional(readOnly = true)
@@ -41,13 +42,19 @@ public class SearchServiceImpl implements SearchService {
     public PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
 //        if(genre == Genre.ALL)
 //            return searchListMediaByName(name, page, pageSize, sort);
-        return searchDAO.searchListMediaByName(name,page,pageSize,sort,genre, minMatches);
+        return searchDao.searchListMediaByName(name,page,pageSize,sort,genre, minMatches);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort) {
-        return searchDAO.searchMediaByTitleNotInList(mediaList, title, page, pageSize, mediaType, sort);
+        return searchDao.searchMediaByTitleNotInList(mediaList, title, page, pageSize, mediaType, sort);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<User> searchUserByUsername(String username, int page, int pageSize) {
+        return searchDao.searchUserByUsername(username, pageSize, page);
     }
 
 }
