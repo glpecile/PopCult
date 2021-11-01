@@ -248,7 +248,7 @@
     <%-- Manage Collaborators Modal--%>
     <div class="modal fade" id="manageCollaboratorsModal" tabindex="-1" aria-labelledby="manageCollaboratorsModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex justify-between">
@@ -256,17 +256,17 @@
                             <spring:message code="lists.collab.manage"/>
                         </h5>
                         <c:if test="${collaboratorsContainer.totalCount != 0}">
-                            <a href="${collaboratorsPath}">
-                                <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
-                                    <spring:message code="home.viewAll"/>
+                                <a href="${collaboratorsPath}">
+                                    <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
+                                        <spring:message code="home.viewAll"/>
+                                    </button>
+                                </a>
+                                <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded"
+                                        data-bs-toggle="modal" data-bs-dismiss="modal"
+                                        data-bs-target="#addCollaboratorsModal">
+                                    <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i>
+                                    <spring:message code="lists.collab.add"/>
                                 </button>
-                            </a>
-                            <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded"
-                                    data-bs-toggle="modal" data-bs-dismiss="modal"
-                                    data-bs-target="#addCollaboratorsModal">
-                                <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i>
-                                <spring:message code="lists.collab.add"/>
-                            </button>
                         </c:if>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

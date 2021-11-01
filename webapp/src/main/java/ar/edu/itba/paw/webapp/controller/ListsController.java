@@ -341,7 +341,8 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/{listId}/collaborators")
     public ModelAndView manageListCollaborators(@PathVariable("listId") final int listId,
-                                                @RequestParam(value = "page", defaultValue = "1") final int page) {
+                                                @RequestParam(value = "page", defaultValue = "1") final int page,
+                                                @ModelAttribute("usernameForm") UsernameForm usernameForm) {
         LOGGER.debug("Trying to access list {} collaborators", listId);
         final ModelAndView mav = new ModelAndView("lists/manageCollaboratorsFromList");
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -349,6 +350,41 @@ public class ListsController {
         mav.addObject("collaboratorsContainer", collaborativeListService.getListCollaborators(mediaList, page - 1, collaboratorsAmount));
         LOGGER.info("List collaborators from {} accessed.", listId);
         return mav;
+    }
+
+    @RequestMapping(value = "/lists/{listId}/collaborators/search", method = {RequestMethod.GET}, params = "search")
+    public ModelAndView searchUsersToAddToCollab(@PathVariable("listId") Integer mediaListId,
+                                                     @Valid @ModelAttribute("userSearchForm") UserSearchForm userSearchForm,
+                                                     final BindingResult errors,
+                                                     @ModelAttribute("usernameForm") UsernameForm usernameForm) {
+        if (errors.hasErrors()) {
+            LOGGER.warn("User search form has errors for list {}", mediaListId);
+            return manageListCollaborators(mediaListId, defaultValue, usernameForm);
+        }
+        LOGGER.info("Searching for term: {}", userSearchForm.getTerm());
+        final List<User> searchResults = searchService.searchUserByUsername(userSearchForm.getTerm(), defaultValue - 1, searchAmount).getElements();
+        LOGGER.info("User search process completed.");
+        return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userSearchTerm", userSearchForm.getTerm()).addObject("userSearchResults", usernameForm.generateUserMap(searchResults));
+    }
+
+    @RequestMapping(value = "/lists/{listId}/collaborators/add", method = {RequestMethod.POST}, params = "add")
+    public ModelAndView addCollaborators(@PathVariable("listId") Integer mediaListId,
+                                               @Valid @ModelAttribute("usernameForm") UsernameForm usernameForm,
+                                               final BindingResult errors) {
+        LOGGER.debug("Trying to add user collaborator to list {}", mediaListId);
+        if (errors.hasErrors()) {
+            LOGGER.warn("User form has errors for list {}", mediaListId);
+            return manageListCollaborators(mediaListId, defaultValue, usernameForm);
+        }
+        MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
+        List<User> users = userService.getById(usernameForm.getUser());
+        try {
+            collaborativeListService.addCollaborators(mediaList, users);
+        } catch (RuntimeException e) { //TODO custom exception
+            return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userAlreadyCollabsInList", true);
+        }
+        LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
+        return new ModelAndView("redirect:/lists/" + mediaListId + "/collaborators");
     }
 
     private ModelAndView addMediaObjects(@PathVariable("listId") Integer mediaListId,
