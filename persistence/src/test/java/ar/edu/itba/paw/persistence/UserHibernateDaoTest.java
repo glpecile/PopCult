@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.hibernate.UserHibernateDao;
 import org.junit.Assert;
@@ -23,8 +22,6 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
@@ -34,18 +31,15 @@ public class UserHibernateDaoTest {
     private static final String USERNAME = "test";
     private static final String PASSWORD = "password";
     private static final String NAME = "PopCult Test";
-    private static final boolean NOT_ENABLED_USER = false;
-    private static final boolean ENABLED_USER = true;
-    private static final UserRole DEFAULT_USER_ROLE = UserRole.USER;
 
     private static final int ALREADY_EXISTS_USER_ID = 4;
     private static final String ALREADY_EXISTS_EMAIL = "email@email.com";
     private static final String ALREADY_EXISTS_USERNAME = "username";
 
-    private static final String USER_TABLE = "users";
+    private static final String USERS_TABLE = "users";
 
     @Autowired
-    UserHibernateDao userHibernateDao;
+    private UserHibernateDao userHibernateDao;
 
     @Autowired
     private DataSource ds;
@@ -96,7 +90,7 @@ public class UserHibernateDaoTest {
 
         Assert.assertNotNull(user);
         Assert.assertEquals(EMAIL, user.getEmail());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("email = '%s'", EMAIL)));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USERS_TABLE, String.format("email = '%s'", EMAIL)));
     }
 
     @Rollback
@@ -107,7 +101,7 @@ public class UserHibernateDaoTest {
         userHibernateDao.register(ALREADY_EXISTS_EMAIL, USERNAME, PASSWORD, NAME);
 
         Assert.fail();
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("email = '%s'", ALREADY_EXISTS_EMAIL)));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USERS_TABLE, String.format("email = '%s'", ALREADY_EXISTS_EMAIL)));
     }
 
     @Rollback
@@ -118,7 +112,7 @@ public class UserHibernateDaoTest {
         userHibernateDao.register(EMAIL, ALREADY_EXISTS_USERNAME, PASSWORD, NAME);
 
         Assert.fail();
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("username = '%s'", ALREADY_EXISTS_USERNAME)));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USERS_TABLE, String.format("username = '%s'", ALREADY_EXISTS_USERNAME)));
     }
 
 }
