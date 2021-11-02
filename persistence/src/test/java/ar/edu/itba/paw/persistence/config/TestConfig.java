@@ -77,8 +77,8 @@ public class TestConfig {
         dp.addScript(users);
         dp.addScript(genre);
         dp.addScript(media);
-//        dp.addScript(lists);
-//        dp.addScript(inserts);
+        dp.addScript(lists);
+        dp.addScript(inserts);
 
         return dp;
     }
