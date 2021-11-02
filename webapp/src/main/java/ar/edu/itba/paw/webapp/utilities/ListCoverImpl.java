@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListCoverImpl {
+
+    private ListCoverImpl() {
+        throw new AssertionError();
+    }
+
     private static final int coverMoviesAmount = 4;
 
     public static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService) {
