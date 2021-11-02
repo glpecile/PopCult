@@ -164,13 +164,16 @@ public class SearchHibernateDao implements SearchDao {
 
     @Override
     public PageContainer<User> searchUserByUsername(String username, List<User> excludedUsers, int page, int pageSize) {
+        StringBuilder nativeString = new StringBuilder("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%')");
         List<Integer> excludedUserIds = new ArrayList<>();
         excludedUsers.forEach( user -> excludedUserIds.add(user.getUserId()));
-        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds OFFSET :offset LIMIT :limit ");
+        if (!excludedUserIds.isEmpty()) nativeString.append("AND users.userId NOT IN :excludedUserIds");
+        nativeString.append("OFFSET :offset LIMIT :limit");
+        final Query nativeQuery = em.createNativeQuery(nativeString.toString());
         nativeQuery.setParameter("username", username);
         nativeQuery.setParameter("offset", page*pageSize);
         nativeQuery.setParameter("limit", pageSize);
-        nativeQuery.setParameter("excludedUserIds", excludedUserIds);
+        if (!excludedUserIds.isEmpty()) nativeQuery.setParameter("excludedUserIds", excludedUserIds);
         @SuppressWarnings("unchecked")
         final List<Long> userIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(userid) FROM users WHERE users.username ILIKE CONCAT('%', :username, '%') AND users.userId NOT IN :excludedUserIds")
