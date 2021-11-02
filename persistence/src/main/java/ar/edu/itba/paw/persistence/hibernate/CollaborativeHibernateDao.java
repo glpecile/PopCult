@@ -89,9 +89,17 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public void addCollaborators(MediaList mediaList, List<User> users) {
-        for (User user: users) {
+        for (User user : users) {
             em.persist(new Request(user, mediaList, true));
         }
+    }
+
+    @Override
+    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
+        final TypedQuery<Request> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", Request.class);
+        query.setParameter("mediaList", mediaList);
+        query.setParameter("user", user);
+        return query.getResultList().stream().findFirst();
     }
 
 }

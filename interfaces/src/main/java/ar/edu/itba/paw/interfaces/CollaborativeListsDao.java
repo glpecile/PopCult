@@ -23,4 +23,6 @@ public interface CollaborativeListsDao {
 
     void addCollaborators(MediaList mediaList, List<User> users);
 
+    Optional<Request> getUserListCollabRequest(MediaList mediaList, User user);
+
 }
