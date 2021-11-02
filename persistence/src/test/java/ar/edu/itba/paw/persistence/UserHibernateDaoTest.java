@@ -18,8 +18,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -38,11 +42,16 @@ public class UserHibernateDaoTest {
     private static final String ALREADY_EXISTS_EMAIL = "email@email.com";
     private static final String ALREADY_EXISTS_USERNAME = "username";
 
+    private static final String USER_TABLE = "users";
+
     @Autowired
     UserHibernateDao userHibernateDao;
 
     @Autowired
     private DataSource ds;
+
+    @PersistenceContext
+    private EntityManager em;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -80,11 +89,36 @@ public class UserHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testRegister() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+    public void testRegister() throws  EmailAlreadyExistsException, UsernameAlreadyExistsException {
         final User user = userHibernateDao.register(EMAIL, USERNAME, PASSWORD, NAME);
+
+        em.flush();
 
         Assert.assertNotNull(user);
         Assert.assertEquals(EMAIL, user.getEmail());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("email = '%s'", EMAIL)));
+    }
+
+    @Rollback
+    @Test(expected = EmailAlreadyExistsException.class)
+    public void testEmailAlreadyExists() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+        //The inserts.sql script inserts a user with email: email@email.com.
+
+        userHibernateDao.register(ALREADY_EXISTS_EMAIL, USERNAME, PASSWORD, NAME);
+
+        Assert.fail();
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("email = '%s'", ALREADY_EXISTS_EMAIL)));
+    }
+
+    @Rollback
+    @Test(expected = UsernameAlreadyExistsException.class)
+    public void testUsernameAlreadyExists() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+        //The inserts.sql script inserts a user with username: username.
+
+        userHibernateDao.register(EMAIL, ALREADY_EXISTS_USERNAME, PASSWORD, NAME);
+
+        Assert.fail();
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, USER_TABLE, String.format("username = '%s'", ALREADY_EXISTS_USERNAME)));
     }
 
 }
