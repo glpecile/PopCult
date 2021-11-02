@@ -61,9 +61,8 @@ public class SearchServiceImpl implements SearchService {
     public PageContainer<User> searchUsersToCollabNotInList(String username, MediaList mediaList, int pageSize, int page) {
         List<User> collaborators = new ArrayList<>();
         collaborators.add(mediaList.getUser());
-        for (Request request : collaborativeListsDao.getListCollaborators(mediaList, 0, 50).getElements()) {
-            collaborators.add(request.getCollaborator());
-        }
+        List<Request> requestList = collaborativeListsDao.getListCollaborators(mediaList, 0, 50).getElements();
+        if (!requestList.isEmpty()) requestList.forEach((request -> collaborators.add(request.getCollaborator())));
         return searchDao.searchUserByUsername(username, collaborators, page, pageSize);
     }
 

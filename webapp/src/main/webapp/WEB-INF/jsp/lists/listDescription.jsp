@@ -208,7 +208,7 @@
                                         class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-300 ease-in-out group hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
                                     <div class="flex">
                                         <h4 class="pl-3 py-4 text-xl font-semibold tracking-tight text-purple-500 group-hover:text-purple-900">
-                                            <c:out value="${fork.listName}"/>
+                                            <spring:message code="lists.forkedBy" arguments="${fork.listName}, ${fork.user.username}"/>
                                         </h4>
                                     </div>
                                 </div>

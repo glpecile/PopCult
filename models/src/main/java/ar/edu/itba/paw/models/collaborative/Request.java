@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "collaborative")
@@ -72,5 +73,18 @@ public class Request {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return Objects.equals(collaborator, request.collaborator) && Objects.equals(mediaList, request.mediaList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(collaborator, mediaList);
     }
 }

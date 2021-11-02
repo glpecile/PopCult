@@ -167,8 +167,8 @@ public class SearchHibernateDao implements SearchDao {
         StringBuilder nativeString = new StringBuilder("SELECT userid FROM users WHERE users.username ILIKE CONCAT('%', :username, '%')");
         List<Integer> excludedUserIds = new ArrayList<>();
         excludedUsers.forEach( user -> excludedUserIds.add(user.getUserId()));
-        if (!excludedUserIds.isEmpty()) nativeString.append("AND users.userId NOT IN :excludedUserIds");
-        nativeString.append("OFFSET :offset LIMIT :limit");
+        if (!excludedUserIds.isEmpty()) nativeString.append(" AND users.userId NOT IN :excludedUserIds");
+        nativeString.append(" OFFSET :offset LIMIT :limit");
         final Query nativeQuery = em.createNativeQuery(nativeString.toString());
         nativeQuery.setParameter("username", username);
         nativeQuery.setParameter("offset", page*pageSize);
