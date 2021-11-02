@@ -50,14 +50,6 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
-//    @Override
-//    public void acceptRequest(int collabId) {
-//        em.createNativeQuery("UPDATE collaborative SET accepted = :status WHERE collabid = :collabId")
-//                .setParameter("status", true)
-//                .setParameter("collabId", collabId)
-//                .executeUpdate();
-//    }
-
     @Override
     public void rejectRequest(Request request) {
         em.remove(request);

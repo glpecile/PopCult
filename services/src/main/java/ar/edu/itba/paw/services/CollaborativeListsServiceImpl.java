@@ -18,10 +18,6 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     private CollaborativeListsDao collaborativeListsDao;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private ListsDao listsDao;
 
     @Transactional
     @Override
@@ -45,7 +41,6 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     public void acceptRequest(Request collaborationRequest) {
         emailService.sendCollabRequestAcceptedEmail(collaborationRequest.getCollaborator(), collaborationRequest);
         collaborationRequest.setAccepted(true);
-//        collaborativeListsDao.acceptRequest(collabId);
     }
 
     @Transactional

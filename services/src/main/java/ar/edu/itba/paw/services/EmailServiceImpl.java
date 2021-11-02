@@ -147,14 +147,12 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
-        userDao.getById(list.getUser().getUserId()).ifPresent(to -> {
-            final Map<String, Object> mailMap = new HashMap<>();
-            mailMap.put("listname", list.getListName());
-            mailMap.put("username", requester.getUsername());
-            mailMap.put("toUsername", listOwner.getUsername());
-            final String subject = messageSource.getMessage("collabEmail.subject", null, LocaleContextHolder.getLocale());
-            sendEmail(to.getEmail(), subject, "collaborationRequest.html", mailMap);
-        });
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("listname", list.getListName());
+        mailMap.put("username", requester.getUsername());
+        mailMap.put("toUsername", listOwner.getUsername());
+        final String subject = messageSource.getMessage("collabEmail.subject", null, LocaleContextHolder.getLocale());
+        sendEmail(listOwner.getEmail(), subject, "collaborationRequest.html", mailMap);
     }
 
     @Async

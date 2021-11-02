@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService {
         Token token = tokenService.createToken(user, TokenType.VERIFICATION);
 
         emailService.sendVerificationEmail(user, token.getToken());
+
         return user;
     }
 
