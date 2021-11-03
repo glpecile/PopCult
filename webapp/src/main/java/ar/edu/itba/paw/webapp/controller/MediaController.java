@@ -256,7 +256,8 @@ public class MediaController {
         }
         final ModelAndView mav = new ModelAndView("principal/primary/films");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final List<MediaType> mediaTypes = filterForm.getMediaTypes().stream().map(MediaType::valueOf).collect(Collectors.toList());
+        final List<MediaType> mediaTypes = new ArrayList<>();
+        mediaTypes.add(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());

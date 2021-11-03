@@ -135,7 +135,7 @@ public class MediaHibernateDao implements MediaDao {
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids) order by "+ sort.nameMedia, Media.class);
         query.setParameter("mediaids", mediaIds);
         List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
