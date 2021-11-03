@@ -22,7 +22,7 @@ public class LoginController {
     @RequestMapping("/login")
     public ModelAndView login() {
         LOGGER.debug("Accessing login page.");
-        return new ModelAndView("login");
+        return new ModelAndView("login/login");
     }
 
     @RequestMapping("/loginFailed")

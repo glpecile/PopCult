@@ -41,13 +41,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
-
-    @Autowired
-    private EditListVoter editListVoter;
     @Autowired
     private UserPanelManagerVoter userPanelManagerVoter;
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
+    @Autowired
+    private ListsManagerVoter listsManagerVoter;
     @Autowired
     private ListsVoter listsVoter;
 
@@ -72,9 +71,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 webExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),
-                editListVoter,
                 userPanelManagerVoter,
                 deleteCommentVoter,
+                listsManagerVoter,
                 listsVoter
         );
         return new UnanimousBased(decisionVoters);

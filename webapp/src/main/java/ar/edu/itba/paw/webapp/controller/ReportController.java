@@ -37,7 +37,7 @@ public class ReportController {
     @RequestMapping(value = "/report/lists/{listId}", method = RequestMethod.GET)
     public ModelAndView reportList(@PathVariable("listId") final int listId,
                                    @ModelAttribute("reportForm") final ReportForm reportFom) {
-        ModelAndView mav = new ModelAndView("reportList");
+        ModelAndView mav = new ModelAndView("reports/reportList");
         mav.addObject("list", listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new));
         LOGGER.info("List: {} was reported.", listId);
         return mav;
@@ -55,14 +55,14 @@ public class ReportController {
         reportService.reportList(mediaList, reportForm.getReport());
         return listsService.getMediaListById(listId).isPresent() ?
                 new ModelAndView("redirect:/lists/" + listId) :
-                new ModelAndView("redirect:/lists");
+                new ModelAndView("lists/lists");
     }
 
     @RequestMapping(value = "/report/lists/{listId}/comment/{commentId}", method = RequestMethod.GET)
     public ModelAndView reportListComment(@PathVariable("listId") final int listId,
                                           @PathVariable("commentId") final int commentId,
                                           @ModelAttribute("reportForm") final ReportForm reportForm) {
-        ModelAndView mav = new ModelAndView("reportComment");
+        ModelAndView mav = new ModelAndView("reports/reportComment");
         mav.addObject("comment", commentService.getListCommentById(commentId).orElseThrow(CommentNotFoundException::new));
         mav.addObject("id", listId);
         mav.addObject("type", "lists");
@@ -87,7 +87,7 @@ public class ReportController {
     public ModelAndView reportMediaComment(@PathVariable("mediaId") final int mediaId,
                                            @PathVariable("commentId") final int commentId,
                                            @ModelAttribute("reportForm") final ReportForm reportForm) {
-        ModelAndView mav = new ModelAndView("reportComment");
+        ModelAndView mav = new ModelAndView("reports/reportComment");
         mav.addObject("comment", commentService.getMediaCommentById(commentId).orElseThrow(CommentNotFoundException::new));
         mav.addObject("id", mediaId);
         mav.addObject("type", "media");

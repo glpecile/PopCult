@@ -46,6 +46,9 @@
                     </c:choose>
                 </button>
                 <ul class="dropdown-menu shadow-lg" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}"/>">
+                        <spring:message code="staff.all"/>
+                    </a></li>
                     <li><a class="dropdown-item" href="<c:url value="/staff/${staffMemberId}/actor"/>">
                         <spring:message code="staff.actor"/>
                     </a></li>
@@ -85,10 +88,14 @@
                 </div>
             </c:forEach>
         </div>
+
+        <br>
+
+        <c:url var="url" value=""/>
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
             <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
-            <jsp:param name="url" value="${urlBase}"/>
+            <jsp:param name="url" value="${url}"/>
         </jsp:include>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,21 +45,17 @@ public class GenreController {
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
                               @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.info("Genre {} accessed", genre);
-        final ModelAndView mav = new ModelAndView("genre");
+        final ModelAndView mav = new ModelAndView("principal/secondary/genre");
         final String normalizedGenre = genre.replaceAll("\\s+", "").toUpperCase();
         final Genre gen = Genre.valueOf(normalizedGenre);
         final String genreName = gen.getGenre();
-        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(Genre.valueOf(normalizedGenre), page - 1, itemsPerPage);
-        final PageContainer<MediaList> genreLists = genreService.getListsContainingGenre(gen,firstPage,listInPage,minimumMediaMatches,true);
-
+        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(gen, page - 1, itemsPerPage);
+        final PageContainer<MediaList> genreLists = genreService.getListsContainingGenre(gen, firstPage, listInPage, minimumMediaMatches, true);
         final List<ListCover> listCovers = getListCover(genreLists.getElements(), listsService);
-        mav.addObject("genreName", Genre.valueOf(normalizedGenre).getGenre());
+
+        mav.addObject("genreName", genreName);
         mav.addObject("mediaPageContainer", mediaPageContainer);
         mav.addObject("genreLists", listCovers);
-        final Map<String, String> map = new HashMap<>();
-        map.put("genreName", genreName);
-        String urlBase = UriComponentsBuilder.newInstance().path("/genre/{genreName}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         return mav;
     }
 }

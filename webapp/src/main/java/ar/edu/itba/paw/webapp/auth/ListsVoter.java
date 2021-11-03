@@ -34,16 +34,39 @@ public class ListsVoter implements AccessDecisionVoter<FilterInvocation> {
         AtomicInteger vote = new AtomicInteger();
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
-        if (URL.toLowerCase().contains("/user/") && URL.contains("/lists")) {
+        if (URL.toLowerCase().contains("/lists/edit/")) {
             try {
-                String username = URL.replaceFirst("/user/", "").replaceFirst("/lists.*", "");
+                int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/edit/", "").replaceFirst("/.*", ""));
                 userService.getCurrentUser().ifPresent(user -> {
-                    if (user.getUsername().equals(username)) {
+                    listsService.getMediaListById(mediaListId).ifPresent(mediaList -> {
+                        if (URL.contains("/manageMedia") || URL.contains("/addMedia") || URL.contains("/search") || URL.contains("deleteMedia")) {
+                            if (listsService.canEditList(user, mediaList)) {
+                                vote.set(ACCESS_GRANTED);
+                            } else {
+                                vote.set(ACCESS_DENIED);
+                            }
+                        } else {
+                            if (user.getUserId() == mediaList.getUser().getUserId()) {
+                                vote.set(ACCESS_GRANTED);
+                            } else {
+                                vote.set(ACCESS_DENIED);
+                            }
+                        }
+                    });
+                });
+            } catch (NumberFormatException e) {
+                vote.set(ACCESS_ABSTAIN);
+            }
+        } else if (URL.contains("/lists/")) {
+            try {
+                int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/", "").replaceFirst("/.*", ""));
+                userService.getCurrentUser().ifPresent(user -> listsService.getMediaListById(mediaListId).ifPresent(list -> {
+                    if (list.getVisible() || listsService.canEditList(user, list)) {
                         vote.set(ACCESS_GRANTED);
                     } else {
                         vote.set(ACCESS_DENIED);
                     }
-                });
+                }));
             } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }

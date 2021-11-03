@@ -3,18 +3,21 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
+import ar.edu.itba.paw.webapp.form.FilterForm;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -61,7 +66,7 @@ public class MediaController {
     @RequestMapping("/")
     public ModelAndView home() {
         LOGGER.debug("Trying to access home.");
-        final ModelAndView mav = new ModelAndView("home");
+        final ModelAndView mav = new ModelAndView("principal/primary/home");
         final PageContainer<Media> latestFilmsContainer = mediaService.getLatestMediaList(MediaType.FILMS, 0, itemsPerContainer);
         final PageContainer<Media> latestSeriesContainer = mediaService.getLatestMediaList(MediaType.SERIE, 0, itemsPerContainer);
         final List<ListCover> recentlyAddedCovers = getListCover(listsService.getLastAddedLists(0, lastAddedAmount).getElements(), listsService);
@@ -69,9 +74,7 @@ public class MediaController {
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         mav.addObject("scrollItemsAmount", itemsPerContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+
         userService.getCurrentUser().ifPresent(user -> {
             final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS, user, 0, itemsPerContainer);
             final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE, user, 0, itemsPerContainer);
@@ -89,7 +92,7 @@ public class MediaController {
     public ModelAndView mediaDescription(@PathVariable("mediaId") final int mediaId,
                                          @ModelAttribute("commentForm") CommentForm commentForm) {
         LOGGER.debug("Trying to access media {} description", mediaId);
-        final ModelAndView mav = new ModelAndView("mediaDescription");
+        final ModelAndView mav = new ModelAndView("media/mediaDescription");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, defaultValue - 1, listsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
@@ -113,7 +116,7 @@ public class MediaController {
     @RequestMapping(value = "/media/{mediaId}/lists")
     public ModelAndView mediaLists(@PathVariable("mediaId") final int mediaId,
                                    @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("mediaRelatedLists");
+        final ModelAndView mav = new ModelAndView("media/mediaRelatedLists");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaList> mediaList = listsService.getListsIncludingMedia(media, page - 1, itemsPerPage);
         final List<ListCover> relatedListsCover = getListCover(mediaList.getElements(), listsService);
@@ -127,7 +130,7 @@ public class MediaController {
     public ModelAndView mediaComments(@PathVariable("mediaId") final int mediaId,
                                       @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access media {} comments", mediaId);
-        final ModelAndView mav = new ModelAndView("mediaCommentDetails");
+        final ModelAndView mav = new ModelAndView("media/mediaCommentDetails");
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, page - 1, itemsPerPage);
         userService.getCurrentUser().ifPresent(user -> mav.addObject("currentUser", user));
@@ -139,7 +142,7 @@ public class MediaController {
 
     @RequestMapping(value = "/media/{mediaId}", method = {RequestMethod.POST}, params = "comment")
     public ModelAndView addComment(@PathVariable("mediaId") final int mediaId,
-                                   @Valid @ModelAttribute("searchForm") final CommentForm form,
+                                   @Valid @ModelAttribute("commentForm") final CommentForm form,
                                    final BindingResult errors) {
         LOGGER.debug("Trying to add a comment to media {}", mediaId);
         if (errors.hasErrors()) {
@@ -240,33 +243,66 @@ public class MediaController {
         return new ModelAndView("redirect:/media/" + mediaId);
     }
 
-    @RequestMapping("/media/films")
-    public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    @RequestMapping(value = "/media/films")
+    public ModelAndView films(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
+                              @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                              final BindingResult errors) throws ParseException {
         LOGGER.debug("Trying to access films");
-        final ModelAndView mav = new ModelAndView("films");
+        if(errors.hasErrors()){
+            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
+        final ModelAndView mav = new ModelAndView("principal/primary/films");
+        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
+        final List<MediaType> mediaTypes = new ArrayList<>();
+        mediaTypes.add(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.FILMS, page - 1, itemsPerPage);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+        final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
+        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            decades.add(Integer.toString(i));
+        }
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("decadesType", decades);
         LOGGER.info("Access to films successfully");
         return mav;
     }
 
     @RequestMapping("/media/series")
-    public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView series(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
+                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                               final BindingResult errors) throws ParseException{
         LOGGER.debug("Trying to access series");
-        final ModelAndView mav = new ModelAndView("series");
+        if(errors.hasErrors()){
+            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
+        final ModelAndView mav = new ModelAndView("principal/primary/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
+        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
+        final List<MediaType> mediaTypes = new ArrayList<>();
+        mediaTypes.add(MediaType.SERIE);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+        final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
+        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            decades.add(Integer.toString(i));
+        }
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("decadesType", decades);
         LOGGER.info("Access to series successfully");
         return mav;
+    }
+
+    @RequestMapping(value = {"/media/series","/media/films"}, method = {RequestMethod.GET}, params = "clear")
+    public ModelAndView clearFilters(HttpServletRequest request, @ModelAttribute("filterForm") final FilterForm filterForm){
+        return new ModelAndView("redirect:" + request.getHeader("referer").replaceAll("\\?.*",""));
     }
 }

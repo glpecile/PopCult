@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,15 +18,15 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     private CollaborativeListsDao collaborativeListsDao;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private ListsDao listsDao;
 
     @Transactional
     @Override
     public Request makeNewRequest(MediaList mediaList, User user) {
-        userDao.getById(mediaList.getUser().getUserId()).ifPresent(listOwner -> emailService.sendNewRequestEmail(mediaList, user, listOwner));
+        Optional<Request> request = collaborativeListsDao.getUserListCollabRequest(mediaList, user);
+        if (request.isPresent()) {
+            return request.get();
+        }
+        emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser());
         return collaborativeListsDao.makeNewRequest(mediaList, user);
     }
 
@@ -38,9 +39,8 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Transactional
     @Override
     public void acceptRequest(Request collaborationRequest) {
-        emailService.sendCollabRequestAcceptedEmail( collaborationRequest.getCollaborator(), collaborationRequest);
+        emailService.sendCollabRequestAcceptedEmail(collaborationRequest.getCollaborator(), collaborationRequest);
         collaborationRequest.setAccepted(true);
-//        collaborativeListsDao.acceptRequest(collabId);
     }
 
     @Transactional
@@ -65,5 +65,11 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Override
     public Optional<Request> getById(int collabId) {
         return collaborativeListsDao.getById(collabId);
+    }
+
+    @Transactional
+    @Override
+    public void addCollaborators(MediaList mediaList, List<User> users) {
+        collaborativeListsDao.addCollaborators(mediaList, users);
     }
 }

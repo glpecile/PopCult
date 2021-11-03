@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.media;
 
 public enum Genre {
-    ALL("All"),
     ACTION("Action"),
     ADVENTURE("Adventure"),
     ANIMATION("Animation"),
@@ -37,7 +36,7 @@ public enum Genre {
         return genre;
     }
 
-    public int getOrdinal(String name) {
-        return Genre.valueOf(name).ordinal();
+    public int getOrdinal() {
+        return this.ordinal() + 1;
     }
 }

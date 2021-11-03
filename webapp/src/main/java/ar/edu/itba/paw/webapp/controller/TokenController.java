@@ -24,14 +24,14 @@ public class TokenController {
     @RequestMapping(value = "/tokenTimedOut")
     public ModelAndView tokenTimedOut(@RequestParam("token") final String token) {
         LOGGER.warn("Token timed out.");
-        ModelAndView mav = new ModelAndView("tokenTimedOut");
+        ModelAndView mav = new ModelAndView("login/tokenTimedOut");
         mav.addObject("token", token);
         return mav;
     }
 
     @RequestMapping(value = "/resendToken")
     public ModelAndView resendToken(@RequestParam("token") final String token) {
-        ModelAndView mav = new ModelAndView("sentEmail");
+        ModelAndView mav = new ModelAndView("login/sentEmail");
         Token tkn = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
         userService.resendToken(tkn);
         LOGGER.info("Token was resent");

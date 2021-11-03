@@ -36,8 +36,8 @@ public class MediaList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(name = "forkedlists",
-            joinColumns = {@JoinColumn(name = "originalistid")},
-            inverseJoinColumns = {@JoinColumn(name = "forkedlistid")}
+            joinColumns = {@JoinColumn(name = "forkedlistid")},
+            inverseJoinColumns = {@JoinColumn(name = "originalistid")}
     )
     private MediaList forkedFrom;
 

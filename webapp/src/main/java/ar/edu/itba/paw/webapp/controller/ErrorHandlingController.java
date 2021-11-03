@@ -20,7 +20,7 @@ public class ErrorHandlingController {
     @RequestMapping("/403")
     public ModelAndView forbidden() {
         LOGGER.info("Error 403 found. User redirect to /403.");
-        ModelAndView mav = new ModelAndView("error");
+        ModelAndView mav = new ModelAndView("errors/error");
         mav.addObject("title", messageSource.getMessage("error.403", null, Locale.getDefault()));
         mav.addObject("description", messageSource.getMessage("error.403.description", null, Locale.getDefault()));
         return mav;

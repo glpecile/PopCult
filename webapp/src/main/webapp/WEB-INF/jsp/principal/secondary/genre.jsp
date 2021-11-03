@@ -60,7 +60,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaPageContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaPageContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${urlBase}"/>
+                <jsp:param name="url" value="/genre/${genreName}"/>
             </jsp:include>
         </div>
     </div>

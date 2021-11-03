@@ -27,8 +27,6 @@ public interface ListsService {
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 
-    List<MediaList> getListsContainingGenre(Genre genre, int pageSize, int minMatches);
-
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
     void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
@@ -48,7 +46,5 @@ public interface ListsService {
     PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize);
 
     PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize);
-
-    Optional<MediaList> getForkedFrom(MediaList mediaList);
 
 }

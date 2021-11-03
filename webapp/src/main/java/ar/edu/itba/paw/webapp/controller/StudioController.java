@@ -33,15 +33,11 @@ public class StudioController {
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,
                                @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.debug("Trying to access studio {}", studioId);
-        final ModelAndView mav = new ModelAndView("studio");
+        final ModelAndView mav = new ModelAndView("principal/secondary/studio");
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
         final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studio, page - 1, itemsPerPage);
         mav.addObject("studio", studio);
         mav.addObject("mediaPageContainer", mediaPageContainer);
-        final Map<String, Integer> map = new HashMap<>();
-        map.put("studioId", studioId);
-        String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Studio {} accessed", studioId);
         return mav;
     }
