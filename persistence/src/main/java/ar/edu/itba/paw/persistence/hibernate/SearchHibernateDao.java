@@ -52,7 +52,7 @@ public class SearchHibernateDao implements SearchDao {
         return new PageContainer<>(mediasList, page, pageSize, count);
     }
 
-    private Query buildAndWhereStatement(String baseQuery, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort, List<Genre> genre, Date fromDate, Date toDate){
+    private Query buildAndWhereStatement(String baseQuery, String title, Integer page, Integer pageSize, List<MediaType> mediaType, SortType sort, List<Genre> genre, Date fromDate, Date toDate){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -75,11 +75,14 @@ public class SearchHibernateDao implements SearchDao {
             parameters.put("toDate", toDate);
         }
 
-        toReturn.append(" ORDER BY ").append(sort.nameMedia);
+        if(sort != null)
+            toReturn.append(" ORDER BY ").append(sort.nameMedia);
 
-        toReturn.append(" OFFSET :offset LIMIT :limit ");
-        parameters.put("offset", page*pageSize);
-        parameters.put("limit", pageSize);
+        if(page != null && pageSize != null){
+            toReturn.append( " OFFSET :offset LIMIT :limit ");
+            parameters.put("offset", page*pageSize);
+            parameters.put("limit", pageSize);
+        }
 
         toReturn.append(" ) AS aux");
 
@@ -88,7 +91,7 @@ public class SearchHibernateDao implements SearchDao {
         return nativeQuery;
     }
     //unicamente para listas
-    private Query buildAndWhereStatement(String baseQuery, String name, int page, int pageSize, boolean visibility,SortType sort, List<Genre> genre, int minMatches){
+    private Query buildAndWhereStatement(String baseQuery, String name, Integer page, Integer pageSize, boolean visibility,SortType sort, List<Genre> genre, int minMatches){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -105,13 +108,14 @@ public class SearchHibernateDao implements SearchDao {
         toReturn.append(" AND visibility = :visibility");
         parameters.put("visibility", visibility);
 
-        toReturn.append(" ORDER BY ").append(sort.nameMediaList);
-//        parameters.put("sort", sort.colNumberMediaList);
+        if(sort != null)
+            toReturn.append(" ORDER BY ").append(sort.nameMedia);
 
-        toReturn.append( " OFFSET :offset LIMIT :limit ");
-        parameters.put("offset", page*pageSize);
-        parameters.put("limit", pageSize);
-
+        if(page != null && pageSize != null){
+            toReturn.append( " OFFSET :offset LIMIT :limit ");
+            parameters.put("offset", page*pageSize);
+            parameters.put("limit", pageSize);
+        }
         toReturn.append(" ) AS aux");
         final Query nativeQuery = em.createNativeQuery(toReturn.toString());
         parameters.forEach(nativeQuery::setParameter);
@@ -128,8 +132,8 @@ public class SearchHibernateDao implements SearchDao {
         List<Long> mediaIds = nativeQuery.getResultList();
 
         //Obtenemos la cantidad total de elementos.
-        final String countBaseQuery = "SELECT COUNT(mediaid) FROM( SELECT DISTINCT mediaid, " + sort.nameMedia +" FROM media NATURAL JOIN mediagenre ";
-        final Query countQuery = buildAndWhereStatement(countBaseQuery,title,page,pageSize,mediaType,sort,genre,fromDate,toDate);
+        final String countBaseQuery = "SELECT COUNT(mediaid) FROM( SELECT DISTINCT mediaid FROM media NATURAL JOIN mediagenre ";
+        final Query countQuery = buildAndWhereStatement(countBaseQuery,title,null,null,mediaType,null,genre,fromDate,toDate);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
@@ -149,8 +153,8 @@ public class SearchHibernateDao implements SearchDao {
         @SuppressWarnings("unchecked")
         List<Long> mediaListIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
-        final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid, " + sort.nameMediaList + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
-        final Query countQuery = buildAndWhereStatement(countBaseQuery,name,page,pageSize,true,sort,genre,minMatches);
+        final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final Query countQuery = buildAndWhereStatement(countBaseQuery,name,null,null,true,null,genre,minMatches);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
