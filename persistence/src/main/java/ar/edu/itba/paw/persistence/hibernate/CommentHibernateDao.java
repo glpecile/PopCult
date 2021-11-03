@@ -58,7 +58,7 @@ public class CommentHibernateDao implements CommentDao {
     @Override
     public PageContainer<MediaComment> getMediaComments(Media media, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM mediacomment WHERE mediaid = :mediaId " +
-                        "OFFSET :offset LIMIT :limit")
+                        "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("mediaId", media.getMediaId())
                 .setParameter("offset", page * pageSize)
                 .setParameter("limit", pageSize);
@@ -69,7 +69,7 @@ public class CommentHibernateDao implements CommentDao {
                 .setParameter("mediaId", media.getMediaId());
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment WHERE commentId IN (:commentIds)", MediaComment.class)//It works, ignore intellij
+        final TypedQuery<MediaComment> query = em.createQuery("FROM MediaComment WHERE commentId IN (:commentIds) ORDER BY creationDate DESC", MediaComment.class)//It works, ignore intellij
                 .setParameter("commentIds", commentIds);
         List<MediaComment> mediaComments = commentIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -79,7 +79,7 @@ public class CommentHibernateDao implements CommentDao {
     @Override
     public PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM listcomment WHERE listid = :listId " +
-                        "OFFSET :offset LIMIT :limit")
+                        "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("listId", mediaList.getMediaListId())
                 .setParameter("offset", page * pageSize)
                 .setParameter("limit", pageSize);
@@ -90,7 +90,7 @@ public class CommentHibernateDao implements CommentDao {
                 .setParameter("listId", mediaList.getMediaListId());
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<ListComment> query = em.createQuery("FROM ListComment WHERE commentId IN (:commentIds)", ListComment.class)//It works, ignore intellij
+        final TypedQuery<ListComment> query = em.createQuery("FROM ListComment WHERE commentId IN (:commentIds) ORDER BY creationDate DESC", ListComment.class)//It works, ignore intellij
                 .setParameter("commentIds", commentIds);
         List<ListComment> mediaComments = commentIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
