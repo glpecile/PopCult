@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.search.SortType;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class FilterForm {
 
     public String getSortType() {
         if(sortType == null)
-            return "title";
+            return SortType.DATE.getName();
         return sortType;
     }
 

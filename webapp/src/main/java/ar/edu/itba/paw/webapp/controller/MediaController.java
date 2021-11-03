@@ -278,16 +278,30 @@ public class MediaController {
     }
 
     @RequestMapping("/media/series")
-    public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView series(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
+                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                               final BindingResult errors) throws ParseException{
         LOGGER.debug("Trying to access series");
+        if(errors.hasErrors()){
+            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
         final ModelAndView mav = new ModelAndView("principal/primary/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaList(MediaType.SERIE, page - 1, itemsPerPage);
+        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
+        final List<MediaType> mediaTypes = new ArrayList<>();
+        mediaTypes.add(MediaType.SERIE);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/series").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+        final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
+        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            decades.add(Integer.toString(i));
+        }
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("decadesType", decades);
         LOGGER.info("Access to series successfully");
         return mav;
     }

@@ -109,7 +109,7 @@ public class SearchHibernateDao implements SearchDao {
         parameters.put("visibility", visibility);
 
         if(sort != null)
-            toReturn.append(" ORDER BY ").append(sort.nameMedia);
+            toReturn.append(" ORDER BY ").append(sort.nameMediaList);
 
         if(page != null && pageSize != null){
             toReturn.append( " OFFSET :offset LIMIT :limit ");
@@ -137,7 +137,7 @@ public class SearchHibernateDao implements SearchDao {
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaIds)", Media.class);
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaIds) order by "+ sort.nameMedia, Media.class);
         query.setParameter("mediaIds", mediaIds);
         List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -158,7 +158,7 @@ public class SearchHibernateDao implements SearchDao {
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
-        final TypedQuery<MediaList> query = em.createQuery("from MediaList where mediaListId in (:mediaListIds)", MediaList.class);
+        final TypedQuery<MediaList> query = em.createQuery("from MediaList where mediaListId in (:mediaListIds) order by " + sort.nameMediaList, MediaList.class);
         query.setParameter("mediaListIds", mediaListIds);
         List<MediaList> mediaList = mediaListIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
