@@ -45,9 +45,7 @@ public class SearchServiceImpl implements SearchService {
     @Transactional(readOnly = true)
     @Override
     public PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
-//        if(genre == Genre.ALL)
-//            return searchListMediaByName(name, page, pageSize, sort);
-        return searchDao.searchListMediaByName(name, page, pageSize, sort, genre, minMatches);
+        return searchDAO.searchListMediaByName(name,page,pageSize,sort,genre, minMatches);
     }
 
     @Transactional(readOnly = true)

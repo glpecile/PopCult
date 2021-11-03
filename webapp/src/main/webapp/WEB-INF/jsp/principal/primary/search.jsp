@@ -214,6 +214,7 @@
                             <c:param name="genres" value="${genre}"/>
                         </c:forEach>
                     </c:when>
+                    <c:when test="${p.key eq 'page'}"/>
                     <c:otherwise>
                         <c:param name="${p.key}" value="${p.value}"/>
                     </c:otherwise>
@@ -226,9 +227,7 @@
         <jsp:param name="currentPage" value="${searchFilmsContainer.currentPage + 1}"/>
         <jsp:param name="url" value="${urlBase2}"/>
     </jsp:include>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp">
-        <jsp:param name="url" value="${urlBase2}"/>
-    </jsp:include>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
 </html>
