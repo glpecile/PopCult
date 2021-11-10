@@ -47,7 +47,7 @@
                 <div class="flex-col flex-wrap p-4 space-x-4">
                     <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
                          alt="no_results_image">
-                    <h3 class="text-center py-2 mt-6 text-gray-400">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
                         <spring:message code="profile.otherNoLists"/>
                     </h3>
                 </div>
@@ -77,7 +77,7 @@
                 <div class="flex-col flex-wrap p-4 space-x-4">
                     <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
                          alt="no_results_image">
-                    <h3 class="text-center py-2 mt-6 text-gray-400">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
                         <spring:message code="profile.otherNoLists"/>
                     </h3>
                 </div>
