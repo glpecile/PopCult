@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ListsDao {
     PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
+
+    PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches);
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 

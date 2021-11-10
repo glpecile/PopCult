@@ -5,7 +5,9 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,12 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
         return listsDao.getLastAddedLists(page, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
+        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches);
     }
 
     @Transactional(readOnly = true)

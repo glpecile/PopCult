@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="en">
@@ -16,6 +17,7 @@
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
     <title><spring:message code="lists.title"/> &#8226; PopCult</title>
 </head>
+<c:url var="url" value=""/>
 <c:url value="/lists/new" var="createListPath"/>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -72,18 +74,56 @@
             <h2 class="font-bold text-2xl py-2">
                 <spring:message code="lists.explore"/>
             </h2>
-            <c:forEach var="cover" items="${allLists}">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                    <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
-                        <jsp:param name="title" value="${cover.name}"/>
-                        <jsp:param name="listId" value="${cover.listId}"/>
-                        <jsp:param name="image1" value="${cover.image1}"/>
-                        <jsp:param name="image2" value="${cover.image2}"/>
-                        <jsp:param name="image3" value="${cover.image3}"/>
-                        <jsp:param name="image4" value="${cover.image4}"/>
+            <c:set var="sortTypes" value="${sortTypes}" scope="request"/>
+            <c:set var="genreTypes" value="${genreTypes}" scope="request"/>
+            <jsp:include page="/WEB-INF/jsp/components/filters.jsp">
+                <jsp:param name="url" value="${url}"/>
+            </jsp:include>
+
+
+            <c:choose>
+                <c:when test="${fn:length(allListContainer.elements) == 0}">
+                    <br>
+                    <h3 class="text-center">
+                        <spring:message code="films.noMedia"/>
+                    </h3>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="cover" items="${allLists}">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                            <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                                <jsp:param name="title" value="${cover.name}"/>
+                                <jsp:param name="listId" value="${cover.listId}"/>
+                                <jsp:param name="image1" value="${cover.image1}"/>
+                                <jsp:param name="image2" value="${cover.image2}"/>
+                                <jsp:param name="image3" value="${cover.image3}"/>
+                                <jsp:param name="image4" value="${cover.image4}"/>
+                            </jsp:include>
+                        </div>
+                    </c:forEach>
+                    <br>
+                    <c:url value="" var="paginationUrl">
+                        <c:forEach var="p" items="${param}">
+                            <c:choose>
+                                <c:when test="${p.key eq 'genres'}">
+                                    <c:forEach var="genre" items="${paramValues.genres}">
+                                        <c:param name="genres" value="${genre}"/>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${p.key eq 'page'}"/>
+                                <c:otherwise>
+                                    <c:param name="${p.key}" value="${p.value}"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </c:url>
+                    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                        <jsp:param name="mediaPages" value="${allListContainer.totalPages}"/>
+                        <jsp:param name="currentPage" value="${allListContainer.currentPage + 1}"/>
+                        <jsp:param name="url" value="${paginationUrl}"/>
                     </jsp:include>
-                </div>
-            </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <br>
