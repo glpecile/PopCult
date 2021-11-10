@@ -29,6 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         final ar.edu.itba.paw.models.user.User user = userService.getByUsername(username).orElseThrow(UnregisteredUserException::new);
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
-        return new User(username, user.getPassword(), user.isEnabled(), ACCOUNT_NON_EXPIRED, CREDENTIALS_NON_EXPIRED, ACCOUNT_NON_LOCKED, authorities);
+        return new User(username, user.getPassword(), user.isEnabled(), ACCOUNT_NON_EXPIRED, CREDENTIALS_NON_EXPIRED, user.isNonLocked(), authorities);
     }
 }

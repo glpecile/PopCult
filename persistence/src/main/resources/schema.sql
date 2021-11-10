@@ -8,14 +8,16 @@ CREATE TABLE IF NOT EXISTS image
 -- UserDao
 CREATE TABLE IF NOT EXISTS users
 (
-    userId   SERIAL PRIMARY KEY,
-    email    TEXT    NOT NULL,
-    username TEXT    NOT NULL,
-    password TEXT    NOT NULL,
-    name     VARCHAR(100),
-    enabled  BOOLEAN NOT NULL,
-    imageId  INT,
-    role     INT     NOT NULL,
+    userId      SERIAL PRIMARY KEY,
+    email       TEXT    NOT NULL,
+    username    TEXT    NOT NULL,
+    password    TEXT    NOT NULL,
+    name        VARCHAR(100),
+    enabled     BOOLEAN NOT NULL,
+    nonLocked   BOOLEAN NOT NULL,
+    strikes     INT     NOT NULL,
+    imageId     INT,
+    role        INT     NOT NULL,
     UNIQUE (email),
     UNIQUE (username),
     FOREIGN KEY (imageId) REFERENCES image (imageId) ON DELETE SET NULL
