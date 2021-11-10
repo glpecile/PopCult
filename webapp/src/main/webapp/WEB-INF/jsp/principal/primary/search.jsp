@@ -167,7 +167,13 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <div class="flex-col flex-wrap p-4 space-x-4">
+                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                                         alt="no_results_image">
+                                    <h1 class="text-xl text-gray-400 py-2 mt-6 text-center">
+                                        <spring:message code="search.sorry" arguments="${param.term}"/>
+                                    </h1>
+                                </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -192,18 +198,26 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <div class="flex-col flex-wrap p-4 space-x-4">
+                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                                         alt="no_results_image">
+                                    <h1 class="text-xl text-gray-400 py-2 mt-6 text-center">
+                                        <spring:message code="search.sorry" arguments="${param.term}"/>
+                                    </h1>
+                                </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <h1 class="font-bold text-2xl py-2">
-                    <spring:message code="search.sorry" arguments="${param.term}"/>
-                        <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
-                </h1>
-                <br>
+                <div class="flex flex-wrap p-4 mt-48 space-x-4">
+                    <img class="w-52 object-center" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="no_results_image">
+                    <h1 class="font-bold text-3xl py-2 mt-14 text-center">
+                        <spring:message code="search.sorry" arguments="${param.term}"/>
+                            <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
+                    </h1>
+                </div>
             </c:otherwise>
         </c:choose>
         <c:url value="" var="urlBase2">
