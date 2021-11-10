@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -37,13 +38,16 @@ public class ListsManagerVoter implements AccessDecisionVoter<FilterInvocation> 
         if (URL.toLowerCase().contains("/user/") && URL.contains("/lists")) {
             try {
                 String username = URL.replaceFirst("/user/", "").replaceFirst("/lists.*", "");
-                userService.getCurrentUser().ifPresent(user -> {
-                    if (user.getUsername().equals(username)) {
-                        vote.set(ACCESS_GRANTED);
-                    } else {
-                        vote.set(ACCESS_DENIED);
-                    }
-                });
+                if (!userService.getCurrentUser().isPresent()) {
+                    vote.set(ACCESS_DENIED);
+                    return vote.get();
+                }
+                User user = userService.getCurrentUser().get();
+                if (user.getUsername().equals(username)) {
+                    vote.set(ACCESS_GRANTED);
+                } else {
+                    vote.set(ACCESS_DENIED);
+                }
             } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }

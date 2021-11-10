@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -33,14 +34,17 @@ public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocati
         String URL = filterInvocation.getRequestUrl();
 
         if (URL.startsWith("/user/") && ((URL.contains("/requests")) || URL.contains("/notifications"))) {
+            if (!userService.getCurrentUser().isPresent()) {
+                vote.set(ACCESS_DENIED);
+                return vote.get();
+            }
+            User user = userService.getCurrentUser().get();
             String username = URL.replaceFirst("/user/", "").replaceFirst("(/requests|/notifications).*", "");
-            userService.getCurrentUser().ifPresent(user -> {
-                if ((user.getUsername().equals(username))) {
-                    vote.set(ACCESS_GRANTED);
-                } else {
-                    vote.set(ACCESS_DENIED);
-                }
-            });
+            if ((user.getUsername().equals(username))) {
+                vote.set(ACCESS_GRANTED);
+            } else {
+                vote.set(ACCESS_DENIED);
+            }
         }
 
         return vote.get();
