@@ -62,7 +62,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${userFavListsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${userFavListsContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/favoriteLists"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
@@ -87,7 +87,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${userPublicLists.totalPages}"/>
                     <jsp:param name="currentPage" value="${userPublicLists.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/favoriteLists"/>
                 </jsp:include>
             </c:otherwise>
         </c:choose>

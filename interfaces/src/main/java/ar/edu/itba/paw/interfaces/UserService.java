@@ -5,10 +5,13 @@ import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
     Optional<User> getById(int userId);
+
+    List<User> getById (List<Integer> userId);
 
     Optional<User> getByEmail(String email);
 

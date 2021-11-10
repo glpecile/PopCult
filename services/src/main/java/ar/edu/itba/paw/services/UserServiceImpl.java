@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,6 +57,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<User> getById(List<Integer> userId) {
+        return userDao.getById(userId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<User> getByEmail(String email) {
         return userDao.getByEmail(email);
     }
@@ -74,6 +81,7 @@ public class UserServiceImpl implements UserService {
         Token token = tokenService.createToken(user, TokenType.VERIFICATION);
 
         emailService.sendVerificationEmail(user, token.getToken());
+
         return user;
     }
 

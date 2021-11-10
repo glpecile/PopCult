@@ -13,7 +13,7 @@ public class StaffMember {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 100)
+    @Column(length = 5000)
     private String description;
 
     @Column(length = 100)

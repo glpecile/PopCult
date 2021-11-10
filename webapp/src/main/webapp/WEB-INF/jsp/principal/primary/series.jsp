@@ -89,10 +89,25 @@
                 </div>
             </c:forEach>
             <br>
+            <c:url value="" var="paginationUrl">
+                <c:forEach var="p" items="${param}">
+                    <c:choose>
+                        <c:when test="${p.key eq 'genres'}">
+                            <c:forEach var="genre" items="${paramValues.genres}">
+                                <c:param name="genres" value="${genre}"/>
+                            </c:forEach>
+                        </c:when>
+                        <c:when test="${p.key eq 'page'}"/>
+                        <c:otherwise>
+                            <c:param name="${p.key}" value="${p.value}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </c:url>
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="${url}"/>
+                <jsp:param name="url" value="${paginationUrl}"/>
             </jsp:include>
         </c:otherwise>
     </c:choose>

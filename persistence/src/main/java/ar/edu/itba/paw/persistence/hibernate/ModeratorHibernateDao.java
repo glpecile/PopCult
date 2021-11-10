@@ -50,7 +50,7 @@ public class ModeratorHibernateDao implements ModeratorDao {
 
     @Override
     public PageContainer<User> getModRequesters(int page, int pageSize) {
-        final Query nativeQuery = em.createNativeQuery("SELECT u.userid FROM modrequests u LIMIT :limit OFFSET :offset");
+        final Query nativeQuery = em.createNativeQuery("SELECT u.userid FROM modrequests u ORDER BY date DESC LIMIT :limit OFFSET :offset");
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("offset", page * pageSize);
         @SuppressWarnings("unchecked")

@@ -38,10 +38,6 @@ public class StudioController {
         final PageContainer<Media> mediaPageContainer = studioService.getMediaByStudio(studio, page - 1, itemsPerPage);
         mav.addObject("studio", studio);
         mav.addObject("mediaPageContainer", mediaPageContainer);
-        final Map<String, Integer> map = new HashMap<>();
-        map.put("studioId", studioId);
-        String urlBase = UriComponentsBuilder.newInstance().path("/studio/{studioId}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Studio {} accessed", studioId);
         return mav;
     }

@@ -74,9 +74,7 @@ public class MediaController {
         mav.addObject("latestSeriesList", latestSeriesContainer.getElements());
         mav.addObject("recentlyAddedLists", recentlyAddedCovers);
         mav.addObject("scrollItemsAmount", itemsPerContainer);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
+
         userService.getCurrentUser().ifPresent(user -> {
             final PageContainer<Media> discoveryFilmContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.FILMS, user, 0, itemsPerContainer);
             final PageContainer<Media> discoverySeriesContainer = favoriteService.getRecommendationsBasedOnFavMedia(MediaType.SERIE, user, 0, itemsPerContainer);
@@ -270,9 +268,6 @@ public class MediaController {
         mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
         mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
         mav.addObject("decadesType", decades);
-        final Map<String, String> map = new HashMap<>();
-        String urlBase = UriComponentsBuilder.newInstance().path("/media/films").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("Access to films successfully");
         return mav;
     }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.user.User;
 
 import java.util.Date;
 import java.util.List;
@@ -18,5 +19,5 @@ public interface SearchDao {
 
     PageContainer<MediaList> searchListMediaByName(String name, int page, int pageSize, SortType sort, List<Genre> genre, int minMatches);
 
-
+    PageContainer<User> searchUserByUsername(String username, List<User> excludedUsers, int page, int pageSize);
 }
