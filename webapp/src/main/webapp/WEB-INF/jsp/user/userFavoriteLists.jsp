@@ -75,7 +75,7 @@
                         <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
                              alt="no_results_image">
                         <h3 class="text-center py-2 mt-0.5 text-gray-400">
-                            <spring:message code="profile.favLists.noLists"/>
+                            <spring:message code="profile.favLists.otherNoLists"/>
                         </h3>
                     </div>
                 </c:if>
