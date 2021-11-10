@@ -62,6 +62,15 @@
                         <spring:message code="profile.settings.passwordChange"/>
                     </button>
                 </a>
+<%--                        TODO add modal--%>
+                    <%-- Delete account --%>
+                <a href=<c:url value="/deleteUser"/>>
+                    <button type="button"
+                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
+                        <spring:message code="profile.settings.deleteUser"/>
+                    </button>
+                </a>
                 <div class="flex space-x-3">
                         <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>

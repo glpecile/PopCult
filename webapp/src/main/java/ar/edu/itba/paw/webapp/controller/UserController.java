@@ -266,7 +266,6 @@ public class UserController {
         userService.deleteUser(user);
         LOGGER.info("{} user deleted successfully", user.getUsername());
         return new ModelAndView("redirect:/logout");
-
     }
 
 
