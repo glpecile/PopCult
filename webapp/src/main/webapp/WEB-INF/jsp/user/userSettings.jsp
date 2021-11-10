@@ -56,7 +56,7 @@
             <div class="flex justify-between">
                     <%-- Change password --%>
                 <a href=<c:url value="/changePassword"/>>
-                    <button type="button"
+                    <button type="button" 
                             class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
                         <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
                         <spring:message code="profile.settings.passwordChange"/>
@@ -64,13 +64,13 @@
                 </a>
 <%--                        TODO add modal--%>
                     <%-- Delete account --%>
-                <a href=<c:url value="/deleteUser"/>>
-                    <button type="button"
+<%--                <a href=<c:url value="/deleteUser"/>>--%>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
                             class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
                         <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
                         <spring:message code="profile.settings.deleteUser"/>
                     </button>
-                </a>
+<%--                </a>--%>
                 <div class="flex space-x-3">
                         <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>
@@ -89,6 +89,32 @@
                 </div>
             </div>
         </form:form>
+    </div>
+<%--    Delete User Modal--%>
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold text-2xl" id="deleteUserModalLabel">
+                        <spring:message code="profile.settings.deleteUser.header"/>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <spring:message code="profile.settings.deleteUser.modal"/>
+                </div>
+                <div class="modal-footer">
+                    <c:url value="/deleteUser" var="deletePath"/>
+                    <form:form action="${deletePath}" method="DELETE">
+                        <button type="submit" class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                            <i class="fas fa-user-alt-slash group-hover:text-white pr-2" aria-hidden="true"></i>
+                            <spring:message code="profile.settings.deleteUser"/>
+                        </button>
+                    </form:form>
+                </div>
+            </div>
+        </div>
     </div>
     <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
