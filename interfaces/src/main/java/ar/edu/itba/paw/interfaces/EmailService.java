@@ -11,6 +11,8 @@ public interface EmailService {
 
     void sendVerificationEmail(User to, String token);
 
+    void sendDeletedUserEmail(User to);
+
     void sendResetPasswordEmail(User to, String token);
 
     void sendReportCreatedEmail(User to, String report);

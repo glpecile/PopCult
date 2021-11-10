@@ -88,6 +88,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
+    public void sendDeletedUserEmail(User to) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", to.getUsername());
+        final String subject = messageSource.getMessage("email.deleteUser.subject", null, LocaleContextHolder.getLocale());
+        sendEmail(to.getEmail(), subject, "userDeleted.html", mailMap);
+    }
+
+    @Async
+    @Override
     public void sendResetPasswordEmail(User to, String token) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
