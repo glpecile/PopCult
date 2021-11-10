@@ -25,21 +25,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 
 @Controller
-public class UserController {    
+public class UserController {
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -261,6 +258,15 @@ public class UserController {
         }
         LOGGER.info("Token timed out.");
         return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
+    }
+
+    @RequestMapping("/deleteUser")
+    public ModelAndView deleteUser() {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        userService.deleteUser(user);
+        LOGGER.info("{} user deleted successfully", user.getUsername());
+        return new ModelAndView("redirect:/logout");
+
     }
 
 

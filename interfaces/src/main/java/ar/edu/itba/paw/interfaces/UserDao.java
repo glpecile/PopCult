@@ -19,4 +19,5 @@ public interface UserDao {
 
     User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException;
 
+    void deleteUser(User user);
 }

@@ -87,6 +87,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public void deleteUser(User user) {
+        userDao.deleteUser(user);
+    }
+
+    @Transactional
+    @Override
     public Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             LOGGER.error("userId: {} changing password failed.", user.getUserId());

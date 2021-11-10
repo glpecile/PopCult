@@ -65,4 +65,8 @@ public class UserHibernateDao implements UserDao {
         return user;
     }
 
+    @Override
+    public void deleteUser(User user) {
+        em.remove(user);
+    }
 }
