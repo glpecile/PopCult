@@ -201,13 +201,9 @@ public class ListsController {
         }
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        try {
-            final MediaList mediaList = listsService.createMediaList(user, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative(), media);
-            LOGGER.info("New list created, id = {}", mediaList.getMediaListId());
-            return new ModelAndView("redirect:/lists/edit/" + mediaList.getMediaListId() + "/manageMedia");
-        }catch (MediaAlreadyInListException e){
-            return new ModelAndView("lists/createListForm");
-        }
+        final MediaList mediaList = listsService.createMediaList(user, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative(), media);
+        LOGGER.info("New list created, id = {}", mediaList.getMediaListId());
+        return new ModelAndView("redirect:/lists/edit/" + mediaList.getMediaListId() + "/manageMedia");
     }
 
     // MANAGE MEDIA IN LIST

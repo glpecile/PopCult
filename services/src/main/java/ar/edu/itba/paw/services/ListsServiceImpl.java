@@ -10,6 +10,8 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class ListsServiceImpl implements ListsService {
     @Autowired
     private ListsDao listsDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListsServiceImpl.class);
 
     @Transactional(readOnly = true)
     @Override
@@ -84,9 +88,13 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd) throws MediaAlreadyInListException{
+    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd){
         MediaList mediaList = listsDao.createMediaList(user, title, description, visibility, collaborative);
-        listsDao.addToMediaList(mediaList, mediaToAdd);
+        try{
+            listsDao.addToMediaList(mediaList, mediaToAdd);
+        } catch (MediaAlreadyInListException e){
+            LOGGER.error("Media already exists in Media List");
+        }
         return mediaList;
     }
 

@@ -225,15 +225,22 @@
                         <h2 class="font-bold pb-1.5">
                             <spring:message code="search.by"/> <c:out value="${searchTerm}"/>
                         </h2>
-                        <!-- Search Results of every Media -->
-                        <div class="row">
-                            <div class="overflow-y-auto h-50">
-                                <div class="flex flex-col space-y-2.5">
-                                    <form:checkboxes path="media" items="${searchResults}"/>
-                                    <form:errors path="media" cssClass="error text-red-400"/>
+                        <c:choose>
+                            <c:when test="${searchResults.size != 0}">
+                                <!-- Search Results of every Media -->
+                                <div class="row">
+                                    <div class="overflow-y-auto h-50">
+                                        <div class="flex flex-col space-y-2.5">
+                                            <form:checkboxes path="media" items="${searchResults}"/>
+                                            <form:errors path="media" cssClass="error text-red-400"/>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:when>
+                            <c:otherwise>
+
+                            </c:otherwise>
+                        </c:choose>
                         <br>
                     </c:if>
                 </div>
@@ -340,19 +347,26 @@
                         </div>
                     </div>
                     <form:form cssClass="m-0 p-0" modelAttribute="usernameForm" action="${addCollabPath}" method="POST">
-                    <c:if test="${userSearchTerm != null}">
-                        <h2 class="font-bold pb-1.5">
-                            <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
-                        </h2>
-                        <!-- Search Results of every User -->
-                        <div class="row">
-                            <div class="overflow-y-auto h-50">
-                                <div class="flex flex-col space-y-2.5">
-                                    <form:checkboxes path="user" items="${userSearchResults}"/>
-                                    <form:errors path="user" cssClass="error text-red-400"/>
+                        <c:if test="${userSearchTerm != null}">
+                            <h2 class="font-bold pb-1.5">
+                                <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
+                            </h2>
+                        <c:choose>
+                            <c:when test="${userSearchResults.size != 0}">
+                                <!-- Search Results of every User -->
+                                <div class="row">
+                                    <div class="overflow-y-auto h-50">
+                                        <div class="flex flex-col space-y-2.5">
+                                            <form:checkboxes path="user" items="${userSearchResults}"/>
+                                            <form:errors path="user" cssClass="error text-red-400"/>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:when>
+                            <c:otherwise>
+
+                            </c:otherwise>
+                        </c:choose>
                         <br>
                     </c:if>
                 </div>
