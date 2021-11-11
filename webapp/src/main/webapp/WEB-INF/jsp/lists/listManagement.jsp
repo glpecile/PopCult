@@ -238,7 +238,9 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp">
+                                    <jsp:param name="term" value="${param.term}"/>
+                                </jsp:include>
                             </c:otherwise>
                         </c:choose>
                         <br>
