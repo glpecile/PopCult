@@ -11,8 +11,6 @@ import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -213,7 +211,7 @@ public class UserServiceImpl implements UserService {
                 break;
             case THIRD_BAN_STRIKES:
                 userDao.deleteUser(user);
-                //todo send email
+                emailService.sendDeletedUserByStrikesEmail(user);
                 break;
         }
     }
@@ -223,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public void banUser(User user) {
         user.setNonLocked(false);
         user.setBanDate(LocalDateTime.now());
-        //todo sendEmail
+        emailService.sendBannedUserEmail(user);
     }
 
     @Transactional
@@ -231,7 +229,7 @@ public class UserServiceImpl implements UserService {
     public void unbanUser(User user) {
         user.setNonLocked(true);
         user.setBanDate(null);
-        //Todo sendEmail
+        emailService.sendUnbannedUserEmail(user);
     }
 
 //    @Transactional
