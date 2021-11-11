@@ -167,7 +167,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -192,18 +192,20 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <h1 class="font-bold text-2xl py-2">
-                    <spring:message code="search.sorry" arguments="${param.term}"/>
-                        <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
-                </h1>
-                <br>
+                <div class="flex flex-wrap p-4 mt-48 space-x-4">
+                    <img class="w-52 object-center" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="no_results_image">
+                    <h1 class="font-bold text-3xl py-2 mt-14 text-center">
+                        <spring:message code="search.sorry" arguments="${param.term}"/>
+                            <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
+                    </h1>
+                </div>
             </c:otherwise>
         </c:choose>
         <c:url value="" var="urlBase2">
@@ -214,6 +216,7 @@
                             <c:param name="genres" value="${genre}"/>
                         </c:forEach>
                     </c:when>
+                    <c:when test="${p.key eq 'page'}"/>
                     <c:otherwise>
                         <c:param name="${p.key}" value="${p.value}"/>
                     </c:otherwise>
@@ -226,9 +229,7 @@
         <jsp:param name="currentPage" value="${searchFilmsContainer.currentPage + 1}"/>
         <jsp:param name="url" value="${urlBase2}"/>
     </jsp:include>
-    <jsp:include page="/WEB-INF/jsp/components/footer.jsp">
-        <jsp:param name="url" value="${urlBase2}"/>
-    </jsp:include>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
 </body>
 </html>

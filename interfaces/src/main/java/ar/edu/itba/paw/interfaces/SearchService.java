@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.user.User;
 
 import java.text.ParseException;
 import java.util.List;
@@ -18,5 +19,6 @@ public interface SearchService {
 
     PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort);
 
+    PageContainer<User> searchUsersToCollabNotInList(String username, MediaList mediaList, int pageSize, int page);
 
 }

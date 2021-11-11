@@ -25,21 +25,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 
 @Controller
-public class UserController {    
+public class UserController {
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -63,7 +60,7 @@ public class UserController {
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int notificationsPerPage = 16;
-    private static final int editablePerPage = 6;
+    private static final int editablePerPage = 12;
 
 
     @RequestMapping("/user/{username}")
@@ -78,11 +75,6 @@ public class UserController {
         mav.addObject("user", user);
         mav.addObject("lists", userListsCover);
         mav.addObject("userListsContainer", userLists);
-
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
 
         PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page - 1, listsPerPage);
         final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
@@ -105,11 +97,6 @@ public class UserController {
         mav.addObject("favoriteMediaContainer", favoriteMedia);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
-
         LOGGER.info("{} favorite media accessed.", username);
         return mav;
     }
@@ -128,10 +115,6 @@ public class UserController {
         mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
         mav.addObject("suggestedMediaContainer", suggestedMedia);
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/toWatchMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
         LOGGER.info("{} to watch media accessed.", username);
         return mav;
     }
@@ -148,11 +131,6 @@ public class UserController {
 
         mav.addObject("user", user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/watchedMedia").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
 
         LOGGER.info("{} watched media accessed.", username);
         return mav;
@@ -172,11 +150,6 @@ public class UserController {
         List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
         mav.addObject("favoriteLists", favoriteCovers);
         mav.addObject("userFavListsContainer", userFavLists);
-
-        final Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        String urlBase = UriComponentsBuilder.newInstance().path("/user/{username}/favoriteLists").buildAndExpand(map).toUriString();
-        mav.addObject("urlBase", urlBase);
 
         PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user, page - 1, listsPerPage);
         final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
@@ -285,6 +258,14 @@ public class UserController {
         }
         LOGGER.info("Token timed out.");
         return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
+    }
+
+    @RequestMapping("/deleteUser")
+    public ModelAndView deleteUser() {
+        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        userService.deleteUser(user);
+        LOGGER.info("{} user deleted successfully", user.getUsername());
+        return new ModelAndView("redirect:/logout");
     }
 
 

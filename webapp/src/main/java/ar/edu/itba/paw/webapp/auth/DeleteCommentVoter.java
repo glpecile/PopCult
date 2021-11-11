@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -38,26 +39,28 @@ public class DeleteCommentVoter implements AccessDecisionVoter<FilterInvocation>
         if (URL.contains("/deletecomment")) {
             try {
                 int commentId = Integer.parseInt(URL.replaceFirst("/deletecomment/", "").replaceFirst("/.*", ""));
-                userService.getCurrentUser().ifPresent(user -> {
-                    if (URL.contains("/lists/")) {
-                        commentService.getListCommentById(commentId).ifPresent((comment -> {
-                            if (user.getUserId() == comment.getUser().getUserId()) {
-                                vote.set(ACCESS_GRANTED);
-                            } else {
-                                vote.set(ACCESS_DENIED);
-                            }
-                        }));
-                    }else if (URL.contains("/media/")) {
-                        commentService.getMediaCommentById(commentId).ifPresent((comment -> {
-                            if (user.getUserId() == comment.getUser().getUserId()) {
-                                vote.set(ACCESS_GRANTED);
-                            } else {
-                                vote.set(ACCESS_DENIED);
-                            }
-                        }));
-                    }
-
-                });
+                if (!userService.getCurrentUser().isPresent()) {
+                    vote.set(ACCESS_DENIED);
+                    return vote.get();
+                }
+                User user = userService.getCurrentUser().get();
+                if (URL.contains("/lists/")) {
+                    commentService.getListCommentById(commentId).ifPresent((comment -> {
+                        if (user.getUserId() == comment.getUser().getUserId()) {
+                            vote.set(ACCESS_GRANTED);
+                        } else {
+                            vote.set(ACCESS_DENIED);
+                        }
+                    }));
+                } else if (URL.contains("/media/")) {
+                    commentService.getMediaCommentById(commentId).ifPresent((comment -> {
+                        if (user.getUserId() == comment.getUser().getUserId()) {
+                            vote.set(ACCESS_GRANTED);
+                        } else {
+                            vote.set(ACCESS_DENIED);
+                        }
+                    }));
+                }
             } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }

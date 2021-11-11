@@ -8,9 +8,10 @@ import ar.edu.itba.paw.models.user.User;
 import java.util.Map;
 
 public interface EmailService {
-    void sendEmail(String to, String subject, String template, Map<String, Object> variables);
 
     void sendVerificationEmail(User to, String token);
+
+    void sendDeletedUserEmail(User to);
 
     void sendResetPasswordEmail(User to, String token);
 
@@ -31,4 +32,10 @@ public interface EmailService {
     void sendModRequestApprovedEmail(User to);
 
     void sendModRoleRemovedEmail(User to);
+
+    void sendBannedUserEmail(User to);
+
+    void sendUnbannedUserEmail(User to);
+
+    void sendDeletedUserByStrikesEmail(User to);
 }

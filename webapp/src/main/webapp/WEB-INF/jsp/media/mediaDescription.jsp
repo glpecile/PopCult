@@ -66,9 +66,10 @@
                                                value="<c:out value = "${list.mediaListId}"/>">
                                     </form>
                                 </c:forEach>
-                                <a class="dropdown-item p-1.5" href=${createListPath}>
-                                    <spring:message code="lists.create"/>
-                                </a>
+                                <form action="${createListPath}" method="GET">
+                                    <input type="hidden" name="mediaId" value="<c:out value="${media.mediaId}"/>">
+                                    <button class="dropdown-item p-1.5" type="submit"><spring:message code="lists.create"/></button>
+                                </form>
                             </ul>
                         </div>
                     </sec:authorize>
@@ -208,6 +209,7 @@
                     <c:forEach var="comment" items="${mediaCommentsContainer.elements}">
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
                             <jsp:param name="username" value="${comment.user.username}"/>
+                            <jsp:param name="imageId" value="${comment.user.imageId}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
                             <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
@@ -221,9 +223,13 @@
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <p class="text-center text-gray-400 m-1.5">
-                        <spring:message code="comments.empty"/>
-                    </p>
+                    <div class="flex-col flex-wrap p-4 space-x-4">
+                        <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                             alt="no_results_image">
+                        <p class="text-center text-gray-400 m-1.5 py-2 mt-0.5">
+                            <spring:message code="comments.empty"/>
+                        </p>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </div>

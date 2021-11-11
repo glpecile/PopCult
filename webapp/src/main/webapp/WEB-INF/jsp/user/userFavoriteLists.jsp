@@ -40,9 +40,13 @@
         <c:choose>
             <c:when test="${currentUsername == user.username}">
                 <c:if test="${userFavListsContainer.totalCount == 0}">
-                    <h3 class="text-center text-gray-400">
-                        <spring:message code="profile.favLists.noLists"/>
-                    </h3>
+                    <div class="flex-col flex-wrap p-4 space-x-4">
+                        <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                             alt="no_results_image">
+                        <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                            <spring:message code="profile.favLists.noLists"/>
+                        </h3>
+                    </div>
                 </c:if>
                 <div class="row">
                     <c:forEach var="cover" items="${favoriteLists}">
@@ -62,14 +66,18 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${userFavListsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${userFavListsContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/favoriteLists"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
                 <c:if test="${userPublicLists.totalCount == 0}">
-                    <h3 class="text-center text-gray-400">
-                        <spring:message code="profile.favLists.otherNoLists"/>
-                    </h3>
+                    <div class="flex-col flex-wrap p-4 space-x-4">
+                        <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                             alt="no_results_image">
+                        <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                            <spring:message code="profile.favLists.otherNoLists"/>
+                        </h3>
+                    </div>
                 </c:if>
                 <c:forEach var="cover" items="${userPublicListCover}">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
@@ -87,7 +95,7 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${userPublicLists.totalPages}"/>
                     <jsp:param name="currentPage" value="${userPublicLists.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/favoriteLists"/>
                 </jsp:include>
             </c:otherwise>
         </c:choose>

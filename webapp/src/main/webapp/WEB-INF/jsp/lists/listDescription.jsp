@@ -19,25 +19,23 @@
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <div class="flex flex-wrap pt-4">
-            <div class="col-md-auto">
-                <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                <div class="flex justify-right">
+        <div class="flex flex-col flex-wrap pt-4">
+            <h2 class="display-5 fw-bolder max-w-full break-words"><c:out value="${list.listName}"/></h2>
+            <div class="flex justify-right">
+                <h4 class="py-2 pb-2.5">
+                    <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
+                                                         href="<c:url value="/user/${user.username}"/>"><b><c:out
+                        value="${user.username}"/></b></a>
+                </h4>
+                <%-- Forked From --%>
+                <c:if test="${list.forkedFrom != null}">
                     <h4 class="py-2 pb-2.5">
-                        <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
-                                                             href="<c:url value="/user/${user.username}"/>"><b><c:out
-                            value="${user.username}"/></b></a>
+                        <spring:message code="lists.forkedFrom"/> <a
+                            class="text-purple-500 hover:text-purple-900"
+                            href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
+                            value="${list.forkedFrom.listName}"/></b></a>
                     </h4>
-                    <%-- Forked From --%>
-                    <c:if test="${list.forkedFrom != null}">
-                        <h4 class="py-2 pb-2.5">
-                            <spring:message code="lists.forkedFrom"/> <a
-                                class="text-purple-500 hover:text-purple-900"
-                                href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
-                                value="${list.forkedFrom.listName}"/></b></a>
-                        </h4>
-                    </c:if>
-                </div>
+                </c:if>
                 <%-- Amount of Forks --%>
                 <c:if test="${forks.totalCount != 0}">
                     <div class="flex">
@@ -71,7 +69,7 @@
                 </a>
             </div>
         </div>
-        <p class="lead text-justify pb-2"><c:out value="${list.description}"/></p>
+        <p class="lead text-justify max-w-full break-words pb-2"><c:out value="${list.description}"/></p>
         <c:if test="${collaborators.totalCount != 0}">
             <h4 class="font-bold py-2 pb-2.5"><spring:message code="lists.collaborators"/></h4>
             <div class="flex flex-wrap justify-start items-center space-x-1.5 space-y-1.5">
@@ -169,6 +167,7 @@
                     <c:forEach var="comment" items="${listCommentsContainer.elements}">
                         <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
                             <jsp:param name="username" value="${comment.user.username}"/>
+                            <jsp:param name="imageId" value="${comment.user.imageId}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
                             <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
@@ -181,9 +180,13 @@
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <p class="text-center text-gray-400 m-1.5">
-                        <spring:message code="comments.empty"/>
-                    </p>
+                    <div class="flex-col flex-wrap p-4 space-x-4">
+                        <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                             alt="no_results_image">
+                        <p class="text-center text-gray-400 m-1.5 py-2 mt-0.5">
+                            <spring:message code="comments.empty"/>
+                        </p>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -208,7 +211,7 @@
                                         class="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-300 ease-in-out group hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
                                     <div class="flex">
                                         <h4 class="pl-3 py-4 text-xl font-semibold tracking-tight text-purple-500 group-hover:text-purple-900">
-                                            <c:out value="${fork.listName}"/>
+                                            <spring:message code="lists.forkedBy" arguments="${fork.listName}, ${fork.user.username}"/>
                                         </h4>
                                     </div>
                                 </div>

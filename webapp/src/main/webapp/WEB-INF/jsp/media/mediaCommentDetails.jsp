@@ -49,9 +49,13 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                <p class="text-center text-gray-400 m-1.5">
-                    <spring:message code="comments.empty"/>
-                </p>
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                         alt="no_results_image">
+                    <p class="text-center text-gray-400 m-1.5 py-2 mt-0.5">
+                        <spring:message code="comments.empty"/>
+                    </p>
+                </div>
             </c:otherwise>
         </c:choose>
     </div>

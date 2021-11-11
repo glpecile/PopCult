@@ -56,12 +56,14 @@
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${toWatchMediaIdsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${toWatchMediaIdsContainer.currentPage + 1}"/>
-                    <jsp:param name="url" value="${urlBase}"/>
+                    <jsp:param name="url" value="/user/${user.username}/toWatchMedia"/>
                 </jsp:include>
             </c:when>
             <c:otherwise>
-                <div>
-                    <h3 class="text-center text-gray-400">
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                         alt="no_results_image">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
                         <spring:message code="profile.toWatchMedia.noMedia"/>
                     </h3>
                 </div>

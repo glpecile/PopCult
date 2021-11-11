@@ -2,14 +2,16 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
-import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,8 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,11 +50,22 @@ public class UserServiceImpl implements UserService {
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
     /* default */ static final UserRole DEFAULT_USER_ROLE = UserRole.USER;
 
+    private static final int FIRST_BAN_STRIKES = 3;
+    private static final int SECOND_BAN_STRIKES = 6;
+    private static final int THIRD_BAN_STRIKES = 9;
+    private static final int BAN_DAYS = 5;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getById(int userId) {
+        return userDao.getById(userId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> getById(List<Integer> userId) {
         return userDao.getById(userId);
     }
 
@@ -76,6 +91,13 @@ public class UserServiceImpl implements UserService {
         emailService.sendVerificationEmail(user, token.getToken());
 
         return user;
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(User user) {
+        userDao.deleteUser(user);
+        emailService.sendDeletedUserEmail(user);
     }
 
     @Transactional
@@ -172,4 +194,57 @@ public class UserServiceImpl implements UserService {
     public void updateUserData(User user, String name) {
         user.setName(name);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<User> getBannedUsers(int page, int pageSize) {
+        return userDao.getBannedUsers(page, pageSize);
+    }
+
+    @Transactional
+    @Override
+    public void strikeUser(User user) {
+        int userStrikes = user.addStrike();
+        switch(userStrikes) {
+            case FIRST_BAN_STRIKES:
+            case SECOND_BAN_STRIKES:
+                banUser(user);
+                break;
+            case THIRD_BAN_STRIKES:
+                userDao.deleteUser(user);
+                emailService.sendDeletedUserByStrikesEmail(user);
+                break;
+        }
+    }
+
+    @Transactional
+    @Override
+    public void banUser(User user) {
+        user.setNonLocked(false);
+        user.setBanDate(LocalDateTime.now());
+        emailService.sendBannedUserEmail(user);
+    }
+
+    @Transactional
+    @Override
+    public void unbanUser(User user) {
+        user.setNonLocked(true);
+        user.setBanDate(null);
+        emailService.sendUnbannedUserEmail(user);
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void unbanUsers() {
+        LOGGER.info("Executing scheduled tasks");
+        LocalDateTime actualDate = LocalDateTime.now();
+        userDao.getBannedUsers().forEach(user -> {
+            if(user.getBanDate() != null && user.getBanDate().plusDays(BAN_DAYS).isAfter(actualDate)) {
+                user.setNonLocked(true);
+                user.setBanDate(null);
+                emailService.sendUnbannedUserEmail(user);
+            }
+        });
+    }
+
 }
