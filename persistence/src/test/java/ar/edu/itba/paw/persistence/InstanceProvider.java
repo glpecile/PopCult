@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Country;
 import ar.edu.itba.paw.models.media.Media;
@@ -31,6 +32,8 @@ public class InstanceProvider {
 
     /* default */ static final int ALREADY_EXISTS_COLLAB_ID = 2;
 
+    /* default */ static final int ALREADY_EXISTS_IMAGE_ID = 2;
+
     private InstanceProvider() {
         throw new AssertionError();
     }
@@ -59,5 +62,9 @@ public class InstanceProvider {
 
     public static MediaList getLikedMediaList() {
         return new MediaList(ALREADY_EXISTS_LIKED_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
+    }
+
+    public static Image getImage() {
+        return new Image(ALREADY_EXISTS_IMAGE_ID, null);
     }
 }
