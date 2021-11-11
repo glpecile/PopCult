@@ -20,10 +20,10 @@
 <body class="bg-gray-50">
 <div class="flex flex-col h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <div class="flex-grow py-24 whitespace-pre-line">
-        <div class="flex flex-wrap p-3.5">
-            <img class="w-80" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="error_image">
-            <div class="flex flex-col">
+    <div class="flex-grow whitespace-pre-line">
+        <div class="flex flex-wrap p-3.5 mx-auto my-auto">
+            <img class="w-80 pt-12" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="error_image">
+            <div class="flex flex-col pl-8">
                 <h1 class="text-6xl font-black text-justify">
                     <spring:message code="error.404"/>
                 </h1>

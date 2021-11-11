@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title> &#8226; PopCult</title>
+    <title><spring:message code="error.title"/> &#8226; PopCult</title>
 </head>
 
 <body class="bg-gray-50">
