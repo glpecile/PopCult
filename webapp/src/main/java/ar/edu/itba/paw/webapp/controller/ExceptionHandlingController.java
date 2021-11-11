@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,6 +68,12 @@ public class ExceptionHandlingController {
     public ModelAndView disabledUserException() {
         LOGGER.info("Handling DisabledUserException");
         return new ModelAndView("login/login").addObject("error", messageSource.getMessage("login.disabled", null, Locale.getDefault()));
+    }
+
+    @ExceptionHandler({LockedException.class})
+    public ModelAndView lockedUserException() {
+        LOGGER.info("Handling LockedUserException");
+        return new ModelAndView("login/login").addObject("error", messageSource.getMessage("login.locked", null, Locale.getDefault()));
     }
 
     @ExceptionHandler({InternalAuthenticationServiceException.class})
