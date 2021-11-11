@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.hibernate.ListsHibernateDao;
@@ -19,17 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.Optional;
+
+import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_LIST_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 public class ListsHibernateDaoTest {
-
-    private static final int ALREADY_EXISTS_USER_ID = 4;
-    private static final String ALREADY_EXISTS_EMAIL = "email@email.com";
-    private static final String ALREADY_EXISTS_USERNAME = "username";
-    private static final String ALREADY_EXISTS_PASSWORD = "password";
-    private static final String ALREADY_EXISTS_NAME = "name";
 
     private static final String LISTNAME = "List";
     private static final String DESCRIPTION = "Description";
@@ -54,10 +53,16 @@ public class ListsHibernateDaoTest {
     @Before
     public void setup() {
         jdbcTemplate = new JdbcTemplate(ds);
-        user = new User
-                .Builder(ALREADY_EXISTS_EMAIL, ALREADY_EXISTS_USERNAME, ALREADY_EXISTS_PASSWORD, ALREADY_EXISTS_NAME)
-                .userId(ALREADY_EXISTS_USER_ID)
-                .build();
+        user = InstanceProvider.getUser();
+    }
+
+    @Rollback
+    @Test
+    public void testGetMediaListById() {
+        Optional<MediaList> mediaList = listsHibernateDao.getMediaListById(ALREADY_EXISTS_LIST_ID);
+
+        Assert.assertTrue(mediaList.isPresent());
+        Assert.assertEquals(ALREADY_EXISTS_LIST_ID, mediaList.get().getMediaListId().intValue());
     }
 
     @Rollback
@@ -72,4 +77,34 @@ public class ListsHibernateDaoTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, LISTS_TABLE, String.format("listname = '%s'", LISTNAME)));
     }
 
+    @Rollback
+    @Test(expected = MediaAlreadyInListException.class)
+    public void testAddMediaAlreadyInList() throws MediaAlreadyInListException {
+        MediaList mediaList = InstanceProvider.getMediaList();
+        Media media = InstanceProvider.getMediaAlreadyInList();
+
+        listsHibernateDao.addToMediaList(mediaList, media);
+
+        Assert.fail();
+    }
+
+    @Rollback
+    @Test
+    public void testCanEditList() {
+        MediaList mediaList = InstanceProvider.getCanEditMediaList();
+
+        boolean canEdit = listsHibernateDao.canEditList(user, mediaList);
+
+        Assert.assertTrue(canEdit);
+    }
+
+    @Rollback
+    @Test
+    public void testCanNotEditList() {
+        MediaList mediaList = InstanceProvider.getMediaList();
+
+        boolean canEdit = listsHibernateDao.canEditList(user, mediaList);
+
+        Assert.assertFalse(canEdit);
+    }
 }

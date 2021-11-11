@@ -23,9 +23,10 @@ public class InstanceProvider {
     private static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIKED_MEDIA_ID = 2;
 
-    private static final int ALREADY_EXISTS_LIST_ID = 2;
+    /* default */ static final int ALREADY_EXISTS_LIST_ID = 2;
+    private static final int MEDIA_ALREADY_IN_LIST_ID = 29;
     private static final int ALREADY_EXISTS_LIKED_LIST_ID = 3;
-
+    private static final int ALREADY_EXISTS_CAN_EDIT_LIST_ID = 3;
 
     /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_ID = 2;
@@ -64,7 +65,12 @@ public class InstanceProvider {
         return new MediaList(ALREADY_EXISTS_LIKED_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
     }
 
-    public static Image getImage() {
-        return new Image(ALREADY_EXISTS_IMAGE_ID, null);
+    public static Media getMediaAlreadyInList() {
+        return new Media(MEDIA_ALREADY_IN_LIST_ID, MediaType.FILMS, "Shrek", "...", "", 90, null, 0, Country.US);
     }
+
+    public static MediaList getCanEditMediaList() {
+        return new MediaList(ALREADY_EXISTS_CAN_EDIT_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
+    }
+
 }
