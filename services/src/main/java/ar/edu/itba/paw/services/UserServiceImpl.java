@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -232,17 +233,18 @@ public class UserServiceImpl implements UserService {
         emailService.sendUnbannedUserEmail(user);
     }
 
-//    @Transactional
-//    @Scheduled(cron = "0 0 * * *")
-//    public void unbanUsers() {
-//        LocalDateTime actualDate = LocalDateTime.now();
-//        userDao.getBannedUsers().forEach(user -> {
-//            if(user.getBanDate().plusDays(BAN_DAYS).isAfter(actualDate)) {
-//                user.setNonLocked(true);
-//                user.setBanDate(null);
-//                //todo send email
-//            }
-//        });
-//    }
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void unbanUsers() {
+        LOGGER.info("Executing scheduled tasks");
+        LocalDateTime actualDate = LocalDateTime.now();
+        userDao.getBannedUsers().forEach(user -> {
+            if(user.getBanDate() != null && user.getBanDate().plusDays(BAN_DAYS).isAfter(actualDate)) {
+                user.setNonLocked(true);
+                user.setBanDate(null);
+                emailService.sendUnbannedUserEmail(user);
+            }
+        });
+    }
 
 }

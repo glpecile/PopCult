@@ -47,4 +47,6 @@ public interface UserService {
     void banUser(User user);
 
     void unbanUser(User user);
+
+    void unbanUsers();
 }
