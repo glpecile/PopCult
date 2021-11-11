@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
-import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Country;
 import ar.edu.itba.paw.models.media.Media;
@@ -29,6 +28,9 @@ public class InstanceProvider {
 
     /* default */ static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIKED_MEDIA_ID = 2;
+    private static final int ALREADY_EXISTS_TO_WATCH_MEDIA_ID = 2;
+    private static final int ALREADY_EXISTS_WATCHED_MEDIA_ID = 3;
+
 
     /* default */ static final int ALREADY_EXISTS_LIST_ID = 2;
     private static final int MEDIA_ALREADY_IN_LIST_ID = 29;
@@ -57,7 +59,7 @@ public class InstanceProvider {
     }
 
     public static Media getMedia() {
-        return new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.FILMS, "House", "...", "", 7788, null, 8, Country.US);
+        return new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.SERIE, "House", "...", "", 7788, null, 8, Country.US);
     }
 
     public static MediaList getMediaList() {
@@ -73,7 +75,7 @@ public class InstanceProvider {
     }
 
     public static Media getLikedMedia() {
-        return new Media(ALREADY_EXISTS_LIKED_MEDIA_ID, MediaType.FILMS, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
+        return new Media(ALREADY_EXISTS_LIKED_MEDIA_ID, MediaType.SERIE, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
     }
 
     public static MediaList getLikedMediaList() {
@@ -92,6 +94,14 @@ public class InstanceProvider {
         return new User.Builder(ALREADY_EXISTS_EMAIL_WITH_MOD_REQUEST, ALREADY_EXISTS_USERNAME_WITH_MOD_REQUEST, ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST, ALREADY_EXISTS_NAME_WITH_MOD_REQUEST)
                 .userId(ALREADY_EXISTS_USER_ID_WITH_MOD_REQUEST)
                 .build();
+    }
+
+    public static Media getToWatchMedia() {
+        return new Media(ALREADY_EXISTS_TO_WATCH_MEDIA_ID, MediaType.SERIE, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
+    }
+
+    public static Media getWatchedMedia() {
+        return new Media(ALREADY_EXISTS_WATCHED_MEDIA_ID, MediaType.SERIE, "Revolution", "...", "", 1764, null, 2, Country.US);
     }
 
 }

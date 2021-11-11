@@ -33,3 +33,8 @@ INSERT INTO listcommentreport(reportid, commentid, reporteeid, report, date)
 VALUES (2, 2, 4, 'Report', current_timestamp);
 INSERT INTO mediacommentreport(reportid, commentid, reporteeid, report, date)
 VALUES (2, 2, 4, 'Report', current_timestamp);
+
+INSERT INTO towatchmedia(watchedmediaid, userid, mediaid, watchdate)
+VALUES (2, 4, 2, null); --TO WATCH
+INSERT INTO towatchmedia(watchedmediaid, userid, mediaid, watchdate)
+VALUES (3, 4, 3, current_timestamp);  --WATCHED
