@@ -54,13 +54,11 @@ public class ReportHibernateDao implements ReportDao {
     @Override
     public Optional<ListCommentReport> getListCommentReportById(int reportId) {
         return Optional.ofNullable(em.find(ListCommentReport.class, reportId));
-
     }
 
     @Override
     public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
         return Optional.ofNullable(em.find(MediaCommentReport.class, reportId));
-
     }
 
     @Override

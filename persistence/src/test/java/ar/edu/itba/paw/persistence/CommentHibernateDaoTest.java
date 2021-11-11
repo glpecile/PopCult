@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Country;
 import ar.edu.itba.paw.models.media.Media;
-import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.hibernate.CommentHibernateDao;
@@ -25,26 +23,21 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.Optional;
+
+import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_LIST_COMMENT_ID;
+import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_MEDIA_COMMENT_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 public class CommentHibernateDaoTest {
 
-    private static final int ALREADY_EXISTS_USER_ID = 4;
-    private static final String ALREADY_EXISTS_EMAIL = "email@email.com";
-    private static final String ALREADY_EXISTS_USERNAME = "username";
-    private static final String ALREADY_EXISTS_PASSWORD = "password";
-    private static final String ALREADY_EXISTS_NAME = "name";
-
-    private static final int ALREADY_EXISTS_MEDIA_ID = 1;
-
-    private static final int ALREADY_EXISTS_LIST_ID = 2;
-
     private static final String COMMENT = "Comment";
 
     private static final String LIST_COMMENT_TABLE = "listcomment";
     private static final String MEDIA_COMMENT_TABLE = "mediacomment";
+    private static final String NOTIFICATION_TABLE = "commentnotifications";
 
     @Autowired
     private CommentHibernateDao commentHibernateDao;
@@ -58,23 +51,18 @@ public class CommentHibernateDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private User user;
-    private Media media;
-    private MediaList mediaList;
 
     @Before
     public void setup() {
         jdbcTemplate = new JdbcTemplate(ds);
-        user = new User
-                .Builder(ALREADY_EXISTS_EMAIL, ALREADY_EXISTS_USERNAME, ALREADY_EXISTS_PASSWORD, ALREADY_EXISTS_NAME)
-                .userId(ALREADY_EXISTS_USER_ID)
-                .build();
-        media = new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.FILMS, "House", "...", "", 7788, null, 8, Country.US);
-        mediaList = new MediaList(ALREADY_EXISTS_LIST_ID, user, "Kids Movies", "...", null, true, false);
+        user = InstanceProvider.getUser();
     }
 
     @Rollback
     @Test
     public void testAddCommentToMedia() {
+        Media media = InstanceProvider.getMedia();
+
         MediaComment comment = commentHibernateDao.addCommentToMedia(user, media, COMMENT);
 
         em.flush();
@@ -87,6 +75,8 @@ public class CommentHibernateDaoTest {
     @Rollback
     @Test
     public void testAddCommentToList() {
+        MediaList mediaList = InstanceProvider.getMediaList();
+
         ListComment comment = commentHibernateDao.addCommentToList(user, mediaList, COMMENT);
 
         em.flush();
@@ -94,5 +84,32 @@ public class CommentHibernateDaoTest {
         Assert.assertNotNull(comment);
         Assert.assertEquals(COMMENT, comment.getCommentBody());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, LIST_COMMENT_TABLE, String.format("commentid = '%d'", comment.getCommentId())));
+    }
+
+    @Rollback
+    @Test
+    public void testAddCommentNotification() {
+        Notification notification = commentHibernateDao.addCommentNotification(InstanceProvider.getListComment());
+
+        em.flush();
+
+        Assert.assertNotNull(notification);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, NOTIFICATION_TABLE, String.format("notificationid = %d", notification.getNotificationId())));
+    }
+
+    @Rollback
+    @Test
+    public void testGetMediaCommentById() {
+        Optional<MediaComment> mediaComment = commentHibernateDao.getMediaCommentById(ALREADY_EXISTS_MEDIA_COMMENT_ID);
+
+        Assert.assertTrue(mediaComment.isPresent());
+    }
+
+    @Rollback
+    @Test
+    public void testGetListCommentById() {
+        Optional<ListComment> listComment = commentHibernateDao.getListCommentById(ALREADY_EXISTS_LIST_COMMENT_ID);
+
+        Assert.assertTrue(listComment.isPresent());
     }
 }

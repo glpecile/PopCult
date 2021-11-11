@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Primary
@@ -25,7 +25,7 @@ public class TokenHibernateDao implements TokenDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenHibernateDao.class);
 
     @Override
-    public Token createToken(User user, TokenType type, String token, Date expiryDate) {
+    public Token createToken(User user, TokenType type, String token, LocalDateTime expiryDate) {
         final Token tkn =  new Token(user, type, token, expiryDate);
         em.persist(tkn);
         return tkn;

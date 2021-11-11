@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.image.Image;
+import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.hibernate.ImageHibernateDao;
+import ar.edu.itba.paw.persistence.hibernate.CollaborativeHibernateDao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,19 +22,17 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_IMAGE_ID;
+import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_COLLAB_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class ImageHibernateDaoTest {
+public class CollaborativeHibernateDaoTest {
 
-    private static final byte[] byteBlob = {0, 1, 2, 3, 4};
-
-    private static final String IMAGE_TABLE = "image";
+    private static final String REQUEST_TABLE = "collaborative";
 
     @Autowired
-    private ImageHibernateDao imageHibernateDao;
+    private CollaborativeHibernateDao collaborativeHibernateDao;
 
     @Autowired
     private DataSource ds;
@@ -42,30 +42,32 @@ public class ImageHibernateDaoTest {
 
     private JdbcTemplate jdbcTemplate;
 
+    private User user;
+    private MediaList mediaList;
+
     @Before
     public void setup() {
         jdbcTemplate = new JdbcTemplate(ds);
+        user = InstanceProvider.getUser();
+        mediaList = InstanceProvider.getMediaList();
     }
 
     @Rollback
     @Test
-    public void testGetImage() {
-        Optional<Image> image = imageHibernateDao.getImage(ALREADY_EXISTS_IMAGE_ID);
-
-        Assert.assertTrue(image.isPresent());
-        Assert.assertEquals(ALREADY_EXISTS_IMAGE_ID, image.get().getImageId().intValue());
-    }
-
-    @Rollback
-    @Test
-    public void testUploadImage() {
-        Image image = imageHibernateDao.uploadImage(byteBlob);
+    public void testMakeNewRequest() {
+        Request request = collaborativeHibernateDao.makeNewRequest(mediaList, user);
 
         em.flush();
 
-        Assert.assertNotNull(image);
-        Assert.assertArrayEquals(byteBlob, image.getImageBlob());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, IMAGE_TABLE, String.format("imageid = '%d'", image.getImageId())));
+        Assert.assertNotNull(request);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, REQUEST_TABLE, String.format("collabid = %d", request.getCollabId())));
     }
 
+    @Rollback
+    @Test
+    public void testGetById() {
+        Optional<Request> request = collaborativeHibernateDao.getById(ALREADY_EXISTS_COLLAB_ID);
+
+        Assert.assertTrue(request.isPresent());
+    }
 }
