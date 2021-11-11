@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
@@ -35,7 +35,7 @@ public class UserServiceImplTest {
 
     private static final String TOKEN = "Token";
     private static final TokenType TOKEN_TYPE = TokenType.VERIFICATION;
-    private static final Date EXPIRY_DATE = new Date();
+    private static final LocalDateTime EXPIRY_DATE = LocalDateTime.now();
 
 
     @InjectMocks
