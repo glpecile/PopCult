@@ -32,4 +32,10 @@ public interface EmailService {
     void sendModRequestApprovedEmail(User to);
 
     void sendModRoleRemovedEmail(User to);
+
+    void sendBannedUserEmail(User to);
+
+    void sendUnbannedUserEmail(User to);
+
+    void sendDeletedUserByStrikesEmail(User to);
 }

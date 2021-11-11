@@ -138,6 +138,7 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("comment", comment.getCommentBody());
         mailMap.put("report", report);
+        mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.deleted.comment.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap);
     }
@@ -149,6 +150,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("list", mediaList.getListName());
         mailMap.put("listDescription", mediaList.getDescription());
         mailMap.put("report", report);
+        mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.deleted.list.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
     }
@@ -187,5 +189,34 @@ public class EmailServiceImpl implements EmailService {
     public void sendModRoleRemovedEmail(User to) {
         final String subject = messageSource.getMessage("email.mod.removed.subject", null, LocaleContextHolder.getLocale());
         sendEmail(to.getEmail(), subject, "modRoleRemoved.html", null);
+    }
+
+    @Async
+    @Override
+    public void sendBannedUserEmail(User to) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", to.getUsername());
+        mailMap.put("strikes", to.getStrikes());
+        final String subject = messageSource.getMessage("email.bans.ban.subject", null, LocaleContextHolder.getLocale());
+        sendEmail(to.getEmail(), subject, "userBanned.html", mailMap);
+    }
+
+    @Async
+    @Override
+    public void sendUnbannedUserEmail(User to) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", to.getUsername());
+        mailMap.put("strikes", to.getStrikes());
+        final String subject = messageSource.getMessage("email.bans.unban.subject", null, LocaleContextHolder.getLocale());
+        sendEmail(to.getEmail(), subject, "userUnbanned.html", mailMap);
+    }
+
+    @Async
+    @Override
+    public void sendDeletedUserByStrikesEmail(User to) {
+        final Map<String, Object> mailMap = new HashMap<>();
+        mailMap.put("username", to.getUsername());
+        final String subject = messageSource.getMessage("email.bans.deleted.subject", null, LocaleContextHolder.getLocale());
+        sendEmail(to.getEmail(), subject, "userDeletedByStrikes.html", mailMap);
     }
 }
