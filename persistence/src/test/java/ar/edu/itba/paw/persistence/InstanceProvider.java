@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Country;
@@ -41,6 +42,10 @@ public class InstanceProvider {
 
     /* default */ static final int ALREADY_EXISTS_IMAGE_ID = 2;
 
+    /* default */ static final int ALREADY_EXISTS_LIST_REPORT_ID = 2;
+    /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_REPORT_ID = 2;
+    /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_REPORT_ID = 2;
+
     private InstanceProvider() {
         throw new AssertionError();
     }
@@ -61,6 +66,10 @@ public class InstanceProvider {
 
     public static ListComment getListComment() {
         return new ListComment(ALREADY_EXISTS_LIST_COMMENT_ID, getUser(), COMMENT, LocalDateTime.now(), getMediaList());
+    }
+
+    public static MediaComment getMediaComment() {
+        return new MediaComment(ALREADY_EXISTS_MEDIA_COMMENT_ID, getUser(), COMMENT, LocalDateTime.now(), getMedia());
     }
 
     public static Media getLikedMedia() {
