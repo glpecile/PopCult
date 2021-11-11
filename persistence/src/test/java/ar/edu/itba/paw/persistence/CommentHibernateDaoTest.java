@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_LIST_COMMENT_ID;

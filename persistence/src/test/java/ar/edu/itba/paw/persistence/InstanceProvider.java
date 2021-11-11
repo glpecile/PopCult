@@ -26,6 +26,8 @@ public class InstanceProvider {
     /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_ID = 2;
 
+    /* default */ static final int ALREADY_EXISTS_COLLAB_ID = 2;
+
     private InstanceProvider() {
         throw new AssertionError();
     }
