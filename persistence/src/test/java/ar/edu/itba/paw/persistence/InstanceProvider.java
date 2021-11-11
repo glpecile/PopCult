@@ -18,9 +18,15 @@ public class InstanceProvider {
     private static final String ALREADY_EXISTS_PASSWORD = "password";
     private static final String ALREADY_EXISTS_NAME = "name";
 
+    private static final int ALREADY_EXISTS_USER_ID_WITH_MOD_REQUEST = 5;
+    private static final String ALREADY_EXISTS_EMAIL_WITH_MOD_REQUEST = "mod@request.com";
+    private static final String ALREADY_EXISTS_USERNAME_WITH_MOD_REQUEST = "modRequestUser";
+    private static final String ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST = "password";
+    private static final String ALREADY_EXISTS_NAME_WITH_MOD_REQUEST = "name";
+
     private static final String COMMENT = "Comment";
 
-    private static final int ALREADY_EXISTS_MEDIA_ID = 1;
+    /* default */ static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIKED_MEDIA_ID = 2;
 
     /* default */ static final int ALREADY_EXISTS_LIST_ID = 2;
@@ -71,6 +77,12 @@ public class InstanceProvider {
 
     public static MediaList getCanEditMediaList() {
         return new MediaList(ALREADY_EXISTS_CAN_EDIT_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
+    }
+
+    public static User getUserWithModRequest() {
+        return new User.Builder(ALREADY_EXISTS_EMAIL_WITH_MOD_REQUEST, ALREADY_EXISTS_USERNAME_WITH_MOD_REQUEST, ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST, ALREADY_EXISTS_NAME_WITH_MOD_REQUEST)
+                .userId(ALREADY_EXISTS_USER_ID_WITH_MOD_REQUEST)
+                .build();
     }
 
 }
