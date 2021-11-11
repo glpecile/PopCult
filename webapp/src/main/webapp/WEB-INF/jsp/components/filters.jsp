@@ -5,9 +5,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:useBean id="sortTypes" scope="request" type="java.util.ArrayList"/>
-<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>
+<%--<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>--%>
 <jsp:useBean id="genreTypes" scope="request" type="java.util.ArrayList"/>
-<%--<jsp:useBean id="activeGenres" scope="request" type="java.util.Collection"/>--%>
+
 
 <filters>
     <form:form cssClass="m-0 p-0" modelAttribute="filterForm" action="${param.url}" method="GET">
@@ -21,10 +21,13 @@
                     <form:select cssClass="form-select block" path="sortType" items="${sortTypes}"/>
                 </div>
                 <!-- Decades -->
-                <div class="flex flex-col">
-                    <p><spring:message code="search.decades"/></p>
-                    <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>
-                </div>
+<%--                <c:if   test="${decadesType != null}">--%>
+<%--                    <div class="flex flex-col">--%>
+<%--                        <p><spring:message code="search.decades"/></p>--%>
+<%--                        <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>--%>
+<%--                    </div>--%>
+<%--                </c:if>--%>
+
                 <!-- Categories -->
                 <div class="dropdown pr-4 flex flex-col">
                     <p>

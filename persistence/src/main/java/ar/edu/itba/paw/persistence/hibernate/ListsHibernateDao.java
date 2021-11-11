@@ -159,7 +159,8 @@ public class ListsHibernateDao implements ListsDao {
             parameters.put("genres", genre.stream().map(Genre::ordinal).collect(Collectors.toList()));
             groupBy.add(" medialistid ");
             groupBy.add(" visibility ");
-            groupBy.add(sort.nameMediaList);
+            if(sort !=null)
+                groupBy.add(sort.nameMediaList);
             having.add(" COUNT(mediaId) >= :minMatches ");
             parameters.put("minMatches", minMatches);
         }
@@ -202,7 +203,7 @@ public class ListsHibernateDao implements ListsDao {
         if(sort != null){
             sortString = ", " + sort.nameMediaList;
         }
-        final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid, " + sortString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
         final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,true,sort, genre, minMatches);
         @SuppressWarnings("unchecked")
         List<Long> mediaListIds = nativeQuery.getResultList();

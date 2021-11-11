@@ -126,12 +126,6 @@
             </c:choose>
         </div>
     </div>
-    <br>
-    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${allListContainer.totalPages}"/>
-        <jsp:param name="currentPage" value="${allListContainer.currentPage + 1}"/>
-        <jsp:param name="url" value="/lists"/>
-    </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
