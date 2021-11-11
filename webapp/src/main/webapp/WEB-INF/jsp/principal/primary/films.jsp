@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
     <title><spring:message code="films.title"/> &#8226; PopCult</title>
 </head>
-<c:url var="url" value=""/>
+
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">

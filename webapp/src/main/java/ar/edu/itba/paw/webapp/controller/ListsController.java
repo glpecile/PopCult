@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
@@ -21,9 +22,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -54,16 +59,29 @@ public class ListsController {
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;
     private static final int commentsAmount = 12;
+    private static final int minMatches = 2;
 
     @RequestMapping("/lists")
-    public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView lists(HttpServletRequest request,
+                              @RequestParam(value = "page", defaultValue = "1") final int page,
+                              @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                              final BindingResult errors) {
+        LOGGER.debug("Trying to access lists");
+        if(errors.hasErrors()){
+            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
+            return new ModelAndView("redirect: " + request.getHeader("referer"));
+        }
         final ModelAndView mav = new ModelAndView("lists/lists");
-        final PageContainer<MediaList> allLists = listsService.getAllLists(page - 1, listsPerPage);
+        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,itemsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches);
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         mav.addObject("mostLikedLists", mostLikedLists);
         mav.addObject("allLists", allListsCovers);
         mav.addObject("allListContainer", allLists);
+        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        LOGGER.info("Access to lists successfully");
         return mav;
     }
 

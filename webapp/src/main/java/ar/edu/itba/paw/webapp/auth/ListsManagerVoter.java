@@ -11,6 +11,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -36,20 +37,12 @@ public class ListsManagerVoter implements AccessDecisionVoter<FilterInvocation> 
         vote.set(ACCESS_ABSTAIN);
         String URL = filterInvocation.getRequestUrl();
         if (URL.toLowerCase().contains("/user/") && URL.contains("/lists")) {
-            try {
-                String username = URL.replaceFirst("/user/", "").replaceFirst("/lists.*", "");
-                if (!userService.getCurrentUser().isPresent()) {
-                    vote.set(ACCESS_DENIED);
-                    return vote.get();
-                }
-                User user = userService.getCurrentUser().get();
-                if (user.getUsername().equals(username)) {
-                    vote.set(ACCESS_GRANTED);
-                } else {
-                    vote.set(ACCESS_DENIED);
-                }
-            } catch (NumberFormatException e) {
-                vote.set(ACCESS_ABSTAIN);
+            String username = URL.replaceFirst("/user/", "").replaceFirst("/lists.*", "");
+            Optional<User> user = userService.getCurrentUser();
+            if (user.isPresent() && user.get().getUsername().equals(username)) {
+                vote.set(ACCESS_GRANTED);
+            } else {
+                vote.set(ACCESS_DENIED);
             }
         }
         return vote.get();

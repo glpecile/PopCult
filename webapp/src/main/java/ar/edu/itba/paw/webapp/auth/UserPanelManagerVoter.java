@@ -10,6 +10,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -34,13 +35,9 @@ public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocati
         String URL = filterInvocation.getRequestUrl();
 
         if (URL.startsWith("/user/") && ((URL.contains("/requests")) || URL.contains("/notifications"))) {
-            if (!userService.getCurrentUser().isPresent()) {
-                vote.set(ACCESS_DENIED);
-                return vote.get();
-            }
-            User user = userService.getCurrentUser().get();
             String username = URL.replaceFirst("/user/", "").replaceFirst("(/requests|/notifications).*", "");
-            if ((user.getUsername().equals(username))) {
+            Optional<User> user = userService.getCurrentUser();
+            if (user.isPresent() && user.get().getUsername().equals(username)) {
                 vote.set(ACCESS_GRANTED);
             } else {
                 vote.set(ACCESS_DENIED);

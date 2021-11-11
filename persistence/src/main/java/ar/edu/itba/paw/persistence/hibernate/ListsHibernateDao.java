@@ -4,7 +4,10 @@ import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +18,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Primary
 @Repository
@@ -141,6 +143,80 @@ public class ListsHibernateDao implements ListsDao {
         List<MediaList> list = getMediaLists(listIds);
 
         return new PageContainer<>(list, page, pageSize, count);
+    }
+
+    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, boolean visibility,SortType sort, List<Genre> genre, int minMatches){
+        StringBuilder toReturn = new StringBuilder();
+        final Map<String, Object> parameters = new HashMap<>();
+        toReturn.append(baseQuery);
+        LinkedList<String> where = new LinkedList<>();
+        LinkedList<String> groupBy = new LinkedList<>();
+        LinkedList<String> having = new LinkedList<>();
+
+        if(!genre.isEmpty()){
+
+            where.add(" genreid IN ( :genres) ");
+            parameters.put("genres", genre.stream().map(Genre::ordinal).collect(Collectors.toList()));
+            groupBy.add(" medialistid ");
+            groupBy.add(" visibility ");
+            groupBy.add(sort.nameMediaList);
+            having.add(" COUNT(mediaId) >= :minMatches ");
+            parameters.put("minMatches", minMatches);
+        }
+        where.add(" visibility = :visibility ");
+        parameters.put("visibility", visibility);
+        if(!where.isEmpty()){
+            toReturn.append("WHERE ");
+            toReturn.append(where.removeFirst());
+            where.forEach(w -> toReturn.append(" AND ").append(w));
+        }
+        if(!groupBy.isEmpty()){
+            toReturn.append(" GROUP BY ");
+            toReturn.append(groupBy.removeFirst());
+            groupBy.forEach(w -> toReturn.append(" , ").append(w));
+        }
+        if(!having.isEmpty()){
+            toReturn.append(" HAVING ");
+            toReturn.append(having.removeFirst());
+            where.forEach(w -> toReturn.append(" AND ").append(w));
+        }
+        if(sort != null)
+            toReturn.append(" ORDER BY ").append(sort.nameMediaList);
+
+        if(page != null && pageSize != null){
+            toReturn.append( " OFFSET :offset LIMIT :limit ");
+            parameters.put("offset", page*pageSize);
+            parameters.put("limit", pageSize);
+        }
+        toReturn.append(" ) AS aux");
+        final Query nativeQuery = em.createNativeQuery(toReturn.toString());
+        parameters.forEach(nativeQuery::setParameter);
+        return nativeQuery;
+    }
+
+    @Override
+    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
+        //Para paginacion
+        //Pedimos el contenido paginado.
+        String sortString = "";
+        if(sort != null){
+            sortString = ", " + sort.nameMediaList;
+        }
+        final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid, " + sortString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,true,sort, genre, minMatches);
+        @SuppressWarnings("unchecked")
+        List<Long> mediaListIds = nativeQuery.getResultList();
+        //Obtenemos la cantidad total de elementos.
+        final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,true,null,genre,minMatches);
+        final long count = ((Number) countQuery.getSingleResult()).longValue();
+
+        //Query que se pide con los ids ya paginados
+        final TypedQuery<MediaList> query = em.createQuery("from MediaList where mediaListId in (:mediaListIds) order by " + sort.nameMediaList, MediaList.class);
+        query.setParameter("mediaListIds", mediaListIds);
+        List<MediaList> mediaList = mediaListIds.isEmpty() ? Collections.emptyList() : query.getResultList();
+
+        return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
     @Override
