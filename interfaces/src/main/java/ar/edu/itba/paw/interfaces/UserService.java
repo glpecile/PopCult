@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
@@ -38,4 +39,12 @@ public interface UserService {
     void uploadUserProfileImage(User user, byte[] photoBlob);
 
     void updateUserData(User user, String name);
+
+    PageContainer<User> getBannedUsers(int page, int pageSize);
+
+    void strikeUser(User user);
+
+    void banUser(User user);
+
+    void unbanUser(User user);
 }

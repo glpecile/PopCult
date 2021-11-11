@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.user;
 import ar.edu.itba.paw.models.image.Image;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -36,6 +37,9 @@ public class User {
     @Column(nullable = false)
     private int strikes;
 
+    @Column
+    private LocalDateTime banDate;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "imageid")
     private Image image;
@@ -68,6 +72,7 @@ public class User {
         this.enabled = builder.enabled;
         this.nonLocked = builder.nonLocked;
         this.strikes = builder.strikes;
+        this.banDate = builder.banDate;
         this.image = builder.image;
         this.role = builder.role;
     }
@@ -136,6 +141,18 @@ public class User {
         this.strikes = strikes;
     }
 
+    public int addStrike() {
+        return ++this.strikes;
+    }
+
+    public LocalDateTime getBanDate() {
+        return banDate;
+    }
+
+    public void setBanDate(LocalDateTime banDate) {
+        this.banDate = banDate;
+    }
+
     public int getImageId() {
         return image == null ? DEFAULT_IMAGE : image.getImageId();
     }
@@ -163,6 +180,7 @@ public class User {
         private boolean enabled = false;
         private boolean nonLocked = true;
         private int strikes = 0;
+        private LocalDateTime banDate = null;
         private Image image = null;
         private UserRole role = UserRole.USER;
 
@@ -190,6 +208,11 @@ public class User {
 
         public Builder strikes(int strikes) {
             this.strikes = strikes;
+            return this;
+        }
+
+        public Builder banDate(LocalDateTime banDate) {
+            this.banDate = banDate;
             return this;
         }
 

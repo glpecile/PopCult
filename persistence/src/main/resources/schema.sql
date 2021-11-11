@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users
     enabled     BOOLEAN NOT NULL,
     nonLocked   BOOLEAN NOT NULL,
     strikes     INT     NOT NULL,
+    banDate     TIMESTAMP,
     imageId     INT,
     role        INT     NOT NULL,
     UNIQUE (email),
