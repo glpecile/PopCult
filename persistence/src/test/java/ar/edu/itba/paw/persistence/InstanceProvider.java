@@ -20,8 +20,11 @@ public class InstanceProvider {
     private static final String COMMENT = "Comment";
 
     private static final int ALREADY_EXISTS_MEDIA_ID = 1;
+    private static final int ALREADY_EXISTS_LIKED_MEDIA_ID = 2;
 
     private static final int ALREADY_EXISTS_LIST_ID = 2;
+    private static final int ALREADY_EXISTS_LIKED_LIST_ID = 3;
+
 
     /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_ID = 2;
@@ -50,4 +53,11 @@ public class InstanceProvider {
         return new ListComment(ALREADY_EXISTS_LIST_COMMENT_ID, getUser(), COMMENT, LocalDateTime.now(), getMediaList());
     }
 
+    public static Media getLikedMedia() {
+        return new Media(ALREADY_EXISTS_LIKED_MEDIA_ID, MediaType.FILMS, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
+    }
+
+    public static MediaList getLikedMediaList() {
+        return new MediaList(ALREADY_EXISTS_LIKED_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
+    }
 }

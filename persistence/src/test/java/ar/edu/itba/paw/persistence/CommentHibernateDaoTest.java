@@ -51,20 +51,18 @@ public class CommentHibernateDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private User user;
-    private Media media;
-    private MediaList mediaList;
 
     @Before
     public void setup() {
         jdbcTemplate = new JdbcTemplate(ds);
         user = InstanceProvider.getUser();
-        media = InstanceProvider.getMedia();
-        mediaList = InstanceProvider.getMediaList();
     }
 
     @Rollback
     @Test
     public void testAddCommentToMedia() {
+        Media media = InstanceProvider.getMedia();
+
         MediaComment comment = commentHibernateDao.addCommentToMedia(user, media, COMMENT);
 
         em.flush();
@@ -77,6 +75,8 @@ public class CommentHibernateDaoTest {
     @Rollback
     @Test
     public void testAddCommentToList() {
+        MediaList mediaList = InstanceProvider.getMediaList();
+
         ListComment comment = commentHibernateDao.addCommentToList(user, mediaList, COMMENT);
 
         em.flush();

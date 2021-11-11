@@ -11,3 +11,8 @@ VALUES (2, 4, 2, 'Media Comment', current_date);
 
 INSERT INTO collaborative(collabid, listid, collaboratorid, accepted)
 VALUES (2, 4, 4, false);
+
+INSERT INTO favoritemedia(userid, mediaid)
+VALUES (4, 2);
+INSERT INTO favoritelists(userid, medialistid)
+VALUES (4, 3);
