@@ -32,6 +32,8 @@ public interface ListsService {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
+    MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd) throws MediaAlreadyInListException;
+
     void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
 
     void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException;

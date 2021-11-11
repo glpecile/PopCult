@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class ListsServiceImpl implements ListsService {
     @Autowired
     private ListsDao listsDao;
+    @Autowired
+    private MediaDao mediaDao;
 
     @Transactional(readOnly = true)
     @Override
@@ -79,6 +82,14 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative) {
         return listsDao.createMediaList(user, title, description, visibility, collaborative);
+    }
+
+    @Transactional
+    @Override
+    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd) throws MediaAlreadyInListException{
+        MediaList mediaList = listsDao.createMediaList(user, title, description, visibility, collaborative);
+        listsDao.addToMediaList(mediaList, mediaToAdd);
+        return mediaList;
     }
 
     @Transactional

@@ -60,6 +60,7 @@ public class ListsController {
     private static final int collaboratorsAmount = 20;
     private static final int commentsAmount = 12;
     private static final int minMatches = 2;
+    private static final int mediaDefaultValue = -1;
 
     @RequestMapping("/lists")
     public ModelAndView lists(HttpServletRequest request,
@@ -178,20 +179,37 @@ public class ListsController {
 
     //CREATE A NEW LIST - PART 1
     @RequestMapping(value = "/lists/new", method = {RequestMethod.GET})
-    public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form) {
-        return new ModelAndView("lists/createListForm");
+    public ModelAndView createListForm(@ModelAttribute("createListForm") final ListForm form, @RequestParam(name = "mediaId") final int mediaId) {
+        return new ModelAndView("lists/createListForm").addObject("mediaId", mediaId);
     }
 
-    @RequestMapping(value = "/lists/new", method = {RequestMethod.POST})
+    @RequestMapping(value = "/lists/new", method = {RequestMethod.POST}, params = "post")
     public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("Create a new list form has errors.");
-            return createListForm(form);
+            return createListForm(form, mediaDefaultValue);
         }
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
         LOGGER.info("New list created, id = {}", mediaList.getMediaListId());
         return new ModelAndView("redirect:/lists/edit/" + mediaList.getMediaListId() + "/manageMedia");
+    }
+
+    @RequestMapping(value = "/lists/new", method = {RequestMethod.POST}, params = "mediaId")
+    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors, @RequestParam("mediaId") final int mediaId) {
+        if (errors.hasErrors()) {
+            LOGGER.warn("Create a new list form has errors.");
+            return createListForm(form, mediaId);
+        }
+        User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        try {
+            final MediaList mediaList = listsService.createMediaList(user, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative(), media);
+            LOGGER.info("New list created, id = {}", mediaList.getMediaListId());
+            return new ModelAndView("redirect:/lists/edit/" + mediaList.getMediaListId() + "/manageMedia");
+        }catch (MediaAlreadyInListException e){
+            return new ModelAndView("lists/createListForm");
+        }
     }
 
     // MANAGE MEDIA IN LIST

@@ -30,11 +30,12 @@
                     <spring:message code="editable.title"/>
                 </h2>
                 <%-- Create List Button --%>
-                <a href=${createListPath}>
+                <form action="${createListPath}" METHOD="GET">
+                    <input type="hidden" name="mediaId" value="<c:out value="-1"/>">
                     <button class="btn btn-link my-2.5 text-purple-500 hover:text-purple-900 btn-rounded">
                         <spring:message code="lists.create"/>
                     </button>
-                </a>
+                </form>
             </div>
             <div class="row py-2">
                 <c:if test="${listContainer.totalCount == 0}">

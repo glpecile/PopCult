@@ -66,9 +66,10 @@
                                                value="<c:out value = "${list.mediaListId}"/>">
                                     </form>
                                 </c:forEach>
-                                <a class="dropdown-item p-1.5" href=${createListPath}>
-                                    <spring:message code="lists.create"/>
-                                </a>
+                                <form action="${createListPath}" method="GET">
+                                    <input type="hidden" name="mediaId" value="<c:out value="${media.mediaId}"/>">
+                                    <button class="dropdown-item p-1.5" type="submit"><spring:message code="lists.create"/></button>
+                                </form>
                             </ul>
                         </div>
                     </sec:authorize>

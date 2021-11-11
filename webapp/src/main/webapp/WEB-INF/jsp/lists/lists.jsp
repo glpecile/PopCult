@@ -30,11 +30,12 @@
                 <spring:message code="lists.popular"/>
             </h2>
             <%-- Create List Button --%>
-            <a href=${createListPath}>
+            <form action="${createListPath}" method="GET">
+                <input type="hidden" name="mediaId" value="<c:out value="-1"/>">
                 <button class="btn btn-link my-2.5 text-purple-500 hover:text-purple-900 btn-rounded">
                     <spring:message code="lists.create"/>
                 </button>
-            </a>
+            </form>
         </div>
         <div class="flex flex-col" data-controller="slider">
             <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
