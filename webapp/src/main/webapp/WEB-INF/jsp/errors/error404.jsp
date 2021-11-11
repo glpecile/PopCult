@@ -22,7 +22,7 @@
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow py-24 whitespace-pre-line">
         <div class="flex flex-wrap p-3.5">
-            <img src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="error_image">
+            <img class="w-80" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="error_image">
             <div class="flex flex-col">
                 <h1 class="text-6xl font-black text-justify">
                     <spring:message code="error.404"/>
