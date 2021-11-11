@@ -5,7 +5,7 @@ import ar.edu.itba.paw.webapp.form.annotations.PasswordMatches;
 import javax.validation.constraints.Size;
 
 @PasswordMatches()
-public class ResetPasswordForm {
+public class ResetPasswordForm implements PasswordMatchesForm {
 
     @Size(min = 8, max = 100)
     private String newPassword;
@@ -37,5 +37,10 @@ public class ResetPasswordForm {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public String getPassword() {
+        return newPassword;
     }
 }

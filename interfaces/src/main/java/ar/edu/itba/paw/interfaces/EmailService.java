@@ -11,6 +11,8 @@ public interface EmailService {
 
     void sendVerificationEmail(User to, String token);
 
+    void sendDeletedUserEmail(User to);
+
     void sendResetPasswordEmail(User to, String token);
 
     void sendReportCreatedEmail(User to, String report);
@@ -30,4 +32,10 @@ public interface EmailService {
     void sendModRequestApprovedEmail(User to);
 
     void sendModRoleRemovedEmail(User to);
+
+    void sendBannedUserEmail(User to);
+
+    void sendUnbannedUserEmail(User to);
+
+    void sendDeletedUserByStrikesEmail(User to);
 }

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence.hibernate;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
-import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
@@ -54,10 +55,10 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
-        if(getByEmail(email).isPresent()) {
+        if (getByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
-        if(getByUsername(username).isPresent()) {
+        if (getByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }
         final User user = new User.Builder(email, username, password, name).build();
@@ -65,4 +66,35 @@ public class UserHibernateDao implements UserDao {
         return user;
     }
 
+    @Override
+    public void deleteUser(User user) {
+        em.remove(user);
+    }
+
+    @Override
+    public PageContainer<User> getBannedUsers(int page, int pageSize) {
+        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE nonlocked = :nonLocked ORDER BY bandate DESC OFFSET :offset LIMIT :limit")
+                .setParameter("nonLocked", false)
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> userIds = nativeQuery.getResultList();
+
+        final Query countQuery = em.createQuery("SELECT COUNT(*) FROM User WHERE nonLocked = :nonLocked")
+                .setParameter("nonLocked", false);
+        final long count = (long) countQuery.getSingleResult();
+
+        final TypedQuery<User> query = em.createQuery("FROM User where userId IN :userIds ORDER BY banDate DESC", User.class)
+                .setParameter("userIds", userIds);
+        List<User> bannedUsers = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
+
+        return new PageContainer<>(bannedUsers, page, pageSize, count);
+    }
+
+    @Override
+    public List<User> getBannedUsers() {
+        final TypedQuery<User> query = em.createQuery("from User where nonLocked = :nonLocked", User.class);
+        query.setParameter("nonLocked", false);
+        return query.getResultList();
+    }
 }

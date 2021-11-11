@@ -74,7 +74,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM ListReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<ListReport> query = em.createQuery("FROM ListReport WHERE reportId IN (:reportIds)", ListReport.class)
+        final TypedQuery<ListReport> query = em.createQuery("FROM ListReport WHERE reportId IN (:reportIds) ORDER BY date DESC", ListReport.class)
                 .setParameter("reportIds", reportIds);
         List<ListReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -92,7 +92,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM ListCommentReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<ListCommentReport> query = em.createQuery("FROM ListCommentReport WHERE reportId IN (:reportIds)", ListCommentReport.class)
+        final TypedQuery<ListCommentReport> query = em.createQuery("FROM ListCommentReport WHERE reportId IN (:reportIds) ORDER BY date DESC", ListCommentReport.class)
                 .setParameter("reportIds", reportIds);
         List<ListCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -110,7 +110,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM MediaCommentReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<MediaCommentReport> query = em.createQuery("FROM MediaCommentReport WHERE reportId IN (:reportIds)", MediaCommentReport.class)
+        final TypedQuery<MediaCommentReport> query = em.createQuery("FROM MediaCommentReport WHERE reportId IN (:reportIds) ORDER BY date DESC", MediaCommentReport.class)
                 .setParameter("reportIds", reportIds);
         List<MediaCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 

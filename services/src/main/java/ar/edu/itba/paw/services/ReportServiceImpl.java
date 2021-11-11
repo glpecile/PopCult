@@ -36,6 +36,7 @@ public class ReportServiceImpl implements ReportService {
     public void reportList(MediaList mediaList, String report) {
         if (moderatorService.principalIsMod()) {
             listsService.deleteList(mediaList);
+            userService.strikeUser(mediaList.getUser());
             sendDeletedListEmail(mediaList.getUser(), mediaList, report);
         } else {
             userService.getCurrentUser().ifPresent(reportee -> {
@@ -50,6 +51,7 @@ public class ReportServiceImpl implements ReportService {
     public void reportListComment(ListComment comment, String report) {
         if (moderatorService.principalIsMod()) {
             commentService.deleteCommentFromList(comment);
+            userService.strikeUser(comment.getUser());
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
             userService.getCurrentUser().ifPresent(reportee -> {
@@ -64,6 +66,7 @@ public class ReportServiceImpl implements ReportService {
     public void reportMediaComment(MediaComment comment, String report) {
         if (moderatorService.principalIsMod()) {
             commentService.deleteCommentFromMedia(comment);
+            userService.strikeUser(comment.getUser());
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
             userService.getCurrentUser().ifPresent(reportee -> {
@@ -132,6 +135,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void approveListReport(ListReport listReport) {
         listsService.deleteList(listReport.getMediaList());
+        userService.strikeUser(listReport.getMediaList().getUser());
         sendReportApprovedEmail(listReport.getReportee(), listReport.getReport());
         sendDeletedListEmail(listReport.getMediaList().getUser(), listReport.getMediaList(), listReport.getReport());
     }
@@ -140,6 +144,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void approveListCommentReport(ListCommentReport listCommentReport) {
         commentService.deleteCommentFromList(listCommentReport.getComment());
+        userService.strikeUser(listCommentReport.getComment().getUser());
         sendReportApprovedEmail(listCommentReport.getReportee(), listCommentReport.getReport());
         sendDeletedCommentEmail(listCommentReport.getComment().getUser(), listCommentReport.getComment(), listCommentReport.getReport());
     }
@@ -148,6 +153,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void approveMediaCommentReport(MediaCommentReport mediaCommentReport) {
         commentService.deleteCommentFromMedia(mediaCommentReport.getComment());
+        userService.strikeUser(mediaCommentReport.getComment().getUser());
         sendReportApprovedEmail(mediaCommentReport.getReportee(), mediaCommentReport.getReport());
         sendDeletedCommentEmail(mediaCommentReport.getComment().getUser(), mediaCommentReport.getComment(), mediaCommentReport.getReport());
     }

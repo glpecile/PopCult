@@ -39,6 +39,19 @@
                     <spring:message code="admin.reports.desc"/>
                 </p>
             </div>
+            <!-- Link to bans -->
+            <div
+                    class="group flex flex-col bg-white shadow-lg rounded-lg p-3 transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
+                <i class="fas fa-user-alt-slash text-center text-purple-500 group-hover:text-purple-900 fa-2x mt-3"></i>
+                <h2 class="text-2xl text-center py-2 pb-2.5">
+                    <a class="stretched-link text-purple-500 group-hover:text-purple-900" href="<c:url value="/admin/bans"/>">
+                        <b><spring:message code="bans.title"/></b>
+                    </a>
+                </h2>
+                <p class="p-2.5 m-1.5 text-center">
+                    <spring:message code="admin.bans.desc"/>
+                </p>
+            </div>
             <!-- Link to mods -->
             <sec:authorize access="hasRole('ADMIN')">
                 <div
