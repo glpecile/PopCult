@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Primary
@@ -26,14 +27,14 @@ public class CommentHibernateDao implements CommentDao {
 
     @Override
     public MediaComment addCommentToMedia(User user, Media media, String comment) {
-        MediaComment mediaComment = new MediaComment(null, user, comment, new Date(), media);
+        MediaComment mediaComment = new MediaComment(null, user, comment, LocalDateTime.now(), media);
         em.persist(mediaComment);
         return mediaComment;
     }
 
     @Override
     public ListComment addCommentToList(User user, MediaList mediaList, String comment) {
-        ListComment listComment = new ListComment(null, user, comment, new Date(), mediaList);
+        ListComment listComment = new ListComment(null, user, comment, LocalDateTime.now(), mediaList);
         em.persist(listComment);
         return listComment;
     }

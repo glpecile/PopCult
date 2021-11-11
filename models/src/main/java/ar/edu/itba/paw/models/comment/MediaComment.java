@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "mediacomment")
@@ -24,7 +24,7 @@ public class MediaComment extends Comment {
         //Just for hibernate
     }
 
-    public MediaComment(Integer commentId, User user, String commentBody, Date creationDate, Media media) {
+    public MediaComment(Integer commentId, User user, String commentBody, LocalDateTime creationDate, Media media) {
         super(user, commentBody, creationDate);
         this.commentId = commentId;
         this.media = media;
