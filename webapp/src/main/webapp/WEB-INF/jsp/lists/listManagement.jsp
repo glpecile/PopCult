@@ -226,7 +226,7 @@
                             <spring:message code="search.by"/> <c:out value="${searchTerm}"/>
                         </h2>
                         <c:choose>
-                            <c:when test="${searchResults.size != 0}">
+                            <c:when test="${searchResultSize != 0}">
                                 <!-- Search Results of every Media -->
                                 <div class="row">
                                     <div class="overflow-y-auto h-50">
@@ -238,7 +238,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-
+                                <p> TODO appropriate message </p>
                             </c:otherwise>
                         </c:choose>
                         <br>
@@ -352,7 +352,7 @@
                                 <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
                             </h2>
                         <c:choose>
-                            <c:when test="${userSearchResults.size != 0}">
+                            <c:when test="${userSearchResultSize != 0}">
                                 <!-- Search Results of every User -->
                                 <div class="row">
                                     <div class="overflow-y-auto h-50">
@@ -364,7 +364,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-
+                                <p> TODO appropriate message </p>
                             </c:otherwise>
                         </c:choose>
                         <br>

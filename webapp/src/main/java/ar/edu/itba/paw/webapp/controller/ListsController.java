@@ -246,7 +246,10 @@ public class ListsController {
         final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements();
         searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements());
         LOGGER.info("Search process completed.");
-        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("searchTerm", searchForm.getTerm()).addObject("searchResults", mediaForm.generateMediaMap(searchResults));
+        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm)
+                .addObject("searchTerm", searchForm.getTerm())
+                .addObject("searchResults", mediaForm.generateMediaMap(searchResults))
+                .addObject("searchResultSize", searchResults.size());
 
     }
 
@@ -287,7 +290,10 @@ public class ListsController {
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         final List<User> searchResults = searchService.searchUsersToCollabNotInList(userSearchForm.getTerm(),mediaList , searchAmount, defaultValue - 1).getElements();
         LOGGER.info("User search process completed.");
-        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userSearchTerm", userSearchForm.getTerm()).addObject("userSearchResults", usernameForm.generateUserMap(searchResults));
+        return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm)
+                .addObject("userSearchTerm", userSearchForm.getTerm())
+                .addObject("userSearchResults", usernameForm.generateUserMap(searchResults))
+                .addObject("userSearchResultSize", searchResults.size());
 
     }
 
