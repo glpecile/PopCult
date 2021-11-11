@@ -21,8 +21,6 @@ import java.util.Optional;
 public class ListsServiceImpl implements ListsService {
     @Autowired
     private ListsDao listsDao;
-    @Autowired
-    private MediaDao mediaDao;
 
     @Transactional(readOnly = true)
     @Override

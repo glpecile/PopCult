@@ -68,13 +68,14 @@
                 </a>
                 <c:choose>
                     <c:when test="${mediaId == null || mediaId <= 0}">
+                        <input type="hidden" name="mediaId" value="<c:out value="-1"/>">
                         <button class="row btn btn-secondary py-2" type="submit" name="post">
                             <spring:message code="lists.create.confirm"/>
                         </button>
                     </c:when>
                     <c:otherwise>
                         <input type="hidden" name="mediaId" value="<c:out value="${mediaId}"/>">
-                        <button class="row btn btn-secondary py-2" type="submit">
+                        <button class="row btn btn-secondary py-2" type="submit" name="postWithMedia">
                             <spring:message code="lists.create.confirm"/>
                         </button>
                     </c:otherwise>

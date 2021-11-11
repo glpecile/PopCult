@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -60,7 +59,6 @@ public class ListsController {
     private static final int collaboratorsAmount = 20;
     private static final int commentsAmount = 12;
     private static final int minMatches = 2;
-    private static final int mediaDefaultValue = -1;
 
     @RequestMapping("/lists")
     public ModelAndView lists(HttpServletRequest request,
@@ -184,10 +182,10 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/new", method = {RequestMethod.POST}, params = "post")
-    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors) {
+    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors, @RequestParam("mediaId") final int mediaId) {
         if (errors.hasErrors()) {
             LOGGER.warn("Create a new list form has errors.");
-            return createListForm(form, mediaDefaultValue);
+            return createListForm(form, mediaId);
         }
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user, form.getListTitle(), form.getDescription(), form.isVisible(), form.isCollaborative());
@@ -195,8 +193,8 @@ public class ListsController {
         return new ModelAndView("redirect:/lists/edit/" + mediaList.getMediaListId() + "/manageMedia");
     }
 
-    @RequestMapping(value = "/lists/new", method = {RequestMethod.POST}, params = "mediaId")
-    public ModelAndView postListForm(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors, @RequestParam("mediaId") final int mediaId) {
+    @RequestMapping(value = "/lists/new", method = {RequestMethod.POST}, params = "postWithMedia")
+    public ModelAndView postListFormWithMedia(@Valid @ModelAttribute("createListForm") final ListForm form, final BindingResult errors, @RequestParam("mediaId") final int mediaId) {
         if (errors.hasErrors()) {
             LOGGER.warn("Create a new list form has errors.");
             return createListForm(form, mediaId);
