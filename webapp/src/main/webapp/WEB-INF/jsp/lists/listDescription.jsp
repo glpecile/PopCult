@@ -19,25 +19,23 @@
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <div class="flex flex-wrap pt-4">
-            <div class="col-md-auto">
-                <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
-                <div class="flex justify-right">
+        <div class="flex flex-col flex-wrap pt-4">
+            <h2 class="display-5 fw-bolder max-w-full break-words"><c:out value="${list.listName}"/></h2>
+            <div class="flex justify-right">
+                <h4 class="py-2 pb-2.5">
+                    <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
+                                                         href="<c:url value="/user/${user.username}"/>"><b><c:out
+                        value="${user.username}"/></b></a>
+                </h4>
+                <%-- Forked From --%>
+                <c:if test="${list.forkedFrom != null}">
                     <h4 class="py-2 pb-2.5">
-                        <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
-                                                             href="<c:url value="/user/${user.username}"/>"><b><c:out
-                            value="${user.username}"/></b></a>
+                        <spring:message code="lists.forkedFrom"/> <a
+                            class="text-purple-500 hover:text-purple-900"
+                            href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
+                            value="${list.forkedFrom.listName}"/></b></a>
                     </h4>
-                    <%-- Forked From --%>
-                    <c:if test="${list.forkedFrom != null}">
-                        <h4 class="py-2 pb-2.5">
-                            <spring:message code="lists.forkedFrom"/> <a
-                                class="text-purple-500 hover:text-purple-900"
-                                href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
-                                value="${list.forkedFrom.listName}"/></b></a>
-                        </h4>
-                    </c:if>
-                </div>
+                </c:if>
                 <%-- Amount of Forks --%>
                 <c:if test="${forks.totalCount != 0}">
                     <div class="flex">

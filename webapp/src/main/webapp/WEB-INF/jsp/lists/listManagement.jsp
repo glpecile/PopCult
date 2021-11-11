@@ -238,7 +238,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <p> TODO appropriate message </p>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
                             </c:otherwise>
                         </c:choose>
                         <br>
@@ -347,10 +347,10 @@
                         </div>
                     </div>
                     <form:form cssClass="m-0 p-0" modelAttribute="usernameForm" action="${addCollabPath}" method="POST">
-                        <c:if test="${userSearchTerm != null}">
-                            <h2 class="font-bold pb-1.5">
-                                <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
-                            </h2>
+                    <c:if test="${userSearchTerm != null}">
+                        <h2 class="font-bold pb-1.5">
+                            <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
+                        </h2>
                         <c:choose>
                             <c:when test="${userSearchResultSize != 0}">
                                 <!-- Search Results of every User -->
@@ -364,7 +364,13 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <p> TODO appropriate message </p>
+                                <div class="flex-col flex-wrap p-4 space-x-4">
+                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                                         alt="no_results_image">
+                                    <h1 class="text-xl text-gray-400 py-2 mt-3 text-center">
+                                        <spring:message code="search.user" arguments="${userSearchTerm}"/>
+                                    </h1>
+                                </div>
                             </c:otherwise>
                         </c:choose>
                         <br>

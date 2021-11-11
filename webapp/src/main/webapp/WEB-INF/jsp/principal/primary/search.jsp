@@ -167,13 +167,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="flex-col flex-wrap p-4 space-x-4">
-                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
-                                         alt="no_results_image">
-                                    <h1 class="text-xl text-gray-400 py-2 mt-6 text-center">
-                                        <spring:message code="search.sorry" arguments="${param.term}"/>
-                                    </h1>
-                                </div>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -198,13 +192,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="flex-col flex-wrap p-4 space-x-4">
-                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
-                                         alt="no_results_image">
-                                    <h1 class="text-xl text-gray-400 py-2 mt-6 text-center">
-                                        <spring:message code="search.sorry" arguments="${param.term}"/>
-                                    </h1>
-                                </div>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
