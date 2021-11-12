@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,8 +66,8 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches) {
-        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches);
+    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate) {
+        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches, fromDate, toDate);
     }
 
     @Transactional(readOnly = true)

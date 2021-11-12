@@ -76,6 +76,7 @@
             </h2>
             <c:set var="sortTypes" value="${sortTypes}" scope="request"/>
             <c:set var="genreTypes" value="${genreTypes}" scope="request"/>
+            <c:set var="decadesType" value="${decadesType}" scope="request"/>
             <jsp:include page="/WEB-INF/jsp/components/filters.jsp">
                 <jsp:param name="url" value="${url}"/>
             </jsp:include>

@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:useBean id="sortTypes" scope="request" type="java.util.ArrayList"/>
-<%--<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>--%>
+<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>
 <jsp:useBean id="genreTypes" scope="request" type="java.util.ArrayList"/>
 
 
@@ -21,12 +21,12 @@
                     <form:select cssClass="form-select block" path="sortType" items="${sortTypes}"/>
                 </div>
                 <!-- Decades -->
-<%--                <c:if   test="${decadesType != null}">--%>
-<%--                    <div class="flex flex-col">--%>
-<%--                        <p><spring:message code="search.decades"/></p>--%>
-<%--                        <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>--%>
-<%--                    </div>--%>
-<%--                </c:if>--%>
+                <c:if   test="${decadesType != null}">
+                    <div class="flex flex-col">
+                        <p><spring:message code="search.decades"/></p>
+                        <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>
+                    </div>
+                </c:if>
 
                 <!-- Categories -->
                 <div class="dropdown pr-4 flex flex-col">

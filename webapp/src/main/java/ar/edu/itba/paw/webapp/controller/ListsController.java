@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,14 +74,20 @@ public class ListsController {
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,itemsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches);
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,itemsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getDecade(), filterForm.getLastYear());
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
+        final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
+        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            decades.add(Integer.toString(i));
+        }
         mav.addObject("mostLikedLists", mostLikedLists);
         mav.addObject("allLists", allListsCovers);
         mav.addObject("allListContainer", allLists);
         mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
         mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("decadesType", decades);
         LOGGER.info("Access to lists successfully");
         return mav;
     }

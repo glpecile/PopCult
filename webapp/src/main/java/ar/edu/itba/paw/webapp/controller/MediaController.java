@@ -246,7 +246,7 @@ public class MediaController {
     @RequestMapping(value = "/media/films")
     public ModelAndView films(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
-                              final BindingResult errors) throws ParseException {
+                              final BindingResult errors){
         LOGGER.debug("Trying to access films");
         if(errors.hasErrors()){
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
