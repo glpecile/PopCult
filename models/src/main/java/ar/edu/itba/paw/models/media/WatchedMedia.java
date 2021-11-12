@@ -3,7 +3,10 @@ package ar.edu.itba.paw.models.media;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 
 @Entity
 @Table(name = "towatchmedia")
@@ -59,11 +62,15 @@ public class WatchedMedia {
         this.media = media;
     }
 
-    public LocalDateTime getWatchDate() {
-        return watchDate;
+    public String getWatchDate() {
+        return watchDate.toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public void setWatchDate(LocalDateTime watchDate) {
         this.watchDate = watchDate;
+    }
+
+    public LocalDateTime getWatchDateTime() {
+        return watchDate;
     }
 }

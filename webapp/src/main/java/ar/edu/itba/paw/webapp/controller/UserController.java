@@ -28,10 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -40,8 +37,6 @@ import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Controller
 public class UserController {
-    @Autowired
-    private ImageService imageService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -134,8 +129,9 @@ public class UserController {
 
         mav.addObject("user", user);
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-
+        mav.addObject("currentDate", LocalDate.now());
         LOGGER.info("{} watched media accessed.", username);
+        watchedMediaIds.getElements().forEach(watchedMedia -> LOGGER.info("{}", watchedMedia.getWatchDate()));
         return mav;
     }
 

@@ -9,8 +9,6 @@
         <sec:authentication property="principal.username"/>
     </c:set>
 </sec:authorize>
-<jsp:useBean id="now" class="java.util.Date"/>
-<fmt:formatDate var="localDate" value="${now}" pattern="yyyy-MM-dd"/>
 <c:if test="${currentUsername == param.listOwner}">
     <button
             class="h-10 w-full truncate bg-gray-300 hover:bg-purple-500 text-gray-700 font-semibold hover:text-white my-2.5 px-4 border border-gray-500 hover:border-transparent rounded-lg"
@@ -34,7 +32,7 @@
                 <c:url value="/user/${param.listOwner}/watchedMedia" var="editDatePath"/>
                 <form:form method="POST" action="${editDatePath}">
                     <label for="watchedDate"><spring:message code="editWatch.watched" arguments="${param.lastWatched}"/> -> </label>
-                    <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${localDate}">
+                    <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${param.currentDate}">
                     <span class="validity"></span>
                     <input type="hidden" name="username" value="<c:out value="${param.listOwner}"/>">
                     <input type="hidden" name="mediaId" value="<c:out value="${param.id}"/>">
