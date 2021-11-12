@@ -53,6 +53,7 @@
                         <jsp:param name="mediaTitle" value="${watched.media.title}"/>
                         <jsp:param name="id" value="${watched.media.mediaId}"/>
                         <jsp:param name="listOwnerId" value="${user.userId}"/>
+                        <jsp:param name="currentDate" value="${currentDate}"/>
                     </jsp:include>
                 </div>
             </c:forEach>

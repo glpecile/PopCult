@@ -1,11 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-2.5 m-2.5 mb-0 ring-2 ring-gray-200 bg-white rounded-lg flex flex-wrap flex-col">
+    <spring:message code="date.format" var="format"/>
+    <fmt:parseDate value="${param.date}" pattern="yyyy-MM-dd" var="parsedDate"/>
+    <fmt:formatDate value="${parsedDate}" pattern="${format}" var="formattedDate"/>
     <div class="flex flex-row justify-between">
-        <a class="font-bold text-purple-500 hover:text-purple-900" href="<c:url value="/user/${param.username}"/>">
-            <c:out value="${param.username}"/>
-        </a>
+        <div class="flex">
+            <a class="font-bold text-purple-500 hover:text-purple-900" href="<c:url value="/user/${param.username}"/>">
+                <c:out value="${param.username}"/>
+            </a>
+            <p class="text-base tracking-tight pl-1 text-gray-400">
+                &#8226; <c:out value="${formattedDate}"/>
+            </p>
+        </div>
         <div class="flex justify-right space-x-2">
             <c:url var="reportPath" value="/report/${param.type}/${param.id}/comment/${param.commentId}"/>
             <c:choose>

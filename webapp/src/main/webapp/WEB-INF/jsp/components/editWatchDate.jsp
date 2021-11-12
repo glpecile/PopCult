@@ -9,14 +9,15 @@
         <sec:authentication property="principal.username"/>
     </c:set>
 </sec:authorize>
-<jsp:useBean id="now" class="java.util.Date"/>
-<fmt:formatDate var="localDate" value="${now}" pattern="yyyy-MM-dd"/>
 <c:if test="${currentUsername == param.listOwner}">
+    <spring:message code="date.format" var="format"/>
+    <fmt:parseDate value="${param.lastWatched}" pattern="yyyy-MM-dd" var="parsedDate"/>
+    <fmt:formatDate value="${parsedDate}" pattern="${format}" var="formattedDate"/>
     <button
             class="h-10 w-full truncate bg-gray-300 hover:bg-purple-500 text-gray-700 font-semibold hover:text-white my-2.5 px-4 border border-gray-500 hover:border-transparent rounded-lg"
             data-bs-toggle="modal"
             data-bs-target="#editDate${param.id}Modal">
-        <i class="fas fa-pencil-alt pr-2" aria-hidden="true"></i><spring:message code="editWatch.watched" arguments="${param.lastWatched}"/>
+        <i class="fas fa-pencil-alt pr-2" aria-hidden="true"></i><spring:message code="editWatch.watched" arguments="${formattedDate}"/>
     </button>
 </c:if>
 <div class="modal fade" id="editDate${param.id}Modal" tabindex="-1" aria-labelledby="editDateModalLabel"
@@ -25,16 +26,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title font-bold text-2xl" id="editDateModalLabel">
-                    <spring:message code="general.edit"/> <c:out value="${param.mediaTitle}"/> <spring:message
-                        code="editWatch.watched.date" arguments="${param.lastWatched}"/>
+                    <spring:message code="editWatch.watched.edit" arguments="${param.mediaTitle}"/>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <c:url value="/user/${param.listOwner}/watchedMedia" var="editDatePath"/>
                 <form:form method="POST" action="${editDatePath}">
-                    <label for="watchedDate"><spring:message code="editWatch.watched" arguments="${param.lastWatched}"/> -> </label>
-                    <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${localDate}">
+                    <label for="watchedDate"><spring:message code="editWatch.watched" arguments="${formattedDate}"/> -> </label>
+                    <input type="date" id="watchedDate" name="watchedDate" required min="1990-01-01" max="${param.currentDate}">
                     <span class="validity"></span>
                     <input type="hidden" name="username" value="<c:out value="${param.listOwner}"/>">
                     <input type="hidden" name="mediaId" value="<c:out value="${param.id}"/>">

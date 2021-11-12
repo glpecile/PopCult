@@ -210,6 +210,7 @@
                             <jsp:param name="username" value="${comment.user.username}"/>
                             <jsp:param name="imageId" value="${comment.user.imageId}"/>
                             <jsp:param name="comment" value="${comment.commentBody}"/>
+                            <jsp:param name="date" value="${comment.creationDate}"/>
                             <jsp:param name="commenterId" value="${comment.user.userId}"/>
                             <jsp:param name="currentUserId" value="${currentUser.userId}"/>
                             <jsp:param name="commentId" value="${comment.commentId}"/>
