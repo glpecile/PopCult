@@ -131,7 +131,6 @@ public class UserController {
         mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
         mav.addObject("currentDate", LocalDate.now());
         LOGGER.info("{} watched media accessed.", username);
-        watchedMediaIds.getElements().forEach(watchedMedia -> LOGGER.info("{}", watchedMedia.getWatchDate()));
         return mav;
     }
 

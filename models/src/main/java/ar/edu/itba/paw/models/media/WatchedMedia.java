@@ -62,8 +62,8 @@ public class WatchedMedia {
         this.media = media;
     }
 
-    public String getWatchDate() {
-        return watchDate.toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+    public LocalDate getWatchDate() {
+        return watchDate.toLocalDate();
     }
 
     public void setWatchDate(LocalDateTime watchDate) {
