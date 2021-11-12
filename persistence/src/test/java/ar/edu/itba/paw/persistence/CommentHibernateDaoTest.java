@@ -103,6 +103,7 @@ public class CommentHibernateDaoTest {
         Optional<MediaComment> mediaComment = commentHibernateDao.getMediaCommentById(ALREADY_EXISTS_MEDIA_COMMENT_ID);
 
         Assert.assertTrue(mediaComment.isPresent());
+        Assert.assertEquals(ALREADY_EXISTS_MEDIA_COMMENT_ID, mediaComment.get().getCommentId().intValue());
     }
 
     @Rollback
@@ -111,5 +112,6 @@ public class CommentHibernateDaoTest {
         Optional<ListComment> listComment = commentHibernateDao.getListCommentById(ALREADY_EXISTS_LIST_COMMENT_ID);
 
         Assert.assertTrue(listComment.isPresent());
+        Assert.assertEquals(ALREADY_EXISTS_LIST_COMMENT_ID, listComment.get().getCommentId().intValue());
     }
 }

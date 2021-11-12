@@ -66,5 +66,6 @@ public class ModeratorHibernateDaoTest {
         moderatorHibernateDao.addModRequest(user);
 
         Assert.fail();
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, MOD_REQUESTS_TABLE, String.format("userid = %d", user.getUserId())));
     }
 }
