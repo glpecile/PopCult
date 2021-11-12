@@ -25,7 +25,6 @@
             <sec:authentication property="principal.username"/>
         </c:set>
     </sec:authorize>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <%--    profile   --%>
         <jsp:include page="/WEB-INF/jsp/components/profile.jsp">

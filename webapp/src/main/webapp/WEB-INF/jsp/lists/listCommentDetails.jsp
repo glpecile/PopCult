@@ -19,7 +19,6 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <div class="flex flex-wrap justify-between p-2.5">
             <!-- Title -->

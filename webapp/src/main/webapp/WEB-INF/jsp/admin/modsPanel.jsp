@@ -15,7 +15,6 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <!-- Mods Panel message -->
         <h1 class="text-center display-5 fw-bolder py-4">

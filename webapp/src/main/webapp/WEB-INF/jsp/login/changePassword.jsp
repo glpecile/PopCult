@@ -18,7 +18,6 @@
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <br>
         <c:url value="/changePassword" var="postPath"/>
         <form:form modelAttribute="changePassword" action="${postPath}" method="post"
                    class="g-3 p-4 my-8 bg-white shadow-lg rounded-lg">

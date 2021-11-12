@@ -14,17 +14,20 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <!-- Banned Users Panel message -->
         <h1 class="text-center display-5 fw-bolder py-4">
             <spring:message code="bans.title"/>
         </h1>
-        <%--  Banned Users      --%>
+        <%--  Banned Users  --%>
         <c:if test="${bannedUsersContainer.totalCount == 0}">
-            <h3 class="text-center text-gray-400 pt-3">
-                <spring:message code="bans.empty"/>
-            </h3>
+            <div class="flex-col flex-wrap p-4 space-x-4">
+                <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                     alt="no_results_image">
+                <h3 class="text-xl text-gray-400 py-2 mt-3 text-center">
+                    <spring:message code="bans.empty"/>
+                </h3>
+            </div>
         </c:if>
         <c:forEach var="bannedUser" items="${bannedUsersContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/bannedInfo.jsp">

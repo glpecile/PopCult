@@ -18,7 +18,6 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <sec:authorize access="isAuthenticated()">
         <c:set var="currentUsername">
             <sec:authentication property="principal.username"/>

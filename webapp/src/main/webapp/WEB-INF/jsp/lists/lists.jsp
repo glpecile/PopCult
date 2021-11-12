@@ -21,7 +21,6 @@
 <c:url value="/lists/new" var="createListPath"/>
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<br>
 <div class="col-8 offset-2">
     <div class="row">
         <div class="flex justify-between">

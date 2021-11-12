@@ -21,7 +21,6 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <div class="row">
             <div class="flex flex-wrap justify-between p-2.5 pb-0">
@@ -55,8 +54,7 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
-<%--                TODO este br no funciona--%>
-                <br>
+                <div class="py-3"></div>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${listContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${listContainer.currentPage + 1}"/>

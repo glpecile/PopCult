@@ -20,13 +20,11 @@
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <br>
         <form:form cssClass="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" modelAttribute="userSettings" action="${postPath}" method="post">
             <div class="flex flex-col justify-center items-center">
-                <h2 class="text-3xl">
+                <h2 class="text-3xl mb-3">
                     <spring:message code="profile.settings.header" arguments="${user.username}"/>
                 </h2>
-                <br>
                     <%-- Name Form --%>
                 <div class="py-1 text-semibold w-full">
                     <form:label path="name" cssClass="form-label">
@@ -56,21 +54,21 @@
             <div class="flex justify-between">
                     <%-- Change password --%>
                 <a href=<c:url value="/changePassword"/>>
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
                         <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
                         <spring:message code="profile.settings.passwordChange"/>
                     </button>
                 </a>
-<%--                        TODO add modal--%>
+                    <%--                        TODO add modal--%>
                     <%-- Delete account --%>
-<%--                <a href=<c:url value="/deleteUser"/>>--%>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                        <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
-                        <spring:message code="profile.settings.deleteUser"/>
-                    </button>
-<%--                </a>--%>
+                    <%--                <a href=<c:url value="/deleteUser"/>>--%>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                        class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                    <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
+                    <spring:message code="profile.settings.deleteUser"/>
+                </button>
+                    <%--                </a>--%>
                 <div class="flex space-x-3">
                         <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>
@@ -90,7 +88,7 @@
             </div>
         </form:form>
     </div>
-<%--    Delete User Modal--%>
+    <%-- Delete User Modal --%>
     <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -107,7 +105,8 @@
                 <div class="modal-footer">
                     <c:url value="/deleteUser" var="deletePath"/>
                     <form:form action="${deletePath}" method="DELETE">
-                        <button type="submit" class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        <button type="submit"
+                                class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
                             <i class="fas fa-user-alt-slash group-hover:text-white pr-2" aria-hidden="true"></i>
                             <spring:message code="profile.settings.deleteUser"/>
                         </button>
