@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Primary
@@ -27,21 +28,21 @@ public class ReportHibernateDao implements ReportDao {
 
     @Override
     public ListReport reportList(MediaList mediaList, User reportee, String report) {
-        ListReport listReport = new ListReport(null, reportee, report, new Date(), mediaList);
+        ListReport listReport = new ListReport(null, reportee, report, LocalDateTime.now(), mediaList);
         em.persist(listReport);
         return listReport;
     }
 
     @Override
     public ListCommentReport reportListComment(ListComment listComment, User reportee, String report) {
-        ListCommentReport listCommentReport = new ListCommentReport(null, reportee, report, new Date(), listComment);
+        ListCommentReport listCommentReport = new ListCommentReport(null, reportee, report, LocalDateTime.now(), listComment);
         em.persist(listCommentReport);
         return listCommentReport;
     }
 
     @Override
     public MediaCommentReport reportMediaComment(MediaComment mediaComment, User reportee, String report) {
-        MediaCommentReport mediaCommentReport = new MediaCommentReport(null, reportee, report, new Date(), mediaComment);
+        MediaCommentReport mediaCommentReport = new MediaCommentReport(null, reportee, report, LocalDateTime.now(), mediaComment);
         em.persist(mediaCommentReport);
         return mediaCommentReport;
     }

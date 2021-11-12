@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models.report;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class Report {
@@ -15,15 +15,14 @@ public abstract class Report {
     @Column(name = "report", length = 1000, nullable = false)
     private String report;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
     /* default */ Report() {
         //Just for hibernate
     }
 
-    public Report(User reportee, String report, Date date) {
+    public Report(User reportee, String report, LocalDateTime date) {
         this.reportee = reportee;
         this.report = report;
         this.date = date;
@@ -45,11 +44,11 @@ public abstract class Report {
         this.report = report;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

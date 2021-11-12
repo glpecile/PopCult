@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class MediaCommentReport extends Report {
 
     }
 
-    public MediaCommentReport(Integer reportId, User reportee, String report, Date date, MediaComment comment) {
+    public MediaCommentReport(Integer reportId, User reportee, String report, LocalDateTime date, MediaComment comment) {
         super(reportee, report, date);
         this.reportId = reportId;
         this.comment = comment;

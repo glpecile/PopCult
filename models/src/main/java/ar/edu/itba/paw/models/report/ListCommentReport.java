@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -20,17 +21,11 @@ public class ListCommentReport extends Report {
     @JoinColumn(name = "commentid")
     private ListComment comment;
 
-//    private int mediaListId; Esto no hace falta
-
-//    private int userId; Esto no se por que esta xd
-
-//    private String commentBody;
-
     /* default */ ListCommentReport() {
 
     }
 
-    public ListCommentReport(Integer reportId, User reportee, String report, Date date, ListComment comment) {
+    public ListCommentReport(Integer reportId, User reportee, String report, LocalDateTime date, ListComment comment) {
         super(reportee, report, date);
         this.reportId = reportId;
         this.comment = comment;
