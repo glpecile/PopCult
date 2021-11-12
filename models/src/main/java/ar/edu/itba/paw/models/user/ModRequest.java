@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.models.user;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "modrequests")
@@ -17,15 +16,14 @@ public class ModRequest {
     @JoinColumn(name = "userid")
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
     /* default */ ModRequest() {
         //Just for hibernate, we love you!
     }
 
-    public ModRequest(Integer requestId, User user, Date date) {
+    public ModRequest(Integer requestId, User user, LocalDateTime date) {
         this.requestId = requestId;
         this.user = user;
         this.date = date;
@@ -47,11 +45,11 @@ public class ModRequest {
         this.user = user;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 public interface TokenDao {

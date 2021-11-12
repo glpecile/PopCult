@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @MappedSuperclass
 public abstract class Comment {

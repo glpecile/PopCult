@@ -1,11 +1,10 @@
 package ar.edu.itba.paw.models.media;
 
-import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 @Entity
 @Table(name = "towatchmedia")
 public class WatchedMedia {

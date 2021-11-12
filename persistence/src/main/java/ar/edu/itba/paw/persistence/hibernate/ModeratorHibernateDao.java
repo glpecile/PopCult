@@ -15,8 +15,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Primary
@@ -71,7 +71,7 @@ public class ModeratorHibernateDao implements ModeratorDao {
         if(modRequestAlreadyExists(user)) {
             throw new ModRequestAlreadyExistsException();
         }
-        ModRequest modRequest = new ModRequest(null, user, new Date());
+        ModRequest modRequest = new ModRequest(null, user, LocalDateTime.now());
         em.persist(modRequest);
         return modRequest;
     }
