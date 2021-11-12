@@ -12,8 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Primary
@@ -24,7 +24,7 @@ public class WatchHibernateDao implements WatchDao {
     private EntityManager em;
 
     @Override
-    public void addWatchMedia(Media media, User user, Date date) {
+    public void addWatchMedia(Media media, User user, LocalDateTime date) {
         final WatchedMedia watchedMedia = new WatchedMedia(user, media, date);
         em.persist(watchedMedia);
     }
@@ -46,7 +46,7 @@ public class WatchHibernateDao implements WatchDao {
     }
 
     @Override
-    public void updateWatchedMediaDate(Media media, User user, Date date) {
+    public void updateWatchedMediaDate(Media media, User user, LocalDateTime date) {
         em.createNativeQuery("UPDATE towatchmedia SET watchdate = :date WHERE mediaid = :mediaId AND userid = :userId AND watchdate IS NOT NULL")
                 .setParameter("date", date)
                 .setParameter("userId", user.getUserId())

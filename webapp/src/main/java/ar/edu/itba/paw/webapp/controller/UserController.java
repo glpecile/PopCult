@@ -30,6 +30,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -302,12 +305,11 @@ public class UserController {
     public ModelAndView editWatchedDate(@PathVariable("username") final String username,
                                         @RequestParam("watchedDate") String watchedDate,
                                         @RequestParam("userId") int userId,
-                                        @RequestParam("mediaId") int mediaId) throws ParseException {
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+                                        @RequestParam("mediaId") int mediaId) {
         LOGGER.debug("{} is trying to edit watch date", username);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
-        watchService.updateWatchedMediaDate(media, user, f.parse(watchedDate));
+        watchService.updateWatchedMediaDate(media, user, LocalDate.parse(watchedDate, DateTimeFormatter.ISO_DATE).atStartOfDay());
         LOGGER.info("{} updated successfully watched date", username);
         return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
     }
