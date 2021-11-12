@@ -212,8 +212,14 @@ public class ListsHibernateDao implements ListsDao {
         String sortBaseString = "";
         String sortCountString = "";
         if(sort != null){
-            sortBaseString = ", " + sort.nameMediaList;
-            sortCountString = "order by " + sort.nameMediaList;
+            if(sort == SortType.TITLE) {
+                sortBaseString = ", LOWER(" + sort.nameMediaList + ") ";
+                sortCountString = "order by lower(" + sort.nameMediaList + ")";
+            }
+            else {
+                sortBaseString = ", " + sort.nameMediaList;
+                sortCountString = "order by " + sort.nameMediaList;
+            }
         }
         final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortBaseString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
         final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,true,sort, genre, minMatches,fromDate,toDate);
