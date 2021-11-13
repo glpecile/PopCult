@@ -13,6 +13,11 @@
         <p th:text="#{email.bans.unban.greeting (${username})}"></p>
         <p th:text="#{email.bans.remember}"></p>
         <p th:text="#{email.bans.strikes (${strikes})}"></p>
+        <span th:text="#{email.bans.login}"></span>
+        <a th:href="@{{basePath}/login(basePath=${basePath})}">
+            <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
+                    th:text="#{email.bans.here}"></button>
+        </a>
         <br><br>
         <p th:text="#{email.close}"></p>
     </div>
