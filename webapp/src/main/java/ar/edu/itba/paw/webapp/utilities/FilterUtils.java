@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.utilities;
 
 import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -46,5 +47,15 @@ public class FilterUtils {
         }
 
         return decadeMap;
+    }
+
+    public static Map<String, String> getMediaTypes(MessageSource messageSource) {
+        Map<String, String> mediaTypeMap = new HashMap<>();
+
+        for(MediaType mediaType : MediaType.values()) {
+            mediaTypeMap.put(mediaType.getType().toUpperCase(), messageSource.getMessage(mediaType.getType(), null, LocaleContextHolder.getLocale()));
+        }
+
+        return mediaTypeMap;
     }
 }

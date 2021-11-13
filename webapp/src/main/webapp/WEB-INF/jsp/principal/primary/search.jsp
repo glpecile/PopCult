@@ -61,11 +61,11 @@
                                             <spring:message code="search.all"/>
                                         </c:when>
                                         <c:when test="${fn:length(param.mediaTypes) == 1}">
-                                            <c:out value="${param.mediaTypes}"/>
+                                            <spring:message code="${param.mediaTypes}"/>
                                         </c:when>
                                         <c:otherwise>
                                             <c:forEach items="${paramValues.mediaTypes}" var="type">
-                                                <c:out value="${type} "/>
+                                                <spring:message code="${type}"/>
                                             </c:forEach>
                                         </c:otherwise>
                                     </c:choose>
