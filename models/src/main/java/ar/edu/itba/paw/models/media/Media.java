@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,9 +34,8 @@ public class Media {
     @Column(length = 100)
     private Integer length;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date releaseDate;
+    private LocalDateTime releaseDate;
 
     @Column
     private int seasons;
@@ -79,7 +78,7 @@ public class Media {
 
     }
 
-    public Media(final Integer mediaId, final MediaType type, final String title, final String description, final String image, final Integer length, final Date releaseDate,
+    public Media(final Integer mediaId, final MediaType type, final String title, final String description, final String image, final Integer length, final LocalDateTime releaseDate,
                  final int seasons, final Country country) {
         this.mediaId = mediaId;
         this.type = type;
@@ -140,16 +139,16 @@ public class Media {
         this.length = length;
     }
 
-    public Date getReleaseDate() {
+    public LocalDateTime getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
 
     public String getReleaseYear() {
-        return String.valueOf(releaseDate).substring(0, 4);
+        return String.valueOf(releaseDate.getYear());
     }
 
     public int getSeasons() {
