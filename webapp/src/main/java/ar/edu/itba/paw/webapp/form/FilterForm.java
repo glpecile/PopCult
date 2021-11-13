@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.search.SortType;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +17,20 @@ public class FilterForm {
     @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0")
     private String decade;
 
-    public String getDecade() {
-        if(decade != null && decade.compareTo("ALL") == 0)
+    public LocalDateTime getStartYear() {
+        if(decade == null || decade.compareTo("ALL") == 0)
             return null;
+        return LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
+    }
+
+    public String getDecade() {
         return decade;
     }
-    public String getLastYear(){
-        if(decade == null ||decade.compareTo("ALL") == 0 )
+
+    public LocalDateTime getLastYear(){
+        if(decade == null || decade.compareTo("ALL") == 0)
             return null;
-        return String.valueOf(Integer.parseInt(decade) + 9);
+        return LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
     }
 
     public void setDecade(String decade) {

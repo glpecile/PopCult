@@ -76,6 +76,7 @@
             </h2>
             <c:set var="sortTypes" value="${sortTypes}" scope="request"/>
             <c:set var="genreTypes" value="${genreTypes}" scope="request"/>
+            <c:set var="decadesType" value="${decadesType}" scope="request"/>
             <jsp:include page="/WEB-INF/jsp/components/filters.jsp">
                 <jsp:param name="url" value="${url}"/>
             </jsp:include>
@@ -85,7 +86,7 @@
                 <c:when test="${fn:length(allListContainer.elements) == 0}">
                     <br>
                     <h3 class="text-center">
-                        <spring:message code="films.noMedia"/>
+                        <spring:message code="lists.noLists"/>
                     </h3>
                 </c:when>
                 <c:otherwise>
@@ -126,12 +127,6 @@
             </c:choose>
         </div>
     </div>
-    <br>
-    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-        <jsp:param name="mediaPages" value="${allListContainer.totalPages}"/>
-        <jsp:param name="currentPage" value="${allListContainer.currentPage + 1}"/>
-        <jsp:param name="url" value="/lists"/>
-    </jsp:include>
 </div>
 <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>

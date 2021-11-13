@@ -53,7 +53,7 @@ public class ListsController {
 
     private static final int itemsPerPage = 4;
     private static final int scrollerAmount = 6;
-    private static final int listsPerPage = 8;
+    private static final int listsPerPage = 12;
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;
@@ -72,16 +72,27 @@ public class ListsController {
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,itemsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches);
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,listsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getStartYear(), filterForm.getLastYear());
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
+        final List<String> decades = new ArrayList<>();
+        decades.add("ALL");
+        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
+            decades.add(Integer.toString(i));
+        }
         mav.addObject("mostLikedLists", mostLikedLists);
         mav.addObject("allLists", allListsCovers);
         mav.addObject("allListContainer", allLists);
         mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
         mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
+        mav.addObject("decadesType", decades);
         LOGGER.info("Access to lists successfully");
         return mav;
+    }
+
+    @RequestMapping(value = {"/lists"}, method = {RequestMethod.GET}, params = "clear")
+    public ModelAndView clearFilters(HttpServletRequest request, @ModelAttribute("filterForm") final FilterForm filterForm){
+        return new ModelAndView("redirect:" + request.getHeader("referer").replaceAll("\\?.*",""));
     }
 
     private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -48,15 +49,8 @@ public class MediaServiceImpl implements MediaService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, String fromDate, String toDate) throws ParseException {
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        Date fDate = null;
-        Date tDate = null;
-        if(fromDate != null && toDate != null){
-            fDate = f.parse(fromDate+ "-01-01");
-            tDate = f.parse(toDate + "-12-31");
-        }
-        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fDate,tDate);
+    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate){
+        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fromDate,toDate);
     }
 
 }

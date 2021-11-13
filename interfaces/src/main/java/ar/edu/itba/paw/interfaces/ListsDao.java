@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public interface ListsDao {
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
 
-    PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches);
+    PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate);
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 

@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,7 @@ public class MediaHibernateDao implements MediaDao {
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
-    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, List<MediaType> mediaType, SortType sort, List<Genre> genre, Date fromDate, Date toDate){
+    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, List<MediaType> mediaType, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -121,7 +122,7 @@ public class MediaHibernateDao implements MediaDao {
         return nativeQuery;
     }
     @Override
-    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, Date fromDate, Date toDate) {
+    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate) {
         //Para paginacion
         //Pedimos el contenido paginado.
         final String baseQuery = "SELECT mediaid FROM ( SELECT DISTINCT mediaid, " + sort.nameMedia +" FROM  media NATURAL JOIN mediagenre ";

@@ -17,7 +17,6 @@ import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.FilterForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -246,7 +244,7 @@ public class MediaController {
     @RequestMapping(value = "/media/films")
     public ModelAndView films(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
-                              final BindingResult errors) throws ParseException {
+                              final BindingResult errors){
         LOGGER.debug("Trying to access films");
         if(errors.hasErrors()){
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
@@ -257,7 +255,7 @@ public class MediaController {
         final List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final List<String> decades = new ArrayList<>();
@@ -286,7 +284,7 @@ public class MediaController {
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
         final List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.SERIE);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getDecade(), filterForm.getLastYear());
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         final List<String> decades = new ArrayList<>();
