@@ -13,7 +13,7 @@
     <div class="flex">
         <img class="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
              src="<c:url value="/user/image/${param.imageId}"/>">
-        <h4 class="pl-3 py-4 text-xl font-normal tracking-tight">
+        <h4 class="pl-3 text-xl font-normal tracking-tight mt-3.5">
             <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900"><strong><c:out value="${param.name}"/></strong></a>.
             <spring:message code="profile.otherDescription" arguments="${param.username}"/>
             &#8226; <spring:message code="profile.strikes" arguments="${param.strikes}"/>
@@ -28,6 +28,5 @@
             <jsp:param name="unbanUserPath" value="/admin/bans/${param.userId}"/>
         </jsp:include>
     </div>
-
 </div>
 </html>
