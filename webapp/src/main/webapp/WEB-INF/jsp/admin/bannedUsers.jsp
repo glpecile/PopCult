@@ -34,6 +34,8 @@
                 <jsp:param name="userId" value="${bannedUser.userId}"/>
                 <jsp:param name="name" value="${bannedUser.name}"/>
                 <jsp:param name="username" value="${bannedUser.username}"/>
+                <jsp:param name="strikes" value="${bannedUser.strikes}"/>
+                <jsp:param name="unbanDate" value="${bannedUser.unbanDate}"/>
                 <jsp:param name="imageId" value="${bannedUser.imageId}"/>
             </jsp:include>
         </c:forEach>

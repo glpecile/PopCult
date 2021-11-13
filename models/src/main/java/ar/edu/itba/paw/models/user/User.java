@@ -10,6 +10,7 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
     public static final int DEFAULT_IMAGE = 0;
+    public static final int BAN_DAYS = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
@@ -147,6 +148,10 @@ public class User {
 
     public LocalDateTime getBanDate() {
         return banDate;
+    }
+
+    public LocalDateTime getUnbanDate() {
+        return banDate.plusDays(BAN_DAYS);
     }
 
     public void setBanDate(LocalDateTime banDate) {

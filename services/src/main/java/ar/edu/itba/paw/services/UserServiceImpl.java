@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +44,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TokenService tokenService;
 
-    /* default */ static final boolean NOT_ENABLED_USER = false;
     /* default */ static final boolean ENABLED_USER = true;
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
-    /* default */ static final UserRole DEFAULT_USER_ROLE = UserRole.USER;
 
     private static final int FIRST_BAN_STRIKES = 3;
     private static final int SECOND_BAN_STRIKES = 6;
     private static final int THIRD_BAN_STRIKES = 9;
-    private static final int BAN_DAYS = 5;
+    private static final int BAN_DAYS = User.BAN_DAYS;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
