@@ -13,12 +13,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-bold text-2xl" id="reject${param.id}ModModalLabel">
-                        <spring:message code="mods.remove"/>
+                        <spring:message code="mods.request.reject"/>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <spring:message code="modal.modsReject.body"/>
+                    <spring:message code="modal.rejectRequest.body"/>
                 </div>
                 <div class="modal-footer">
                     <c:url value="${param.removeRequestPath}" var="removeRequestPath"/>
@@ -26,7 +26,7 @@
                         <input type="hidden" name="removeMod">
                         <button type="submit" class="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"  name="rejectRequest">
                             <i class="fas fa-times group-hover:text-white pr-2" aria-hidden="true"></i>
-                            <spring:message code="mods.remove"/>
+                            <spring:message code="mods.request.reject"/>
                         </button>
                     </form:form>
                 </div>

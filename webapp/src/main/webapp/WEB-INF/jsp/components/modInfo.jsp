@@ -17,7 +17,7 @@
         </h4>
     </div>
     <div class="flex justify-between p-3 text-center justify-center items-center">
-        <jsp:include page="/WEB-INF/jsp/components/rejectMod.jsp">
+        <jsp:include page="/WEB-INF/jsp/components/quitMod.jsp">
             <jsp:param name="id" value="${param.userId}"/>
             <jsp:param name="removeRequestPath" value="/admin/mods/${param.userId}"/>
         </jsp:include>
