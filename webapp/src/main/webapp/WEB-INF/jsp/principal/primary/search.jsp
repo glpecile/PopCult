@@ -117,12 +117,12 @@
                             <button class="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
                                     type="submit">
                                 <i class="fas fa-filter group-hover:text-white pr-2"></i>
-                                <c:out value="APPLY FILTERS"/>
+                                <spring:message code="search.applyFilters"/>
                             </button>
                             <button class="btn btn-warning bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
                                     type="submit" name="clear" id="clear">
                                 <i class="far fa-times-circle group-hover:text-white pr-2"></i>
-                                <c:out value="CLEAR FILTERS"/>
+                                <spring:message code="search.clearFilters"/>
                             </button>
                         </div>
                     </div>
