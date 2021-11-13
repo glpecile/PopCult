@@ -14,6 +14,7 @@
         <strong><i th:text="${comment}"></i></strong>
         <p th:text="#{email.deleted.comment.reason}"></p>
         <i th:text="${report}"></i>
+        <p th:text="#{email.bans.strikes (${strikes})}"></p>
         <br>
         <p th:text="#{email.close}"></p>
     </div>

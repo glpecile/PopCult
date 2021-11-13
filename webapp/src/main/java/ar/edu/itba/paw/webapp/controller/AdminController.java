@@ -13,6 +13,8 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -21,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
@@ -146,6 +146,25 @@ public class AdminController {
         MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(reportId).orElseThrow(ReportNotFoundException::new);
         reportService.deleteMediaCommentReport(mediaCommentReport);
         LOGGER.info("Media comment report {} rejected", reportId);
+        return new ModelAndView("redirect:" + request.getHeader("referer"));
+    }
+
+    @RequestMapping(value = "/admin/bans", method = {RequestMethod.GET})
+    public ModelAndView bannedUsers(@RequestParam(value = "page", defaultValue = "1") final int page) {
+        LOGGER.info("Banned users panel accessed");
+        ModelAndView mav = new ModelAndView("admin/bannedUsers");
+        PageContainer<User> bannedUsersContainer = userService.getBannedUsers(page - 1, itemsPerPage);
+        mav.addObject("bannedUsersContainer", bannedUsersContainer);
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/bans/{userId}", method = {RequestMethod.POST, RequestMethod.DELETE}, params = "removeBan")
+    public ModelAndView unbanUser(HttpServletRequest request,
+                                  @PathVariable("userId") final int userId) {
+        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
+        LOGGER.debug("Trying to unban user {}", userId);
+        userService.unbanUser(user);
+        LOGGER.info("User {} unbanned", userId);
         return new ModelAndView("redirect:" + request.getHeader("referer"));
     }
 

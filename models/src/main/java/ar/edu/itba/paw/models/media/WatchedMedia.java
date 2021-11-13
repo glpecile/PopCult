@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.models.media;
 
-import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+
 @Entity
 @Table(name = "towatchmedia")
 public class WatchedMedia {
@@ -21,15 +24,14 @@ public class WatchedMedia {
     @JoinColumn(name = "mediaId")
     private Media media;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date watchDate;
+    private LocalDateTime watchDate;
 
     /*default*/ WatchedMedia() {
         //hehe
     }
 
-    public WatchedMedia(User user, Media media, Date watchDate) {
+    public WatchedMedia(User user, Media media, LocalDateTime watchDate) {
         this.watchedMediaId = null;
         this.user = user;
         this.media = media;
@@ -60,11 +62,15 @@ public class WatchedMedia {
         this.media = media;
     }
 
-    public Date getWatchDate() {
-        return watchDate;
+    public LocalDate getWatchDate() {
+        return watchDate.toLocalDate();
     }
 
-    public void setWatchDate(Date watchDate) {
+    public void setWatchDate(LocalDateTime watchDate) {
         this.watchDate = watchDate;
+    }
+
+    public LocalDateTime getWatchDateTime() {
+        return watchDate;
     }
 }

@@ -19,7 +19,6 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <h2 class="display-5 fw-bolder text-center">
             <spring:message code="profile.panel.title" arguments="${username}"/>
@@ -32,9 +31,13 @@
             <spring:message code="profile.requests.title"/>
         </h1>
         <c:if test="${requestContainer.totalCount == 0}">
-            <h3 class="text-center text-gray-400 pt-3">
-                <spring:message code="profile.requests.none"/>
-            </h3>
+            <div class="flex-col flex-wrap p-4 space-x-4">
+                <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                     alt="no_results_image">
+                <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                    <spring:message code="profile.requests.none"/>
+                </h3>
+            </div>
         </c:if>
         <c:forEach var="request" items="${requestContainer.elements}">
             <jsp:include page="/WEB-INF/jsp/components/request.jsp">

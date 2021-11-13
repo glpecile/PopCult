@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "listcomment")
@@ -25,7 +25,7 @@ public class ListComment extends Comment {
         //Just for hibernate
     }
 
-    public ListComment(Integer commentId, User user, String commentBody, Date creationDate, MediaList mediaList) {
+    public ListComment(Integer commentId, User user, String commentBody, LocalDateTime creationDate, MediaList mediaList) {
         super(user, commentBody, creationDate);
         this.commentId = commentId;
         this.mediaList = mediaList;

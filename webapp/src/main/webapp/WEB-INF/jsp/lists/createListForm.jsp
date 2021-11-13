@@ -19,7 +19,8 @@
 <div class="flex flex-col h-screen bg-gray-50">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="flex-grow col-8 offset-2">
-        <form:form modelAttribute="createListForm" action="${createListPath}" method="post" class="row g-3 p-2 my-8 bg-white shadow-lg">
+        <form:form modelAttribute="createListForm" action="${createListPath}" method="post"
+                   class="row g-3 p-2 my-8 bg-white shadow-lg">
             <h2 class="font-bold text-3xl">
                 <spring:message code="lists.create.title"/>
             </h2>
@@ -28,7 +29,8 @@
                     <form:label path="listTitle" for="listName" class="form-label">
                         <spring:message code="lists.create.name"/>
                     </form:label>
-                    <form:input path="listTitle" type="text" class="form-control focus:outline-none focus:ring focus:border-purple-300"
+                    <form:input path="listTitle" type="text"
+                                class="form-control focus:outline-none focus:ring focus:border-purple-300"
                                 id="listName"/>
                     <form:errors path="listTitle" cssClass="formError text-red-500" element="p"/>
                 </div>
@@ -38,7 +40,8 @@
                     <form:label path="description" for="listDesc" class="form-label">
                         <spring:message code="lists.create.desc"/>
                     </form:label>
-                    <form:textarea path="description" type="text" class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
+                    <form:textarea path="description" type="text"
+                                   class="form-control h-24 resize-y overflow-clip overflow-auto" id="listDesc"
                                    value=""/>
                     <form:errors path="description" cssClass="formError text-red-500" element="p"/>
                 </div>
@@ -63,9 +66,20 @@
                         <spring:message code="profile.passwordChange.discard"/>
                     </button>
                 </a>
-                <button class="row btn btn-secondary py-2" type="submit">
-                    <spring:message code="lists.create.confirm"/>
-                </button>
+                <c:choose>
+                    <c:when test="${mediaId == null || mediaId <= 0}">
+                        <input type="hidden" name="mediaId" value="<c:out value="-1"/>">
+                        <button class="row btn btn-secondary py-2" type="submit" name="post">
+                            <spring:message code="lists.create.confirm"/>
+                        </button>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="hidden" name="mediaId" value="<c:out value="${mediaId}"/>">
+                        <button class="row btn btn-secondary py-2" type="submit" name="postWithMedia">
+                            <spring:message code="lists.create.confirm"/>
+                        </button>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </form:form>
     </div>

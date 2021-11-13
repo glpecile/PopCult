@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Primary
@@ -27,21 +28,21 @@ public class ReportHibernateDao implements ReportDao {
 
     @Override
     public ListReport reportList(MediaList mediaList, User reportee, String report) {
-        ListReport listReport = new ListReport(null, reportee, report, new Date(), mediaList);
+        ListReport listReport = new ListReport(null, reportee, report, LocalDateTime.now(), mediaList);
         em.persist(listReport);
         return listReport;
     }
 
     @Override
     public ListCommentReport reportListComment(ListComment listComment, User reportee, String report) {
-        ListCommentReport listCommentReport = new ListCommentReport(null, reportee, report, new Date(), listComment);
+        ListCommentReport listCommentReport = new ListCommentReport(null, reportee, report, LocalDateTime.now(), listComment);
         em.persist(listCommentReport);
         return listCommentReport;
     }
 
     @Override
     public MediaCommentReport reportMediaComment(MediaComment mediaComment, User reportee, String report) {
-        MediaCommentReport mediaCommentReport = new MediaCommentReport(null, reportee, report, new Date(), mediaComment);
+        MediaCommentReport mediaCommentReport = new MediaCommentReport(null, reportee, report, LocalDateTime.now(), mediaComment);
         em.persist(mediaCommentReport);
         return mediaCommentReport;
     }
@@ -54,13 +55,11 @@ public class ReportHibernateDao implements ReportDao {
     @Override
     public Optional<ListCommentReport> getListCommentReportById(int reportId) {
         return Optional.ofNullable(em.find(ListCommentReport.class, reportId));
-
     }
 
     @Override
     public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
         return Optional.ofNullable(em.find(MediaCommentReport.class, reportId));
-
     }
 
     @Override
@@ -74,7 +73,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM ListReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<ListReport> query = em.createQuery("FROM ListReport WHERE reportId IN (:reportIds)", ListReport.class)
+        final TypedQuery<ListReport> query = em.createQuery("FROM ListReport WHERE reportId IN (:reportIds) ORDER BY date DESC", ListReport.class)
                 .setParameter("reportIds", reportIds);
         List<ListReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -92,7 +91,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM ListCommentReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<ListCommentReport> query = em.createQuery("FROM ListCommentReport WHERE reportId IN (:reportIds)", ListCommentReport.class)
+        final TypedQuery<ListCommentReport> query = em.createQuery("FROM ListCommentReport WHERE reportId IN (:reportIds) ORDER BY date DESC", ListCommentReport.class)
                 .setParameter("reportIds", reportIds);
         List<ListCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
@@ -110,7 +109,7 @@ public class ReportHibernateDao implements ReportDao {
         final Query countQuery = em.createQuery("SELECT COUNT(*) FROM MediaCommentReport");
         long count = (long) countQuery.getSingleResult();
 
-        final TypedQuery<MediaCommentReport> query = em.createQuery("FROM MediaCommentReport WHERE reportId IN (:reportIds)", MediaCommentReport.class)
+        final TypedQuery<MediaCommentReport> query = em.createQuery("FROM MediaCommentReport WHERE reportId IN (:reportIds) ORDER BY date DESC", MediaCommentReport.class)
                 .setParameter("reportIds", reportIds);
         List<MediaCommentReport> listReports = reportIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 

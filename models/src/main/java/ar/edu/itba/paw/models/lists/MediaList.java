@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models.lists;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -24,9 +24,8 @@ public class MediaList {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     @Column(name = "visibility")
     private Boolean visible;
@@ -50,12 +49,12 @@ public class MediaList {
         this.user = user;
         this.listName = listName;
         this.description = description;
-        this.creationDate = new Date();
+        this.creationDate = LocalDateTime.now();
         this.visible = visible;
         this.collaborative = collaborative;
     }
 
-    public MediaList(Integer mediaListId, User user, String listName, String description, Date creationDate, boolean visible, boolean collaborative) {
+    public MediaList(Integer mediaListId, User user, String listName, String description, LocalDateTime creationDate, boolean visible, boolean collaborative) {
         this.mediaListId = mediaListId;
         this.user = user;
         this.listName = listName;
@@ -97,11 +96,11 @@ public class MediaList {
         this.description = description;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -134,7 +133,7 @@ public class MediaList {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MediaList mediaList = (MediaList) o;
-        return mediaListId == mediaList.mediaListId;
+        return mediaListId.equals(mediaList.mediaListId);
     }
 
     @Override

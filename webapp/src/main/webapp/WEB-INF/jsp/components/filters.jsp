@@ -4,10 +4,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="sortTypes" scope="request" type="java.util.ArrayList"/>
-<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>
-<jsp:useBean id="genreTypes" scope="request" type="java.util.ArrayList"/>
-<%--<jsp:useBean id="activeGenres" scope="request" type="java.util.Collection"/>--%>
+<jsp:useBean id="sortTypes" scope="request" type="java.util.Map"/>
+<jsp:useBean id="decadesType" scope="request" type="java.util.Map"/>
+<jsp:useBean id="genreTypes" scope="request" type="java.util.Map"/>
+
 
 <filters>
     <form:form cssClass="m-0 p-0" modelAttribute="filterForm" action="${param.url}" method="GET">
@@ -21,10 +21,13 @@
                     <form:select cssClass="form-select block" path="sortType" items="${sortTypes}"/>
                 </div>
                 <!-- Decades -->
-                <div class="flex flex-col">
-                    <p><spring:message code="search.decades"/></p>
-                    <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>
-                </div>
+                <c:if   test="${decadesType != null}">
+                    <div class="flex flex-col">
+                        <p><spring:message code="search.decades"/></p>
+                        <form:select cssClass="form-select block" path="decade" items="${decadesType}"/>
+                    </div>
+                </c:if>
+
                 <!-- Categories -->
                 <div class="dropdown pr-4 flex flex-col">
                     <p>
@@ -59,12 +62,12 @@
                 <button class="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
                         type="submit">
                     <i class="fas fa-filter group-hover:text-white pr-2"></i>
-                    <c:out value="APPLY FILTERS"/>
+                    <spring:message code="search.applyFilters"/>
                 </button>
                 <button class="btn btn-warning bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
                         type="submit" name="clear" id="clear">
                     <i class="far fa-times-circle group-hover:text-white pr-2"></i>
-                    <c:out value="CLEAR FILTERS"/>
+                    <spring:message code="search.clearFilters"/>
                 </button>
             </div>
         </div>

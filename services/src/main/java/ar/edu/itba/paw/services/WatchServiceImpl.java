@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class WatchServiceImpl implements WatchService {
@@ -20,7 +20,7 @@ public class WatchServiceImpl implements WatchService {
     @Transactional
     @Override
     public void addWatchedMedia(Media media, User user) {
-        watchDao.addWatchMedia(media, user, new Date());
+        watchDao.addWatchMedia(media, user, LocalDateTime.now());
     }
 
     @Transactional
@@ -43,7 +43,7 @@ public class WatchServiceImpl implements WatchService {
 
     @Transactional
     @Override
-    public void updateWatchedMediaDate(Media media, User user, Date date) {
+    public void updateWatchedMediaDate(Media media, User user, LocalDateTime date) {
         watchDao.updateWatchedMediaDate(media, user, date);
     }
 

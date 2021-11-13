@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.Optional;
+
+import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_IMAGE_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -42,6 +45,15 @@ public class ImageHibernateDaoTest {
     @Before
     public void setup() {
         jdbcTemplate = new JdbcTemplate(ds);
+    }
+
+    @Rollback
+    @Test
+    public void testGetImage() {
+        Optional<Image> image = imageHibernateDao.getImage(ALREADY_EXISTS_IMAGE_ID);
+
+        Assert.assertTrue(image.isPresent());
+        Assert.assertEquals(ALREADY_EXISTS_IMAGE_ID, image.get().getImageId().intValue());
     }
 
     @Rollback

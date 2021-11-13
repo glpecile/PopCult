@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
@@ -9,11 +10,14 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.webapp.form.FilterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utilities.FilterUtils;
 import ar.edu.itba.paw.webapp.utilities.ListCoverImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,9 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 @Controller
@@ -37,6 +41,12 @@ public class SearchController {
 
     @Autowired
     private ListsService listsService;
+
+    @Autowired
+    private MediaService mediaService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     private static final int itemsPerPage = 12;
 
@@ -48,38 +58,36 @@ public class SearchController {
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET})
     public ModelAndView search(HttpServletRequest request,
-                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                               @Valid @ModelAttribute("searchForm") final FilterForm searchForm,
                                final BindingResult errors,
                                @RequestParam(value = "page", defaultValue = "1") final int page
-                               ) throws ParseException {
+    ) throws ParseException {
         LOGGER.info("Searching for term: {}", searchForm.getTerm());
-        if(errors.hasErrors()) {
+        if (errors.hasErrors()) {
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
         final ModelAndView mav = new ModelAndView("principal/primary/search");
         final List<Genre> genres = searchForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
         final List<MediaType> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).collect(Collectors.toList());
-        final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getDecade(), searchForm.getLastYear());
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches);
-        final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
-        final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
-        final List<String> decades = new ArrayList<>();
-        decades.add("ALL");
-        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
-            decades.add(Integer.toString(i));
-        }
-        mav.addObject("mediaTypes", Arrays.stream(MediaType.values()).map(MediaType::getType).map(String::toUpperCase).collect(Collectors.toList()));
+        //final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getDecade(), searchForm.getLastYear());
+        final PageContainer<Media> searchMediaResults = mediaService.getMediaByFilters(mediaTypes, page - 1, itemsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm());
+        //final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches);
+        final PageContainer<MediaList> searchMediaListResults = listsService.getMediaListByFilters(page - 1, listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm());
+        final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(), listsService);
+        final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers, searchMediaListResults.getCurrentPage(), searchMediaListResults.getPageSize(), searchMediaListResults.getTotalCount());
+
+        mav.addObject("mediaTypes", FilterUtils.getMediaTypes(messageSource));
         mav.addObject("searchFilmsContainer", searchMediaResults);
         mav.addObject("listCoversContainer", listCoversContainer);
-        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("decades", decades);
+        mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
+        mav.addObject("genreTypes", FilterUtils.getGenres(messageSource));
+        mav.addObject("decades", FilterUtils.getDecades(messageSource));
         return mav;
     }
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET}, params = "clear")
-    public ModelAndView clearFilters(@ModelAttribute("searchForm") final SearchForm searchForm){
+    public ModelAndView clearFilters(@ModelAttribute("searchForm") final SearchForm searchForm) {
         return new ModelAndView("redirect:/search?term=" + searchForm.getTerm());
     }
 }

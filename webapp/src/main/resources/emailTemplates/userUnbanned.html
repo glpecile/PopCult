@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{{basePath}(basePath=${basePath})}">
+        <img style="max-width: 300px;" class="textlogo" src="https://cdn.discordapp.com/attachments/851847371851956334/887501017170731058/PopCultTextLogo.png"/>
+    </a>
+    <div>
+        <h2 th:text="#{email.bans}"></h2>
+        <p th:text="#{email.bans.unban.greeting (${username})}"></p>
+        <p th:text="#{email.bans.remember}"></p>
+        <p th:text="#{email.bans.strikes (${strikes})}"></p>
+        <span th:text="#{email.bans.login}"></span>
+        <a th:href="@{{basePath}/login(basePath=${basePath})}">
+            <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
+                    th:text="#{email.bans.here}"></button>
+        </a>
+        <br><br>
+        <p th:text="#{email.close}"></p>
+    </div>
+</div>
+</body>
+</html>

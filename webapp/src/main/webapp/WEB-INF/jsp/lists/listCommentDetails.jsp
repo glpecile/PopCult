@@ -19,41 +19,47 @@
 <body class="bg-gray-50">
 <div class="min-h-screen flex flex-col">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-    <br>
     <div class="col-8 offset-2 flex-grow">
-            <div class="flex flex-wrap justify-between p-2.5">
-                <!-- Title -->
-                <h1 class="font-bold display-5 pt-2">
-                    <spring:message code="comments.main.title"/><a class="text-purple-500 hover:text-purple-900" href="<c:url value="/lists/${listId}"/>"> <c:out value="${list.listName}"/></a>
-                </h1>
-                <!-- Count indicator -->
-                <div class="flex rounded-full p-2.5 mt-4 h-8 w-8 justify-center items-center text-base text-white bg-purple-500">
-                    <c:out value="${listCommentsContainer.totalCount}"/>
-                </div>
+        <div class="flex flex-wrap justify-between p-2.5">
+            <!-- Title -->
+            <h1 class="font-bold display-5 pt-2">
+                <spring:message code="comments.main.title"/><a class="text-purple-500 hover:text-purple-900"
+                                                               href="<c:url value="/lists/${listId}"/>"> <c:out value="${list.listName}"/></a>
+            </h1>
+            <!-- Count indicator -->
+            <div class="flex rounded-full p-2.5 mt-4 h-8 w-8 justify-center items-center text-base text-white bg-purple-500">
+                <c:out value="${listCommentsContainer.totalCount}"/>
             </div>
-            <!-- Comments from list -->
-            <c:choose>
-                <c:when test="${listCommentsContainer.totalCount != 0}">
-                    <c:forEach var="comment" items="${listCommentsContainer.elements}">
-                        <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
-                            <jsp:param name="username" value="${comment.user.username}"/>
-                            <jsp:param name="comment" value="${comment.commentBody}"/>
-                            <jsp:param name="commenterId" value="${comment.user.userId}"/>
-                            <jsp:param name="currentUserId" value="${currentUser.userId}"/>
-                            <jsp:param name="commentId" value="${comment.commentId}"/>
-                            <jsp:param name="type" value="lists"/>
-                            <jsp:param name="id" value="${listId}"/>
-                            <jsp:param name="deletePath" value="/lists/${listId}/deleteComment/${comment.commentId}"/>
-                            <jsp:param name="currentURL" value="/comments"/>
-                        </jsp:include>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <p class="text-center text-gray-400 m-1.5">
+        </div>
+        <!-- Comments from list -->
+        <c:choose>
+            <c:when test="${listCommentsContainer.totalCount != 0}">
+                <c:forEach var="comment" items="${listCommentsContainer.elements}">
+                    <jsp:include page="/WEB-INF/jsp/components/comment.jsp">
+                        <jsp:param name="username" value="${comment.user.username}"/>
+                        <jsp:param name="imageId" value="${comment.user.imageId}"/>
+                        <jsp:param name="comment" value="${comment.commentBody}"/>
+                        <jsp:param name="date" value="${comment.creationDate}"/>
+                        <jsp:param name="commenterId" value="${comment.user.userId}"/>
+                        <jsp:param name="currentUserId" value="${currentUser.userId}"/>
+                        <jsp:param name="commentId" value="${comment.commentId}"/>
+                        <jsp:param name="type" value="lists"/>
+                        <jsp:param name="id" value="${listId}"/>
+                        <jsp:param name="deletePath" value="/lists/${listId}/deleteComment/${comment.commentId}"/>
+                        <jsp:param name="currentURL" value="/comments"/>
+                    </jsp:include>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                         alt="no_results_image">
+                    <p class="text-center text-gray-400 m-1.5 py-2 mt-0.5">
                         <spring:message code="comments.empty"/>
                     </p>
-                </c:otherwise>
-            </c:choose>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
     <br>
     <c:url var="urlBase" value=""/>

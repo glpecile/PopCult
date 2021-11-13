@@ -5,7 +5,7 @@ import ar.edu.itba.paw.webapp.form.annotations.PasswordMatches;
 import javax.validation.constraints.Size;
 
 @PasswordMatches()
-public class PasswordForm {
+public class PasswordForm implements PasswordMatchesForm {
     @Size(min = 8, max = 100)
     private String currentPassword;
 
@@ -31,6 +31,7 @@ public class PasswordForm {
         this.newPassword = newPassword;
     }
 
+    @Override
     public String getRepeatPassword() {
         return repeatPassword;
     }
@@ -39,4 +40,8 @@ public class PasswordForm {
         this.repeatPassword = repeatPassword;
     }
 
+    @Override
+    public String getPassword() {
+        return newPassword;
+    }
 }

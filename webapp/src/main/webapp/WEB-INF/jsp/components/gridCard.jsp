@@ -8,7 +8,8 @@
         <div class="col px-0 mx-0"><img class="img-fluid" src="<c:out value="${param.image4}"/>" alt=""></div>
     </div>
     <a href="<c:url value="/lists/${param.listId}"/>"
-       class="stretched-link text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-purple-900 font-medium text-lg p-1.5 m-2.5">
+       title="<c:out value="${param.title}"/>"
+       class="stretched-link overflow-ellipsis text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-purple-900 font-medium text-lg p-1.5 m-2.5">
         <c:out value="${param.title}"/>
     </a>
 </div>

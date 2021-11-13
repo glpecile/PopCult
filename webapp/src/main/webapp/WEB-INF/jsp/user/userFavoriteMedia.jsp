@@ -23,7 +23,6 @@
             <sec:authentication property="principal.username"/>
         </c:set>
     </sec:authorize>
-    <br>
     <div class="col-8 offset-2 flex-grow">
         <%--    profile   --%>
         <jsp:include page="/WEB-INF/jsp/components/profile.jsp">
@@ -39,7 +38,7 @@
         <%-- current tab --%>
         <c:choose>
             <c:when test="${favoriteMediaContainer.totalCount > 0}">
-                <div class="row">
+                <div class="row pb-2">
                     <c:forEach var="media" items="${favoriteMediaContainer.elements}">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                             <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -51,8 +50,6 @@
                         </div>
                     </c:forEach>
                 </div>
-
-                <br>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${favoriteMediaContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${favoriteMediaContainer.currentPage + 1}"/>
@@ -60,8 +57,10 @@
                 </jsp:include>
             </c:when>
             <c:otherwise>
-                <div>
-                    <h3 class="text-center text-gray-400">
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                         alt="no_results_image">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
                         <spring:message code="profile.favMedia.noMedia"/>
                     </h3>
                 </div>

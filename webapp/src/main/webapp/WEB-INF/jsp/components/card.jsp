@@ -10,7 +10,7 @@
     <img class="img-fluid rounded-t-lg" src="<c:out value="${param.image}"/>" alt="media_image">
     <!-- Media Title -->
     <a href="<c:url value="/media/${param.mediaId}"/>"
-       class="stretched-link text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-purple-900 font-medium text-lg p-1.5 m-2.5"
+       class="stretched-link overflow-ellipsis text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-purple-900 font-medium text-lg p-1.5 m-2.5"
        title="<c:out value="${param.title}"/> (<c:out value="${param.releaseDate}"/>)">
         <b><c:out value="${param.title}"/></b> (<c:out value="${param.releaseDate}"/>)
     </a>

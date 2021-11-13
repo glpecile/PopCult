@@ -62,13 +62,15 @@
                 </div>
             </div>
             <c:if test="${mediaContainer.totalCount == 0}">
-                <div class="flex flex-col">
-                    <h4 class="text-center py-0.5">
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                         alt="no_results_image">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
                         <spring:message code="lists.empty"/>
-                    </h4>
-                    <h4 class="text-center py-0.5">
+                    </h3>
+                    <h3 class="text-center py-0.5 text-gray-400">
                         <spring:message code="lists.howTo"/>
-                    </h4>
+                    </h3>
                 </div>
             </c:if>
             <div class="flex flex-col space-y-2.5">
@@ -223,15 +225,24 @@
                         <h2 class="font-bold pb-1.5">
                             <spring:message code="search.by"/> <c:out value="${searchTerm}"/>
                         </h2>
-                        <!-- Search Results of every Media -->
-                        <div class="row">
-                            <div class="overflow-y-auto h-50">
-                                <div class="flex flex-col space-y-2.5">
-                                    <form:checkboxes path="media" items="${searchResults}"/>
-                                    <form:errors path="media" cssClass="error text-red-400"/>
+                        <c:choose>
+                            <c:when test="${searchResultSize != 0}">
+                                <!-- Search Results of every Media -->
+                                <div class="row">
+                                    <div class="overflow-y-auto h-50">
+                                        <div class="flex flex-col space-y-2.5">
+                                            <form:checkboxes path="media" items="${searchResults}"/>
+                                            <form:errors path="media" cssClass="error text-red-400"/>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:when>
+                            <c:otherwise>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp">
+                                    <jsp:param name="term" value="${param.term}"/>
+                                </jsp:include>
+                            </c:otherwise>
+                        </c:choose>
                         <br>
                     </c:if>
                 </div>
@@ -256,17 +267,17 @@
                             <spring:message code="lists.collab.manage"/>
                         </h5>
                         <c:if test="${collaboratorsContainer.totalCount != 0}">
-                                <a href="${collaboratorsPath}">
-                                    <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
-                                        <spring:message code="home.viewAll"/>
-                                    </button>
-                                </a>
-                                <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal"
-                                        data-bs-target="#addCollaboratorsModal">
-                                    <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i>
-                                    <spring:message code="lists.collab.add"/>
+                            <a href="${collaboratorsPath}">
+                                <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
+                                    <spring:message code="home.viewAll"/>
                                 </button>
+                            </a>
+                            <button class="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal"
+                                    data-bs-target="#addCollaboratorsModal">
+                                <i class="fas fa-plus text-gray-500 group-hover:text-white pr-2"></i>
+                                <spring:message code="lists.collab.add"/>
+                            </button>
                         </c:if>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -275,9 +286,13 @@
                     <div class="overflow-y-auto h-50">
                         <div class="flex flex-col space-y-2.5">
                             <c:if test="${collaboratorsContainer.totalCount == 0}">
-                                <h3 class="text-center text-gray-400">
-                                    <spring:message code="lists.collab.empty"/>
-                                </h3>
+                                <div class="flex-col flex-wrap p-4 space-x-4">
+                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoExclamation.png"/>"
+                                         alt="no_results_image">
+                                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                                        <spring:message code="lists.collab.empty"/>
+                                    </h3>
+                                </div>
                                 <button class="btn btn-link flex justify-center group bg-gray-300 hover:bg-purple-400 text-gray-700 font-semibold hover:text-white"
                                         data-bs-toggle="modal" data-bs-dismiss="modal"
                                         data-bs-target="#addCollaboratorsModal">
@@ -338,15 +353,28 @@
                         <h2 class="font-bold pb-1.5">
                             <spring:message code="search.by"/> <c:out value="${userSearchTerm}"/>
                         </h2>
-                        <!-- Search Results of every User -->
-                        <div class="row">
-                            <div class="overflow-y-auto h-50">
-                                <div class="flex flex-col space-y-2.5">
-                                    <form:checkboxes path="user" items="${userSearchResults}"/>
-                                    <form:errors path="user" cssClass="error text-red-400"/>
+                        <c:choose>
+                            <c:when test="${userSearchResultSize != 0}">
+                                <!-- Search Results of every User -->
+                                <div class="row">
+                                    <div class="overflow-y-auto h-50">
+                                        <div class="flex flex-col space-y-2.5">
+                                            <form:checkboxes path="user" items="${userSearchResults}"/>
+                                            <form:errors path="user" cssClass="error text-red-400"/>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="flex-col flex-wrap p-4 space-x-4">
+                                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                                         alt="no_results_image">
+                                    <h1 class="text-xl text-gray-400 py-2 mt-3 text-center">
+                                        <spring:message code="search.user" arguments="${userSearchTerm}"/>
+                                    </h1>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                         <br>
                     </c:if>
                 </div>

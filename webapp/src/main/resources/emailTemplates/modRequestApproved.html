@@ -11,6 +11,12 @@
     <div>
         <p th:text="#{email.mod.greeting}"></p>
         <p th:text="#{email.mod.approved.body}"></p>
+        <p th:text="#{email.mod.description}"></p>
+        <span th:text="#{email.mod.panel}"></span>
+        <a th:href="@{{basePath}/admin(basePath=${basePath})}">
+            <button style="background-color: transparent;border: none;color: blueviolet;font-size:20px;text-align: left;text-decoration: underline"
+                    th:text="#{email.bans.here}"></button>
+        </a>
         <p th:text="#{email.mod.close}"></p>
         <br>
         <p th:text="#{email.close}"></p>

@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "listreport")
@@ -24,7 +24,7 @@ public class ListReport extends Report {
 
     }
 
-    public ListReport(Integer reportId, User reportee, String report, Date date, MediaList mediaList) {
+    public ListReport(Integer reportId, User reportee, String report, LocalDateTime date, MediaList mediaList) {
         super(reportee, report, date);
         this.reportId = reportId;
         this.mediaList = mediaList;

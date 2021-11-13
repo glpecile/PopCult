@@ -22,7 +22,7 @@
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <br>
+    <!-- TODO: Desaparecer cuando se usan filtros -->
     <h4 class="font-bold text-2xl pt-2">
         <spring:message code="films.popular"/>
     </h4>
@@ -71,23 +71,26 @@
         </jsp:include>
         <c:choose>
             <c:when test="${fn:length(mediaListContainer.elements) == 0}">
-                <br>
-                <h3 class="text-center">
-                    <spring:message code="films.noMedia"/>
-                </h3>
+                <div class="flex-col flex-wrap p-4 space-x-4">
+                    <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                         alt="no_results_image">
+                    <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                        <spring:message code="films.noMedia"/>
+                    </h3>
+                </div>
             </c:when>
             <c:otherwise>
-                        <c:forEach var="media" items="${mediaListContainer.elements}">
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                                <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                                    <jsp:param name="image" value="${media.image}"/>
-                                    <jsp:param name="title" value="${media.title}"/>
-                                    <jsp:param name="releaseDate" value="${media.releaseYear}"/>
-                                    <jsp:param name="mediaId" value="${media.mediaId}"/>
-                                </jsp:include>
-                            </div>
-                        </c:forEach>
-                    <br>
+                <c:forEach var="media" items="${mediaListContainer.elements}">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                        <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                            <jsp:param name="image" value="${media.image}"/>
+                            <jsp:param name="title" value="${media.title}"/>
+                            <jsp:param name="releaseDate" value="${media.releaseYear}"/>
+                            <jsp:param name="mediaId" value="${media.mediaId}"/>
+                        </jsp:include>
+                    </div>
+                </c:forEach>
+                <br>
                 <c:url value="" var="paginationUrl">
                     <c:forEach var="p" items="${param}">
                         <c:choose>
@@ -103,11 +106,11 @@
                         </c:choose>
                     </c:forEach>
                 </c:url>
-                    <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
-                        <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
-                        <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
-                        <jsp:param name="url" value="${paginationUrl}"/>
-                    </jsp:include>
+                <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                    <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>
+                    <jsp:param name="currentPage" value="${mediaListContainer.currentPage + 1}"/>
+                    <jsp:param name="url" value="${paginationUrl}"/>
+                </jsp:include>
             </c:otherwise>
         </c:choose>
     </div>

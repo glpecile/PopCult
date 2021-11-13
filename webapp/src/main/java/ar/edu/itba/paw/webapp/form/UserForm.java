@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @PasswordMatches()
-public class UserForm {
+public class UserForm implements PasswordMatchesForm {
     @Email()
     @Size(min = 6, max = 100)
     private String email;
@@ -42,6 +42,7 @@ public class UserForm {
         this.username = username;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -50,6 +51,7 @@ public class UserForm {
         this.password = password;
     }
 
+    @Override
     public String getRepeatPassword() {
         return repeatPassword;
     }

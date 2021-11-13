@@ -61,11 +61,11 @@
                                             <spring:message code="search.all"/>
                                         </c:when>
                                         <c:when test="${fn:length(param.mediaTypes) == 1}">
-                                            <c:out value="${param.mediaTypes}"/>
+                                            <spring:message code="${param.mediaTypes}"/>
                                         </c:when>
                                         <c:otherwise>
                                             <c:forEach items="${paramValues.mediaTypes}" var="type">
-                                                <c:out value="${type} "/>
+                                                <spring:message code="${type}"/>
                                             </c:forEach>
                                         </c:otherwise>
                                     </c:choose>
@@ -117,12 +117,12 @@
                             <button class="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
                                     type="submit">
                                 <i class="fas fa-filter group-hover:text-white pr-2"></i>
-                                <c:out value="APPLY FILTERS"/>
+                                <spring:message code="search.applyFilters"/>
                             </button>
                             <button class="btn btn-warning bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
                                     type="submit" name="clear" id="clear">
                                 <i class="far fa-times-circle group-hover:text-white pr-2"></i>
-                                <c:out value="CLEAR FILTERS"/>
+                                <spring:message code="search.clearFilters"/>
                             </button>
                         </div>
                     </div>
@@ -167,7 +167,9 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp">
+                                    <jsp:param name="term" value="${param.term}"/>
+                                </jsp:include>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -192,18 +194,22 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.sorry" arguments="${param.term}"/>
+                                <jsp:include page="/WEB-INF/jsp/components/noSearchResults.jsp">
+                                    <jsp:param name="term" value="${param.term}"/>
+                                </jsp:include>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <h1 class="font-bold text-2xl py-2">
-                    <spring:message code="search.sorry" arguments="${param.term}"/>
-                        <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
-                </h1>
-                <br>
+                <div class="flex flex-wrap p-4 mt-48 space-x-4">
+                    <img class="w-52 object-center" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="no_results_image">
+                    <h1 class="font-bold text-3xl py-2 mt-14 text-center">
+                        <spring:message code="search.sorry" arguments="${param.term}"/>
+                            <%--  Sorry, we couldn't find any terms for <c:out value="${param.term}"/>--%>
+                    </h1>
+                </div>
             </c:otherwise>
         </c:choose>
         <c:url value="" var="urlBase2">
@@ -215,6 +221,11 @@
                         </c:forEach>
                     </c:when>
                     <c:when test="${p.key eq 'page'}"/>
+                    <c:when test="${p.key eq 'mediaTypes'}">
+                        <c:forEach var="mediaType" items="${paramValues.mediaTypes}">
+                            <c:param name="mediaTypes" value="${mediaType}"/>
+                        </c:forEach>
+                    </c:when>
                     <c:otherwise>
                         <c:param name="${p.key}" value="${p.value}"/>
                     </c:otherwise>

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models.comment;
 import ar.edu.itba.paw.models.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class Comment {
@@ -15,15 +15,14 @@ public abstract class Comment {
     @Column(name = "description", length = 1000, nullable = false)
     private String commentBody;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable = false)
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     /* default */ Comment() {
         //Just for hibernate
     }
 
-    public Comment(User user, String commentBody, Date creationDate) {
+    public Comment(User user, String commentBody, LocalDateTime creationDate) {
         this.user = user;
         this.commentBody = commentBody;
         this.creationDate = creationDate;
@@ -45,11 +44,11 @@ public abstract class Comment {
         this.commentBody = commentBody;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 }

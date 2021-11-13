@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +18,7 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     TokenDao tokenDao;
 
-    /* default */ static final int EXPIRATION = 60 * 24;
+    /* default */ static final int EXPIRATION = 1; //days
 
     @Transactional
     @Override
@@ -29,11 +27,8 @@ public class TokenServiceImpl implements TokenService {
         return tokenDao.createToken(user, type, token, calculateExpiryDate(EXPIRATION));
     }
 
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(calendar.getTime().getTime());
+    private LocalDateTime calculateExpiryDate(int expiryTimeInDays) {
+        return LocalDateTime.now().plusDays(expiryTimeInDays);
     }
 
     @Transactional(readOnly = true)
@@ -51,8 +46,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional(readOnly = true)
     @Override
     public boolean isValidToken(Token token, TokenType type) {
-        Calendar calendar = Calendar.getInstance();
-        return token.getType() == type && token.getExpiryDate().getTime() >= calendar.getTime().getTime();
+        return token.getType() == type && token.getExpiryDate().isAfter(LocalDateTime.now());
     }
 
     @Transactional

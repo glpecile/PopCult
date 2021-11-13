@@ -12,9 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static ar.edu.itba.paw.services.TokenServiceImpl.EXPIRATION;
 import static org.mockito.ArgumentMatchers.*;
@@ -32,8 +30,7 @@ public class TokenServiceImplTest {
     private static final String TOKEN = "Token";
     private static final TokenType TOKEN_TYPE = TokenType.VERIFICATION;
 
-    private Calendar calendar;
-    private static Date expiryDate;
+    private static LocalDateTime expiryDate;
 
     @InjectMocks
     private final TokenServiceImpl tokenService = new TokenServiceImpl();
@@ -42,16 +39,12 @@ public class TokenServiceImplTest {
 
     @Before
     public void setup() {
-        calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-
         user = new User.Builder(EMAIL, USERNAME, PASSWORD, NAME).build();
     }
 
     @Test
     public void testCreateToken() {
-        calendar.add(Calendar.MINUTE, EXPIRATION);
-        expiryDate = new Date(calendar.getTime().getTime());
+        expiryDate = LocalDateTime.now().plusDays(EXPIRATION);
         when(mockDao.createToken(eq(user), eq(TOKEN_TYPE), anyString(), any()))
                 .thenReturn(new Token(user, TOKEN_TYPE, TOKEN, expiryDate));
 
@@ -63,8 +56,7 @@ public class TokenServiceImplTest {
 
     @Test
     public void testIsValidToken() {
-        calendar.add(Calendar.MINUTE, EXPIRATION);
-        expiryDate = new Date(calendar.getTime().getTime());
+        expiryDate = LocalDateTime.now().plusDays(EXPIRATION);
         Token token = new Token(user, TOKEN_TYPE, TOKEN, expiryDate);
 
         boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);
@@ -74,8 +66,7 @@ public class TokenServiceImplTest {
 
     @Test
     public void testIsInvalidToken() {
-        calendar.add(Calendar.MINUTE, -EXPIRATION);
-        expiryDate = new Date(calendar.getTime().getTime());
+        expiryDate = LocalDateTime.now().plusDays(-EXPIRATION);
         Token token = new Token(user, TOKEN_TYPE, TOKEN, expiryDate);
 
         boolean isValid = tokenService.isValidToken(token, TOKEN_TYPE);

@@ -3,12 +3,14 @@ package ar.edu.itba.paw.models.user;
 import ar.edu.itba.paw.models.image.Image;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 public class User {
     public static final int DEFAULT_IMAGE = 0;
+    public static final int BAN_DAYS = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
@@ -30,6 +32,15 @@ public class User {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(nullable = false)
+    private boolean nonLocked;
+
+    @Column(nullable = false)
+    private int strikes;
+
+    @Column
+    private LocalDateTime banDate;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "imageid")
     private Image image;
@@ -42,16 +53,16 @@ public class User {
         //Just for Hibernate, we love you!
     }
 
-    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, UserRole role) {
-        this.userId = userId;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.enabled = enabled;
-        this.image = image;
-        this.role = role;
-    }
+//    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, UserRole role) {
+//        this.userId = userId;
+//        this.email = email;
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.enabled = enabled;
+//        this.image = image;
+//        this.role = role;
+//    }
 
     public User(Builder builder) {
         this.userId = builder.userId;
@@ -60,68 +71,103 @@ public class User {
         this.password = builder.password;
         this.name = builder.name;
         this.enabled = builder.enabled;
+        this.nonLocked = builder.nonLocked;
+        this.strikes = builder.strikes;
+        this.banDate = builder.banDate;
         this.image = builder.image;
-        this.role =  builder.role;
+        this.role = builder.role;
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public int getImageId() {
-        return image == null ? DEFAULT_IMAGE : image.getImageId();
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    public boolean isNonLocked() {
+        return nonLocked;
+    }
+
+    public void setNonLocked(boolean nonLocked) {
+        this.nonLocked = nonLocked;
+    }
+
+    public int getStrikes() {
+        return strikes;
+    }
+
+    public void setStrikes(int strikes) {
+        this.strikes = strikes;
+    }
+
+    public int addStrike() {
+        return ++this.strikes;
+    }
+
+    public LocalDateTime getBanDate() {
+        return banDate;
+    }
+
+    public LocalDateTime getUnbanDate() {
+        return banDate.plusDays(BAN_DAYS);
+    }
+
+    public void setBanDate(LocalDateTime banDate) {
+        this.banDate = banDate;
+    }
+
+    public int getImageId() {
+        return image == null ? DEFAULT_IMAGE : image.getImageId();
+    }
+
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 
     public void setRole(UserRole role) {
@@ -137,6 +183,9 @@ public class User {
         //Initialized to default values
         private Integer userId = null;
         private boolean enabled = false;
+        private boolean nonLocked = true;
+        private int strikes = 0;
+        private LocalDateTime banDate = null;
         private Image image = null;
         private UserRole role = UserRole.USER;
 
@@ -154,6 +203,21 @@ public class User {
 
         public Builder enabled(boolean enabled) {
             this.enabled = enabled;
+            return this;
+        }
+
+        public Builder nonLocked(boolean nonLocked) {
+            this.nonLocked = nonLocked;
+            return this;
+        }
+
+        public Builder strikes(int strikes) {
+            this.strikes = strikes;
+            return this;
+        }
+
+        public Builder banDate(LocalDateTime banDate) {
+            this.banDate = banDate;
             return this;
         }
 
@@ -177,7 +241,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return userId.equals(user.userId);
     }
 
     @Override
