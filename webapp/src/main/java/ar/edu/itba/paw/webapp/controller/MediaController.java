@@ -17,9 +17,11 @@ import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.FilterForm;
+import ar.edu.itba.paw.webapp.utilities.FilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +30,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -41,8 +43,6 @@ public class MediaController {
     @Autowired
     private MediaService mediaService;
     @Autowired
-    private StaffService staffService;
-    @Autowired
     private ListsService listsService;
     @Autowired
     private UserService userService;
@@ -52,6 +52,8 @@ public class MediaController {
     private WatchService watchService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
@@ -258,17 +260,14 @@ public class MediaController {
         final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final List<String> decades = new ArrayList<>();
-        decades.add("ALL");
-        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
-            decades.add(Integer.toString(i));
-        }
-        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("decadesType", decades);
+        mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
+        mav.addObject("genreTypes", FilterUtils.getGenres(messageSource));
+        mav.addObject("decadesType", FilterUtils.getDecades(messageSource));
         LOGGER.info("Access to films successfully");
         return mav;
     }
+
+
 
     @RequestMapping("/media/series")
     public ModelAndView series(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
@@ -287,14 +286,9 @@ public class MediaController {
         final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
-        final List<String> decades = new ArrayList<>();
-        decades.add("ALL");
-        for (Integer i : IntStream.range(0, 11).map(x -> (10 * x) + 1920).toArray()) {
-            decades.add(Integer.toString(i));
-        }
-        mav.addObject("sortTypes", Arrays.stream(SortType.values()).map(SortType::getName).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("genreTypes",Arrays.stream(Genre.values()).map(Genre::getGenre).map(String::toUpperCase).collect(Collectors.toList()));
-        mav.addObject("decadesType", decades);
+        mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
+        mav.addObject("genreTypes", FilterUtils.getGenres(messageSource));
+        mav.addObject("decadesType", FilterUtils.getDecades(messageSource));
         LOGGER.info("Access to series successfully");
         return mav;
     }

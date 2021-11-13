@@ -4,9 +4,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="sortTypes" scope="request" type="java.util.ArrayList"/>
-<jsp:useBean id="decadesType" scope="request" type="java.util.ArrayList"/>
-<jsp:useBean id="genreTypes" scope="request" type="java.util.ArrayList"/>
+<jsp:useBean id="sortTypes" scope="request" type="java.util.Map"/>
+<jsp:useBean id="decadesType" scope="request" type="java.util.Map"/>
+<jsp:useBean id="genreTypes" scope="request" type="java.util.Map"/>
 
 
 <filters>
