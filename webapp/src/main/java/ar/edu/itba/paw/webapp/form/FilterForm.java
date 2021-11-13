@@ -17,11 +17,16 @@ public class FilterForm {
     @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0")
     private String decade;
 
-    public LocalDateTime getDecade() {
+    public LocalDateTime getStartYear() {
         if(decade == null || decade.compareTo("ALL") == 0)
             return null;
         return LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
     }
+
+    public String getDecade() {
+        return decade;
+    }
+
     public LocalDateTime getLastYear(){
         if(decade == null || decade.compareTo("ALL") == 0)
             return null;

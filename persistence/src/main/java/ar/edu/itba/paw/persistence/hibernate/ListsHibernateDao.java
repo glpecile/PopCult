@@ -166,16 +166,18 @@ public class ListsHibernateDao implements ListsDao {
         }
         where.add(" visibility = :visibility ");
         parameters.put("visibility", visibility);
+
+        if(fromDate != null && toDate != null) {
+            where.add(" creationdate BETWEEN :fromDate AND :toDate ");
+            parameters.put("fromDate", fromDate.toLocalDate());
+            parameters.put("toDate", toDate.toLocalDate());
+        }
         if(!where.isEmpty()){
             toReturn.append("WHERE ");
             toReturn.append(where.removeFirst());
             where.forEach(w -> toReturn.append(" AND ").append(w));
         }
-        if(fromDate != null && toDate != null) {
-            where.add(" creationdate BETWEEN :fromDate AND :toDate ");
-            parameters.put("fromDate", fromDate);
-            parameters.put("toDate", toDate);
-        }
+
         if(!groupBy.isEmpty()){
             toReturn.append(" GROUP BY ");
             toReturn.append(groupBy.removeFirst());

@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ListsController {
 
     private static final int itemsPerPage = 4;
     private static final int scrollerAmount = 6;
-    private static final int listsPerPage = 8;
+    private static final int listsPerPage = 12;
     private static final int defaultValue = 1;
     private static final int searchAmount = 12;
     private static final int collaboratorsAmount = 20;
@@ -74,7 +73,7 @@ public class ListsController {
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,itemsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getDecade(), filterForm.getLastYear());
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,listsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getStartYear(), filterForm.getLastYear());
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         final List<String> decades = new ArrayList<>();
@@ -90,6 +89,11 @@ public class ListsController {
         mav.addObject("decadesType", decades);
         LOGGER.info("Access to lists successfully");
         return mav;
+    }
+
+    @RequestMapping(value = {"/lists"}, method = {RequestMethod.GET}, params = "clear")
+    public ModelAndView clearFilters(HttpServletRequest request, @ModelAttribute("filterForm") final FilterForm filterForm){
+        return new ModelAndView("redirect:" + request.getHeader("referer").replaceAll("\\?.*",""));
     }
 
     private List<ListCover> generateCoverList(List<MediaList> MediaListLists) {

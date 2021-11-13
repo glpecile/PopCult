@@ -86,7 +86,7 @@
                 <c:when test="${fn:length(allListContainer.elements) == 0}">
                     <br>
                     <h3 class="text-center">
-                        <spring:message code="films.noMedia"/>
+                        <spring:message code="lists.noLists"/>
                     </h3>
                 </c:when>
                 <c:otherwise>
