@@ -13,10 +13,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.TokenNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -326,7 +323,7 @@ public class UserController {
     public ModelAndView acceptCollabRequests(@PathVariable("username") final String username,
                                              @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to accept collab request", username);
-        Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO EXCEPTION
+        Request collab = collaborativeListService.getById(collabId).orElseThrow(RequestNotFoundException::new);
         collaborativeListService.acceptRequest(collab);
         LOGGER.info("{} collab request accepted", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
@@ -336,7 +333,7 @@ public class UserController {
     public ModelAndView rejectCollabRequests(@PathVariable("username") final String username,
                                              @RequestParam("collabId") final int collabId) {
         LOGGER.debug("{} trying to reject collab request", username);
-        Request collab = collaborativeListService.getById(collabId).orElseThrow(RuntimeException::new); //TODO CUSTOM EXCEPTION
+        Request collab = collaborativeListService.getById(collabId).orElseThrow(RequestNotFoundException::new);
         collaborativeListService.rejectRequest(collab);
         LOGGER.info("{} collab request rejected", username);
         return new ModelAndView("redirect:/user/" + username + "/requests");
