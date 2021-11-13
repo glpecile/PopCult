@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +46,8 @@ public class MediaServiceImpl implements MediaService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate){
-        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fromDate,toDate);
+    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term){
+        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fromDate,toDate, term);
     }
 
 }

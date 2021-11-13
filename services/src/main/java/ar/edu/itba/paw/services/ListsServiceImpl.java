@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
 import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.interfaces.MediaDao;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -71,8 +70,8 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate) {
-        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches, fromDate, toDate);
+    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term) {
+        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches, fromDate, toDate, term);
     }
 
     @Transactional(readOnly = true)

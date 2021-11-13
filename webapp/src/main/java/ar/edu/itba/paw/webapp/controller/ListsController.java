@@ -75,7 +75,7 @@ public class ListsController {
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,listsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getStartYear(), filterForm.getLastYear());
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page-1,listsPerPage,SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,minMatches, filterForm.getStartYear(), filterForm.getLastYear(), null );
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         mav.addObject("mostLikedLists", mostLikedLists);

@@ -9,10 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterForm {
+
+    @Pattern(regexp = "[^/><%]+")
+    private String term;
+
     private List<String> genres;
+
     private List<String> mediaTypes;
+
     @Pattern(regexp = "TITLE|DATE")
     private String sortType;
+
     @Size(max = 4)
     @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0")
     private String decade;
@@ -67,5 +74,13 @@ public class FilterForm {
 
     public void setMediaTypes(List<String> mediaTypes) {
         this.mediaTypes = mediaTypes;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 }

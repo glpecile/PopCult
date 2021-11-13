@@ -257,7 +257,7 @@ public class MediaController {
         final List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
@@ -283,7 +283,7 @@ public class MediaController {
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
         final List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.SERIE);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear());
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));

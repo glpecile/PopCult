@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
@@ -9,6 +10,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.webapp.form.FilterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utilities.ListCoverImpl;
 import org.slf4j.Logger;
@@ -38,6 +40,9 @@ public class SearchController {
     @Autowired
     private ListsService listsService;
 
+    @Autowired
+    private MediaService mediaService;
+
     private static final int itemsPerPage = 12;
 
     private static final int listsPerPage = 12;
@@ -48,7 +53,7 @@ public class SearchController {
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET})
     public ModelAndView search(HttpServletRequest request,
-                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                               @Valid @ModelAttribute("searchForm") final FilterForm searchForm,
                                final BindingResult errors,
                                @RequestParam(value = "page", defaultValue = "1") final int page
                                ) throws ParseException {
@@ -60,8 +65,10 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("principal/primary/search");
         final List<Genre> genres = searchForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
         final List<MediaType> mediaTypes = searchForm.getMediaTypes().stream().map(MediaType::valueOf).collect(Collectors.toList());
-        final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getDecade(), searchForm.getLastYear());
-        final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches);
+        //final PageContainer<Media> searchMediaResults = searchService.searchMediaByTitle(searchForm.getTerm(),page-1,itemsPerPage, mediaTypes,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, searchForm.getDecade(), searchForm.getLastYear());
+        final PageContainer<Media> searchMediaResults = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage,SortType.valueOf(searchForm.getSortType().toUpperCase()),genres,searchForm.getStartYear(),searchForm.getLastYear(), searchForm.getTerm());
+        //final PageContainer<MediaList> searchMediaListResults = searchService.searchListMediaByName(searchForm.getTerm(),page-1,listsPerPage, SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches);
+        final PageContainer<MediaList> searchMediaListResults = listsService.getMediaListByFilters(page-1,listsPerPage,SortType.valueOf(searchForm.getSortType().toUpperCase()), genres, minimumMediaMatches, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm());
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(),listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers,searchMediaListResults.getCurrentPage(),searchMediaListResults.getPageSize(),searchMediaListResults.getTotalCount());
         final List<String> decades = new ArrayList<>();

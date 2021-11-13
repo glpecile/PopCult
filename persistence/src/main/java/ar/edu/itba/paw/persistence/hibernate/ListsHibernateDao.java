@@ -145,7 +145,7 @@ public class ListsHibernateDao implements ListsDao {
         return new PageContainer<>(list, page, pageSize, count);
     }
 
-    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, boolean visibility, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate){
+    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, String term,boolean visibility, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -153,6 +153,10 @@ public class ListsHibernateDao implements ListsDao {
         LinkedList<String> groupBy = new LinkedList<>();
         LinkedList<String> having = new LinkedList<>();
 
+        if(term != null){
+            where.add( SortType.TITLE.nameMediaList + " ILIKE CONCAT('%', :listname, '%')");
+            parameters.put("listname", term);
+        }
         if(!genre.isEmpty()){
 
             where.add(" genreid IN ( :genres) ");
@@ -161,6 +165,9 @@ public class ListsHibernateDao implements ListsDao {
             groupBy.add(" visibility ");
             if(sort !=null)
                 groupBy.add(sort.nameMediaList);
+            if(fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.nameMediaList)){
+                groupBy.add(SortType.DATE.nameMediaList);
+            }
             having.add(" COUNT(mediaId) >= :minMatches ");
             parameters.put("minMatches", minMatches);
         }
@@ -186,7 +193,7 @@ public class ListsHibernateDao implements ListsDao {
         if(!having.isEmpty()){
             toReturn.append(" HAVING ");
             toReturn.append(having.removeFirst());
-            where.forEach(w -> toReturn.append(" AND ").append(w));
+            having.forEach(w -> toReturn.append(" AND ").append(w));
         }
         if(sort != null) {
             toReturn.append(" ORDER BY ");
@@ -208,7 +215,7 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate) {
+    public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term) {
         //Para paginacion
         //Pedimos el contenido paginado.
         String sortBaseString = "";
@@ -224,12 +231,12 @@ public class ListsHibernateDao implements ListsDao {
             }
         }
         final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortBaseString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
-        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,true,sort, genre, minMatches,fromDate,toDate);
+        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,term,true,sort, genre, minMatches,fromDate,toDate);
         @SuppressWarnings("unchecked")
         List<Long> mediaListIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
         final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
-        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,true,null,genre,minMatches,fromDate,toDate);
+        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,term,true,null,genre,minMatches,fromDate,toDate);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados

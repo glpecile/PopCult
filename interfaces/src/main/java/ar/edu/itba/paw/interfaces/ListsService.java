@@ -27,7 +27,7 @@ public interface ListsService {
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
-    PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate);
+    PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term);
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 
