@@ -99,7 +99,6 @@ public class MediaController {
         final PageContainer<MediaComment> mediaCommentsContainer = commentService.getMediaComments(media, defaultValue - 1, itemsPerPage);
         mav.addObject("media", media);
         mav.addObject("relatedLists", relatedListsCover);
-        mav.addObject("mediaListContainer", mediaList);//TODO esto me parece que no se usa
         mav.addObject("mediaCommentsContainer", mediaCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);

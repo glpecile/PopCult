@@ -20,7 +20,7 @@ public class WatchServiceImpl implements WatchService {
     @Transactional
     @Override
     public void addWatchedMedia(Media media, User user) {
-        watchDao.addWatchMedia(media, user, LocalDateTime.now()); //TODO hacemos una fecha con hora exacta? o cambiamos a LocalDate.nos().atStartOfDay()?
+        watchDao.addWatchMedia(media, user, LocalDateTime.now());
     }
 
     @Transactional

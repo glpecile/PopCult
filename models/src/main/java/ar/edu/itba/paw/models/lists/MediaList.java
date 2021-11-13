@@ -133,7 +133,7 @@ public class MediaList {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MediaList mediaList = (MediaList) o;
-        return mediaListId == mediaList.mediaListId;
+        return mediaListId.equals(mediaList.mediaListId);
     }
 
     @Override

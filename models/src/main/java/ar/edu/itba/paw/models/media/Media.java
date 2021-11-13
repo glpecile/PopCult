@@ -16,7 +16,7 @@ public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "media_mediaid_seq")
     @SequenceGenerator(sequenceName = "media_mediaid_seq", name="media_mediaid_seq", allocationSize = 1)
-    private Integer mediaId;//TODO cambiar a Long, hay que hacer un refactor a todo.
+    private Integer mediaId;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
@@ -204,7 +204,7 @@ public class Media {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Media media = (Media) o;
-        return mediaId == media.mediaId;
+        return mediaId.equals(media.mediaId);
     }
 
     @Override
