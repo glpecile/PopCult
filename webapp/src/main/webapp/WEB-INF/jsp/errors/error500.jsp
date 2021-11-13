@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/overflow.css"/>"/>
     <!-- Local Scripts -->
     <script type="text/javascript" src="<c:url value="/resources/js/components/slider.js"/>"></script>
-    <title><spring:message code="error.404.title"/> &#8226; PopCult</title>
+    <title><spring:message code="error.500.title"/> &#8226; PopCult</title>
 </head>
 
 <body class="bg-gray-50">
@@ -25,10 +25,10 @@
             <img class="w-80 pt-12" src="<c:url value="/resources/images/PopCultLogoX.png"/>" alt="error_image">
             <div class="flex flex-col pl-8">
                 <h1 class="text-6xl font-black text-justify">
-                    <spring:message code="error.404"/>
+                    <spring:message code="error.500"/>
                 </h1>
                 <p class="text-2xl font-semibold text-justify">
-                    <spring:message code="error.404.message"/>
+                    <spring:message code="error.500.message"/>
                 </p>
                 <a class="text-2xl font-bold text-purple-500 hover:text-purple-900" href="<c:url value="/"/>">
                     <spring:message code="nav.drop.home"/>
