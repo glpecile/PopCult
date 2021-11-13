@@ -221,6 +221,11 @@
                         </c:forEach>
                     </c:when>
                     <c:when test="${p.key eq 'page'}"/>
+                    <c:when test="${p.key eq 'mediaTypes'}">
+                        <c:forEach var="mediaType" items="${paramValues.mediaTypes}">
+                            <c:param name="mediaTypes" value="${mediaType}"/>
+                        </c:forEach>
+                    </c:when>
                     <c:otherwise>
                         <c:param name="${p.key}" value="${p.value}"/>
                     </c:otherwise>

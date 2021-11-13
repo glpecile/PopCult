@@ -70,8 +70,8 @@ public class ListsController {
                               final BindingResult errors) {
         LOGGER.debug("Trying to access lists");
         if(errors.hasErrors()){
-            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
-            return new ModelAndView("redirect: " + request.getHeader("referer"));
+            LOGGER.info("Invalid FilterForm, redirecting to /lists.");
+            return new ModelAndView("redirect:/lists");
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
         final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
