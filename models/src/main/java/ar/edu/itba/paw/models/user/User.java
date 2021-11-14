@@ -53,17 +53,6 @@ public class User {
         //Just for Hibernate, we love you!
     }
 
-//    public User(Integer userId, String email, String username, String password, String name, boolean enabled, Image image, UserRole role) {
-//        this.userId = userId;
-//        this.email = email;
-//        this.username = username;
-//        this.password = password;
-//        this.name = name;
-//        this.enabled = enabled;
-//        this.image = image;
-//        this.role = role;
-//    }
-
     public User(Builder builder) {
         this.userId = builder.userId;
         this.email = builder.email;
@@ -151,7 +140,7 @@ public class User {
     }
 
     public LocalDateTime getUnbanDate() {
-        return banDate.plusDays(BAN_DAYS);
+        return banDate == null ? null : banDate.plusDays(BAN_DAYS);
     }
 
     public void setBanDate(LocalDateTime banDate) {

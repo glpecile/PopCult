@@ -236,10 +236,12 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("Executing scheduled tasks");
         LocalDateTime actualDate = LocalDateTime.now();
         userDao.getBannedUsers().forEach(user -> {
-            if(user.getBanDate() != null && user.getBanDate().plusDays(BAN_DAYS).isAfter(actualDate)) {
+            LOGGER.info("Checking ban for {}", user.getUsername());
+            if(user.getBanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
                 user.setNonLocked(true);
                 user.setBanDate(null);
                 emailService.sendUnbannedUserEmail(user);
+                LOGGER.info("{} unbanned", user.getUsername());
             }
         });
     }
