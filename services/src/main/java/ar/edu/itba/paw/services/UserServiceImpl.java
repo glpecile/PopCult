@@ -237,10 +237,8 @@ public class UserServiceImpl implements UserService {
         LocalDateTime actualDate = LocalDateTime.now();
         userDao.getBannedUsers().forEach(user -> {
             LOGGER.info("Checking ban for {}", user.getUsername());
-            if(user.getBanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
-                user.setNonLocked(true);
-                user.setBanDate(null);
-                emailService.sendUnbannedUserEmail(user);
+            if(user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
+                unbanUser(user);
                 LOGGER.info("{} unbanned", user.getUsername());
             }
         });
