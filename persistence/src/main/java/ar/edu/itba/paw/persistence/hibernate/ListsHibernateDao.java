@@ -291,12 +291,13 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
+    public void addToMediaList(MediaList mediaList, List<Media> medias){
         for (Media media : medias) {
-            if(mediaAlreadyInList(mediaList, media)) {
-                throw new MediaAlreadyInListException();
+            try {
+                addToMediaList(mediaList, media);
+            }catch (MediaAlreadyInListException e){
+                LOGGER.error("Cannot add media {} to list {}: List already contains this media.", media.getMediaId(), mediaList.getMediaListId());
             }
-            addToMediaList(mediaList, media);
         }
     }
 
@@ -323,11 +324,7 @@ public class ListsHibernateDao implements ListsDao {
                 .setParameter("toCopyId", toCopy)
                 .getResultList();
         List<Media> toCopyMedia = getMedias(toCopyMediaIds);
-        try {
-            addToMediaList(fork, toCopyMedia);
-        } catch (MediaAlreadyInListException e) {
-            LOGGER.error("Media already exists in MediaList");
-        }
+        addToMediaList(fork, toCopyMedia);
         addToForkedLists(toCopy, fork);
         return fork;
     }

@@ -106,7 +106,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
             try {
                 addCollaborator(mediaList, user);
             } catch (UserAlreadyCollaboratesInListException e){
-                LOGGER.error("User already collaborates in media list.");
+                LOGGER.error("User {} already collaborates in medialist {}.", user.getUsername(), mediaList.getMediaListId());
             }
         }
     }

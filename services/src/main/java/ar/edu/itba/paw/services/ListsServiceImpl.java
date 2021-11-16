@@ -106,7 +106,7 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
+    public void addToMediaList(MediaList mediaList, List<Media> medias){
         listsDao.addToMediaList(mediaList, medias);
     }
 

@@ -276,11 +276,7 @@ public class ListsController {
         }
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         List<Media> media = mediaService.getById(mediaForm.getMedia());
-        try {
-            listsService.addToMediaList(mediaList, media);
-        } catch (MediaAlreadyInListException e) {
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("alreadyInList", true);
-        }
+        listsService.addToMediaList(mediaList, media);
         LOGGER.info("Media {} added to list {}", mediaForm.getMedia(), mediaListId);
         return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
     }
