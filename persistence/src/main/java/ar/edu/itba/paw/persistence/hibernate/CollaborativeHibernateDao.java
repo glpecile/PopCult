@@ -82,7 +82,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     private boolean userCollaboratesInList(MediaList mediaList, User user) {
-        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE medialistid = :mediaListId AND collaboratorid = :userId")
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :mediaListId AND collaboratorid = :userId")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("userId", user.getUserId())
                 .getSingleResult()).intValue() != 0;
