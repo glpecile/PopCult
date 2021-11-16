@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,22 +160,22 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private void sendReportCreatedEmail(User user, String report) {
-        emailService.sendReportCreatedEmail(user, report);
+        emailService.sendReportCreatedEmail(user, report, LocaleContextHolder.getLocale());
     }
 
     private void sendReportRejectedEmail(User reportee, String report) {
-        emailService.sendReportRejectedEmail(reportee, report);
+        emailService.sendReportRejectedEmail(reportee, report, LocaleContextHolder.getLocale());
     }
 
     private void sendReportApprovedEmail(User reportee, String report) {
-        emailService.sendReportApprovedEmail(reportee, report);
+        emailService.sendReportApprovedEmail(reportee, report, LocaleContextHolder.getLocale());
     }
 
     private void sendDeletedListEmail(User user, MediaList mediaList, String report) {
-        emailService.sendDeletedListEmail(user, mediaList, report);
+        emailService.sendDeletedListEmail(user, mediaList, report, LocaleContextHolder.getLocale());
     }
 
     private void sendDeletedCommentEmail(User user, Comment comment, String report) {
-        emailService.sendDeletedCommentEmail(user, comment, report);
+        emailService.sendDeletedCommentEmail(user, comment, report, LocaleContextHolder.getLocale());
     }
 }

@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -63,7 +64,7 @@ public class UserServiceImplTest {
         when(mockPasswordEncoder.encode(Mockito.anyString())).thenReturn(PASSWORD);
         when(mockTokenService.createToken(any(), any()))
                 .thenReturn(new Token(user, TOKEN_TYPE, TOKEN, EXPIRY_DATE));
-        doNothing().when(mockEmailService).sendVerificationEmail(any(), anyString());
+        doNothing().when(mockEmailService).sendVerificationEmail(any(), anyString(), any());
 
         User user = userService.register(EMAIL, USERNAME, PASSWORD, NAME);
 

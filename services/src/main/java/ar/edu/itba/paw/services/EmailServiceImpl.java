@@ -22,6 +22,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -44,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-    private void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
+    private void sendEmail(String to, String subject, String template, Map<String, Object> variables, Locale locale) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
@@ -53,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setFrom(FROM);
             mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(getHtmlBody(template, variables), true);
+            mimeMessageHelper.setText(getHtmlBody(template, variables, locale), true);
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException messagingException) {
@@ -61,8 +62,8 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    private String getHtmlBody(String template, Map<String, Object> variables) {
-        Context thymeleafContext = new Context(LocaleContextHolder.getLocale());
+    private String getHtmlBody(String template, Map<String, Object> variables, Locale locale) {
+        Context thymeleafContext = new Context(locale);
         if(variables == null) {
             variables = new HashMap<>();
         }
@@ -73,145 +74,145 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendVerificationEmail(User to, String token) {
+    public void sendVerificationEmail(User to, String token, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.confirmation.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "registerConfirmation.html", mailMap);
+        sendEmail(to.getEmail(), subject, "registerConfirmation.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendDeletedUserEmail(User to) {
+    public void sendDeletedUserEmail(User to, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         final String subject = messageSource.getMessage("email.deleteUser.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "userDeleted.html", mailMap);
+        sendEmail(to.getEmail(), subject, "userDeleted.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendResetPasswordEmail(User to, String token) {
+    public void sendResetPasswordEmail(User to, String token, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("token", token);
         final String subject = messageSource.getMessage("email.resetPassword", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "resetPassword.html", mailMap);
+        sendEmail(to.getEmail(), subject, "resetPassword.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendReportCreatedEmail(User to, String report) {
+    public void sendReportCreatedEmail(User to, String report, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.created.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "reportCreated.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportCreated.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendReportApprovedEmail(User to, String report) {
+    public void sendReportApprovedEmail(User to, String report, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.approved.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "reportApproved.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportApproved.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendReportRejectedEmail(User to, String report) {
+    public void sendReportRejectedEmail(User to, String report, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("report", report);
         final String subject = messageSource.getMessage("email.report.rejected.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "reportRejected.html", mailMap);
+        sendEmail(to.getEmail(), subject, "reportRejected.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendDeletedCommentEmail(User to, Comment comment, String report) {
+    public void sendDeletedCommentEmail(User to, Comment comment, String report, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("comment", comment.getCommentBody());
         mailMap.put("report", report);
         mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.deleted.comment.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap);
+        sendEmail(to.getEmail(), subject, "deletedComment.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendDeletedListEmail(User to, MediaList mediaList, String report) {
+    public void sendDeletedListEmail(User to, MediaList mediaList, String report, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("list", mediaList.getListName());
         mailMap.put("listDescription", mediaList.getDescription());
         mailMap.put("report", report);
         mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.deleted.list.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "deletedList.html", mailMap);
+        sendEmail(to.getEmail(), subject, "deletedList.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendNewRequestEmail(MediaList list, User requester, User listOwner) {
+    public void sendNewRequestEmail(MediaList list, User requester, User listOwner, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", list.getListName());
         mailMap.put("username", requester.getUsername());
         mailMap.put("toUsername", listOwner.getUsername());
         final String subject = messageSource.getMessage("collabEmail.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(listOwner.getEmail(), subject, "collaborationRequest.html", mailMap);
+        sendEmail(listOwner.getEmail(), subject, "collaborationRequest.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendCollabRequestAcceptedEmail(User to, Request collaboration) {
+    public void sendCollabRequestAcceptedEmail(User to, Request collaboration, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", collaboration.getMediaList().getListName());
         mailMap.put("collabUsername", collaboration.getCollaborator().getUsername());
         mailMap.put("listId", collaboration.getMediaList().getMediaListId());
         final String subject = messageSource.getMessage("collabConfirmEmail.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap);
+        sendEmail(to.getEmail(), subject, "collaborationConfirmed.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendModRequestApprovedEmail(User to) {
+    public void sendModRequestApprovedEmail(User to, Locale locale) {
         final String subject = messageSource.getMessage("email.mod.approved.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "modRequestApproved.html", null);
+        sendEmail(to.getEmail(), subject, "modRequestApproved.html", null, locale);
     }
 
     @Async
     @Override
-    public void sendModRoleRemovedEmail(User to) {
+    public void sendModRoleRemovedEmail(User to, Locale locale) {
         final String subject = messageSource.getMessage("email.mod.removed.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "modRoleRemoved.html", null);
+        sendEmail(to.getEmail(), subject, "modRoleRemoved.html", null, locale);
     }
 
     @Async
     @Override
-    public void sendBannedUserEmail(User to) {
+    public void sendBannedUserEmail(User to, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.bans.ban.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "userBanned.html", mailMap);
+        sendEmail(to.getEmail(), subject, "userBanned.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendUnbannedUserEmail(User to) {
+    public void sendUnbannedUserEmail(User to, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         mailMap.put("strikes", to.getStrikes());
         final String subject = messageSource.getMessage("email.bans.unban.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "userUnbanned.html", mailMap);
+        sendEmail(to.getEmail(), subject, "userUnbanned.html", mailMap, locale);
     }
 
     @Async
     @Override
-    public void sendDeletedUserByStrikesEmail(User to) {
+    public void sendDeletedUserByStrikesEmail(User to, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", to.getUsername());
         final String subject = messageSource.getMessage("email.bans.deleted.subject", null, LocaleContextHolder.getLocale());
-        sendEmail(to.getEmail(), subject, "userDeletedByStrikes.html", mailMap);
+        sendEmail(to.getEmail(), subject, "userDeletedByStrikes.html", mailMap, locale);
     }
 }
