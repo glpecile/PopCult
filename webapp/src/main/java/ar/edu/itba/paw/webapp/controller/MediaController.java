@@ -176,7 +176,7 @@ public class MediaController {
             listsService.addToMediaList(mediaList, media);
         } catch (MediaAlreadyInListException e) {
             LOGGER.error("Media {} is already in list {}.", mediaId, mediaListId);
-            return new ModelAndView("redirect:/media/" + mediaId).addObject("alreadyInList", true);//TODO mostrar el mensaje
+            return new ModelAndView("redirect:/media/" + mediaId);
         }
         LOGGER.error("Media {} was added to list {} successfully", mediaId, mediaListId);
         return new ModelAndView("redirect:/media/" + mediaId);

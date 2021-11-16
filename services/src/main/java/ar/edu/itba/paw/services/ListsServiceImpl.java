@@ -52,12 +52,6 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Media> getMediaIdInList(MediaList mediaList) {
-        return listsDao.getMediaIdInList(mediaList);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
         return listsDao.getMediaIdInList(mediaList, page, pageSize);
     }

@@ -24,13 +24,24 @@ public class InstanceProvider {
     private static final String ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST = "password";
     private static final String ALREADY_EXISTS_NAME_WITH_MOD_REQUEST = "name";
 
+    private static final int ALREADY_EXISTS_USER_ID_NO_COLLABORATOR = 5;
+    private static final String ALREADY_EXISTS_EMAIL_NO_COLLABORATOR = "mod@request.com";
+    private static final String ALREADY_EXISTS_USERNAME_NO_COLLABORATOR = "modRequestUser";
+    private static final String ALREADY_EXISTS_PASSWORD_NO_COLLABORATOR = "password";
+    private static final String ALREADY_EXISTS_NAME_NO_COLLABORATOR = "name";
+
+    private static final int ALREADY_EXISTS_USER_ID_LIST_OWNER = 10;
+    private static final String ALREADY_EXISTS_EMAIL_LIST_OWNER = "popcult.paw@gmail.com";
+    private static final String ALREADY_EXISTS_USERNAME_LIST_OWNER = "PopCult";
+    private static final String ALREADY_EXISTS_PASSWORD_LIST_OWNER = "password";
+    private static final String ALREADY_EXISTS_NAME_LIST_OWNER = "PopCult";
+
     private static final String COMMENT = "Comment";
 
     /* default */ static final int ALREADY_EXISTS_MEDIA_ID = 1;
     private static final int ALREADY_EXISTS_LIKED_MEDIA_ID = 2;
     private static final int ALREADY_EXISTS_TO_WATCH_MEDIA_ID = 2;
     private static final int ALREADY_EXISTS_WATCHED_MEDIA_ID = 3;
-
 
     /* default */ static final int ALREADY_EXISTS_LIST_ID = 2;
     private static final int MEDIA_ALREADY_IN_LIST_ID = 29;
@@ -58,12 +69,34 @@ public class InstanceProvider {
                 .build();
     }
 
+    public static User getUserWithModRequest() {
+        return new User.Builder(ALREADY_EXISTS_EMAIL_WITH_MOD_REQUEST, ALREADY_EXISTS_USERNAME_WITH_MOD_REQUEST, ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST, ALREADY_EXISTS_NAME_WITH_MOD_REQUEST)
+                .userId(ALREADY_EXISTS_USER_ID_WITH_MOD_REQUEST)
+                .build();
+    }
+
+    public static User getOwnerListUser() {
+        return new User.Builder(ALREADY_EXISTS_EMAIL_LIST_OWNER, ALREADY_EXISTS_USERNAME_LIST_OWNER, ALREADY_EXISTS_PASSWORD_LIST_OWNER, ALREADY_EXISTS_NAME_LIST_OWNER)
+                .userId(ALREADY_EXISTS_USER_ID_LIST_OWNER)
+                .build();
+    }
+
+    public static User getUserCollaborator() {
+        return getUser();
+    }
+
+    public static User getNoCollaboratorUser() {
+        return new User.Builder(ALREADY_EXISTS_EMAIL_NO_COLLABORATOR, ALREADY_EXISTS_USERNAME_NO_COLLABORATOR, ALREADY_EXISTS_PASSWORD_NO_COLLABORATOR, ALREADY_EXISTS_NAME_NO_COLLABORATOR)
+                .userId(ALREADY_EXISTS_USER_ID_NO_COLLABORATOR)
+                .build();
+    }
+
     public static Media getMedia() {
         return new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.SERIE, "House", "...", "", 7788, null, 8, Country.US);
     }
 
     public static MediaList getMediaList() {
-        return new MediaList(ALREADY_EXISTS_LIST_ID, getUser(), "Kids Movies", "...", null, true, false);
+        return new MediaList(ALREADY_EXISTS_LIST_ID, getOwnerListUser(), "Kids Movies", "...", null, true, false);
     }
 
     public static ListComment getListComment() {
@@ -87,13 +120,7 @@ public class InstanceProvider {
     }
 
     public static MediaList getCanEditMediaList() {
-        return new MediaList(ALREADY_EXISTS_CAN_EDIT_LIST_ID, getUser(), "Movies to Enjoy Alone", "...", null, true, false);
-    }
-
-    public static User getUserWithModRequest() {
-        return new User.Builder(ALREADY_EXISTS_EMAIL_WITH_MOD_REQUEST, ALREADY_EXISTS_USERNAME_WITH_MOD_REQUEST, ALREADY_EXISTS_PASSWORD_WITH_MOD_REQUEST, ALREADY_EXISTS_NAME_WITH_MOD_REQUEST)
-                .userId(ALREADY_EXISTS_USER_ID_WITH_MOD_REQUEST)
-                .build();
+        return new MediaList(ALREADY_EXISTS_CAN_EDIT_LIST_ID, getOwnerListUser(), "Movies to Enjoy Alone", "...", null, true, false);
     }
 
     public static Media getToWatchMedia() {
