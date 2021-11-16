@@ -19,10 +19,11 @@ La versión de **Java** utilizada es `1.8.0_77`.
 La versión usada de **Tomcat** es `7.0.76`.
 
 Las tablas de la base de datos serán creadas automáticamente al inicar la aplicación.
-Además, se deben ejecutar los siguientes scripts de sql para popular la base de datos por única vez:
+Además, se deben ejecutar los siguientes scripts de sql, en el orden especificado, para popular la base de datos por única vez:
 ```bash
 genre.sql
 media.sql
+users.sql
 lists.sql
 ```
 Los scripts se encuentran en `/persistence/src/main/resources`.
