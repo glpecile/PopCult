@@ -75,7 +75,6 @@
             <div class="relative inline-block">
                 <img class="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src="<c:url value="/user/image/${param.imageId}"/>">
-                <!-- TODO: Add other user badge -->
             </div>
             <h2 class="text-3xl font-bold"><c:out value="${param.name}"/></h2>
             <h4>
