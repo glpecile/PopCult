@@ -5,7 +5,7 @@
         background-color: #8B5CF6;
     }
 </style>
-<nav>
+<nav class="mt-3">
     <ul class="pagination pagination-circle justify-content-center">
         <c:if test="${param.mediaPages > 1}">
             <%--    Previous button--%>
@@ -67,8 +67,7 @@
                     </c:choose>
                 </c:if>
             </c:forEach>
-
-
+            
             <%--    Last page--%>
             <c:if test="${param.mediaPages > 2 && param.currentPage < param.mediaPages - 2}">
                 <li class="page-item disabled">

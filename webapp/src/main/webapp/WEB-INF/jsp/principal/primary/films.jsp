@@ -89,7 +89,6 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
-                <br>
                 <c:url value="" var="paginationUrl">
                     <c:forEach var="p" items="${param}">
                         <c:choose>

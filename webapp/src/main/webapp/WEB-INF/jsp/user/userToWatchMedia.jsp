@@ -49,8 +49,6 @@
                         </div>
                     </c:forEach>
                 </div>
-
-                <br>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${toWatchMediaIdsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${toWatchMediaIdsContainer.currentPage + 1}"/>

@@ -84,10 +84,13 @@
 
             <c:choose>
                 <c:when test="${fn:length(allListContainer.elements) == 0}">
-                    <br>
-                    <h3 class="text-center">
-                        <spring:message code="lists.noLists"/>
-                    </h3>
+                    <div class="flex-col flex-wrap p-4 space-x-4">
+                        <img class="w-36 object-center mx-auto" src="<c:url value="/resources/images/PopCultLogoX.png"/>"
+                             alt="no_results_image">
+                        <h3 class="text-center py-2 mt-0.5 text-gray-400">
+                            <spring:message code="lists.noLists"/>
+                        </h3>
+                    </div>
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="cover" items="${allLists}">
@@ -102,7 +105,6 @@
                             </jsp:include>
                         </div>
                     </c:forEach>
-                    <br>
                     <c:url value="" var="paginationUrl">
                         <c:forEach var="p" items="${param}">
                             <c:choose>
