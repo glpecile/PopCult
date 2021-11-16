@@ -24,5 +24,5 @@ public interface CollaborativeListService {
 
     Optional<Request> getById(int collabId);
 
-    void addCollaborators(MediaList mediaList, List<User> users)  throws UserAlreadyCollaboratesInListException;
+    void addCollaborators(MediaList mediaList, List<User> users);
 }

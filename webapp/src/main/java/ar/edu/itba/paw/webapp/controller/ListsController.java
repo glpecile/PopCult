@@ -320,11 +320,7 @@ public class ListsController {
         }
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         List<User> users = userService.getById(usernameForm.getUser());
-        try {
-            collaborativeListService.addCollaborators(mediaList, users);
-        } catch (UserAlreadyCollaboratesInListException e) {
-            return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userAlreadyCollabsInList", true);
-        }
+        collaborativeListService.addCollaborators(mediaList, users);
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
         return new ModelAndView("redirect:/lists/edit/" + mediaListId + "/manageMedia");
     }
@@ -426,11 +422,7 @@ public class ListsController {
         }
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
         List<User> users = userService.getById(usernameForm.getUser());
-        try {
-            collaborativeListService.addCollaborators(mediaList, users);
-        } catch (UserAlreadyCollaboratesInListException e) {
-            return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userAlreadyCollabsInList", true);
-        }
+        collaborativeListService.addCollaborators(mediaList, users);
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
         return new ModelAndView("redirect:/lists/" + mediaListId + "/collaborators");
     }

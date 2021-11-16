@@ -20,7 +20,9 @@ public interface CollaborativeListsDao {
 
     Optional<Request> getById(int collabId);
 
-    void addCollaborators(MediaList mediaList, List<User> users) throws UserAlreadyCollaboratesInListException;
+    void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException;
+
+    void addCollaborators(MediaList mediaList, List<User> users) ;
 
     Optional<Request> getUserListCollabRequest(MediaList mediaList, User user);
 

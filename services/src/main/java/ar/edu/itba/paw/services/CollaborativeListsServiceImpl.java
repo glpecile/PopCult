@@ -70,7 +70,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users) throws UserAlreadyCollaboratesInListException {
+    public void addCollaborators(MediaList mediaList, List<User> users){
         collaborativeListsDao.addCollaborators(mediaList, users);
     }
 }
