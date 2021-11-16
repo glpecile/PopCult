@@ -42,7 +42,6 @@
                 </jsp:include>
             </div>
         </c:forEach>
-        <br>
         <c:url value="" var="urlBase"/>
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${mediaListContainer.totalPages}"/>

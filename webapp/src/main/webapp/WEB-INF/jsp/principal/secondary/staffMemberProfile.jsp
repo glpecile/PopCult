@@ -75,8 +75,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        <br>
-        <div class="row">
+        <div class="row pt-3">
             <c:forEach var="media" items="${mediaContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
@@ -88,9 +87,6 @@
                 </div>
             </c:forEach>
         </div>
-
-        <br>
-
         <c:url var="url" value=""/>
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
