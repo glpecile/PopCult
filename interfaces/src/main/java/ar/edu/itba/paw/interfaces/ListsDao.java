@@ -25,7 +25,7 @@ public interface ListsDao {
 
     PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
 
-    PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
+    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
     PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term);
 

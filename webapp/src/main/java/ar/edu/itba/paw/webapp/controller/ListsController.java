@@ -114,7 +114,6 @@ public class ListsController {
         mav.addObject("media", mediaFromList);
         mav.addObject("user", u);
         mav.addObject("listCommentsContainer", listCommentsContainer);
-        //listsService.getForkedFrom(mediaList).ifPresent(forkedFrom -> mav.addObject("forkedFrom", forkedFrom));
         userService.getCurrentUser().ifPresent(user -> {
             mav.addObject("currentUser", user);
             mav.addObject("isFavoriteList", favoriteService.isFavoriteList(mediaList, user));
