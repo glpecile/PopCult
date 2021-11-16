@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +26,8 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @PersistenceContext
     private EntityManager em;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CollaborativeHibernateDao.class);
 
     @Override
     public Request makeNewRequest(MediaList mediaList, User user) {
@@ -80,9 +86,28 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users) {
+    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
+        if (userCollaboratesInList(mediaList, user) || user.equals(mediaList.getUser())){
+            throw new UserAlreadyCollaboratesInListException();
+        }
+        em.persist(new Request(user, mediaList, true));
+    }
+
+    private boolean userCollaboratesInList(MediaList mediaList, User user) {
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :mediaListId AND collaboratorid = :userId")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("userId", user.getUserId())
+                .getSingleResult()).intValue() != 0;
+    }
+
+    @Override
+    public void addCollaborators(MediaList mediaList, List<User> users){
         for (User user : users) {
-            em.persist(new Request(user, mediaList, true));
+            try {
+                addCollaborator(mediaList, user);
+            } catch (UserAlreadyCollaboratesInListException e){
+                LOGGER.error("User {} already collaborates in medialist {}.", user.getUsername(), mediaList.getMediaListId());
+            }
         }
     }
 

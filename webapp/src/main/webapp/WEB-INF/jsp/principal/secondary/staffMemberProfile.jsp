@@ -18,13 +18,14 @@
     <div class="col-8 offset-2 flex-grow">
         <div class="row">
             <div class="col-12 col-lg-4">
-                <img src="${member.image}" class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" alt="Media Image">
-                <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+                <div class="rounded-lg shadow-md bg-white">
+                    <img src="${member.image}" class="img-fluid rounded-t-lg" alt="Media Image">
+                    <jsp:include page="/WEB-INF/jsp/components/share.jsp"/>
+                </div>
             </div>
             <div class="col-12 col-lg-8">
-                <h1 class="display-5 fw-bolder"><c:out value="${member.name}"/></h1>
-                <br>
-                <p class="lead text-justify"><c:out value="${member.description}"/></p>
+                <h1 class="display-5 fw-bolder brak-words max-w-full"><c:out value="${member.name}"/></h1>
+                <p class="lead text-justify pt-2.5"><c:out value="${member.description}"/></p>
             </div>
         </div>
         <br>

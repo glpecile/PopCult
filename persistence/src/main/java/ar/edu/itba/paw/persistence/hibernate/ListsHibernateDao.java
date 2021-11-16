@@ -95,17 +95,6 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public List<Media> getMediaIdInList(MediaList mediaList) {
-        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId")
-                .setParameter("mediaListId", mediaList.getMediaListId());
-        @SuppressWarnings("unchecked")
-        List<Long> mediaIds = nativeQuery.getResultList();
-
-        return getMedias(mediaIds);
-
-    }
-
-    @Override
     public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", page * pageSize);
@@ -291,9 +280,13 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
+    public void addToMediaList(MediaList mediaList, List<Media> medias){
         for (Media media : medias) {
-            addToMediaList(mediaList, media);
+            try {
+                addToMediaList(mediaList, media);
+            }catch (MediaAlreadyInListException e){
+                LOGGER.error("Cannot add media {} to list {}: List already contains this media.", media.getMediaId(), mediaList.getMediaListId());
+            }
         }
     }
 
@@ -320,11 +313,7 @@ public class ListsHibernateDao implements ListsDao {
                 .setParameter("toCopyId", toCopy)
                 .getResultList();
         List<Media> toCopyMedia = getMedias(toCopyMediaIds);
-        try {
-            addToMediaList(fork, toCopyMedia);
-        } catch (MediaAlreadyInListException e) {
-            LOGGER.error("Media already exists in MediaList");
-        }
+        addToMediaList(fork, toCopyMedia);
         addToForkedLists(toCopy, fork);
         return fork;
     }

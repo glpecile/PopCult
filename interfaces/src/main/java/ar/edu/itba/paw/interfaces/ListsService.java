@@ -21,8 +21,6 @@ public interface ListsService {
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    List<Media> getMediaIdInList(MediaList mediaList);//TODO BORRAR
-
     PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
@@ -37,7 +35,7 @@ public interface ListsService {
 
     void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
 
-    void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, List<Media> medias);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
 

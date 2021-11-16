@@ -26,10 +26,9 @@
     <div class="col-8 offset-2 flex-grow">
         <div class="row">
             <div class="col-12 col-lg-4">
-                <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${media.image}"
-                     alt="Media Image"/>
-
+                <!-- Media Grid -->
                 <div class="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
+                    <img class="img-fluid rounded-t-lg" src="${media.image}" alt="Media Image"/>
                     <%-- Icon row --%>
                     <div class="flex justify-around pt-2">
                         <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -73,18 +72,12 @@
                         </div>
                     </sec:authorize>
                 </div>
-                <!-- End component -->
             </div>
-
             <div class="col-12 col-lg-8 mb-1.5">
-                <div class="row justify-content-start">
-                    <div class="col-md-auto">
-                        <h1 class="display-5 fw-bolder"><c:out value="${media.title}"/></h1>
-                    </div>
-                </div>
+                <h1 class="display-5 fw-bolder justify-start pt-2 break-words max-w-full"><c:out value="${media.title}"/></h1>
                 <div class="text-xl py-2">
                     <span><c:out value="${media.releaseYear}"/></span>
-                    <span class="mx-3 mt-3">&#8226;</span>
+                    <span class="mx-1.5 mt-3">&#8226;</span>
                     <span><c:out value="${media.country.countryName}"/></span>
                 </div>
                 <p class="lead text-justify"><c:out value="${media.description}"/></p>

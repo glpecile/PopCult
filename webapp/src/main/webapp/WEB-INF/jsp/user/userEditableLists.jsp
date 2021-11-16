@@ -54,7 +54,6 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
-                <div class="py-3"></div>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${listContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${listContainer.currentPage + 1}"/>

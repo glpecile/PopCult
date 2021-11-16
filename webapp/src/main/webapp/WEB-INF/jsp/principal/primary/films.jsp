@@ -22,7 +22,6 @@
 <body class="bg-gray-50">
 <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
 <div class="col-8 offset-2">
-    <!-- TODO: Desaparecer cuando se usan filtros -->
     <h4 class="font-bold text-2xl pt-2">
         <spring:message code="films.popular"/>
     </h4>
@@ -90,7 +89,6 @@
                         </jsp:include>
                     </div>
                 </c:forEach>
-                <br>
                 <c:url value="" var="paginationUrl">
                     <c:forEach var="p" items="${param}">
                         <c:choose>

@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
         Token token = tokenService.createToken(user, TokenType.VERIFICATION);
 
-        emailService.sendVerificationEmail(user, token.getToken());
+        emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
 
         return user;
     }
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         userDao.deleteUser(user);
-        emailService.sendDeletedUserEmail(user);
+        emailService.sendDeletedUserEmail(user, LocaleContextHolder.getLocale());
     }
 
     @Transactional
@@ -113,7 +114,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) throws EmailNotExistsException {
         User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
         Token token = tokenService.createToken(user, TokenType.RESET_PASS);
-        emailService.sendResetPasswordEmail(user, token.getToken());
+        emailService.sendResetPasswordEmail(user, token.getToken(), LocaleContextHolder.getLocale());
     }
 
     @Transactional
@@ -164,9 +165,9 @@ public class UserServiceImpl implements UserService {
     public void resendToken(Token token) {
         tokenService.renewToken(token);
         if (token.getType() == TokenType.VERIFICATION) {
-            emailService.sendVerificationEmail(token.getUser(), token.getToken());
+            emailService.sendVerificationEmail(token.getUser(), token.getToken(), LocaleContextHolder.getLocale());
         } else if (token.getType() == TokenType.RESET_PASS) {
-            emailService.sendResetPasswordEmail(token.getUser(), token.getToken());
+            emailService.sendResetPasswordEmail(token.getUser(), token.getToken(), LocaleContextHolder.getLocale());
         }
     }
 
@@ -209,7 +210,7 @@ public class UserServiceImpl implements UserService {
                 break;
             case THIRD_BAN_STRIKES:
                 userDao.deleteUser(user);
-                emailService.sendDeletedUserByStrikesEmail(user);
+                emailService.sendDeletedUserByStrikesEmail(user, LocaleContextHolder.getLocale());
                 break;
         }
     }
@@ -219,7 +220,7 @@ public class UserServiceImpl implements UserService {
     public void banUser(User user) {
         user.setNonLocked(false);
         user.setBanDate(LocalDateTime.now());
-        emailService.sendBannedUserEmail(user);
+        emailService.sendBannedUserEmail(user, LocaleContextHolder.getLocale());
     }
 
     @Transactional
@@ -227,7 +228,7 @@ public class UserServiceImpl implements UserService {
     public void unbanUser(User user) {
         user.setNonLocked(true);
         user.setBanDate(null);
-        emailService.sendUnbannedUserEmail(user);
+        emailService.sendUnbannedUserEmail(user, LocaleContextHolder.getLocale());
     }
 
     @Transactional
@@ -237,10 +238,8 @@ public class UserServiceImpl implements UserService {
         LocalDateTime actualDate = LocalDateTime.now();
         userDao.getBannedUsers().forEach(user -> {
             LOGGER.info("Checking ban for {}", user.getUsername());
-            if(user.getBanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
-                user.setNonLocked(true);
-                user.setBanDate(null);
-                emailService.sendUnbannedUserEmail(user);
+            if(user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
+                unbanUser(user);
                 LOGGER.info("{} unbanned", user.getUsername());
             }
         });

@@ -21,11 +21,9 @@ public interface ListsDao {
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    List<Media> getMediaIdInList(MediaList mediaList);//TODO BORRAR
-
     PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
 
-    PageContainer<MediaList> getLastAddedLists(int page, int pageSize); //TODO optional probar
+    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
     PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term);
 
@@ -35,7 +33,7 @@ public interface ListsDao {
 
     void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
 
-    void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, List<Media> medias);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
 

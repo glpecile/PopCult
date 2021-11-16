@@ -15,44 +15,14 @@
 <c:url value="/lists/${listId}" var="commentPath"/>
 <c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
 <c:url value="/lists/${listId}/comments" var="commentsDetailPath"/>
+<c:url value="" var="paginationUrl"/>
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
     <div class="col-8 offset-2 flex-grow">
-        <div class="flex flex-col flex-wrap pt-4">
-            <h2 class="display-5 fw-bolder max-w-full break-words"><c:out value="${list.listName}"/></h2>
-            <div class="flex justify-right">
-                <h4 class="py-2 pb-2.5">
-                    <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
-                                                         href="<c:url value="/user/${user.username}"/>"><b><c:out
-                        value="${user.username}"/></b></a>
-                </h4>
-                <%-- Forked From --%>
-                <c:if test="${list.forkedFrom != null}">
-                    <h4 class="py-2 pb-2.5">
-                        <spring:message code="lists.forkedFrom"/> <a
-                            class="text-purple-500 hover:text-purple-900"
-                            href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
-                            value="${list.forkedFrom.listName}"/></b></a>
-                    </h4>
-                </c:if>
-                <%-- Amount of Forks --%>
-                <c:if test="${forks.totalCount != 0}">
-                    <div class="flex">
-                        <h4 class="py-2 pb-2.5">
-                            <spring:message code="lists.forkedAmount"/>
-                        </h4>
-                        <a class="text-purple-500 hover:text-purple-900 cursor-pointer font-bold text-center px-1 pt-1.5"
-                           data-bs-toggle="modal"
-                           data-bs-target="#forksModal">
-                            <c:out value="${forks.totalCount}"/>
-                        </a>
-                        <h4 class="py-2 pb-2.5">
-                            <spring:message code="lists.forkedTimes" arguments="${forks.totalCount}"/>
-                        </h4>
-                    </div>
-                </c:if>
-            </div>
+        <div class="flex flex-wrap pt-2">
+            <h2 class="display-5 fw-bolder"><c:out value="${list.listName}"/></h2>
+            <!-- Favorite and report buttons -->
             <div class="flex flex-grow justify-between">
                 <div class="pt-2.5">
                     <jsp:include page="/WEB-INF/jsp/components/favorite.jsp">
@@ -68,6 +38,39 @@
                     </button>
                 </a>
             </div>
+        </div>
+        <!-- List author and fork info -->
+        <div class="flex justify-right">
+            <h4 class="py-2 pb-2.5">
+                <spring:message code="lists.by"/> <a class="text-purple-500 hover:text-purple-900"
+                                                     href="<c:url value="/user/${user.username}"/>"><b><c:out
+                    value="${user.username}"/></b></a>
+            </h4>
+            <%-- Forked From --%>
+            <c:if test="${list.forkedFrom != null}">
+                <h4 class="py-2 pb-2.5">
+                    <spring:message code="lists.forkedFrom"/> <a
+                        class="text-purple-500 hover:text-purple-900"
+                        href="<c:url value="/lists/${list.forkedFrom.mediaListId}"/>"><b><c:out
+                        value="${list.forkedFrom.listName}"/></b></a>
+                </h4>
+            </c:if>
+            <%-- Amount of Forks --%>
+            <c:if test="${forks.totalCount != 0}">
+                <div class="flex">
+                    <h4 class="py-2 pb-2.5">
+                        <spring:message code="lists.forkedAmount"/>
+                    </h4>
+                    <a class="text-purple-500 hover:text-purple-900 cursor-pointer font-bold text-center px-1 pt-1.5"
+                       data-bs-toggle="modal"
+                       data-bs-target="#forksModal">
+                        <c:out value="${forks.totalCount}"/>
+                    </a>
+                    <h4 class="py-2 pb-2.5">
+                        <spring:message code="lists.forkedTimes" arguments="${forks.totalCount}"/>
+                    </h4>
+                </div>
+            </c:if>
         </div>
         <p class="lead text-justify max-w-full break-words pb-2"><c:out value="${list.description}"/></p>
         <c:if test="${collaborators.totalCount != 0}">
@@ -125,7 +128,7 @@
         </div>
         <!-- Films and Series in the list -->
         <div class="row pb-4">
-            <c:forEach var="media" items="${media}">
+            <c:forEach var="media" items="${mediaContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${media.image}"/>
@@ -135,6 +138,11 @@
                     </jsp:include>
                 </div>
             </c:forEach>
+            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
+                <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
+                <jsp:param name="url" value="${paginationUrl}"/>
+            </jsp:include>
         </div>
         <!-- Comments Section -->
         <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">

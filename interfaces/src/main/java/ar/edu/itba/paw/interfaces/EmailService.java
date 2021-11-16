@@ -5,37 +5,37 @@ import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 
-import java.util.Map;
+import java.util.Locale;
 
 public interface EmailService {
 
-    void sendVerificationEmail(User to, String token);
+    void sendVerificationEmail(User to, String token, Locale locale);
 
-    void sendDeletedUserEmail(User to);
+    void sendDeletedUserEmail(User to, Locale locale);
 
-    void sendResetPasswordEmail(User to, String token);
+    void sendResetPasswordEmail(User to, String token, Locale locale);
 
-    void sendReportCreatedEmail(User to, String report);
+    void sendReportCreatedEmail(User to, String report, Locale locale);
 
-    void sendReportApprovedEmail(User to, String report);
+    void sendReportApprovedEmail(User to, String report, Locale locale);
 
-    void sendReportRejectedEmail(User to, String report);
+    void sendReportRejectedEmail(User to, String report, Locale locale);
 
-    void sendDeletedCommentEmail(User to, Comment comment, String report);
+    void sendDeletedCommentEmail(User to, Comment comment, String report, Locale locale);
 
-    void sendDeletedListEmail(User to, MediaList mediaList, String report);
+    void sendDeletedListEmail(User to, MediaList mediaList, String report, Locale locale);
 
-    void sendNewRequestEmail(MediaList list, User requester, User listOwner);
+    void sendNewRequestEmail(MediaList list, User requester, User listOwner, Locale locale);
 
-    void sendCollabRequestAcceptedEmail(User to, Request collaboration);
+    void sendCollabRequestAcceptedEmail(User to, Request collaboration, Locale locale);
 
-    void sendModRequestApprovedEmail(User to);
+    void sendModRequestApprovedEmail(User to, Locale locale);
 
-    void sendModRoleRemovedEmail(User to);
+    void sendModRoleRemovedEmail(User to, Locale locale);
 
-    void sendBannedUserEmail(User to);
+    void sendBannedUserEmail(User to, Locale locale);
 
-    void sendUnbannedUserEmail(User to);
+    void sendUnbannedUserEmail(User to, Locale locale);
 
-    void sendDeletedUserByStrikesEmail(User to);
+    void sendDeletedUserByStrikesEmail(User to, Locale locale);
 }

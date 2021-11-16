@@ -3,7 +3,6 @@
 <%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -50,8 +49,6 @@
                         </div>
                     </c:forEach>
                 </div>
-
-                <br>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${toWatchMediaIdsContainer.totalPages}"/>
                     <jsp:param name="currentPage" value="${toWatchMediaIdsContainer.currentPage + 1}"/>

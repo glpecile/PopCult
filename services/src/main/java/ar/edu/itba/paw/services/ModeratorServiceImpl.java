@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,14 +39,14 @@ public class ModeratorServiceImpl implements ModeratorService {
     public void promoteToMod(User user) {
         user.setRole(UserRole.MOD);
         removeRequest(user);
-        emailService.sendModRequestApprovedEmail(user);
+        emailService.sendModRequestApprovedEmail(user, LocaleContextHolder.getLocale());
     }
 
     @Transactional
     @Override
     public void removeMod(User user) {
         user.setRole(UserRole.USER);
-        emailService.sendModRoleRemovedEmail(user);
+        emailService.sendModRoleRemovedEmail(user, LocaleContextHolder.getLocale());
     }
 
     @Transactional(readOnly = true)

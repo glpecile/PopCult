@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
         if (request.isPresent()) {
             return request.get();
         }
-        emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser());
+        emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser(), LocaleContextHolder.getLocale());
         return collaborativeListsDao.makeNewRequest(mediaList, user);
     }
 
@@ -39,7 +41,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Transactional
     @Override
     public void acceptRequest(Request collaborationRequest) {
-        emailService.sendCollabRequestAcceptedEmail(collaborationRequest.getCollaborator(), collaborationRequest);
+        emailService.sendCollabRequestAcceptedEmail(collaborationRequest.getCollaborator(), collaborationRequest, LocaleContextHolder.getLocale());
         collaborationRequest.setAccepted(true);
     }
 
@@ -69,7 +71,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users) {
+    public void addCollaborators(MediaList mediaList, List<User> users){
         collaborativeListsDao.addCollaborators(mediaList, users);
     }
 }

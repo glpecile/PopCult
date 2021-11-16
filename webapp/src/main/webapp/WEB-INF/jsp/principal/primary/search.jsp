@@ -163,7 +163,6 @@
                                             </jsp:include>
                                         </div>
                                     </c:forEach>
-                                    <br>
                                 </div>
                             </c:when>
                             <c:otherwise>

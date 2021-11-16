@@ -18,12 +18,12 @@
     <div class="col-8 offset-2 flex-grow">
         <div class="row">
             <div class="col-12 col-lg-2">
-                <img class="img-fluid img-thumbnail card-img-top rounded-lg shadow-md" src="${studio.image}"
+                <img class="img-fluid rounded-lg shadow-md" src="${studio.image}"
                      onerror="this.src='https://media.discordapp.net/attachments/851847371851956334/884465752307015740/local-file-not-found.png';"
                      alt="StudioPicture"/>
             </div>
             <div class="col-12 col-lg-10">
-                <h1 class="display-5 fw-bolder"><c:out value="${studio.name}"/></h1>
+                <h1 class="display-5 fw-bolder break-words max-w-full"><c:out value="${studio.name}"/></h1>
             </div>
         </div>
         <h4 class="lead py-4">
