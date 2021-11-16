@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -79,9 +81,19 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         return Optional.ofNullable(em.find(Request.class, collabId));
     }
 
+    private boolean userCollaboratesInList(MediaList mediaList, User user) {
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :mediaListId AND collaboratorid = :userId")
+                .setParameter("mediaListId", mediaList.getMediaListId())
+                .setParameter("userId", user.getUserId())
+                .getSingleResult()).intValue() != 0;
+    }
+
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users) {
+    public void addCollaborators(MediaList mediaList, List<User> users) throws UserAlreadyCollaboratesInListException {
         for (User user : users) {
+            if (userCollaboratesInList(mediaList, user)){
+                throw new UserAlreadyCollaboratesInListException();
+            }
             em.persist(new Request(user, mediaList, true));
         }
     }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -23,5 +24,5 @@ public interface CollaborativeListService {
 
     Optional<Request> getById(int collabId);
 
-    void addCollaborators(MediaList mediaList, List<User> users);
+    void addCollaborators(MediaList mediaList, List<User> users)  throws UserAlreadyCollaboratesInListException;
 }

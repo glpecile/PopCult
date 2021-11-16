@@ -293,6 +293,9 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public void addToMediaList(MediaList mediaList, List<Media> medias) throws MediaAlreadyInListException {
         for (Media media : medias) {
+            if(mediaAlreadyInList(mediaList, media)) {
+                throw new MediaAlreadyInListException();
+            }
             addToMediaList(mediaList, media);
         }
     }

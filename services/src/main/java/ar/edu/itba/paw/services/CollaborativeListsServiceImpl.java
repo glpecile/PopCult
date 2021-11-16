@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -69,7 +70,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users) {
+    public void addCollaborators(MediaList mediaList, List<User> users) throws UserAlreadyCollaboratesInListException {
         collaborativeListsDao.addCollaborators(mediaList, users);
     }
 }

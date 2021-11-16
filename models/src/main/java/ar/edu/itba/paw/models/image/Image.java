@@ -11,7 +11,6 @@ public class Image {
     @SequenceGenerator(sequenceName = "image_imageid_seq", name = "image_imageid_seq", allocationSize = 1)
     private Integer imageId;
 
-    //TODO chequear constraints
     @Column(name = "photoblob")
     private byte[] imageBlob;
 

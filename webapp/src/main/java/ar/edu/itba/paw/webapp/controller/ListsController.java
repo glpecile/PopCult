@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
@@ -99,19 +100,20 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/{listId}", method = {RequestMethod.GET})
     public ModelAndView listDescription(@PathVariable("listId") final int listId,
-                                        @ModelAttribute("commentForm") CommentForm commentForm) {
+                                        @ModelAttribute("commentForm") CommentForm commentForm,
+                                        @RequestParam(value = "page", defaultValue = "1") final int page) {
         LOGGER.info("List {} accesed.", listId);
         final ModelAndView mav = new ModelAndView("lists/listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = mediaList.getUser();
-        final List<Media> mediaFromList = listsService.getMediaIdInList(mediaList);
+        final PageContainer<Media> mediaFromList = listsService.getMediaIdInList(mediaList,  page - 1, listsPerPage);
         final PageContainer<ListComment> listCommentsContainer = commentService.getListComments(mediaList, defaultValue - 1, itemsPerPage);
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, defaultValue - 1, collaboratorsAmount);
         final PageContainer<MediaList> forks = listsService.getListForks(mediaList, defaultValue - 1, itemsPerPage);
         mav.addObject("forks", forks);
         mav.addObject("collaborators", collaborators);
         mav.addObject("list", mediaList);
-        mav.addObject("media", mediaFromList);
+        mav.addObject("mediaContainer", mediaFromList);
         mav.addObject("user", u);
         mav.addObject("listCommentsContainer", listCommentsContainer);
         userService.getCurrentUser().ifPresent(user -> {
@@ -141,7 +143,7 @@ public class ListsController {
                                    final BindingResult errors) {
         if (errors.hasErrors()) {
             LOGGER.warn("List {} adding comment form has errors.", listId);
-            return listDescription(listId, form);
+            return listDescription(listId, form, defaultValue);
         }
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -320,7 +322,7 @@ public class ListsController {
         List<User> users = userService.getById(usernameForm.getUser());
         try {
             collaborativeListService.addCollaborators(mediaList, users);
-        } catch (RuntimeException e) { //TODO custom exception
+        } catch (UserAlreadyCollaboratesInListException e) {
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userAlreadyCollabsInList", true);
         }
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
@@ -426,7 +428,7 @@ public class ListsController {
         List<User> users = userService.getById(usernameForm.getUser());
         try {
             collaborativeListService.addCollaborators(mediaList, users);
-        } catch (RuntimeException e) { //TODO custom exception
+        } catch (UserAlreadyCollaboratesInListException e) {
             return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userAlreadyCollabsInList", true);
         }
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);

@@ -15,6 +15,7 @@
 <c:url value="/lists/${listId}" var="commentPath"/>
 <c:url value="/lists/${listId}/sendRequest" var="requestPath"/>
 <c:url value="/lists/${listId}/comments" var="commentsDetailPath"/>
+<c:url value="" var="paginationUrl"/>
 <body class="bg-gray-50">
 <div class="flex flex-col min-h-screen">
     <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
@@ -127,7 +128,7 @@
         </div>
         <!-- Films and Series in the list -->
         <div class="row pb-4">
-            <c:forEach var="media" items="${media}">
+            <c:forEach var="media" items="${mediaContainer.elements}">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
                     <jsp:include page="/WEB-INF/jsp/components/card.jsp">
                         <jsp:param name="image" value="${media.image}"/>
@@ -137,6 +138,11 @@
                     </jsp:include>
                 </div>
             </c:forEach>
+            <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
+                <jsp:param name="mediaPages" value="${mediaContainer.totalPages}"/>
+                <jsp:param name="currentPage" value="${mediaContainer.currentPage + 1}"/>
+                <jsp:param name="url" value="${paginationUrl}"/>
+            </jsp:include>
         </div>
         <!-- Comments Section -->
         <div class="flex flex-col bg-white shadow-md rounded-lg pb-3">
