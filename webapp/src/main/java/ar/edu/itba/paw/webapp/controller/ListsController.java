@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
@@ -321,7 +322,7 @@ public class ListsController {
         List<User> users = userService.getById(usernameForm.getUser());
         try {
             collaborativeListService.addCollaborators(mediaList, users);
-        } catch (RuntimeException e) { //TODO custom exception
+        } catch (UserAlreadyCollaboratesInListException e) {
             return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm).addObject("userAlreadyCollabsInList", true);
         }
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
@@ -427,7 +428,7 @@ public class ListsController {
         List<User> users = userService.getById(usernameForm.getUser());
         try {
             collaborativeListService.addCollaborators(mediaList, users);
-        } catch (RuntimeException e) { //TODO custom exception
+        } catch (UserAlreadyCollaboratesInListException e) {
             return manageListCollaborators(mediaListId, defaultValue, usernameForm).addObject("userAlreadyCollabsInList", true);
         }
         LOGGER.info("Users {} added as collaborators to list {}", usernameForm.getUser(), mediaListId);
