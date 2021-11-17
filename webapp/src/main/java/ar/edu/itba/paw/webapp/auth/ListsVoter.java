@@ -65,18 +65,18 @@ public class ListsVoter implements AccessDecisionVoter<FilterInvocation> {
             } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }
-        }if ( URL.contains("/lists/") && URL.contains("/collaborators")){
-            try{
+        } else if (URL.contains("/lists/") && URL.contains("/collaborators")) {
+            try {
                 int mediaListId = Integer.parseInt(URL.replaceFirst("/lists/", "").replaceFirst("/.*", ""));
                 listsService.getMediaListById(mediaListId).ifPresent(list -> {
                     Optional<User> user = userService.getCurrentUser();
-                    if (user.isPresent() && user.get().equals(list.getUser())){
+                    if (user.isPresent() && user.get().equals(list.getUser())) {
                         vote.set(ACCESS_GRANTED);
-                    }else{
+                    } else {
                         vote.set(ACCESS_DENIED);
                     }
                 });
-                }catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 vote.set(ACCESS_ABSTAIN);
             }
         } else if (URL.contains("/lists/")) {
