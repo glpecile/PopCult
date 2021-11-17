@@ -5,7 +5,7 @@
 <c:url value="${param.deletePath}" var="deletePath"/>
 <div class="p-2.5 m-2.5 gap-2 bg-white shadow-md rounded-lg flex flex-wrap flex-col">
     <p>
-        <strong><c:out value="${param.listName}"/></strong>
+        <a class="font-bold text-purple-500 hover:text-purple-900" href="<c:url value="/lists/${param.listId}"/>"><c:out value="${param.listName}"/></a>
         <c:out value="${param.description}"/>
     </p>
     <hr>
