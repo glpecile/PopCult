@@ -244,13 +244,13 @@ public class MediaController {
     }
 
     @RequestMapping(value = "/media/films")
-    public ModelAndView films(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
+    public ModelAndView films(@RequestParam(value = "page", defaultValue = "1") final int page,
                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
                               final BindingResult errors){
         LOGGER.debug("Trying to access films");
         if(errors.hasErrors()){
-            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
-            return new ModelAndView("redirect: " + request.getHeader("referer"));
+            LOGGER.info("Invalid FilterForm, redirecting to /media/films.");
+            return new ModelAndView("redirect:/media/films");
         }
         final ModelAndView mav = new ModelAndView("principal/primary/films");
         final List<Genre> genres = NormalizerUtils.getNormalizedGenres(filterForm.getGenres());
@@ -270,13 +270,13 @@ public class MediaController {
 
 
     @RequestMapping("/media/series")
-    public ModelAndView series(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
+    public ModelAndView series(@RequestParam(value = "page", defaultValue = "1") final int page,
                                @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
                                final BindingResult errors){
         LOGGER.debug("Trying to access series");
         if(errors.hasErrors()){
-            LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
-            return new ModelAndView("redirect: " + request.getHeader("referer"));
+            LOGGER.info("Invalid FilterForm, redirecting to /media/series.");
+            return new ModelAndView("redirect:media/series");
         }
         final ModelAndView mav = new ModelAndView("principal/primary/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
