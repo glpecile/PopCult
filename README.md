@@ -25,6 +25,7 @@ genre.sql
 media.sql
 users.sql
 lists.sql
+sequence.sql
 ```
 Los scripts se encuentran en `/persistence/src/main/resources`.
 
