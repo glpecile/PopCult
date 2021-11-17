@@ -12,7 +12,7 @@
     <!-- favicon -->
     <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
     <title>
-        <spring:message code="${genreName}"/> &#8226; PopCult
+        <spring:message code="${genre.genre}"/> &#8226; PopCult
     </title>
 </head>
 <body class="bg-gray-50">
@@ -21,7 +21,7 @@
     <div class="col-8 flex-col offset-2 flex flex-grow">
         <div class="row m-0">
             <h1 class="display-5 fw-bolder py-8">
-                <spring:message code="${genreName}"/>
+                <spring:message code="${genre.genre}"/>
             </h1>
             <c:if test="${fn:length(genreLists) > 0}">
                 <h4 class="font-bold text-2xl">
@@ -60,7 +60,7 @@
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${mediaPageContainer.totalPages}"/>
                 <jsp:param name="currentPage" value="${mediaPageContainer.currentPage + 1}"/>
-                <jsp:param name="url" value="/genre/${genreName}"/>
+                <jsp:param name="url" value="/genre/${genre.genre}"/>
             </jsp:include>
         </div>
     </div>

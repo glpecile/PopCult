@@ -30,6 +30,7 @@ public class ExceptionHandlingController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             DataIntegrityViolationException.class,
+            GenreNotFoundException.class,
             ListNotFoundException.class,
             MediaNotFoundException.class,
             StaffNotFoundException.class,

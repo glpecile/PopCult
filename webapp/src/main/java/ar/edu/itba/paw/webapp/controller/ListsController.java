@@ -14,6 +14,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utilities.FilterUtils;
+import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,8 +66,7 @@ public class ListsController {
     private static final int minMatches = 2;
 
     @RequestMapping("/lists")
-    public ModelAndView lists(HttpServletRequest request,
-                              @RequestParam(value = "page", defaultValue = "1") final int page,
+    public ModelAndView lists(@RequestParam(value = "page", defaultValue = "1") final int page,
                               @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
                               final BindingResult errors) {
         LOGGER.debug("Trying to access lists");
@@ -73,8 +75,9 @@ public class ListsController {
             return new ModelAndView("redirect:/lists");
         }
         final ModelAndView mav = new ModelAndView("lists/lists");
-        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page - 1, listsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()), genres, minMatches, filterForm.getStartYear(), filterForm.getLastYear(), null);
+        final List<Genre> genres = NormalizerUtils.getNormalizedGenres(filterForm.getGenres());
+        final SortType sortType = NormalizerUtils.getNormalizedSortType(filterForm.getSortType());
+        final PageContainer<MediaList> allLists = listsService.getMediaListByFilters(page - 1, listsPerPage, sortType, genres, minMatches, filterForm.getStartYear(), filterForm.getLastYear(), null);
         final List<ListCover> mostLikedLists = generateCoverList(favoriteService.getMostLikedLists(defaultValue - 1, scrollerAmount).getElements());
         final List<ListCover> allListsCovers = generateCoverList(allLists.getElements());
         mav.addObject("mostLikedLists", mostLikedLists);
@@ -236,7 +239,7 @@ public class ListsController {
 
     @RequestMapping(value = "/lists/edit/{listId}/search", method = {RequestMethod.GET}, params = "search")
     public ModelAndView searchMediaToAddToList(@PathVariable("listId") Integer mediaListId,
-                                               @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                                               @Valid @ModelAttribute("searchForm") final FilterForm searchForm,
                                                final BindingResult errors,
                                                @RequestParam(value = "sort", defaultValue = "title") final String sortType,
                                                @ModelAttribute("editListDetails") final ListForm form,
@@ -251,8 +254,9 @@ public class ListsController {
         final List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.SERIE);
         mediaTypes.add(MediaType.FILMS);
-        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements();
-        searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, SortType.valueOf(sortType.toUpperCase())).getElements());
+        final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
+        final List<Media> searchResults = searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, normalizedSortType).getElements();
+        searchResults.addAll(searchService.searchMediaByTitleNotInList(mediaList, searchForm.getTerm(), defaultValue - 1, searchAmount, mediaTypes, normalizedSortType).getElements());
         LOGGER.info("Search process completed.");
         return manageMediaFromList(mediaListId, defaultValue, form, mediaForm, usernameForm)
                 .addObject("searchTerm", searchForm.getTerm())

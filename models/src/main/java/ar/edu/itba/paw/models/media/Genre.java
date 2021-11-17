@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.media;
 
 public enum Genre {
+    NOT("N/A"),
     ACTION("Action"),
     ADVENTURE("Adventure"),
     ANIMATION("Animation"),
