@@ -77,18 +77,20 @@
                         </h3>
                     </div>
                 </c:if>
-                <c:forEach var="cover" items="${userPublicListCover}">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
-                        <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
-                            <jsp:param name="title" value="${cover.name}"/>
-                            <jsp:param name="listId" value="${cover.listId}"/>
-                            <jsp:param name="image1" value="${cover.image1}"/>
-                            <jsp:param name="image2" value="${cover.image2}"/>
-                            <jsp:param name="image3" value="${cover.image3}"/>
-                            <jsp:param name="image4" value="${cover.image4}"/>
-                        </jsp:include>
-                    </div>
-                </c:forEach>
+                <div class="row">
+                    <c:forEach var="cover" items="${userPublicListCover}">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2">
+                            <jsp:include page="/WEB-INF/jsp/components/gridCard.jsp">
+                                <jsp:param name="title" value="${cover.name}"/>
+                                <jsp:param name="listId" value="${cover.listId}"/>
+                                <jsp:param name="image1" value="${cover.image1}"/>
+                                <jsp:param name="image2" value="${cover.image2}"/>
+                                <jsp:param name="image3" value="${cover.image3}"/>
+                                <jsp:param name="image4" value="${cover.image4}"/>
+                            </jsp:include>
+                        </div>
+                    </c:forEach>
+                </div>
                 <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                     <jsp:param name="mediaPages" value="${userPublicLists.totalPages}"/>
                     <jsp:param name="currentPage" value="${userPublicLists.currentPage + 1}"/>
