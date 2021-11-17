@@ -19,8 +19,9 @@
 </head>
 <c:url var="url" value=""/>
 <body class="bg-gray-50">
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 offset-2">
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 offset-2 flex-grow">
         <c:if test="${empty param || (fn:length(param) == 1 and (!(empty param.lang) || param.page eq 1))}">
             <h4 class="font-bold text-2xl pt-2">
                 <spring:message code="series.popular"/>
@@ -56,7 +57,9 @@
                             data-action="click->slider#scrollTo"></li>
                     </ul>
                 </div>
+            </div>
         </c:if>
+
         <div class="row">
             <h4 class="font-bold text-2xl pt-2">
                 <spring:message code="series.explore"/>
@@ -64,11 +67,9 @@
             <c:set var="sortTypes" value="${sortTypes}" scope="request"/>
             <c:set var="decadesType" value="${decadesType}" scope="request"/>
             <c:set var="genreTypes" value="${genreTypes}" scope="request"/>
-
             <jsp:include page="/WEB-INF/jsp/components/filters.jsp">
                 <jsp:param name="url" value="${url}"/>
             </jsp:include>
-
             <c:choose>
                 <c:when test="${fn:length(mediaListContainer.elements) == 0}">
                     <div class="flex-col flex-wrap p-4 space-x-4">
@@ -114,8 +115,7 @@
             </c:choose>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>
