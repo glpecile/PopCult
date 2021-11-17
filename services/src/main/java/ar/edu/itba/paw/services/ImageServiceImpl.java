@@ -19,8 +19,10 @@ import java.util.Optional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+
     @Autowired
-    ImageDao imageDao;
+    private ImageDao imageDao;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
 
     @Transactional(readOnly = true)

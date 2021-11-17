@@ -20,7 +20,6 @@ public class ListCoverImpl {
     public static List<ListCover> getListCover(List<MediaList> discoveryLists, ListsService listsService) {
         List<ListCover> listCovers = new ArrayList<>();
         List<Media> mediaList;
-        PageContainer<Integer> id;
         ListCover cover;
         int size;
         for (MediaList list : discoveryLists) {

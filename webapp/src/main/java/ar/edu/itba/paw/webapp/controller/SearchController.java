@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -29,32 +28,24 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Controller
 public class SearchController {
-    @Autowired
-    private SearchService searchService;
 
     @Autowired
     private ListsService listsService;
-
     @Autowired
     private MediaService mediaService;
-
     @Autowired
     private MessageSource messageSource;
 
-    private static final int itemsPerPage = 12;
-
-    private static final int listsPerPage = 12;
-
-    private static final int minimumMediaMatches = 2; //minimum amount of media on a list that must match for it to be showed
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+
+    private static final int itemsPerPage = 12;
+    private static final int listsPerPage = 12;
+    private static final int minimumMediaMatches = 2; //minimum amount of media on a list that must match for it to be showed
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET})
     public ModelAndView search(HttpServletRequest request,

@@ -19,7 +19,8 @@ public class Notification {
     @Column(name = "opened", nullable = false)
     private boolean opened = false;
 
-    public Notification() {
+    /* default */ Notification() {
+        //Just for hibernate
     }
 
     public Notification(Integer notificationId, ListComment listComment) {

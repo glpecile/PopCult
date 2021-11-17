@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
+import ar.edu.itba.paw.interfaces.CollaborativeListService;
+import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -16,8 +17,10 @@ import java.util.Optional;
 
 @Service
 public class CollaborativeListsServiceImpl implements CollaborativeListService {
+
     @Autowired
     private CollaborativeListsDao collaborativeListsDao;
+
     @Autowired
     private EmailService emailService;
 

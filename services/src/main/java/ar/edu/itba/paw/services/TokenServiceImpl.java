@@ -15,8 +15,9 @@ import java.util.UUID;
 
 @Service
 public class TokenServiceImpl implements TokenService {
+
     @Autowired
-    TokenDao tokenDao;
+    private TokenDao tokenDao;
 
     /* default */ static final int EXPIRATION = 1; //days
 

@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
@@ -14,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-    @Autowired
-    UserService userService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping("/login")
     public ModelAndView login() {

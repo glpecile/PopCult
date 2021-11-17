@@ -21,10 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 @Controller
 public class RegisterController {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
     @RequestMapping(value = "/register", method = {RequestMethod.GET})

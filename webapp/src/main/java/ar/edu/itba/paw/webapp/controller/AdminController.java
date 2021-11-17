@@ -29,7 +29,6 @@ import java.util.Locale;
 
 @Controller
 public class AdminController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private ReportService reportService;
@@ -40,9 +39,9 @@ public class AdminController {
     @Autowired
     private MessageSource messageSource;
 
-    private static final int itemsPerPage = 12;
-    private static final int adminPanelItemsPerPage = 3;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
+    private static final int itemsPerPage = 12;
 
     @RequestMapping("/admin")
     public ModelAndView adminPanel() {

@@ -20,11 +20,12 @@ import java.util.Properties;
 @ComponentScan({"ar.edu.itba.paw.services"})
 @Configuration
 public class EmailConfig {
+
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Bean
-    JavaMailSender javaMailSender() {
+    public JavaMailSender javaMailSender() {
         final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost("smtp.gmail.com");
         javaMailSender.setPort(587);

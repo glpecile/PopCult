@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenreServiceImpl implements GenreService {
+
     @Autowired
     private GenreDao genreDao;
 

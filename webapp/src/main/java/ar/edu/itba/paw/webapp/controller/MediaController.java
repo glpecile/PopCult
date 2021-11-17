@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
-
 @Controller
 public class MediaController {
 
@@ -55,13 +54,13 @@ public class MediaController {
     @Autowired
     private MessageSource messageSource;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
+
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
     private static final int lastAddedAmount = 6;
     private static final int defaultValue = 1;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
 
     @RequestMapping("/")
     public ModelAndView home() {

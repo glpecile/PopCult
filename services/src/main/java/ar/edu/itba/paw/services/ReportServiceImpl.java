@@ -19,16 +19,22 @@ import java.util.Optional;
 
 @Service
 public class ReportServiceImpl implements ReportService {
+
     @Autowired
     private ReportDao reportDao;
+
     @Autowired
     private ListsService listsService;
+
     @Autowired
     private CommentService commentService;
+
     @Autowired
     private EmailService emailService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private ModeratorService moderatorService;
 

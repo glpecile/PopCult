@@ -14,7 +14,7 @@ public class MediaComment extends Comment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mediacomment_commentid_seq")
     @SequenceGenerator(sequenceName = "mediacomment_commentid_seq", name = "mediacomment_commentid_seq", allocationSize = 1)
     @Column(name = "commentid")
-    protected Integer commentId;
+    private Integer commentId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "mediaid")

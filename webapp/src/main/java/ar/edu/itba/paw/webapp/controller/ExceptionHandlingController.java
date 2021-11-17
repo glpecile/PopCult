@@ -21,10 +21,11 @@ import java.util.Locale;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
 
     @Autowired
     private MessageSource messageSource;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
@@ -101,6 +102,4 @@ public class ExceptionHandlingController {
         mav.addObject("description", messageSource.getMessage("exception.internalException", null, Locale.getDefault()));
         return mav;
     }
-
-
 }

@@ -74,8 +74,8 @@ public class Media {
     )
     private List<Actor> actorList;
 
-    public Media(){
-
+    /*default */ Media(){
+        //Just for hibernate
     }
 
     public Media(final Integer mediaId, final MediaType type, final String title, final String description, final String image, final Integer length, final LocalDateTime releaseDate,

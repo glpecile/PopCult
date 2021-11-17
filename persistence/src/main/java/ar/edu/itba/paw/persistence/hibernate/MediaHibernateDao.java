@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Primary
 @Repository
 public class MediaHibernateDao implements MediaDao {
+
     @PersistenceContext
     private EntityManager em;
 
@@ -88,7 +89,7 @@ public class MediaHibernateDao implements MediaDao {
         LinkedList<String> wheres = new LinkedList<>();
 
         if(term != null){
-            wheres.add( SortType.TITLE.nameMedia + " ILIKE CONCAT('%', :name, '%')");
+            wheres.add( SortType.TITLE.getNameMedia() + " ILIKE CONCAT('%', :name, '%')");
             parameters.put("name", term);
         }
 
@@ -113,7 +114,7 @@ public class MediaHibernateDao implements MediaDao {
             wheres.forEach(where -> toReturn.append(" AND ").append(where));
         }
         if(sort != null)
-            toReturn.append(" ORDER BY ").append(sort.nameMedia);
+            toReturn.append(" ORDER BY ").append(sort.getNameMedia());
 
         if(page != null && pageSize != null){
             toReturn.append( " OFFSET :offset LIMIT :limit ");
@@ -130,7 +131,7 @@ public class MediaHibernateDao implements MediaDao {
     public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        final String baseQuery = "SELECT mediaid FROM ( SELECT DISTINCT mediaid, " + sort.nameMedia +" FROM  media NATURAL JOIN mediagenre ";
+        final String baseQuery = "SELECT mediaid FROM ( SELECT DISTINCT mediaid, " + sort.getNameMedia() +" FROM  media NATURAL JOIN mediagenre ";
         final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,term,mediaType,sort, genre,fromDate,toDate);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -141,7 +142,7 @@ public class MediaHibernateDao implements MediaDao {
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids) order by "+ sort.nameMedia, Media.class);
+        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids) order by "+ sort.getNameMedia(), Media.class);
         query.setParameter("mediaids", mediaIds);
         List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 

@@ -14,10 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class TokenController {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenController.class);
 

@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
 
 public class FilterUtils {
 
-
     private FilterUtils() {
         throw new AssertionError();
     }

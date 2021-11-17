@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -27,6 +26,7 @@ import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+
     @Autowired
     @Qualifier("basePath")
     private String basePath;
@@ -36,6 +36,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private SpringTemplateEngine templateEngine;
+
     @Autowired
     private MessageSource messageSource;
 

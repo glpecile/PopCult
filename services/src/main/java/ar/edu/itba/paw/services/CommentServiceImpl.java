@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.CommentDao;
 import ar.edu.itba.paw.interfaces.CommentService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
@@ -18,10 +17,9 @@ import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
+
     @Autowired
-    CommentDao commentDao;
-    @Autowired
-    UserService userService;
+    private CommentDao commentDao;
 
     @Transactional
     @Override

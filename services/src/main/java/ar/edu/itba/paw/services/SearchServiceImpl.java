@@ -22,6 +22,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired
     private SearchDao searchDao;
+
     @Autowired
     private CollaborativeListsDao collaborativeListsDao;
 
