@@ -73,7 +73,7 @@ public class ListsVoter implements AccessDecisionVoter<FilterInvocation> {
                     if (user.isPresent() && user.get().equals(list.getUser())){
                         vote.set(ACCESS_GRANTED);
                     }else{
-                        vote.set(ACCESS_ABSTAIN);
+                        vote.set(ACCESS_DENIED);
                     }
                 });
                 }catch (NumberFormatException e) {
