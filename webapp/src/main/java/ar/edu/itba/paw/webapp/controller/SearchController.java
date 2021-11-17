@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -53,7 +51,7 @@ public class SearchController {
     ){
         LOGGER.info("Searching for term: {}", searchForm.getTerm());
         if (errors.hasErrors()) {
-            LOGGER.info("Invalid FilterForm, redirecting to /search.");
+            LOGGER.warn("Invalid FilterForm, redirecting to /search.");
             return new ModelAndView("redirect:/search");
         }
         final ModelAndView mav = new ModelAndView("principal/primary/search");

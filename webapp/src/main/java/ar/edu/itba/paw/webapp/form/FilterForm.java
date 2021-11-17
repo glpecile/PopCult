@@ -10,6 +10,7 @@ import java.util.List;
 
 public class FilterForm {
 
+    @Size(max=100)
     @Pattern(regexp = "[^/><%]+")
     private String term;
 

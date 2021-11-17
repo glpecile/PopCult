@@ -249,7 +249,7 @@ public class MediaController {
                               final BindingResult errors){
         LOGGER.debug("Trying to access films");
         if(errors.hasErrors()){
-            LOGGER.info("Invalid FilterForm, redirecting to /media/films.");
+            LOGGER.warn("Invalid FilterForm, redirecting to /media/films.");
             return new ModelAndView("redirect:/media/films");
         }
         final ModelAndView mav = new ModelAndView("principal/primary/films");
@@ -275,7 +275,7 @@ public class MediaController {
                                final BindingResult errors){
         LOGGER.debug("Trying to access series");
         if(errors.hasErrors()){
-            LOGGER.info("Invalid FilterForm, redirecting to /media/series.");
+            LOGGER.warn("Invalid FilterForm, redirecting to /media/series.");
             return new ModelAndView("redirect:media/series");
         }
         final ModelAndView mav = new ModelAndView("principal/primary/series");
