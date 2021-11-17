@@ -1,16 +1,12 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.media.Genre;
-import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FilterForm {
 
