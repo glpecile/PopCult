@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.ModeratorDao;
 import ar.edu.itba.paw.interfaces.ModeratorService;
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
@@ -19,12 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ModeratorServiceImpl implements ModeratorService {
+
     @Autowired
     private ModeratorDao moderatorDao;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private EmailService emailService;
+
     @Autowired
     private RoleHierarchy roleHierarchy;
 

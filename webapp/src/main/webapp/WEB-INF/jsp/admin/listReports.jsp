@@ -30,11 +30,12 @@
             <jsp:param name="listCommentsReports" value="${listCommentsReports}"/>
             <jsp:param name="mediaCommentsReports" value="${mediaCommentsReports}"/>
         </jsp:include>
-        <!-- Media comments reports -->
+        <!-- Lists reports -->
         <div class="row">
             <c:forEach var="listReport" items="${listReportPageContainer.elements}">
                 <div class="py-2">
                     <jsp:include page="/WEB-INF/jsp/components/listReport.jsp">
+                        <jsp:param name="listId" value="${listReport.mediaList.mediaListId}"/>
                         <jsp:param name="listName" value="${listReport.mediaList.listName}"/>
                         <jsp:param name="description" value="${listReport.mediaList.description}"/>
                         <jsp:param name="report" value="${listReport.report}"/>

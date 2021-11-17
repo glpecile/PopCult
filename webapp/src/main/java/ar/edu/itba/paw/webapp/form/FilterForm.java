@@ -1,12 +1,16 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilterForm {
 
@@ -56,7 +60,7 @@ public class FilterForm {
 
     public List<String> getGenres() {
         if(genres == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         return genres;
     }
@@ -67,7 +71,7 @@ public class FilterForm {
 
     public List<String> getMediaTypes() {
         if(mediaTypes == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         return mediaTypes;
     }
@@ -83,4 +87,6 @@ public class FilterForm {
     public void setTerm(String term) {
         this.term = term;
     }
+
+
 }

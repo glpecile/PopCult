@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.Collections;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.InstanceProvider.ALREADY_EXISTS_COLLAB_ID;

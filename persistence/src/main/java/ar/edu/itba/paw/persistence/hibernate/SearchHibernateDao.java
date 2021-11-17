@@ -30,7 +30,7 @@ public class SearchHibernateDao implements SearchDao {
     public PageContainer<Media> searchMediaByTitleNotInList(MediaList mediaList, String title, int page, int pageSize, List<MediaType> mediaType, SortType sort) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        String orderBy = " ORDER BY " + sort.nameMedia;
+        String orderBy = " ORDER BY " + sort.getNameMedia();
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE title ILIKE CONCAT('%', :title, '%') AND type IN (:mediaType) AND mediaid NOT IN (SELECT mediaid FROM listelement WHERE medialistid = :mediaListId)" + orderBy + " OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("title", title);
         nativeQuery.setParameter("mediaListId", mediaList.getMediaListId());

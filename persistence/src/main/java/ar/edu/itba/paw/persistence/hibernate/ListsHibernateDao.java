@@ -143,7 +143,7 @@ public class ListsHibernateDao implements ListsDao {
         LinkedList<String> having = new LinkedList<>();
 
         if(term != null){
-            where.add( SortType.TITLE.nameMediaList + " ILIKE CONCAT('%', :listname, '%')");
+            where.add( SortType.TITLE.getNameMediaList() + " ILIKE CONCAT('%', :listname, '%')");
             parameters.put("listname", term);
         }
         if(!genre.isEmpty()){
@@ -153,9 +153,9 @@ public class ListsHibernateDao implements ListsDao {
             groupBy.add(" medialistid ");
             groupBy.add(" visibility ");
             if(sort !=null)
-                groupBy.add(sort.nameMediaList);
-            if(fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.nameMediaList)){
-                groupBy.add(SortType.DATE.nameMediaList);
+                groupBy.add(sort.getNameMediaList());
+            if(fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.getNameMediaList())){
+                groupBy.add(SortType.DATE.getNameMediaList());
             }
             having.add(" COUNT(mediaId) >= :minMatches ");
             parameters.put("minMatches", minMatches);
@@ -187,9 +187,9 @@ public class ListsHibernateDao implements ListsDao {
         if(sort != null) {
             toReturn.append(" ORDER BY ");
             if(sort == SortType.TITLE)
-                toReturn.append(" LOWER(").append(sort.nameMediaList).append(") ");
+                toReturn.append(" LOWER(").append(sort.getNameMediaList()).append(") ");
             else
-                toReturn.append(sort.nameMediaList);
+                toReturn.append(sort.getNameMediaList());
         }
 
         if(page != null && pageSize != null){
@@ -211,12 +211,12 @@ public class ListsHibernateDao implements ListsDao {
         String sortCountString = "";
         if(sort != null){
             if(sort == SortType.TITLE) {
-                sortBaseString = ", LOWER(" + sort.nameMediaList + ") ";
-                sortCountString = "order by lower(" + sort.nameMediaList + ")";
+                sortBaseString = ", LOWER(" + sort.getNameMediaList() + ") ";
+                sortCountString = "order by lower(" + sort.getNameMediaList() + ")";
             }
             else {
-                sortBaseString = ", " + sort.nameMediaList;
-                sortCountString = "order by " + sort.nameMediaList;
+                sortBaseString = ", " + sort.getNameMediaList();
+                sortCountString = "order by " + sort.getNameMediaList();
             }
         }
         final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortBaseString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";

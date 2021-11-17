@@ -16,10 +16,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class ListsVoter implements AccessDecisionVoter<FilterInvocation> {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
+
     @Autowired
-    ListsService listsService;
+    private ListsService listsService;
 
     @Override
     public boolean supports(ConfigAttribute attribute) {

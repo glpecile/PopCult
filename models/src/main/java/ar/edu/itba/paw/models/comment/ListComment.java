@@ -14,8 +14,7 @@ public class ListComment extends Comment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listcomment_commentid_seq")
     @SequenceGenerator(sequenceName = "listcomment_commentid_seq", name = "listcomment_commentid_seq", allocationSize = 1)
     @Column(name = "commentid")
-    protected Integer commentId;
-
+    private Integer commentId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "listid")

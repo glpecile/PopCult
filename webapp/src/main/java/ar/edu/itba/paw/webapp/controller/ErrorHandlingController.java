@@ -14,8 +14,9 @@ import java.util.Locale;
 
 @Controller
 public class ErrorHandlingController {
+
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorHandlingController.class);
 

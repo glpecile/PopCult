@@ -41,12 +41,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl pawUserDetailsService;
+
     @Autowired
     private UserPanelManagerVoter userPanelManagerVoter;
+
     @Autowired
     private DeleteCommentVoter deleteCommentVoter;
+
     @Autowired
     private ListsManagerVoter listsManagerVoter;
+
     @Autowired
     private ListsVoter listsVoter;
 

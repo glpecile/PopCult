@@ -61,7 +61,6 @@
             </a>
         </div>
     </div>
-    <br>
     <c:url value="" var="baseURL"/>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${collaboratorsContainer.totalPages}"/>

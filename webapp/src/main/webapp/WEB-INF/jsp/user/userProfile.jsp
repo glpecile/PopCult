@@ -64,7 +64,6 @@
                 </div>
             </c:forEach>
         </div>
-        <br>
         <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
             <jsp:param name="mediaPages" value="${userListsContainer.totalPages}"/>
             <jsp:param name="currentPage" value="${userListsContainer.currentPage + 1}"/>
@@ -93,7 +92,6 @@
                     </jsp:include>
                 </div>
             </c:forEach>
-            <br>
             <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
                 <jsp:param name="mediaPages" value="${userPublicLists.totalPages}"/>
                 <jsp:param name="currentPage" value="${userPublicLists.currentPage + 1}"/>

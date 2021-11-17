@@ -18,6 +18,7 @@ import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.FilterForm;
 import ar.edu.itba.paw.webapp.utilities.FilterUtils;
+import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
-
 
 @Controller
 public class MediaController {
@@ -55,13 +56,13 @@ public class MediaController {
     @Autowired
     private MessageSource messageSource;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
+
     private static final int itemsPerPage = 12;
     private static final int itemsPerContainer = 6;
     private static final int listsPerPage = 4;
     private static final int lastAddedAmount = 6;
     private static final int defaultValue = 1;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
 
     @RequestMapping("/")
     public ModelAndView home() {
@@ -252,11 +253,11 @@ public class MediaController {
             return new ModelAndView("redirect: " + request.getHeader("referer"));
         }
         final ModelAndView mav = new ModelAndView("principal/primary/films");
-        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.FILMS);
+        final List<Genre> genres = NormalizerUtils.getNormalizedGenres(filterForm.getGenres());
+        final SortType sortType = NormalizerUtils.getNormalizedSortType(filterForm.getSortType());
+        final List<MediaType> mediaTypes = Collections.singletonList(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
@@ -271,7 +272,7 @@ public class MediaController {
     @RequestMapping("/media/series")
     public ModelAndView series(HttpServletRequest request,@RequestParam(value = "page", defaultValue = "1") final int page,
                                @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
-                               final BindingResult errors) throws ParseException{
+                               final BindingResult errors){
         LOGGER.debug("Trying to access series");
         if(errors.hasErrors()){
             LOGGER.info("Redirecting to: {}", request.getHeader("referer"));
@@ -279,10 +280,10 @@ public class MediaController {
         }
         final ModelAndView mav = new ModelAndView("principal/primary/series");
         final PageContainer<Media> mostLikedSeries = favoriteService.getMostLikedMedia(MediaType.SERIE, 0, itemsPerContainer);
-        final List<Genre> genres = filterForm.getGenres().stream().map(g -> g.replaceAll("\\s+", "")).map(Genre::valueOf).collect(Collectors.toList());
-        final List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.SERIE);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, SortType.valueOf(filterForm.getSortType().toUpperCase()),genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
+        final List<Genre> genres = NormalizerUtils.getNormalizedGenres(filterForm.getGenres());
+        final SortType sortType = NormalizerUtils.getNormalizedSortType(filterForm.getSortType());
+        final List<MediaType> mediaTypes = Collections.singletonList(MediaType.SERIE);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));

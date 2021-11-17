@@ -17,12 +17,12 @@ import java.util.Collection;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     private static final boolean ACCOUNT_NON_EXPIRED = true;
     private static final boolean CREDENTIALS_NON_EXPIRED = true;
-    private static final boolean ACCOUNT_NON_LOCKED = true;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

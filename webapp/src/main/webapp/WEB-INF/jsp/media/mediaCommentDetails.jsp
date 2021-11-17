@@ -59,7 +59,6 @@
             </c:otherwise>
         </c:choose>
     </div>
-    <br>
     <c:url var="urlBase" value=""/>
     <jsp:include page="/WEB-INF/jsp/components/pageNavigation.jsp">
         <jsp:param name="mediaPages" value="${mediaCommentsContainer.totalPages}"/>

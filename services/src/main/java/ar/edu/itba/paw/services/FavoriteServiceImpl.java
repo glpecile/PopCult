@@ -15,6 +15,7 @@ import java.util.*;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
+
     @Autowired
     private FavoriteDao favoriteDao;
 

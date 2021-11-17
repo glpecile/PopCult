@@ -31,9 +31,9 @@ import java.util.List;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
-
 @Controller
 public class UserController {
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -52,6 +52,7 @@ public class UserController {
     private CommentService commentService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     private static final int listsPerPage = 4;
     private static final int itemsPerPage = 4;
     private static final int notificationsPerPage = 16;

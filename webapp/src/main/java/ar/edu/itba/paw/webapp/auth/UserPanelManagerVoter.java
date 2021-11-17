@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class UserPanelManagerVoter implements AccessDecisionVoter<FilterInvocation> {
+
     @Autowired
     private UserService userService;
 

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.StaffService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
@@ -15,19 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class StaffMemberController {
-    @Autowired
-    private MediaService mediaService;
+
     @Autowired
     private StaffService staffService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffMemberController.class);
+
     private static final int itemsPerPage = 4;
 
     @RequestMapping("/staff/{staffMemberId}")

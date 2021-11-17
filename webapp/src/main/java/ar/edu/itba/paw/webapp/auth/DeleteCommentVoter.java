@@ -15,10 +15,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class DeleteCommentVoter implements AccessDecisionVoter<FilterInvocation> {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
+
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @Override
     public boolean supports(ConfigAttribute attribute) {

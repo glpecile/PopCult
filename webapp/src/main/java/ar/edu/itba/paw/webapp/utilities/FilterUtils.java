@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
 
 public class FilterUtils {
 
-
     private FilterUtils() {
         throw new AssertionError();
     }
@@ -21,9 +20,9 @@ public class FilterUtils {
         Map<String, String> genreMap = new HashMap<>();
 
         for (Genre genre : Genre.values()) {
-            genreMap.put(genre.getGenre().toUpperCase(), messageSource.getMessage(genre.getGenre(), null, LocaleContextHolder.getLocale()).toUpperCase());
+            if(genre.ordinal() != Genre.NOT.ordinal())
+                genreMap.put(genre.getGenre().toUpperCase(), messageSource.getMessage(genre.getGenre(), null, LocaleContextHolder.getLocale()).toUpperCase());
         }
-
         return genreMap;
     }
 
