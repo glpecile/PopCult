@@ -19,43 +19,46 @@
 </head>
 <c:url var="url" value=""/>
 <body class="bg-gray-50">
-<jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
-<div class="col-8 offset-2">
-    <h4 class="font-bold text-2xl pt-2">
-        <spring:message code="series.popular"/>
-    </h4>
-    <div class="flex flex-col" data-controller="slider">
-        <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
-            <c:set var="i" value="1"/>
-            <c:forEach var="latestSerie" items="${mostLikedSeries}">
-                <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
-                    <c:set var="i" value="${i + 1}"/>
-                    <jsp:include page="/WEB-INF/jsp/components/card.jsp">
-                        <jsp:param name="image" value="${latestSerie.image}"/>
-                        <jsp:param name="title" value="${latestSerie.title}"/>
-                        <jsp:param name="releaseDate" value="${latestSerie.releaseYear}"/>
-                        <jsp:param name="mediaId" value="${latestSerie.mediaId}"/>
-                    </jsp:include>
+<div class="min-h-screen flex flex-col">
+    <jsp:include page="/WEB-INF/jsp/components/navbar.jsp"/>
+    <div class="col-8 offset-2 flex-grow">
+        <c:if test="${empty param || (fn:length(param) == 1 and (!(empty param.lang) || param.page eq 1))}">
+            <h4 class="font-bold text-2xl pt-2">
+                <spring:message code="series.popular"/>
+            </h4>
+            <div class="flex flex-col" data-controller="slider">
+                <div class="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
+                    <c:set var="i" value="1"/>
+                    <c:forEach var="latestSerie" items="${mostLikedSeries}">
+                        <div class="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" data-slider-target="image" id="${i}">
+                            <c:set var="i" value="${i + 1}"/>
+                            <jsp:include page="/WEB-INF/jsp/components/card.jsp">
+                                <jsp:param name="image" value="${latestSerie.image}"/>
+                                <jsp:param name="title" value="${latestSerie.title}"/>
+                                <jsp:param name="releaseDate" value="${latestSerie.releaseYear}"/>
+                                <jsp:param name="mediaId" value="${latestSerie.mediaId}"/>
+                            </jsp:include>
+                        </div>
+                    </c:forEach>
                 </div>
-            </c:forEach>
-        </div>
-        <div class="flex mx-auto my-2">
-            <ul class="flex justify-center">
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="1"
-                    data-action="click->slider#scrollTo"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="2"
-                    data-action="click->slider#scrollTo"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
-                    data-action="click->slider#scrollTo"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="4"
-                    data-action="click->slider#scrollTo"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="5"
-                    data-action="click->slider#scrollTo"></li>
-                <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="6"
-                    data-action="click->slider#scrollTo"></li>
-            </ul>
-        </div>
-
+                <div class="flex mx-auto my-2">
+                    <ul class="flex justify-center">
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="1"
+                            data-action="click->slider#scrollTo"></li>
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="2"
+                            data-action="click->slider#scrollTo"></li>
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="3"
+                            data-action="click->slider#scrollTo"></li>
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="4"
+                            data-action="click->slider#scrollTo"></li>
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="5"
+                            data-action="click->slider#scrollTo"></li>
+                        <li class="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300" data-slider-target="indicator" data-image-id="6"
+                            data-action="click->slider#scrollTo"></li>
+                    </ul>
+                </div>
+            </div>
+        </c:if>
 
         <div class="row">
             <h4 class="font-bold text-2xl pt-2">
@@ -64,11 +67,9 @@
             <c:set var="sortTypes" value="${sortTypes}" scope="request"/>
             <c:set var="decadesType" value="${decadesType}" scope="request"/>
             <c:set var="genreTypes" value="${genreTypes}" scope="request"/>
-
             <jsp:include page="/WEB-INF/jsp/components/filters.jsp">
                 <jsp:param name="url" value="${url}"/>
             </jsp:include>
-
             <c:choose>
                 <c:when test="${fn:length(mediaListContainer.elements) == 0}">
                     <div class="flex-col flex-wrap p-4 space-x-4">
@@ -114,8 +115,7 @@
             </c:choose>
         </div>
     </div>
+    <jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </div>
-
-<jsp:include page="/WEB-INF/jsp/components/footer.jsp"/>
 </body>
 </html>

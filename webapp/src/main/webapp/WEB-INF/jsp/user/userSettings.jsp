@@ -50,22 +50,23 @@
                     <form:errors path="email" cssClass="formError text-red-500" element="p"/>
                 </div>
             </div>
-            <br>
-            <div class="flex justify-between">
-                    <%-- Change password --%>
-                <a href=<c:url value="/changePassword"/>>
-                    <button type="button"
-                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
-                        <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
-                        <spring:message code="profile.settings.passwordChange"/>
+            <div class="flex justify-between pt-3">
+                <div class="flex space-x-3">
+                        <%-- Change password --%>
+                    <a href=<c:url value="/changePassword"/>>
+                        <button type="button"
+                                class="btn btn-dark my-2 bg-gray-300 group hover:bg-purple-400 text-gray-700 font-semibold hover:text-white">
+                            <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
+                            <spring:message code="profile.settings.passwordChange"/>
+                        </button>
+                    </a>
+                        <%-- Delete User --%>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                            class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        <i class="fas fa-user-alt-slash group-hover:text-white pr-2"></i>
+                        <spring:message code="profile.settings.deleteUser"/>
                     </button>
-                </a>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                        class="btn btn-dark my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                    <i class="fas fa-unlock-alt group-hover:text-white pr-2"></i>
-                    <spring:message code="profile.settings.deleteUser"/>
-                </button>
-                    <%--                </a>--%>
+                </div>
                 <div class="flex space-x-3">
                         <%-- Discard changes --%>
                     <a href=<c:url value="/user/${user.username}"/>>

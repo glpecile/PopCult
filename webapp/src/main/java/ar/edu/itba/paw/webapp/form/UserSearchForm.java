@@ -4,7 +4,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserSearchForm {
-    @Size(min = 1)
+    @Size(min = 1, max = 100)
     @Pattern(regexp = "[^/><%]+")
     private String term;
 
