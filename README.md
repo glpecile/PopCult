@@ -1,5 +1,7 @@
 # Proyectos de Aplicaciones Web
 
+![logo](webapp/src/main/webapp/resources/images/PopCultCompleteLogo.png)
+
 ## Autores
 
 - [Julián Arce](https://github.com/juarce), 60509
