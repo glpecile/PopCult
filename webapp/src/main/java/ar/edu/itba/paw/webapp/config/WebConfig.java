@@ -41,7 +41,6 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @EnableScheduling
-@EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller",
         "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"})
@@ -59,16 +58,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "basePath")
     public String basePath() {
         return environment.getProperty("base_path");
-    }
-
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/jsp/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
     }
 
     @Override
