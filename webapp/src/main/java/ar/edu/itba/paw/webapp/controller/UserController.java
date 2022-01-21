@@ -13,25 +13,31 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.dto.output.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
-@Controller
+@Path("users")
+@Component
 public class UserController {
 
     @Autowired
@@ -51,6 +57,9 @@ public class UserController {
     @Autowired
     private CommentService commentService;
 
+    @Context
+    private UriInfo uriInfo;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final int listsPerPage = 4;
@@ -58,6 +67,26 @@ public class UserController {
     private static final int notificationsPerPage = 16;
     private static final int editablePerPage = 12;
 
+
+    @GET
+    @Produces(value = {
+            MediaType.APPLICATION_JSON
+    })
+    public Response listUsers(@QueryParam("page") @DefaultValue("1") int page,
+                              @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        final PageContainer<User> users = userService.getUsers(page - 1, pageSize);
+
+        if (users.getElements().isEmpty()) {
+            return Response.noContent().build();
+        }
+        final List<UserDto> usersDto = users.getElements().stream().map(u -> UserDto.fromUser(uriInfo, u)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build().toString(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "last")
+                .build();
+    }
 
     @RequestMapping("/user/{username}")
     public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,

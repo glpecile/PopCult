@@ -25,4 +25,6 @@ public interface UserDao {
     PageContainer<User> getBannedUsers(int page, int pageSize);
 
     List<User> getBannedUsers();
+
+    PageContainer<User> getUsers(int page, int pageSize);
 }

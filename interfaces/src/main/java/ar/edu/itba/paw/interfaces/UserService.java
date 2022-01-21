@@ -49,4 +49,6 @@ public interface UserService {
     void unbanUser(User user);
 
     void unbanUsers();
+
+    PageContainer<User> getUsers(int page, int pageSize);
 }

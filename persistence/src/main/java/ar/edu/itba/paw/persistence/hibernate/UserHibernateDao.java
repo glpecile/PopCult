@@ -97,4 +97,22 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("nonLocked", false);
         return query.getResultList();
     }
+
+    @Override
+    public PageContainer<User> getUsers(int page, int pageSize) {
+        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users ORDER BY username DESC OFFSET :offset LIMIT :limit")
+                .setParameter("offset", page * pageSize)
+                .setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> userIds = nativeQuery.getResultList();
+
+        final Query countQuery = em.createQuery("SELECT COUNT(userId) FROM User");
+        final long count = (long) countQuery.getSingleResult();
+
+        final TypedQuery<User> query = em.createQuery("FROM User WHERE userId IN :userIds ORDER BY username DESC", User.class)
+                .setParameter("userIds", userIds);
+        List<User> users = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
+
+        return new PageContainer<>(users, page, pageSize, count);
+    }
 }
