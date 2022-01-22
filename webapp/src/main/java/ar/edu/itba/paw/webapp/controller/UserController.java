@@ -16,6 +16,7 @@ import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,19 +75,17 @@ public class UserController {
     })
     public Response listUsers(@QueryParam("page") @DefaultValue("1") int page,
                               @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
-        final PageContainer<User> users = userService.getUsers(page - 1, pageSize);
+        final PageContainer<User> users = userService.getUsers(page, pageSize);
 
         if (users.getElements().isEmpty()) {
             return Response.noContent().build();
         }
-        final List<UserDto> usersDto = users.getElements().stream().map(u -> UserDto.fromUser(uriInfo, u)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build().toString(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build().toString(), "last")
-                .build();
+        final List<UserDto> usersDto = UserDto.fromUserList(uriInfo,users.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<UserDto>>(usersDto) {});
+        ResponseUtils.setPaginationLinks(response,users,uriInfo);
+        return response.build();
     }
+
 
     @RequestMapping("/user/{username}")
     public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,

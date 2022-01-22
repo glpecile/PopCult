@@ -100,8 +100,9 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public PageContainer<User> getUsers(int page, int pageSize) {
+
         final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users ORDER BY username DESC OFFSET :offset LIMIT :limit")
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page-1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> userIds = nativeQuery.getResultList();

@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.user.UserRole;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserDto {
 
@@ -37,6 +39,10 @@ public class UserDto {
         userDto.url = url.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).build().toString();
         userDto.imageUrl = url.getBaseUriBuilder().path("users").path("image").path(String.valueOf(user.getImageId())).build().toString();
         return userDto;
+    }
+
+    public static List<UserDto> fromUserList(UriInfo uriInfo, List<User> userList){
+        return userList.stream().map(u -> UserDto.fromUser(uriInfo, u)).collect(Collectors.toList());
     }
 
     public String getEmail() {
