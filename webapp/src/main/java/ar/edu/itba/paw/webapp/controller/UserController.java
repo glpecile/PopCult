@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Notification;
@@ -13,6 +11,8 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.dto.input.UserCreateDto;
+import ar.edu.itba.paw.webapp.dto.output.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -20,6 +20,7 @@ import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
@@ -58,6 +61,9 @@ public class UserController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Context
     private UriInfo uriInfo;
 
@@ -75,15 +81,54 @@ public class UserController {
     })
     public Response listUsers(@QueryParam("page") @DefaultValue("1") int page,
                               @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        if(page < 1 || pageSize < 1){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         final PageContainer<User> users = userService.getUsers(page, pageSize);
 
         if (users.getElements().isEmpty()) {
             return Response.noContent().build();
         }
-        final List<UserDto> usersDto = UserDto.fromUserList(uriInfo,users.getElements());
+        final List<UserDto> usersDto = UserDto.fromUserList(uriInfo, users.getElements());
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<UserDto>>(usersDto) {});
-        ResponseUtils.setPaginationLinks(response,users,uriInfo);
+        ResponseUtils.setPaginationLinks(response, users, uriInfo);
         return response.build();
+    }
+
+    @GET
+    @Path("/{username}")
+    @Produces(value = {
+            MediaType.APPLICATION_JSON
+    })
+    public Response getUser(@PathParam("username") String username){
+        Optional<User> user = userService.getByUsername(username);
+
+        if(!user.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(UserDto.fromUser(uriInfo, user.get())).build();
+    }
+
+    @PUT //TODO change it to POST
+    @Produces(value = { MediaType.APPLICATION_JSON})
+    @Consumes(value = { MediaType.APPLICATION_JSON})
+    public Response createUser(@Valid UserCreateDto userDto){
+        if(userDto == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        final User user;
+        try {
+            user = userService.register(userDto.getEmail(),userDto.getUsername(),userDto.getPassword(),userDto.getName());
+        } catch (UsernameAlreadyExistsException e) {
+            final ErrorDto errorDto = ErrorDto.fromErrorMsg(messageSource.getMessage("validation.username.alreadyExists", null, Locale.getDefault()),"username");
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<ErrorDto>(errorDto) {}).build();
+        } catch (EmailAlreadyExistsException e) {
+            final ErrorDto errorDto = ErrorDto.fromErrorMsg(messageSource.getMessage("validation.email.alreadyExists", null, Locale.getDefault()),"email");
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<ErrorDto>(errorDto) {}).build();
+        }
+
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build()).build();
     }
 
 
