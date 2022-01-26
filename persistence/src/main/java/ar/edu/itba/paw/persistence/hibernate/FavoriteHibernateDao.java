@@ -50,7 +50,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<Media> getUserFavoriteMedia(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM favoritemedia WHERE userId = :userId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
