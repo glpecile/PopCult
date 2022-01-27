@@ -3,43 +3,29 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.collaborative.Request;
-import ar.edu.itba.paw.models.comment.Notification;
-import ar.edu.itba.paw.models.lists.ListCover;
-import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
-import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.dto.input.DateTimeDto;
 import ar.edu.itba.paw.webapp.dto.input.UserCreateDto;
 import ar.edu.itba.paw.webapp.dto.output.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaFavoriteDto;
+import ar.edu.itba.paw.webapp.dto.output.MediaWatchedDto;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
-import ar.edu.itba.paw.webapp.exceptions.*;
-import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
 @Path("users")
 @Component
@@ -201,12 +187,12 @@ public class UserController {
         Optional<User> user = userService.getByUsername(username);
         Optional<Media> media = mediaService.getById(mediaId);
 
-        if(!user.isPresent() || !media.isPresent()) {
+        if (!user.isPresent() || !media.isPresent()) {
             LOGGER.info("GET /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        if(!favoriteService.isFavorite(media.get(), user.get())) {
+        if (!favoriteService.isFavorite(media.get(), user.get())) {
             LOGGER.info("GET /users/{}/favorite-media/{}: media {} is not favorite of {}.", username, mediaId, mediaId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -219,11 +205,11 @@ public class UserController {
     @Path("/{username}/favorite-media/{mediaId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToFavorites(@PathParam("username") String username,
-                                    @PathParam("mediaId") int mediaId) {
+                                        @PathParam("mediaId") int mediaId) {
         Optional<User> user = userService.getByUsername(username);
         Optional<Media> media = mediaService.getById(mediaId);
 
-        if(!user.isPresent() || !media.isPresent()) {
+        if (!user.isPresent() || !media.isPresent()) {
             LOGGER.info("PUT /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -238,11 +224,11 @@ public class UserController {
     @Path("/{username}/favorite-media/{mediaId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromFavorites(@PathParam("username") String username,
-                                        @PathParam("mediaId") int mediaId) {
+                                             @PathParam("mediaId") int mediaId) {
         Optional<User> user = userService.getByUsername(username);
         Optional<Media> media = mediaService.getById(mediaId);
 
-        if(!user.isPresent() || !media.isPresent()) {
+        if (!user.isPresent() || !media.isPresent()) {
             LOGGER.info("DELETE /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -252,6 +238,119 @@ public class UserController {
         LOGGER.info("DELETE /users/{}/favorite-media/{}: media {} removed from {}'s favorites.", username, mediaId, mediaId, username);
         return Response.noContent().build();
     }
+
+    /**
+     * Watched Media
+     */
+    @GET
+    @Path("/{username}/watched-media")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserWatchedMedia(@PathParam("username") String username,
+                                        @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                        @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        if (page < 1 || pageSize < 1) {
+            LOGGER.info("GET /users/{}/watched-media: Invalid params.", username);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<User> user = userService.getByUsername(username);
+
+        if (!user.isPresent()) {
+            LOGGER.info("GET /users/{}/watched-media: {} does not exists.", username, username);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user.get(), page, pageSize);
+
+        if (watchedMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/watched-media: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromMediaList(uriInfo, watchedMedia.getElements(), user.get());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaWatchedDto>>(mediaWatchedDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, watchedMedia, uriInfo);
+        LOGGER.info("GET /users/{}/watched-media: Returning page {} with {} results.", username, watchedMedia.getCurrentPage(), watchedMedia.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/watched-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response isWatchedMedia(@PathParam("username") String username,
+                                   @PathParam("mediaId") int mediaId) {
+        Optional<User> user = userService.getByUsername(username);
+        Optional<Media> media = mediaService.getById(mediaId);
+
+        if (!user.isPresent() || !media.isPresent()) {
+            LOGGER.info("GET /users/{}/watched-media/{}: Invalid params.", username, mediaId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user.get(), media.get());
+
+        if (!watchedMedia.isPresent()) {
+            LOGGER.info("GET /users/{}/watched-media/{}: media {} is not watched by {}.", username, mediaId, mediaId, username);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /users/{}/watched-media/{}: media {} is watched by {} on {}.", username, mediaId, mediaId, username, watchedMedia.get().getWatchDate());
+        return Response.ok(MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, watchedMedia.get(), user.get())).build();
+    }
+
+    @PUT
+    @Path("/{username}/watched-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response addMediaToWatched(@PathParam("username") String username,
+                                      @PathParam("mediaId") int mediaId,
+                                      DateTimeDto dateTimeDto) {
+        if(dateTimeDto == null || dateTimeDto.getDateTime().isAfter(LocalDateTime.now())) {
+            LOGGER.info("PUT /users/{}/watched-media/{}: Invalid date.", username, mediaId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<User> user = userService.getByUsername(username);
+        Optional<Media> media = mediaService.getById(mediaId);
+
+        if (!user.isPresent() || !media.isPresent()) {
+            LOGGER.info("PUT /users/{}/watched-media/{}: Invalid params.", username, mediaId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        watchService.addWatchedMedia(media.get(), user.get(), dateTimeDto.getDateTime());
+
+        LOGGER.info("PUT /users/{}/watched-media/{}: media {} added to {}'s watched on {}.", username, mediaId, mediaId, username, dateTimeDto.getDateTime().toLocalDate());
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{username}/watched-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response removeMediaFromWatched(@PathParam("username") String username,
+                                           @PathParam("mediaId") int mediaId) {
+        Optional<User> user = userService.getByUsername(username);
+        Optional<Media> media = mediaService.getById(mediaId);
+
+        if (!user.isPresent() || !media.isPresent()) {
+            LOGGER.info("DELETE /users/{}/watched-media/{}: Invalid params.", username, mediaId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        watchService.deleteWatchedMedia(media.get(), user.get());
+
+        LOGGER.info("DELETE /users/{}/watched-media/{}: media {} removed from {}'s watched.", username, mediaId, mediaId, username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * To Watch Media
+     */
+
+    /**
+     * Favorite Lists
+     */
 
 //    @RequestMapping("/user/{username}")
 //    public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,
