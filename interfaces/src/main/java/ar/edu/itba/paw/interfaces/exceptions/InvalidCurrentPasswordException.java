@@ -1,4 +1,10 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class InvalidCurrentPasswordException extends Exception {
+import ar.edu.itba.paw.interfaces.utils.HttpStatusCodes;
+
+public class InvalidCurrentPasswordException extends CustomException {
+
+    public InvalidCurrentPasswordException() {
+        super(HttpStatusCodes.BAD_REQUEST, "exception.invalidCurrentPassword");
+    }
 }

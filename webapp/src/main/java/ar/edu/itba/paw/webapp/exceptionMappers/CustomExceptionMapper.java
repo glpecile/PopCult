@@ -32,7 +32,7 @@ public class CustomExceptionMapper implements ExceptionMapper<CustomException> {
                 exception.getStatusCode());
 
         return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .status(exception.getStatusCode())
                 .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, Locale.getDefault())))
                 .build();
     }
