@@ -23,18 +23,18 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/errors/error404.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>400</error-code>
-        <location>/WEB-INF/jsp/errors/error400.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/WEB-INF/jsp/errors/error500.jsp</location>
-    </error-page>
+<!--    <error-page>-->
+<!--        <error-code>404</error-code>-->
+<!--        <location>/WEB-INF/jsp/errors/error404.jsp</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <error-code>400</error-code>-->
+<!--        <location>/WEB-INF/jsp/errors/error400.jsp</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <error-code>500</error-code>-->
+<!--        <location>/WEB-INF/jsp/errors/error500.jsp</location>-->
+<!--    </error-page>-->
 
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -77,7 +77,10 @@
         <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>ar.edu.itba.paw.webapp.controller</param-value>
+            <param-value>
+                ar.edu.itba.paw.webapp.controller,
+                ar.edu.itba.paw.webapp.exceptionMappers
+            </param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
