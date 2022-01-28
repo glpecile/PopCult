@@ -34,7 +34,7 @@ public class CustomRuntimeExceptionMapper implements ExceptionMapper<CustomRunti
 
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, Locale.getDefault()), ""))
+                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, Locale.getDefault())))
                 .build();
     }
 }

@@ -25,7 +25,7 @@ public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exceptio
 
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ErrorDto.fromErrorMsg(exception.getMessage(), ""))
+                .entity(ErrorDto.fromErrorMsg(exception.getMessage()))
                 .build();
     }
 }
