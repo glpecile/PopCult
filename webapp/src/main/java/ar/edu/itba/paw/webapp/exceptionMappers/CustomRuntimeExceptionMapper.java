@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.exceptionMappers;
 
-import ar.edu.itba.paw.interfaces.exceptions.CustomException;
 import ar.edu.itba.paw.interfaces.exceptions.CustomRuntimeException;
 import ar.edu.itba.paw.webapp.dto.output.ErrorDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
@@ -34,7 +34,7 @@ public class CustomRuntimeExceptionMapper implements ExceptionMapper<CustomRunti
 
         return Response
                 .status(exception.getStatusCode())
-                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, Locale.getDefault())))
+                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, LocaleContextHolder.getLocale())))
                 .build();
     }
 }

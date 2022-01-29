@@ -78,6 +78,7 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
+                ar.edu.itba.paw.webapp.config,
                 ar.edu.itba.paw.webapp.controller,
                 ar.edu.itba.paw.webapp.exceptionMappers
             </param-value>

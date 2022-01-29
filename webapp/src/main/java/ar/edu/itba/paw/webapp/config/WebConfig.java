@@ -22,16 +22,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -42,12 +32,13 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableScheduling
 @ComponentScan({"ar.edu.itba.paw.webapp.controller",
+        "ar.edu.itba.paw.webapp.exceptionMappers",
         "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"})
 @Configuration
 @PropertySource({"classpath:/config/mail-config-develop.properties"})
 //@PropertySource({ "classpath:/config/mail-config-production.properties" })
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig {
 
     @Value("classpath:schema.sql")
     private Resource schema;
@@ -58,12 +49,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "basePath")
     public String basePath() {
         return environment.getProperty("base_path");
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**")
-                .addResourceLocations("/resources/");
     }
 
     @Bean
@@ -128,24 +113,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         messageSource.setCacheSeconds(5);
         return messageSource;
-    }
-
-    // Source: http://acodigo.blogspot.com/2017/04/spring-mvc-i18n-soporte-para-varios.html
-    @Bean
-    public LocaleResolver localeResolver() {
-        return new SessionLocaleResolver();
-    }
-
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("lang");
-        return localeChangeInterceptor;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
     }
 
     @Bean(name = "multipartResolver")

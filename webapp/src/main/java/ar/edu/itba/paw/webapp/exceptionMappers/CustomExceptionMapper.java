@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
@@ -33,7 +34,7 @@ public class CustomExceptionMapper implements ExceptionMapper<CustomException> {
 
         return Response
                 .status(exception.getStatusCode())
-                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, Locale.getDefault())))
+                .entity(ErrorDto.fromErrorMsg(messageSource.getMessage(exception.getMessageCode(), null, LocaleContextHolder.getLocale())))
                 .build();
     }
 }
