@@ -244,7 +244,7 @@ public class UserController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
-                                      DateTimeDto dateTimeDto) {
+                                      @Valid DateTimeDto dateTimeDto) {
         if(dateTimeDto == null) {
             throw new EmptyBodyException();
         }

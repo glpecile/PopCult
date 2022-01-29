@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 public class DateTimeDto {
 
     @NotNull
+    @DateTimeFormat
     private LocalDateTime dateTime;
 
     public LocalDateTime getDateTime() {
