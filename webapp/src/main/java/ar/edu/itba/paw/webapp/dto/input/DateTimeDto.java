@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  */
 public class DateTimeDto {
 
+    @NotNull
     private LocalDateTime dateTime;
 
     public LocalDateTime getDateTime() {

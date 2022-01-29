@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.WatchDao;
 import ar.edu.itba.paw.interfaces.WatchService;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidDateException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
@@ -22,7 +23,10 @@ public class WatchServiceImpl implements WatchService {
     @Transactional
     @Override
     public void addWatchedMedia(Media media, User user, LocalDateTime dateTime) {
-        if (isWatched(media, user) && dateTime != null) {
+        if(dateTime == null || dateTime.isAfter(LocalDateTime.now()) || dateTime.isBefore(media.getReleaseDate())) {
+            throw new InvalidDateException();
+        }
+        if (isWatched(media, user)) {
             watchDao.updateWatchedMediaDate(media, user, dateTime);
         } else {
             watchDao.addWatchMedia(media, user, dateTime);

@@ -22,6 +22,9 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Transactional
     @Override
     public void addMediaToFav(Media media, User user) {
+        if(isFavorite(media, user)) {
+            return;
+        }
         favoriteDao.addMediaToFav(media, user);
     }
 

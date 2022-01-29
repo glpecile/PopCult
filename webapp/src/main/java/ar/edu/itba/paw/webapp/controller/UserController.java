@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.dto.output.MediaToWatchDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaWatchedDto;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
 import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
+import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
@@ -114,14 +115,9 @@ public class UserController {
     @Path("/{username}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteUser(@PathParam("username") String username) {
-        Optional<User> user = userService.getByUsername(username);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        if (!user.isPresent()) {
-            LOGGER.info("DELETE /users/{username}: {} does not exists", username);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        userService.deleteUser(user.get());
+        userService.deleteUser(user);
         LOGGER.info("DELETE /users/{username}: {} user deleted", username);
         return Response.noContent().build();
     }
@@ -135,26 +131,16 @@ public class UserController {
     public Response getUserFavoriteMedia(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        if (page < 1 || pageSize < 1) {
-            LOGGER.info("GET /users/{}/favorite-media: Invalid params.", username);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        Optional<User> user = userService.getByUsername(username);
-
-        if (!user.isPresent()) {
-            LOGGER.info("GET /users/{}/favorite-media: {} does not exists.", username, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user.get(), page, pageSize);
+        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page, pageSize);
 
         if (favoriteMedia.getElements().isEmpty()) {
             LOGGER.info("GET /users/{}/favorite-media: Returning empty list.", username);
             return Response.noContent().build();
         }
 
-        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaList(uriInfo, favoriteMedia.getElements(), user.get());
+        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaList(uriInfo, favoriteMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaFavoriteDto>>(mediaFavoriteDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, favoriteMedia, uriInfo);
@@ -167,21 +153,16 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response isFavoriteMedia(@PathParam("username") String username,
                                     @PathParam("mediaId") int mediaId) {
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("GET /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        if (!favoriteService.isFavorite(media.get(), user.get())) {
+        if (!favoriteService.isFavorite(media, user)) {
             LOGGER.info("GET /users/{}/favorite-media/{}: media {} is not favorite of {}.", username, mediaId, mediaId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /users/{}/favorite-media/{}: media {} is favorite of {}.", username, mediaId, mediaId, username);
-        return Response.ok(MediaFavoriteDto.fromMediaAndUser(uriInfo, media.get(), user.get())).build();
+        return Response.ok(MediaFavoriteDto.fromMediaAndUser(uriInfo, media, user)).build();
     }
 
     @PUT
@@ -189,15 +170,10 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToFavorites(@PathParam("username") String username,
                                         @PathParam("mediaId") int mediaId) {
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("PUT /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        favoriteService.addMediaToFav(media.get(), user.get());
+        favoriteService.addMediaToFav(media, user);
 
         LOGGER.info("PUT /users/{}/favorite-media/{}: media {} added to {}'s favorites.", username, mediaId, mediaId, username);
         return Response.noContent().build();
@@ -208,15 +184,10 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromFavorites(@PathParam("username") String username,
                                              @PathParam("mediaId") int mediaId) {
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("DELETE /users/{}/favorite-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        favoriteService.deleteMediaFromFav(media.get(), user.get());
+        favoriteService.deleteMediaFromFav(media, user);
 
         LOGGER.info("DELETE /users/{}/favorite-media/{}: media {} removed from {}'s favorites.", username, mediaId, mediaId, username);
         return Response.noContent().build();
@@ -231,26 +202,16 @@ public class UserController {
     public Response getUserWatchedMedia(@PathParam("username") String username,
                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        if (page < 1 || pageSize < 1) {
-            LOGGER.info("GET /users/{}/watched-media: Invalid params.", username);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        Optional<User> user = userService.getByUsername(username);
-
-        if (!user.isPresent()) {
-            LOGGER.info("GET /users/{}/watched-media: {} does not exists.", username, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user.get(), page, pageSize);
+        PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, page, pageSize);
 
         if (watchedMedia.getElements().isEmpty()) {
             LOGGER.info("GET /users/{}/watched-media: Returning empty list.", username);
             return Response.noContent().build();
         }
 
-        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromMediaList(uriInfo, watchedMedia.getElements(), user.get());
+        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromMediaList(uriInfo, watchedMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaWatchedDto>>(mediaWatchedDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, watchedMedia, uriInfo);
@@ -263,15 +224,10 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response isWatchedMedia(@PathParam("username") String username,
                                    @PathParam("mediaId") int mediaId) {
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("GET /users/{}/watched-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user.get(), media.get());
+        Optional<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, media);
 
         if (!watchedMedia.isPresent()) {
             LOGGER.info("GET /users/{}/watched-media/{}: media {} is not watched by {}.", username, mediaId, mediaId, username);
@@ -279,7 +235,7 @@ public class UserController {
         }
 
         LOGGER.info("GET /users/{}/watched-media/{}: media {} is watched by {} on {}.", username, mediaId, mediaId, username, watchedMedia.get().getWatchDate());
-        return Response.ok(MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, watchedMedia.get(), user.get())).build();
+        return Response.ok(MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, watchedMedia.get(), user)).build();
     }
 
     @PUT
@@ -289,20 +245,14 @@ public class UserController {
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
                                       DateTimeDto dateTimeDto) {
-        if(dateTimeDto == null || dateTimeDto.getDateTime().isAfter(LocalDateTime.now())) {
-            LOGGER.info("PUT /users/{}/watched-media/{}: Invalid date.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        if(dateTimeDto == null) {
+            throw new EmptyBodyException();
         }
 
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("PUT /users/{}/watched-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        watchService.addWatchedMedia(media.get(), user.get(), dateTimeDto.getDateTime());
+        watchService.addWatchedMedia(media, user, dateTimeDto.getDateTime());
 
         LOGGER.info("PUT /users/{}/watched-media/{}: media {} added to {}'s watched on {}.", username, mediaId, mediaId, username, dateTimeDto.getDateTime().toLocalDate());
         return Response.noContent().build();
@@ -313,15 +263,10 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromWatched(@PathParam("username") String username,
                                            @PathParam("mediaId") int mediaId) {
-        Optional<User> user = userService.getByUsername(username);
-        Optional<Media> media = mediaService.getById(mediaId);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
-        if (!user.isPresent() || !media.isPresent()) {
-            LOGGER.info("DELETE /users/{}/watched-media/{}: Invalid params.", username, mediaId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        watchService.deleteWatchedMedia(media.get(), user.get());
+        watchService.deleteWatchedMedia(media, user);
 
         LOGGER.info("DELETE /users/{}/watched-media/{}: media {} removed from {}'s watched.", username, mediaId, mediaId, username);
         return Response.noContent().build();
@@ -330,6 +275,75 @@ public class UserController {
     /**
      * To Watch Media
      */
+    @GET
+    @Path("/{username}/to-watch-media")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserToWatchMedia(@PathParam("username") String username,
+                                        @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                        @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        PageContainer<Media> toWatchMedia = watchService.getToWatchMedia(user, page, pageSize);
+
+        if (toWatchMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/to-watch-media: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaList(uriInfo, toWatchMedia.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaToWatchDto>>(mediaToWatchDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, toWatchMedia, uriInfo);
+        LOGGER.info("GET /users/{}/to-watch-media: Returning page {} with {} results.", username, toWatchMedia.getCurrentPage(), toWatchMedia.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/to-watch-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response isToWatchMedia(@PathParam("username") String username,
+                                   @PathParam("mediaId") int mediaId) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        if (!watchService.isToWatch(media, user)) {
+            LOGGER.info("GET /users/{}/to-watch-media/{}: media {} is not to watch by {}.", username, mediaId, mediaId, username);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /users/{}/to-watch-media/{}: media {} is to watch by {}.", username, mediaId, mediaId, username);
+        return Response.ok(MediaToWatchDto.fromMediaAndUser(uriInfo, media, user)).build();
+    }
+
+    @PUT
+    @Path("/{username}/to-watch-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response addMediaToWatch(@PathParam("username") String username,
+                                      @PathParam("mediaId") int mediaId,
+                                      DateTimeDto dateTimeDto) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.addMediaToWatch(media, user);
+
+        LOGGER.info("PUT /users/{}/to-watch-media/{}: media {} added to {}'s to watch.", username, mediaId, mediaId, username);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{username}/to-watch-media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response removeMediaFromToWatch(@PathParam("username") String username,
+                                           @PathParam("mediaId") int mediaId) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.deleteToWatchMedia(media, user);
+
+        LOGGER.info("DELETE /users/{}/to-watch-media/{}: media {} removed from {}'s to watch.", username, mediaId, mediaId, username);
+        return Response.noContent().build();
+    }
 
     /**
      * Favorite Lists
