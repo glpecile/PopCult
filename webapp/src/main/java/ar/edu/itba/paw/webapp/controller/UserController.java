@@ -1,17 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.DateTimeDto;
 import ar.edu.itba.paw.webapp.dto.input.UserCreateDto;
-import ar.edu.itba.paw.webapp.dto.output.ErrorDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaFavoriteDto;
+import ar.edu.itba.paw.webapp.dto.output.MediaToWatchDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaWatchedDto;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
+import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +27,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Path("users")
@@ -66,15 +68,10 @@ public class UserController {
 
 
     @GET
-    @Produces(value = {
-            MediaType.APPLICATION_JSON
-    })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listUsers(@QueryParam("page") @DefaultValue(defaultPage) int page,
                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        if (page < 1 || pageSize < 1) {
-            LOGGER.info("GET /users: Invalid params.");
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+
         final PageContainer<User> users = userService.getUsers(page, pageSize);
 
         if (users.getElements().isEmpty()) {
@@ -91,39 +88,25 @@ public class UserController {
 
     @GET
     @Path("/{username}")
-    @Produces(value = {
-            MediaType.APPLICATION_JSON
-    })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getUser(@PathParam("username") String username) {
-        Optional<User> user = userService.getByUsername(username);
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        if (!user.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        return Response.ok(UserDto.fromUser(uriInfo, user.get())).build();
+        LOGGER.info("GET /users/{}: Returning user {}.", user.getUsername(), user.getUsername());
+        return Response.ok(UserDto.fromUser(uriInfo, user)).build();
     }
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createUser(@Valid UserCreateDto userDto) {
+    public Response createUser(@Valid UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         if (userDto == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new EmptyBodyException();
         }
         final User user;
-        try {
-            user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
-        } catch (UsernameAlreadyExistsException e) {
-            final ErrorDto errorDto = ErrorDto.fromErrorMsg(messageSource.getMessage("validation.username.alreadyExists", null, Locale.getDefault()), "username");
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<ErrorDto>(errorDto) {
-            }).build();
-        } catch (EmailAlreadyExistsException e) {
-            final ErrorDto errorDto = ErrorDto.fromErrorMsg(messageSource.getMessage("validation.email.alreadyExists", null, Locale.getDefault()), "email");
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<ErrorDto>(errorDto) {
-            }).build();
-        }
+        user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
+        LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build()).build();
     }
 

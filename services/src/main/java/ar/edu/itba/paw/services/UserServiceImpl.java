@@ -247,7 +247,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize){
+    public PageContainer<User> getUsers(int page, int pageSize) {
         return userDao.getUsers(page, pageSize);
     }
 

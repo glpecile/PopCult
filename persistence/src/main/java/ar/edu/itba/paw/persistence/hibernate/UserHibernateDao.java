@@ -2,9 +2,11 @@ package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidPaginationParametersException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -100,6 +102,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public PageContainer<User> getUsers(int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
 
         final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users ORDER BY username DESC OFFSET :offset LIMIT :limit")
                 .setParameter("offset", (page-1) * pageSize)
