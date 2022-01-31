@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.DateTimeDto;
 import ar.edu.itba.paw.webapp.dto.input.UserCreateDto;
+import ar.edu.itba.paw.webapp.dto.input.UserEditDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaFavoriteDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaToWatchDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaWatchedDto;
@@ -121,6 +122,20 @@ public class UserController {
         LOGGER.info("DELETE /users/{username}: {} user deleted", username);
         return Response.noContent().build();
     }
+
+    @PUT
+    @Path("/{username}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response updatedUser(@PathParam("username") String username,
+                                @Valid UserEditDto userEditDto) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.updateUserData(user, userEditDto.getName());
+        LOGGER.info("PUT /users/{username}: {} user updated", username);
+        return Response.noContent().build();
+    }
+
 
     /**
      * Favorite Media
