@@ -2,21 +2,16 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.dto.input.DateTimeDto;
-import ar.edu.itba.paw.webapp.dto.input.UserCreateDto;
-import ar.edu.itba.paw.webapp.dto.input.UserEditDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaFavoriteDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaToWatchDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaWatchedDto;
-import ar.edu.itba.paw.webapp.dto.output.UserDto;
-import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
-import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.dto.input.*;
+import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +22,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,6 +123,10 @@ public class UserController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updatedUser(@PathParam("username") String username,
                                 @Valid UserEditDto userEditDto) {
+        if (userEditDto == null) {
+            throw new EmptyBodyException();
+        }
+
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         userService.updateUserData(user, userEditDto.getName());
@@ -136,6 +134,59 @@ public class UserController {
         return Response.noContent().build();
     }
 
+    @PUT
+    @Path("/{username}/password")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response updatePassword(@PathParam("username") String username,
+                                   @Valid UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
+        if (userPasswordDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.changePassword(user, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword());
+        LOGGER.info("PUT /users/{username}/password: {} user password updated", username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Reset password
+     */
+    @POST
+    @Path("/reset-password")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response createPasswordResetToken(@Valid UserEmailDto userEmailDto) {
+        if (userEmailDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
+
+        Token token = userService.forgotPassword(user);
+        LOGGER.info("POST /users/reset-password: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path("reset-password").build())
+                .entity(TokenDto.fromToken(uriInfo, token))
+                .build();
+    }
+
+    @PUT
+    @Path("/reset-password")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response resetPassword(@Valid UserResetPasswordDto userResetPasswordDto) {
+        if (userResetPasswordDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        Token token = tokenService.getToken(userResetPasswordDto.getToken()).orElseThrow(TokenNotFoundException::new);
+
+        userService.resetPassword(token, userResetPasswordDto.getNewPassword());
+        LOGGER.info("PUT /users/reset-password: Password reset for {}", token.getUser().getUsername());
+        return Response.noContent().build();
+    }
 
     /**
      * Favorite Media

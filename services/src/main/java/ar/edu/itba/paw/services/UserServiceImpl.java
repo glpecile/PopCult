@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            LOGGER.error("userId: {} changing password failed.", user.getUserId());
+            LOGGER.error("userId: {} changing password failed. Incorrect password", user.getUserId());
             throw new InvalidCurrentPasswordException();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -111,10 +111,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void forgotPassword(String email) throws EmailNotExistsException {
-        User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
+    public Token forgotPassword(User user) {
         Token token = tokenService.createToken(user, TokenType.RESET_PASS);
         emailService.sendResetPasswordEmail(user, token.getToken(), LocaleContextHolder.getLocale());
+        return token;
     }
 
     @Transactional

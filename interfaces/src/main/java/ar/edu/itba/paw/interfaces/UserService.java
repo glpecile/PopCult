@@ -24,7 +24,7 @@ public interface UserService {
 
     Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException;
 
-    void forgotPassword(String email) throws EmailNotExistsException;
+    Token forgotPassword(User user);
 
     boolean resetPassword(Token token, String newPassword);
 
