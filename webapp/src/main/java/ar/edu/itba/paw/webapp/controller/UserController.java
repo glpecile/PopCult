@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
@@ -117,6 +118,11 @@ public class UserController {
         return Response.noContent().build();
     }
 
+    /**
+     * Modify User
+     * Change name
+     * Change password
+     */
     @PUT
     @Path("/{username}")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -152,7 +158,7 @@ public class UserController {
     }
 
     /**
-     * Reset password
+     * Reset password - Recover
      */
     @POST
     @Path("/reset-password")
@@ -176,7 +182,7 @@ public class UserController {
     @Path("/reset-password")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response resetPassword(@Valid UserResetPasswordDto userResetPasswordDto) {
+    public Response resetPassword(@Valid UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
         if (userResetPasswordDto == null) {
             throw new EmptyBodyException();
         }
@@ -185,6 +191,43 @@ public class UserController {
 
         userService.resetPassword(token, userResetPasswordDto.getNewPassword());
         LOGGER.info("PUT /users/reset-password: Password reset for {}", token.getUser().getUsername());
+        return Response.noContent().build();
+    }
+
+    /**
+     * User verification
+     */
+    @POST
+    @Path("/verification")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) {
+        if (userEmailDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
+
+        Token token = userService.createVerificationToken(user);
+        LOGGER.info("POST /users/verification: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path("verification").build())
+                .entity(TokenDto.fromToken(uriInfo, token))
+                .build();
+    }
+
+    @PUT
+    @Path("/verification")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response verificateUser(@Valid UserVerificationDto userVerificationDto) throws InvalidTokenException {
+        if (userVerificationDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        Token token = tokenService.getToken(userVerificationDto.getToken()).orElseThrow(TokenNotFoundException::new);
+
+        userService.confirmRegister(token);
+        LOGGER.info("PUT /users/verification: User {} enabled", token.getUser().getUsername());
         return Response.noContent().build();
     }
 

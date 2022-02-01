@@ -20,17 +20,19 @@ public interface UserService {
 
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
+    Token createVerificationToken(User user);
+
     void deleteUser(User user);
 
     Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException;
 
     Token forgotPassword(User user);
 
-    boolean resetPassword(Token token, String newPassword);
+    void resetPassword(Token token, String newPassword) throws InvalidTokenException;
 
     Optional<User> getCurrentUser();
 
-    boolean confirmRegister(Token token);
+    void confirmRegister(Token token) throws InvalidTokenException;
 
     void resendToken(Token token);
 

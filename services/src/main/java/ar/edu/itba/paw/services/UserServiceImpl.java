@@ -83,12 +83,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name);
-
-        Token token = tokenService.createToken(user, TokenType.VERIFICATION);
-
-        emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
-
+        createVerificationToken(user);
         return user;
+    }
+
+    @Transactional
+    @Override
+    public Token createVerificationToken(User user) {
+        Token token = tokenService.createToken(user, TokenType.VERIFICATION);
+        emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
+        return token;
     }
 
     @Transactional
@@ -119,13 +123,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public boolean resetPassword(Token token, String newPassword) {
+    public void resetPassword(Token token, String newPassword) throws InvalidTokenException {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.RESET_PASS);
-        if (isValidToken) {
-            token.getUser().setPassword(passwordEncoder.encode(newPassword));
-            tokenService.deleteToken(token);
+        if (!isValidToken) {
+            throw new InvalidTokenException();
         }
-        return isValidToken;
+        token.getUser().setPassword(passwordEncoder.encode(newPassword));
+        tokenService.deleteToken(token);
     }
 
     @Transactional(readOnly = true)
@@ -140,15 +144,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public boolean confirmRegister(Token token) {
+    public void confirmRegister(Token token) throws InvalidTokenException {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION);
-        if (isValidToken) {
-            final User user = token.getUser();
-            user.setEnabled(ENABLED_USER);
-            authWithoutPassword(user);
-            tokenService.deleteToken(token);
+        if (!isValidToken) {
+            throw new InvalidTokenException();
         }
-        return isValidToken;
+        final User user = token.getUser();
+        user.setEnabled(ENABLED_USER);
+        authWithoutPassword(user);
+        tokenService.deleteToken(token);
     }
 
     private void authWithoutPassword(User user) {
@@ -203,7 +207,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void strikeUser(User user) {
         int userStrikes = user.addStrike();
-        switch(userStrikes) {
+        switch (userStrikes) {
             case FIRST_BAN_STRIKES:
             case SECOND_BAN_STRIKES:
                 banUser(user);
@@ -238,7 +242,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime actualDate = LocalDateTime.now();
         userDao.getBannedUsers().forEach(user -> {
             LOGGER.info("Checking ban for {}", user.getUsername());
-            if(user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
+            if (user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
                 unbanUser(user);
                 LOGGER.info("{} unbanned", user.getUsername());
             }

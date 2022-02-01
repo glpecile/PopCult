@@ -17,7 +17,7 @@ public class TokenDto {
         tokenDto.token = token.getToken();
         tokenDto.expiryDate = token.getExpiryDate();
 
-        tokenDto.url = url.getBaseUriBuilder().path("users").path("reset-password").build().toString();
+        tokenDto.url = url.getAbsolutePathBuilder().toString();
         return tokenDto;
     }
 
