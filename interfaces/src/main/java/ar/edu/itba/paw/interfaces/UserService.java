@@ -40,6 +40,8 @@ public interface UserService {
 
     void uploadUserProfileImage(User user, byte[] photoBlob);
 
+    void deleteUserProfileImage(User user);
+
     void updateUserData(User user, String name);
 
     PageContainer<User> getBannedUsers(int page, int pageSize);

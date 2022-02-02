@@ -49,4 +49,10 @@ public class ImageServiceImpl implements ImageService {
     public Image uploadImage(byte[] photoBlob) {
         return imageDao.uploadImage(photoBlob);
     }
+
+    @Transactional
+    @Override
+    public void deleteImage(Image image) {
+        imageDao.deleteImage(image);
+    }
 }

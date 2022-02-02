@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
-import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
@@ -12,8 +9,11 @@ import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -232,6 +233,45 @@ public class UserController {
     }
 
     /**
+     * Profile image
+     */
+    @GET
+    @Path("/{username}/image")
+    @Produces(value = {"image/*", MediaType.APPLICATION_JSON})
+    public Response getProfileImage(@PathParam("username") String username) throws ImageConversionException {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
+        LOGGER.info("GET /users/{}/image: Returning user {} image", username, username);
+        return Response.ok(profileImage).build();
+    }
+
+    @PUT
+    @Path("/{username}/image")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response updateProfileImage(@PathParam("username") String username,
+                                       @Image @FormDataParam("image") final FormDataBodyPart image,
+                                       @Size(max = 1024 * 1024 * 2) @FormDataParam("image") byte[] imageBytes) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.uploadUserProfileImage(user, imageBytes);
+        LOGGER.info("PUT /users/{}/image: Returning user {} image", username, username);
+        return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).path("image").build()).build();
+    }
+
+    @DELETE
+    @Path("/{username}/image")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProfileImage(@PathParam("username") String username) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.deleteUserProfileImage(user);
+        LOGGER.info("DELETE /users/{}/image: User {} profile image deleted", username, username);
+        return Response.noContent().build();
+    }
+
+    /**
      * Favorite Media
      */
     @GET
@@ -354,7 +394,7 @@ public class UserController {
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
                                       @Valid DateTimeDto dateTimeDto) {
-        if(dateTimeDto == null) {
+        if (dateTimeDto == null) {
             throw new EmptyBodyException();
         }
 
@@ -429,8 +469,8 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToWatch(@PathParam("username") String username,
-                                      @PathParam("mediaId") int mediaId,
-                                      DateTimeDto dateTimeDto) {
+                                    @PathParam("mediaId") int mediaId,
+                                    DateTimeDto dateTimeDto) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 

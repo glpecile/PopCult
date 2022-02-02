@@ -188,7 +188,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void uploadUserProfileImage(User user, byte[] photoBlob) {
         final Image image = imageService.uploadImage(photoBlob);
+        if(user.getImage() != null) {
+            imageService.deleteImage(user.getImage());
+        }
         user.setImage(image);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserProfileImage(User user) {
+        if(user.getImage() != null) {
+            imageService.deleteImage(user.getImage());
+            user.setImage(null);
+        }
     }
 
     @Transactional
