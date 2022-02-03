@@ -5,7 +5,9 @@ import Series from "./pages/primary/Series";
 import Lists from "./pages/primary/Lists";
 import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
+import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Error404 from "./pages/secondary/errors/Error404";
+
 import Layout from "./components/Layout/Layout";
 
 function App() {
@@ -18,7 +20,7 @@ function App() {
                 <Route path='/lists' exact element={<Lists/>}/>
                 <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
                 <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
-                <Route path='/lists/:id' exact element={<MediaDescription/>}/>
+                <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                 <Route path='*' element={<Error404/>}/>
             </Routes>
         </Layout>
