@@ -1,4 +1,4 @@
-import MediaSlider from "../components/MediaSlider";
+import MediaSlider from "../../components/MediaSlider";
 
 const DUMMY_DATA = [
     {

@@ -1,4 +1,4 @@
-import ListsSlider from "../components/ListsSlider";
+import ListsSlider from "../../components/ListsSlider";
 
 const DUMMY_DATA = [{
     id: 1,
