@@ -4,19 +4,18 @@ import Films from "./pages/Films";
 import Series from "./pages/Series";
 import Lists from "./pages/Lists";
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout/Layout";
 
 function App() {
     return (
-        <div>
-            <Navbar/>
+        <Layout>
             <Routes>
                 <Route path='/' exact element={<Home/>}/>
                 <Route path='/media/films' exact element={<Films/>}/>
                 <Route path='/media/series' exact element={<Series/>}/>
                 <Route path='/lists' exact element={<Lists/>}/>
             </Routes>
-        </div>
+        </Layout>
     );
 }
 
