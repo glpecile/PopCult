@@ -18,6 +18,7 @@ function App() {
                 <Route path='/lists' exact element={<Lists/>}/>
                 <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
                 <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
+                <Route path='/lists/:id' exact element={<MediaDescription/>}/>
                 <Route path='*' element={<Error404/>}/>
             </Routes>
         </Layout>
