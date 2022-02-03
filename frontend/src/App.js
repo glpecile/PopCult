@@ -1,9 +1,10 @@
 import './App.css';
 import {Route, Routes} from "react-router-dom";
-import Films from "./pages/Films";
-import Series from "./pages/Series";
-import Lists from "./pages/Lists";
-import Home from "./pages/Home";
+import Films from "./pages/primary/Films";
+import Series from "./pages/primary/Series";
+import Lists from "./pages/primary/Lists";
+import Home from "./pages/primary/Home";
+import MediaDescription from "./pages/secondary/media/MediaDescription";
 import Layout from "./components/Layout/Layout";
 
 function App() {
@@ -14,6 +15,8 @@ function App() {
                 <Route path='/media/films' exact element={<Films/>}/>
                 <Route path='/media/series' exact element={<Series/>}/>
                 <Route path='/lists' exact element={<Lists/>}/>
+                <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
+                <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
             </Routes>
         </Layout>
     );
