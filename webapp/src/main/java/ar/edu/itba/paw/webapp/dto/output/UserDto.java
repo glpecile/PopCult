@@ -36,8 +36,8 @@ public class UserDto {
         userDto.unbanDate = user.getUnbanDate();
         userDto.role = user.getRole();
 
-        userDto.url = url.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).build().toString();
-        userDto.imageUrl = url.getBaseUriBuilder().path("users").path("image").path(String.valueOf(user.getImageId())).build().toString();
+        userDto.url = url.getBaseUriBuilder().path("users").path(user.getUsername()).build().toString();
+        userDto.imageUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("image").build().toString();
         return userDto;
     }
 
