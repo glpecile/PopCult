@@ -101,6 +101,14 @@ public class UserDto {
         this.banDate = banDate;
     }
 
+    public LocalDateTime getUnbanDate() {
+        return unbanDate;
+    }
+
+    public void setUnbanDate(LocalDateTime unbanDate) {
+        this.unbanDate = unbanDate;
+    }
+
     public UserRole getRole() {
         return role;
     }
