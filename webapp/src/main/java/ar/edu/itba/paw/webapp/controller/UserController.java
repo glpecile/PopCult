@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.*;
@@ -47,6 +48,8 @@ public class UserController {
     private TokenService tokenService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private ModeratorService moderatorService;
 
     @Autowired
     private MessageSource messageSource;
@@ -101,8 +104,8 @@ public class UserController {
         if (userDto == null) {
             throw new EmptyBodyException();
         }
-        final User user;
-        user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
+
+        final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
         LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build()).build();
@@ -248,8 +251,8 @@ public class UserController {
 
     @PUT
     @Path("/{username}/image")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     public Response updateProfileImage(@PathParam("username") String username,
                                        @Image @FormDataParam("image") final FormDataBodyPart image,
                                        @Size(max = 1024 * 1024 * 2) @FormDataParam("image") byte[] imageBytes) {
@@ -262,12 +265,37 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/image")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteProfileImage(@PathParam("username") String username) {
         User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         userService.deleteUserProfileImage(user);
         LOGGER.info("DELETE /users/{}/image: User {} profile image deleted", username, username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Mod Request and Delete Mod Role
+     */
+    @POST
+    @Path("/{username}/mod-requests")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response createModRequest(@PathParam("username") String username) throws ModRequestAlreadyExistsException, UserAlreadyIsModException {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        ModRequest modRequest = moderatorService.addModRequest(user);
+        LOGGER.info("POST /users/{}/mod-requests: Mod request added to user {}", username, username);
+        return Response.created(uriInfo.getBaseUriBuilder().path("mods-requests").path(String.valueOf(modRequest.getRequestId())).build()).build();
+    }
+
+    @DELETE
+    @Path("{username}/mod")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response removeMod(@PathParam("username") String username) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        moderatorService.removeMod(user);
+        LOGGER.info("DELETE /users/{}/mod: Mod role removed to user {}", username, username);
         return Response.noContent().build();
     }
 

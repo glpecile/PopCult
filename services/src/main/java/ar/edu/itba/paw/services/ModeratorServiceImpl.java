@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +58,11 @@ public class ModeratorServiceImpl implements ModeratorService {
 
     @Transactional
     @Override
-    public void addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
+    public ModRequest addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
         if (principalIsMod()) {
             throw new UserAlreadyIsModException();
         }
-        moderatorDao.addModRequest(user);
+        return moderatorDao.addModRequest(user);
     }
 
     @Transactional
@@ -73,7 +74,9 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Transactional(readOnly = true)
     @Override
     public boolean principalIsMod() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
+        //TODO migrate to JWT compatibility
+//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
+        return false;
     }
 }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
 
 public interface ModeratorService {
@@ -14,7 +15,7 @@ public interface ModeratorService {
 
     PageContainer<User> getModRequesters(int page, int pageSize);
 
-    void addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException;
+    ModRequest addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException;
 
     void removeRequest(User user);
 
