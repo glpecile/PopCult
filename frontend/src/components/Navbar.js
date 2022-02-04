@@ -15,7 +15,9 @@ function Navbar() {
                         data-bs-target="#navbarScroll"
                         aria-controls="navbarScroll"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <i className="fas fa-bars transition duration-500 ease-in-out transform focus:-translate-y-1 focus:scale-105"/>
+                    <span
+                        className="navbar-toggler-icon">
+                    </span>
                 </button>
                 <div
                     className="collapse navbar-collapse flex space-x-8 justify-center items-center text-center sm:justify-end"
