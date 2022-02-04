@@ -1,4 +1,5 @@
 import Navbar from "../Navbar";
+import Footer from "../Footer";
 
 function Layout(props) {
     return (
@@ -9,6 +10,7 @@ function Layout(props) {
                     <main>{props.children}</main>
                 </div>
             </div>
+            <Footer/>
         </div>
     )
 }
