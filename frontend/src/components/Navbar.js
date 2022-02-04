@@ -1,6 +1,20 @@
 import {NavLink} from "react-router-dom";
 
 function Navbar() {
+    const switchOnLoggedUser = () => {
+        const isUserPresent = false;
+        return (
+            <>
+                {isUserPresent &&
+                    (<div>Hola
+                    </div>)}
+                {!isUserPresent &&
+                    (<li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                        <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
+                                 to='/login'>Sign In</NavLink>
+                    </li>)}
+            </>);
+    }
     return (
         <nav
             className="mb-3 relative navbar navbar-expand-lg w-full navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-yellow-500 to-purple-900">
@@ -33,6 +47,7 @@ function Navbar() {
                             <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
                                      to='/lists'>Lists</NavLink>
                         </li>
+                        {switchOnLoggedUser()}
                     </ul>
                 </div>
             </div>

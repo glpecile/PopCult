@@ -9,6 +9,7 @@ import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Error404 from "./pages/secondary/errors/Error404";
 
 import Layout from "./components/Layout/Layout";
+import Login from "./pages/secondary/login/Login";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
                 <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
                 <Route path='/lists/:id' exact element={<ListsDescription/>}/>
+                <Route path='/login' exact element={<Login/>}/>
                 <Route path='*' element={<Error404/>}/>
             </Routes>
         </Layout>
