@@ -2,8 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.webapp.dto.output.ModRequestDto;
+import ar.edu.itba.paw.webapp.dto.output.NotificationDto;
+import ar.edu.itba.paw.webapp.exceptions.NotificationNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,5 +46,39 @@ public class ModRequestController {
         ResponseUtils.setPaginationLinks(response, modRequests, uriInfo);
         LOGGER.info("GET /mods-requests: Returning page {} with {} results", modRequests.getCurrentPage(), modRequests.getElements().size());
         return response.build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getModRequest(@PathParam("id") int requestId) {
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+
+        LOGGER.info("GET /mods-requests/{}: Returning notification {}", requestId, requestId);
+        return Response.ok(ModRequestDto.fromModRequest(uriInfo, modRequest)).build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response setNotificationAsOpened(@PathParam("id") int requestId) {
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+
+        moderatorService.promoteToMod(modRequest.getUser());
+
+        LOGGER.info("PUT /mods-requests/{}: Mod request {} approved. {} is mod", requestId, requestId, modRequest.getUser().getUsername());
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response deleteNotification(@PathParam("id") int requestId) {
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+
+        moderatorService.removeModRequest(modRequest);
+
+        LOGGER.info("DELETE /mods-requests/{}: Mod request {} deleted", requestId, requestId);
+        return Response.noContent().build();
     }
 }
