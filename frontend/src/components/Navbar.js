@@ -17,7 +17,7 @@ function Navbar() {
     }
     return (
         <nav
-            className="mb-3 relative navbar navbar-expand-lg w-full navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-yellow-500 to-purple-900">
+            className="mb-3 relative navbar navbar-expand-lg w-full navbar-dark bg-dark text-white shadow-md bg-gradient-to-r from-amber-500 to-purple-900">
             <div className="container-fluid flex sm:px-12 px-16">
                 <NavLink className="navbar-brand m-0 p-0" to='/'>
                     <img

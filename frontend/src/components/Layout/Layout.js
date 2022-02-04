@@ -15,13 +15,13 @@ function Layout(props) {
     return <>
         {layoutVisibility &&
             (<div className="bg-gray-50">
-                <div className="min-h-screen flex flex-col">
+                <div className="flex flex-col justify-between h-screen">
                     <Navbar/>
-                    <div className="col-8 offset-2 flex-grow">
-                        <main>{props.children}</main>
-                    </div>
+                    <main className="col-8 offset-2 flex-grow mb-auto">
+                        {props.children}
+                    </main>
+                    <Footer/>
                 </div>
-                <Footer/>
             </div>)
         }
         {!layoutVisibility && <main>{props.children}</main>}
