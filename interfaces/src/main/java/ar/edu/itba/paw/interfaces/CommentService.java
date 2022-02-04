@@ -28,6 +28,12 @@ public interface CommentService {
 
     void deleteCommentFromList(ListComment comment);
 
+    Optional<Notification> getListCommentNotification(int notificationId);
+
+    void deleteListCommentNotification(Notification notification);
+
+    void setListCommentNotificationAsOpened(Notification notification);
+
     PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
 
     void setUserListsCommentsNotificationsAsOpened(User user);

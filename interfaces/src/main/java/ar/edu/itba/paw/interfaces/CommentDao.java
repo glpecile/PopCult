@@ -30,6 +30,10 @@ public interface CommentDao {
 
     void deleteCommentFromList(ListComment comment);
 
+    Optional<Notification> getListCommentNotification(int notificationId);
+
+    void deleteListCommentNotification(Notification notification);
+
     PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
 
     void setUserListsCommentsNotificationsAsOpened(User user);

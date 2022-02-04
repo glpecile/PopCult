@@ -1,0 +1,63 @@
+package ar.edu.itba.paw.webapp.controller;
+
+import ar.edu.itba.paw.interfaces.CommentService;
+import ar.edu.itba.paw.models.comment.Notification;
+import ar.edu.itba.paw.webapp.dto.output.NotificationDto;
+import ar.edu.itba.paw.webapp.exceptions.NotificationNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+@Path("notifications")
+@Component
+public class NotificationController {
+
+    @Autowired
+    private CommentService commentService;
+
+    @Context
+    private UriInfo uriInfo;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationController.class);
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getNotification(@PathParam("id") int notificationId) {
+        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+
+        LOGGER.info("GET /notifications/{}: Returning notification {}", notificationId, notificationId);
+        return Response.ok(NotificationDto.fromNotification(uriInfo, notification)).build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response setNotificationAsOpened(@PathParam("id") int notificationId) {
+        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+
+        commentService.setListCommentNotificationAsOpened(notification);
+
+        LOGGER.info("PUT /notifications/{}: Notification {} marked as opened", notificationId, notificationId);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response deleteNotification(@PathParam("id") int notificationId) {
+        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+
+        commentService.deleteListCommentNotification(notification);
+
+        LOGGER.info("DELETE /notifications/{}: Notification {} deleted", notificationId, notificationId);
+        return Response.noContent().build();
+    }
+}

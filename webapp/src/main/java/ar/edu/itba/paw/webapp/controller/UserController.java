@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.ModRequest;
@@ -300,6 +301,31 @@ public class UserController {
     }
 
     /**
+     * Locked - ban user
+     */
+    @PUT
+    @Path("{username}/locked")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response banUser(@PathParam("username") String username) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.banUser(user);
+        LOGGER.info("DELETE /users/{}/locked: User {} banned", username, username);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("{username}/locked")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response unbanUser(@PathParam("username") String username) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.unbanUser(user);
+        LOGGER.info("DELETE /users/{}/locked: User {} unbanned", username, username);
+        return Response.noContent().build();
+    }
+
+    /**
      * Favorite Media
      */
     @GET
@@ -525,6 +551,31 @@ public class UserController {
     /**
      * Favorite Lists
      */
+
+    /**
+     * Notifications
+     */
+    @GET
+    @Path("/{username}/notifications")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserNotifications(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        PageContainer<Notification> notifications = commentService.getUserListsCommentsNotifications(user, page, pageSize);
+
+        if(notifications.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/notifications: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+        final List<NotificationDto> notificationDtoList = NotificationDto.fromNotificationList(uriInfo, notifications.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<NotificationDto>>(notificationDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, notifications, uriInfo);
+        LOGGER.info("GET /users/{}/notifications: Returning page {} with {} results.", username, notifications.getCurrentPage(), notifications.getElements().size());
+        return response.build();
+    }
 
 //    @RequestMapping("/user/{username}")
 //    public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,
