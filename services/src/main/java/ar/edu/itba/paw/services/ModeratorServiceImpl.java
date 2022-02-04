@@ -12,10 +12,10 @@ import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class ModeratorServiceImpl implements ModeratorService {
@@ -52,8 +52,14 @@ public class ModeratorServiceImpl implements ModeratorService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<User> getModRequesters(int page, int pageSize) {
-        return moderatorDao.getModRequesters(page, pageSize);
+    public Optional<ModRequest> getModRequest(int modRequestId) {
+        return moderatorDao.getModRequest(modRequestId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<ModRequest> getModRequests(int page, int pageSize) {
+        return moderatorDao.getModRequests(page, pageSize);
     }
 
     @Transactional
@@ -63,6 +69,12 @@ public class ModeratorServiceImpl implements ModeratorService {
             throw new UserAlreadyIsModException();
         }
         return moderatorDao.addModRequest(user);
+    }
+
+    @Transactional
+    @Override
+    public void removeModRequest(ModRequest modRequest) {
+        moderatorDao.removeModRequest(modRequest);
     }
 
     @Transactional

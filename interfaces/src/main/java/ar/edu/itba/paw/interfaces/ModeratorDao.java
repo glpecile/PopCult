@@ -10,9 +10,13 @@ import java.util.Optional;
 public interface ModeratorDao {
     PageContainer<User> getModerators(int page, int pageSize);
 
-    PageContainer<User> getModRequesters(int page, int pageSize);
+    Optional<ModRequest> getModRequest(int modRequestId);
+
+    PageContainer<ModRequest> getModRequests(int page, int pageSize);
 
     ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException;
+
+    void removeModRequest(ModRequest modRequest);
 
     void removeRequest(User user);
 }
