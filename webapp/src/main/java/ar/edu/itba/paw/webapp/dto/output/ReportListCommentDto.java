@@ -35,7 +35,7 @@ public class ReportListCommentDto {
 
         reportListCommentDto.url = url.getBaseUriBuilder().path("lists-comments-reports").path(String.valueOf(listCommentReport.getReportId())).build().toString();
         reportListCommentDto.reportedCommentUrl = url.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listCommentReport.getComment().getCommentId())).build().toString();
-        reportListCommentDto.listUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(listCommentReport.getComment().getMediaList().getListName())).build().toString();
+        reportListCommentDto.listUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(listCommentReport.getComment().getMediaList().getMediaListId())).build().toString();
         reportListCommentDto.reportedUserUrl = url.getBaseUriBuilder().path("users").path(listCommentReport.getComment().getUser().getUsername()).build().toString();
         reportListCommentDto.reporterUserUrl = url.getBaseUriBuilder().path("users").path(listCommentReport.getReportee().getUsername()).build().toString();
         return reportListCommentDto;
