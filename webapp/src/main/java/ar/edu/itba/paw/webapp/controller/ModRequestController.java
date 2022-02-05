@@ -2,10 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.webapp.dto.output.ModRequestDto;
-import ar.edu.itba.paw.webapp.dto.output.NotificationDto;
 import ar.edu.itba.paw.webapp.exceptions.NotificationNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;

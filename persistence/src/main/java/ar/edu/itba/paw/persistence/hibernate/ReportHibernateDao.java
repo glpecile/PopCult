@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -64,8 +65,10 @@ public class ReportHibernateDao implements ReportDao {
 
     @Override
     public PageContainer<ListReport> getListReports(int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT reportid FROM listreport ORDER BY date DESC OFFSET :offset LIMIT :limit")
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> reportIds = nativeQuery.getResultList();
@@ -82,8 +85,10 @@ public class ReportHibernateDao implements ReportDao {
 
     @Override
     public PageContainer<ListCommentReport> getListCommentReports(int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT reportid FROM listcommentreport ORDER BY date DESC OFFSET :offset LIMIT :limit")
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> reportIds = nativeQuery.getResultList();
@@ -100,8 +105,10 @@ public class ReportHibernateDao implements ReportDao {
 
     @Override
     public PageContainer<MediaCommentReport> getMediaCommentReports(int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT reportid FROM mediacommentreport ORDER BY date DESC OFFSET :offset LIMIT :limit")
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> reportIds = nativeQuery.getResultList();
