@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.CommentService;
-import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.ReportService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListReport;

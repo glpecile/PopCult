@@ -3,9 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.ReportService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListCommentReport;
-import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.webapp.dto.output.ReportListCommentDto;
-import ar.edu.itba.paw.webapp.dto.output.ReportListDto;
 import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
@@ -46,7 +44,7 @@ public class ListCommentReportController {
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReportListCommentDto>>(reportListCommentDtoList){
         });
         ResponseUtils.setPaginationLinks(response, listCommentReports, uriInfo);
-        LOGGER.info("GET /lists-reports: Returning page {} with {} results", listCommentReports.getCurrentPage(), listCommentReports.getElements().size());
+        LOGGER.info("GET /lists-comments-reports: Returning page {} with {} results", listCommentReports.getCurrentPage(), listCommentReports.getElements().size());
         return response.build();
     }
 
