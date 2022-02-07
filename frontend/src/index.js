@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import '@fortawesome/fontawesome-free/js/all.js'
 
 ReactDOM.render(
     <React.StrictMode>
