@@ -24,20 +24,20 @@ function LoginForm(props) {
     };
 
     return (
-        <form className="space-y-4" onSubmit={submitHandler}>
+        <form className="my-1.5" onSubmit={submitHandler}>
             <div className="flex flex-col">
-                <label className="py-2 text-semibold w-full"/> Username:
+                <label className="py-2 text-semibold w-full">Username:</label>
                 <input className="form-control shadow-sm accent-purple-400" type="text" value={enteredUsername}
                        pattern="[a-zA-Z0-9]+" minLength={4} maxLength={100}
                        onChange={UsernameChangeHandler}/>
-                <label className="py-2 text-semibold w-full"/>Password:
+                <label className="py-2 text-semibold w-full">Password:</label>
                 <input className="form-control shadow-sm" type="password" value={enteredPassword}
                        minLength={8} maxLength={100}
                        onChange={PasswordChangeHandler}/>
-                <div className="flex py-2 justify-start">
+                <div className="flex pt-2 justify-start">
                     <input className="shadow-sm mt-1.5 accent-purple-400" type="checkbox" defaultChecked={enteredRememberMe}
                            onChange={RememberMeChangeHandler}/>
-                    <label className="text-semibold pl-1.5"/>Remember me
+                    <label className="text-semibold pl-1.5">Remember me</label>
                 </div>
                 <button className="btn btn-secondary my-2 w-full" type="submit">
                     Log In

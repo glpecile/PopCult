@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import '@fortawesome/fontawesome-free/js/all.js'
 import "react-alice-carousel/lib/alice-carousel.css";
+import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 
 ReactDOM.render(
     <React.StrictMode>
