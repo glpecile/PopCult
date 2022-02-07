@@ -39,7 +39,7 @@ const DUMMY_DATA = [
     },
 ];
 
-function Films() {
+const Films = () => {
     return (
         <section>
             <h4 className="font-bold text-2xl pt-2">
