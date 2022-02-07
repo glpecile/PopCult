@@ -5,10 +5,11 @@ import Lists from "./pages/primary/Lists";
 import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
-import Error404 from "./pages/secondary/errors/Error404";
-
-import Layout from "./components/Layout/Layout";
 import Login from "./pages/secondary/login/Login";
+import Profile from "./pages/secondary/user/Profile";
+import Settings from "./pages/secondary/user/Settings";
+import Error404 from "./pages/secondary/errors/Error404";
+import Layout from "./components/Layout/Layout";
 
 function App() {
     return (
@@ -22,6 +23,8 @@ function App() {
                 <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
                 <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                 <Route path='/login' exact element={<Login/>}/>
+                <Route path='/user/:username' exact element={<Profile/>}/>
+                <Route path='/settings' exact element={<Settings/>}/>
                 <Route path='*' element={<Error404/>}/>
             </Routes>
         </Layout>
