@@ -47,9 +47,18 @@ const RegisterForm = (props) => {
             setAlertDisplay(false);
         }, 5000);
     }
+    const formHasErrors = () => {
+        const hasErrors = !(enteredEmailError || enteredUsernameError || enteredNameError || enteredPasswordError || enteredRepeatedPasswordError);
+        const isEmpty = !(enteredEmail.length === 0 || enteredUsername.length ===0 || enteredName.length === 0 || enteredPassword.length ===0 || enteredRepeatedPassword.length === 0);
+        return hasErrors && isEmpty;
+    }
 
     const submitHandler = (event) => {
         event.preventDefault();
+        if (formHasErrors()) {
+            props.onSuccessfulRegister();
+            console.log(event.target);
+        }
     }
 
     return (
