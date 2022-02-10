@@ -13,7 +13,7 @@ const MediaSlider = (props) => {
 
     const createItems = (content) => {
         return (
-            <div className="px-2 py-3">
+            <div className="px-2.5 py-3">
                 <MediaCard
                     key={content.id} id={content.id}
                     image={content.image} title={content.title}
