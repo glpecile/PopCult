@@ -6,6 +6,7 @@ import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Login from "./pages/secondary/login/Login";
+import Register from "./pages/secondary/login/Register";
 import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
 import Error404 from "./pages/secondary/errors/Error404";
@@ -23,6 +24,7 @@ function App() {
                 <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
                 <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                 <Route path='/login' exact element={<Login/>}/>
+                <Route path='/register' exact element={<Register/>}/>
                 <Route path='/user/:username' exact element={<Profile/>}/>
                 <Route path='/settings' exact element={<Settings/>}/>
                 <Route path='*' element={<Error404/>}/>

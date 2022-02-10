@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 
 function LoginWrapper(props) {
-    return (<section className="bg-gradient-to-r from-yellow-500 to-purple-900">
+    return (
         <div className="min-h-screen flex flex-col">
             <div className="flex-grow space-y-2">
                 {/*Logo and card title*/}
@@ -14,7 +14,7 @@ function LoginWrapper(props) {
                 </div>
             </div>
         </div>
-    </section>);
+    );
 }
 
 export default LoginWrapper;
