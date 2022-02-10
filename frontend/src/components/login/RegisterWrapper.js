@@ -11,7 +11,7 @@ const RegisterWrapper = (props) => {
                 Get Started!
             </h2>
             <div className="flex-grow">
-                <div className="container w-full max-w-sm mx-auto p-2.5 font-sans rounded-lg shadow-lg bg-white">
+                <div className="w-full max-w-sm mx-auto p-2.5 font-sans rounded-lg shadow-lg bg-white">
                     {props.children}
                 </div>
             </div>
