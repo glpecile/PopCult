@@ -15,7 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-@Path("lists-comments-reports")
+@Path("media-comments-reports")
 @Component
 public class MediaCommentReportController {
 
