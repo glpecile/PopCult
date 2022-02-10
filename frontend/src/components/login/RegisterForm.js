@@ -40,8 +40,9 @@ const RegisterForm = (props) => {
                     <input type="text" className="form-control"/>
 
                 </div>
-                <div className="py-1 px-2.5 text-semibold w-full">
+                <div className=" relative py-1 px-2.5 text-semibold w-full">
                     <label className="py-2 text-semibold w-full">Name*</label>
+                    {enteredNameError && <span className="absolute inset-y-0 top-2 right-5 flex items-center pl-2 text-rose-500"><i className="fas fa-exclamation-circle"/></span>}
                     <input type="text"
                            className={"w-full rounded " + (enteredNameError ? "border-2 border-rose-500" : "")}
                            defaultValue={enteredName} onChange={NameChangeHandler}
