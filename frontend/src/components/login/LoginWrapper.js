@@ -12,6 +12,12 @@ function LoginWrapper(props) {
                 <div className="w-full max-w-xs mx-auto mt-8 px-4 font-sans rounded-lg shadow-lg bg-white p-2 my-8">
                     {props.children}
                 </div>
+                <div className="flex justify-center">
+                    <Link className="text-white text-center text-sm hover:text-purple-900 uppercase py-2"
+                      to='/register'>
+                        DON'T HAVE AN ACCOUNT? SIGN UP!
+                    </Link>
+                </div>
             </div>
         </div>
     );
