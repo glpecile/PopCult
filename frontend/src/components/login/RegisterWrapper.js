@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 const RegisterWrapper = (props) => {
     return (
-        <div className="min-h-screen flex flex-col justify-center">
+        <div>
             {/*    Logo and Card Title */}
             <Link className="flex justify-center items-center pt-4" to='/'>
                 <img className="w-32 scale-105" src={require("../../images/PopCultLogo.png")} alt="popcult_logo"/>

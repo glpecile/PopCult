@@ -2,7 +2,6 @@ import {Link} from "react-router-dom";
 
 function LoginWrapper(props) {
     return (
-        <div className="min-h-screen flex flex-col">
             <div className="flex-grow space-y-2">
                 {/*Logo and card title*/}
                 <Link className="flex justify-center items-center pt-16" to='/'>
@@ -19,7 +18,6 @@ function LoginWrapper(props) {
                     </Link>
                 </div>
             </div>
-        </div>
     );
 }
 

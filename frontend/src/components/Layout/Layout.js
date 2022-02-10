@@ -26,8 +26,10 @@ function Layout(props) {
         }
         {!layoutVisibility &&
             <div className="bg-gradient-to-r from-amber-500 to-purple-900">
-                <main>{props.children}</main>
-                <Footer styleName="text-white"/>
+                <div className="flex flex-col justify-between h-screen">
+                    <main>{props.children}</main>
+                    <Footer styleName="text-white"/>
+                </div>
             </div>}
     </>
 }
