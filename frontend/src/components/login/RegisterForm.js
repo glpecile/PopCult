@@ -26,7 +26,7 @@ const RegisterForm = (props) => {
     const PasswordChangeHandler = (event) => {
         setEnteredPassword(event.target.value);
         event.target.validity.valid ? setPasswordError(false) : setPasswordError(true);
-        if (enteredRepeatedPassword.localeCompare('') !== 0){
+        if (enteredRepeatedPassword.localeCompare('') !== 0) {
             (event.target.value.localeCompare(enteredRepeatedPassword) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
         }
     };
@@ -40,8 +40,6 @@ const RegisterForm = (props) => {
     };
 
     const displayAlert = () => {
-        const elem = document.getElementById('alert');
-        console.log(elem);
         setAlertDisplay(true);
         setTimeout(() => {
             setAlertDisplay(false);
@@ -49,7 +47,7 @@ const RegisterForm = (props) => {
     }
     const formHasErrors = () => {
         const hasErrors = !(enteredEmailError || enteredUsernameError || enteredNameError || enteredPasswordError || enteredRepeatedPasswordError);
-        const isEmpty = !(enteredEmail.length === 0 || enteredUsername.length ===0 || enteredName.length === 0 || enteredPassword.length ===0 || enteredRepeatedPassword.length === 0);
+        const isEmpty = !(enteredEmail.length === 0 || enteredUsername.length === 0 || enteredName.length === 0 || enteredPassword.length === 0 || enteredRepeatedPassword.length === 0);
         return hasErrors && isEmpty;
     }
 
@@ -57,7 +55,6 @@ const RegisterForm = (props) => {
         event.preventDefault();
         if (formHasErrors()) {
             props.onSuccessfulRegister();
-            console.log(event.target);
         }
     }
 
@@ -103,14 +100,20 @@ const RegisterForm = (props) => {
                         <p className="text-red-500 text-xs italic">Please insert a valid password.</p>}
 
                 </div>
-                {/*TODO ayuda con el fading y el z index por favor*/}
+                {/*TODO ayuda con el fading por favor*/}
                 {alertDisplay &&
-                    <div className="alert fade in show bg-gray-100" id="alert" role="alert">
-                        <small id="passwordHelpBlock" className="form-text text-muted">
-                            Your password must be 8-20 characters long, contain letters and numbers, and must not
-                            contain
-                            spaces, special characters, or emoji.
-                        </small>
+                    <div className="py-1 px-2.5 collapse show z-50 fixed absolute" id="alert">
+                        <div className="alert bg-gray-100/90 text-gray-900 d-flex align-items-center shadow-lg"
+                             role="alert">
+                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <button onClick={() => setAlertDisplay(false)}><i className="fas fa-times"/></button>
+                            </span>
+                            <small id="passwordHelpBlock" className="form-text text-muted">
+                                Your password must be 8-20 characters long,<br/>
+                                contain letters and numbers, and must not contain<br/>
+                                spaces, special characters, or emoji.<br/>
+                            </small>
+                        </div>
                     </div>}
 
                 {/*repPass*/}
