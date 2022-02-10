@@ -8,7 +8,7 @@ function Layout(props) {
     const [layoutVisibility, setLayoutVisibility] = useState(true);
 
     useEffect(() => {
-        setLayoutVisibility(location.pathname !== '/login');
+        setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register');
         console.log("Location changed page 1: ", location);
     }, [location]);
 
@@ -24,7 +24,11 @@ function Layout(props) {
                 </div>
             </div>)
         }
-        {!layoutVisibility && <main>{props.children}</main>}
+        {!layoutVisibility &&
+            <div className="bg-gradient-to-r from-amber-500 to-purple-900">
+                <main>{props.children}</main>
+                <Footer/>
+            </div>}
     </>
 }
 
