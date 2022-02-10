@@ -9,10 +9,11 @@ function Navbar() {
                     (<div>Hola
                     </div>)}
                 {!isUserPresent &&
-                    (<li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                        <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
-                                 to='/login'>Sign In</NavLink>
-                    </li>)}
+                    (
+                        <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
+                                     to='/login'>Sign In</NavLink>
+                        </li>)}
             </>);
     }
     return (
@@ -29,9 +30,8 @@ function Navbar() {
                         data-bs-target="#navbarScroll"
                         aria-controls="navbarScroll"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span
-                        className="navbar-toggler-icon">
-                    </span>
+                    <i className="fas fa-bars navbar-toggler-icon">
+                    </i>
                 </button>
                 <div
                     className="collapse navbar-collapse flex space-x-8 justify-center items-center text-center sm:justify-end"
