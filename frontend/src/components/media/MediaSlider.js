@@ -27,21 +27,38 @@ const MediaSlider = (props) => {
 
     const renderDotsItem = ({isActive}) => {
         return isActive ?
-            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900"> </div> :
-            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900"> </div>;
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900"></div> :
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900"></div>;
     };
 
+    const renderNext = () => {
+        return <button className="absolute top-1/3 -right-4 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-purple-50">
+            <i className="fas fa-angle-right"> </i>
+        </button>;
+    }
+
+    const renderPrev = () => {
+        return <button className="absolute top-1/3 -left-2 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-purple-50">
+            <i className="fas fa-angle-left"> </i>
+        </button>;
+    }
+
     return (
-        <AliceCarousel mouseTracking
-                       touchTracking
-                       touchMoveDefaultEvents
-                       controlsStrategy="responsive"
-                       disableButtonsControls
-                       renderDotsItem={renderDotsItem}
-                       responsive={responsive}
-                       paddingRight={50}
-                       keyboardNavigation={true}
-                       items={props.media.map(content => createItems(content))}/>
+        <>
+            <AliceCarousel mouseTracking
+                           touchTracking
+                           touchMoveDefaultEvents
+                           controlsStrategy="responsive"
+                           renderNextButton={renderNext}
+                           renderPrevButton={renderPrev}
+                           renderDotsItem={renderDotsItem}
+                           responsive={responsive}
+                           paddingRight={50}
+                           keyboardNavigation
+                           items={props.media.map(content => createItems(content))}
+            />
+
+        </>
     );
 }
 
