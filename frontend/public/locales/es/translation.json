@@ -15,5 +15,12 @@
   "nav_my_lists": "Mis Listas",
   "nav_notifications": "Notificaciones",
   "nav_admin" : "Panel de Admin",
-  "nav_sign_out": "Cerrar Sesión"
+  "nav_sign_out": "Cerrar Sesión",
+  "admin_title": "Panel Administrativo",
+  "admin_reports_description": "Aquí se pueden ver todas las peticiones de reporte.",
+  "admin_bans_description": "Aquí se pueden ver todos los usuarios suspendidos.",
+  "admin_mods_description": "Aquí se pueden ver todos los moderadores activos al igual que las peticiones para ser moderador.",
+  "report_title_plural": "Reportes",
+  "bans_title": "Usuarios suspendidos",
+  "mods_title": "Moderadores"
 }

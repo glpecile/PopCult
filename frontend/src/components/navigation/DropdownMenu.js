@@ -33,7 +33,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to='/user/d'>
+                    <NavLink className="dropdown-item" to='/admin'>
                         {t('nav_admin')}
                     </NavLink>
                 </li>

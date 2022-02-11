@@ -10,9 +10,10 @@ import Login from "./pages/secondary/login/Login";
 import Register from "./pages/secondary/login/Register";
 import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
+import Loader from "./pages/secondary/errors/Loader";
+import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Error404 from "./pages/secondary/errors/Error404";
 import Layout from "./components/Layout/Layout";
-import Loader from "./pages/secondary/errors/Loader";
 
 export default function App() {
     return (
@@ -30,6 +31,10 @@ export default function App() {
                     <Route path='/register' exact element={<Register/>}/>
                     <Route path='/user/:username' exact element={<Profile/>}/>
                     <Route path='/settings' exact element={<Settings/>}/>
+                    <Route path='/admin' exact element={<AdminPanel/>}/>
+                    <Route path='/admin/reports' exact element={<AdminPanel/>}/>
+                    <Route path='/admin/bans' exact element={<AdminPanel/>}/>
+                    <Route path='/admin/mods' exact element={<AdminPanel/>}/>
                     <Route path='*' element={<Error404/>}/>
                 </Routes>
             </Layout>

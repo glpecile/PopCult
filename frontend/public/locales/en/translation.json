@@ -15,5 +15,12 @@
   "nav_my_lists": "My Lists",
   "nav_notifications": "Notifications",
   "nav_admin" : "Admin Panel",
-  "nav_sign_out": "Sign Out"
+  "nav_sign_out": "Sign Out",
+  "admin_title": "Administrator Panel",
+  "admin_reports_description": "Here you can see every report sent and accept or decline them.",
+  "admin_bans_description": "Here you can see and manage every banned user.",
+  "admin_mods_description": "Here you can see every active moderator and requests made to become a moderator as well.",
+  "report_title_plural": "Reports",
+  "bans_title": "Banned Users",
+  "mods_title": "Moderators"
 }
