@@ -52,9 +52,10 @@ const SettingsUserProfile = (user) => {
 
             {/*    username and edit */}
             <div className="py-1 px-2.5">
-                <input className={"rounded active:none text-3xl font-bold " + (nameError ? " border-2 border-rose-500" : "")}
-                       type='text' value={currentName}
-                       onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
+                <input
+                    className={"rounded active:none text-3xl font-bold " + (nameError ? " border-2 border-rose-500" : "")}
+                    type='text' value={currentName}
+                    onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
                     <p className="text-red-500 text-xs italic">Valid names contain between 3 and 20
                         non special characters.</p>
@@ -86,19 +87,19 @@ const SettingsUserProfile = (user) => {
                     </small>
                 </div>
             </div>}
-        </div>
-        <div className="flex p-3 text-center justify-end">
-            <Link to='/user/a' className='mr-3'>
-                <button
-                    className="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
-                    <i className="fa fa-trash group-hover:text-white mr-2"/>
-                    Discard changes
+            <div className="m-3">
+                <Link to='/user/a' className='mr-3'>
+                    <button
+                        className="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        <i className="fa fa-trash group-hover:text-white mr-2"/>
+                        Discard changes
+                    </button>
+                </Link>
+                <button type="submit"
+                        className={((nameError || usernameError) ? "disabled " : "") + "btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"}>
+                    <i className="fas fa-check group-hover:text-white mr-2"/>Save Changes
                 </button>
-            </Link>
-            <button type="submit"
-                    className={((nameError || usernameError)?"disabled ":"")+"btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"}>
-                <i className="fas fa-check group-hover:text-white mr-2"/>Save Changes
-            </button>
+            </div>
         </div>
     </form>);
 }
