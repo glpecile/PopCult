@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
@@ -72,9 +73,10 @@ public class UserController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listUsers(@QueryParam("page") @DefaultValue(defaultPage) int page,
-                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-
-        final PageContainer<User> users = userService.getUsers(page, pageSize);
+                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                              @QueryParam("role") UserRole userRole,
+                              @QueryParam("banned") Boolean banned) {
+        final PageContainer<User> users = userService.getUsers(page, pageSize, userRole, banned);
 
         if (users.getElements().isEmpty()) {
             LOGGER.info("GET /users: Returning empty list.");

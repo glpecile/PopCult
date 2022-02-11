@@ -2,10 +2,10 @@ package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidPaginationParametersException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Primary
 @Repository
@@ -101,22 +99,53 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize) {
+    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
         PaginationValidator.validate(page, pageSize);
 
-        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users ORDER BY username DESC OFFSET :offset LIMIT :limit")
-                .setParameter("offset", (page-1) * pageSize)
-                .setParameter("limit", pageSize);
+        final Query nativeQuery = buildGetUsersQuery(" SELECT userid FROM (SELECT DISTINCT userid, username FROM users ", page, pageSize, userRole, banned);
         @SuppressWarnings("unchecked")
         List<Long> userIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createQuery("SELECT COUNT(userId) FROM User");
-        final long count = (long) countQuery.getSingleResult();
+        final Query countQuery = buildGetUsersQuery(" SELECT COUNT(userid) FROM (SELECT DISTINCT userid, username FROM users ", null, null, userRole, banned);
+        final long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<User> query = em.createQuery("FROM User WHERE userId IN :userIds ORDER BY username DESC", User.class)
+        final TypedQuery<User> query = em.createQuery("FROM User WHERE userId IN :userIds ORDER BY username ASC", User.class)
                 .setParameter("userIds", userIds);
         List<User> users = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(users, page, pageSize, count);
+    }
+
+    private Query buildGetUsersQuery(String selectFrom, Integer page, Integer pageSize, UserRole userRole, Boolean banned) {
+        final StringBuilder queryBuilder = new StringBuilder(selectFrom);
+        final LinkedList<String> wheres = new LinkedList<>();
+        final Map<String, Object> parameters = new HashMap<>();
+
+        if(userRole != null) {
+            wheres.add(" role = :role ");
+            parameters.put("role", userRole.ordinal());
+        }
+        if(banned != null) {
+            wheres.add(" nonlocked = :nonlocked ");
+            parameters.put("nonlocked", !banned);
+        }
+
+        if(!wheres.isEmpty()) {
+            queryBuilder.append(" WHERE ");
+            queryBuilder.append(wheres.removeFirst());
+            wheres.forEach(where -> queryBuilder.append(" AND ").append(where));
+        }
+
+        queryBuilder.append(" ORDER BY username ASC ");
+        if(page != null && pageSize != null) {
+            queryBuilder.append(" OFFSET :offset LIMIT :limit ");
+            parameters.put("offset", (page - 1) * pageSize);
+            parameters.put("limit", pageSize);
+        }
+        queryBuilder.append(" ) AS aux");
+
+        final Query nativeQuery = em.createNativeQuery(queryBuilder.toString());
+        parameters.forEach(nativeQuery::setParameter);
+        return nativeQuery;
     }
 }

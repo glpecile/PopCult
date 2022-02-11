@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,8 +264,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize) {
-        return userDao.getUsers(page, pageSize);
+    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
+        return userDao.getUsers(page, pageSize, userRole, banned);
     }
 
 }

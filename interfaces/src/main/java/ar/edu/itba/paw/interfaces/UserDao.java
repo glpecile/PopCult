@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,5 +27,5 @@ public interface UserDao {
 
     List<User> getBannedUsers();
 
-    PageContainer<User> getUsers(int page, int pageSize);
+    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned);
 }
