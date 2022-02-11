@@ -9,7 +9,6 @@ function Layout(props) {
 
     useEffect(() => {
         setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register');
-        console.log("Location changed page 1: ", location);
     }, [location]);
 
     return <>

@@ -1,13 +1,13 @@
 import {NavLink} from "react-router-dom";
+import DropdownMenu from "./Layout/DropdownMenu";
 
 function Navbar() {
-    const switchOnLoggedUser = () => {
-        const isUserPresent = false;
+    const SwitchOnLoggedUser = () => {
+        const isUserPresent = true;
         return (
             <>
                 {isUserPresent &&
-                    (<div>Hola
-                    </div>)}
+                    <DropdownMenu/>}
                 {!isUserPresent &&
                     (
                         <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
@@ -49,7 +49,7 @@ function Navbar() {
                             <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
                                      to='/lists'>Lists</NavLink>
                         </li>
-                        {switchOnLoggedUser()}
+                        <SwitchOnLoggedUser/>
                     </ul>
                 </div>
             </div>
