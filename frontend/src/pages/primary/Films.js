@@ -1,4 +1,5 @@
 import MediaSlider from "../../components/media/MediaSlider";
+import {useTranslation} from "react-i18next";
 
 const DUMMY_DATA = [
     {
@@ -40,10 +41,11 @@ const DUMMY_DATA = [
 ];
 
 const Films = () => {
+    const { t, i18n } = useTranslation();
     return (
         <section>
             <h4 className="font-bold text-2xl pt-2">
-                Films Page</h4>
+                {t('popular_films')}</h4>
             <MediaSlider media={DUMMY_DATA}/>
         </section>
     );
