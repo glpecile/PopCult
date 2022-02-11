@@ -1,5 +1,9 @@
 {
   "title": "PopCult",
   "description": "¡Un sitio para los amantes de películas y series!",
-  "popular_films": "Películas del momento"
+  "popular_films": "Películas del momento",
+  "popular_series": "Series del momento",
+  "popular_lists": "Listas del momento",
+  "error_not_found": "Página No Encontrada.",
+  "go_home": "Volver A Inicio"
 }

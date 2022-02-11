@@ -40,15 +40,14 @@ const DUMMY_DATA = [
     },
 ];
 
-const Films = () => {
-    const { t, i18n } = useTranslation();
+export default function Films() {
+    const {t} = useTranslation();
     return (
         <section>
             <h4 className="font-bold text-2xl pt-2">
-                {t('popular_films')}</h4>
+                {t('popular_films')}
+            </h4>
             <MediaSlider media={DUMMY_DATA}/>
         </section>
     );
 }
-
-export default Films;

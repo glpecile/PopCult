@@ -1,5 +1,9 @@
 {
   "title": "PopCult",
   "description": "A site for film & series lovers!",
-  "popular_films": "Popular films right now"
+  "popular_films": "Popular films right now",
+  "popular_series": "Popular series right now",
+  "popular_lists": "Popular lists right now",
+  "error_not_found": "Page Not Found.",
+  "go_home": "Go Home"
 }

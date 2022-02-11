@@ -1,4 +1,5 @@
 import ListsSlider from "../../components/lists/ListsSlider";
+import {useTranslation} from "react-i18next";
 
 const DUMMY_DATA = [{
     id: 1,
@@ -8,9 +9,11 @@ const DUMMY_DATA = [{
 }];
 
 function Lists() {
+    const [t] = useTranslation();
     return (<section>
             <h4 className="font-bold text-2xl pt-2">
-                Lists Page</h4>
+                {t('popular_lists')}
+            </h4>
             <ListsSlider media={DUMMY_DATA}/>
         </section>
     );

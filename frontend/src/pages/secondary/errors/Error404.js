@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 export default function Error404() {
+    const [t] = useTranslation();
     return (
         <div className="flex-grow whitespace-pre-line">
             <div className="flex flex-wrap p-3.5 mx-auto my-auto">
@@ -10,9 +12,11 @@ export default function Error404() {
                         Error 404.
                     </h1>
                     <p className="text-2xl font-semibold text-justify">
-                        Page Not Found
+                        {t('error_not_found')}
                     </p>
-                    <Link className="text-2xl font-bold text-purple-500 hover:text-purple-900" to='/'>Go Home.</Link>
+                    <Link className="text-2xl font-bold text-purple-500 hover:text-purple-900" to='/'>
+                        {t('go_home')}
+                    </Link>
                 </div>
             </div>
         </div>
