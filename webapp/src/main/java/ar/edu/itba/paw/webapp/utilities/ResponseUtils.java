@@ -13,13 +13,13 @@ public class ResponseUtils {
 
     public static <T> void setPaginationLinks(Response.ResponseBuilder response, PageContainer<T> pageContainer, UriInfo uriInfo){
         if(pageContainer.hasNextPage()){
-            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", pageContainer.getCurrentPage() + 1).build().toString(), "next");
+            response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getCurrentPage() + 1).build().toString(), "next");
         }
         if(pageContainer.hasPrevPage()){
-            response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", pageContainer.getCurrentPage() - 1).build().toString(), "prev");
+            response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getCurrentPage() - 1).build().toString(), "prev");
         }
-        response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", pageContainer.getLastPage()).build().toString(), "last");
-        response.link(uriInfo.getAbsolutePathBuilder().queryParam("page",  pageContainer.getFirstPage()).build().toString(), "first");
+        response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getLastPage()).build().toString(), "last");
+        response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page",  pageContainer.getFirstPage()).build().toString(), "first");
     }
 
 }
