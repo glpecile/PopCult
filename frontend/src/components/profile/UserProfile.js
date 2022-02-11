@@ -16,7 +16,7 @@ const UserProfile = (user) => {
                     <i className="fas fa-user-edit text-purple-500 hover:text-purple-900"/>
                 </Link>)}
             </div>
-            <h4>
+            <h4 className="text-base">
                 Or as we like to call you: {user.username}
             </h4>
         </div>);
