@@ -35,8 +35,13 @@
   "profile_tabs_favMedia": "Contenido Favorito",
   "profile_tabs_favLists": "Listas Favoritas",
   "profile_tabs_watchedMedia": "Contenido Visto",
-  "profile_tabs_toWatchMedia": "Contenido A Ver"
-
-
-
+  "profile_tabs_toWatchMedia": "Contenido A Ver",
+  "login_greeting": "¡Bienvenido De Vuelta!",
+  "login_button": "Ingresa",
+  "login_sign_up": "¿No tiene cuenta? ¡Crea una!",
+  "login_username": "Nombre de usuario:",
+  "login_password": "Contraseña:",
+  "login_remember_me": "Recuerdame",
+  "login_error": "Contraseña o nombre de usuario incorrectos. Por favor, proceda a intentar nuevamente.",
+  "login_recovery": "¿Ha olvidado su contraseña?"
 }

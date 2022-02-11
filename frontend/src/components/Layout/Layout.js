@@ -19,7 +19,7 @@ function Layout(props) {
                     <main className="col-8 offset-2 flex-grow mb-auto">
                         {props.children}
                     </main>
-                    <Footer styleName="text-black"/>
+                    <Footer styleName="text-slate-900"/>
                 </div>
             </div>)
         }
@@ -27,7 +27,7 @@ function Layout(props) {
             <div className="bg-gradient-to-r from-amber-500 to-purple-900">
                 <div className="flex flex-col justify-between min-h-screen">
                     <main>{props.children}</main>
-                    <Footer styleName="text-white"/>
+                    <Footer styleName="text-slate-50"/>
                 </div>
             </div>}
     </>

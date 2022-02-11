@@ -15,7 +15,7 @@ export default function Error404() {
                         {t('error_not_found')}
                     </p>
                     <Link className="text-2xl font-bold text-purple-500 hover:text-purple-900" to='/'>
-                        {t('go_home')}
+                        {t('error_go_home')}
                     </Link>
                 </div>
             </div>
