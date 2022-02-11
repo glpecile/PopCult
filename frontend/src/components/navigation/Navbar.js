@@ -1,7 +1,9 @@
 import {NavLink} from "react-router-dom";
-import DropdownMenu from "./Layout/DropdownMenu";
+import DropdownMenu from "./DropdownMenu";
+import {useTranslation} from "react-i18next";
 
-function Navbar() {
+const Navbar = () => {
+    const [t] = useTranslation();
     const SwitchOnLoggedUser = () => {
         const isUserPresent = true;
         return (
@@ -11,8 +13,9 @@ function Navbar() {
                 {!isUserPresent &&
                     (
                         <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
-                                     to='/login'>Sign In</NavLink>
+                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page" to='/login'>
+                                {t('nav_sign_out')}
+                            </NavLink>
                         </li>)}
             </>);
     }
@@ -23,7 +26,7 @@ function Navbar() {
                 <NavLink className="navbar-brand m-0 p-0" to='/'>
                     <img
                         className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:rotate-2 w-52"
-                        src={require('../images/PopCultCompleteLogo.png')}
+                        src={require('../../images/PopCultCompleteLogo.png')}
                         alt="popcult_text_logo"/>
                 </NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,16 +41,19 @@ function Navbar() {
                     id="navbarScroll">
                     <ul className="navbar-nav ms-auto my-2 my-lg-0">
                         <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
-                                     to='/media/films'>Films</NavLink>
+                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page" to='/media/films'>
+                                {t('nav_films')}
+                            </NavLink>
                         </li>
                         <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
-                                     to='/media/series'>Series</NavLink>
+                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page" to='/media/series'>
+                                {t('nav_series')}
+                            </NavLink>
                         </li>
                         <li className="nav-item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page"
-                                     to='/lists'>Lists</NavLink>
+                            <NavLink className="nav-link active text-lg lg:text-right" aria-current="page" to='/lists'>
+                                {t('nav_lists')}
+                            </NavLink>
                         </li>
                         <SwitchOnLoggedUser/>
                     </ul>

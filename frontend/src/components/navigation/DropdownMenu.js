@@ -1,6 +1,8 @@
 import {NavLink} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const DropdownMenu = () => {
+    const [t] = useTranslation();
     return (
         <li className="z-50 nav-item dropdown transition duration-500 ease-in-out transform hover:-translate-y-1 hovƒer:scale-105">
             <div className="nav-link dropdown-toggle active text-lg lg:text-right"
@@ -12,32 +14,32 @@ const DropdownMenu = () => {
             <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
                 <li>
                     <NavLink to='/' className="dropdown-item">
-                        Home
+                        {t('nav_home')}
                     </NavLink>
                 </li>
                 <li>
                     <NavLink className="dropdown-item" to='/user/a'>
-                        Profile
+                        {t('nav_profile')}
                     </NavLink>
                 </li>
                 <li>
                     <NavLink className="dropdown-item" to='/user/b'>
-                        My Lists
+                        {t('nav_my_lists')}
                     </NavLink>
                 </li>
                 <li>
                     <NavLink className="dropdown-item" to='/user/c'>
-                        Notifications
+                        {t('nav_notifications')}
                     </NavLink>
                 </li>
                 <li>
                     <NavLink className="dropdown-item" to='/user/d'>
-                        Admin Panel
+                        {t('nav_admin')}
                     </NavLink>
                 </li>
                 <li>
                     <NavLink className="dropdown-item" to='/user/e'>
-                        Sign Out
+                        {t('nav_sign_out')}
                     </NavLink>
                 </li>
             </ul>

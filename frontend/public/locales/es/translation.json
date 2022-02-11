@@ -5,5 +5,15 @@
   "popular_series": "Series del momento",
   "popular_lists": "Listas del momento",
   "error_not_found": "Página No Encontrada.",
-  "go_home": "Volver A Inicio"
+  "error_go_home": "Volver A Inicio",
+  "nav_sign_in": "Ingresar",
+  "nav_films": "Películas",
+  "nav_series": "Series",
+  "nav_lists": "Listas",
+  "nav_home": "Inicio",
+  "nav_profile": "Perfil",
+  "nav_my_lists": "Mis Listas",
+  "nav_notifications": "Notificaciones",
+  "nav_admin" : "Panel de Admin",
+  "nav_sign_out": "Cerrar Sesión"
 }

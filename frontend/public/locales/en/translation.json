@@ -5,5 +5,15 @@
   "popular_series": "Popular series right now",
   "popular_lists": "Popular lists right now",
   "error_not_found": "Page Not Found.",
-  "go_home": "Go Home"
+  "error_go_home": "Go Home",
+  "nav_sign_in": "Sign In",
+  "nav_films": "Films",
+  "nav_series": "Series",
+  "nav_lists": "Lists",
+  "nav_home": "Home",
+  "nav_profile": "Profile",
+  "nav_my_lists": "My Lists",
+  "nav_notifications": "Notifications",
+  "nav_admin" : "Admin Panel",
+  "nav_sign_out": "Sign Out"
 }
