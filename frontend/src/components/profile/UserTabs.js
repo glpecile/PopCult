@@ -23,7 +23,7 @@ const UserTabs = (props) => {
     const toReturnValue = (bool, title, setTabActiveTrue) => {
         return (bool ? (
             <button
-                className="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
+                className="py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
                 {title}
             </button>) : (
             <button onClick={() => {

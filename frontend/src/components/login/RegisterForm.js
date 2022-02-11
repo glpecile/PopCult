@@ -158,7 +158,7 @@ const RegisterForm = (props) => {
                         <input type="text"
                                className={"w-full rounded active:none " + (enteredNameError ? "border-2 border-rose-500" : "")}
                                defaultValue={enteredName} onChange={NameChangeHandler}
-                               minLength={3} maxLength={100} pattern="[a-zA-Z0-9\\s]+"/>
+                               minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                     </div>
                     {enteredNameError &&
                         <p className="text-red-500 text-xs italic">Valid names contain between 3 and 20
