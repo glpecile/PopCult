@@ -27,18 +27,18 @@ const MediaSlider = (props) => {
 
     const renderDotsItem = ({isActive}) => {
         return isActive ?
-            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900"></div> :
-            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900"></div>;
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900"> </div> :
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900"> </div>;
     };
 
     const renderNext = () => {
-        return <button className="absolute top-1/3 -right-4 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-purple-50">
+        return <button className="absolute top-1/3 -right-4 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-slate-200">
             <i className="fas fa-angle-right"> </i>
         </button>;
     }
 
     const renderPrev = () => {
-        return <button className="absolute top-1/3 -left-2 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-purple-50">
+        return <button className="absolute top-1/3 -left-2 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-slate-200">
             <i className="fas fa-angle-left"> </i>
         </button>;
     }
