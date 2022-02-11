@@ -1,4 +1,6 @@
 import SettingsUserProfile from "../../../components/profile/SettingsUserProfile";
+import {useState} from "react";
+import {Navigate} from "react-router-dom";
 
 const DUMMY_USER = {
     userid: 1,
@@ -8,9 +10,14 @@ const DUMMY_USER = {
 };
 
 const Settings = () => {
+    const [successfulUpdate, setSuccessfulUpdate] = useState(false);
     const updateUserData = (props) => {
-        console.log(props);
+        setSuccessfulUpdate(true);
     }
-    return (<SettingsUserProfile name={DUMMY_USER.name} username={DUMMY_USER.username} image={DUMMY_USER.image} onSaveUserData={updateUserData}/>);
+    return (<>
+        <SettingsUserProfile name={DUMMY_USER.name} username={DUMMY_USER.username} image={DUMMY_USER.image}
+                                   onSaveUserData={updateUserData}/>
+        {successfulUpdate && <Navigate to='/user/a'/>}
+    </>);
 }
 export default Settings;

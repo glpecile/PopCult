@@ -1,52 +1,106 @@
 import {useState} from "react";
+import {Link} from "react-router-dom";
 
 const SettingsUserProfile = (user) => {
     const [currentUsername, setUsername] = useState(user.username);
     const [currentName, setName] = useState(user.name);
     const [currentImage, setUserImage] = useState(user.image);
+    const [imageError, setImageError] = useState(false);
+    const [nameError, setNameError] = useState(false);
+    const [usernameError, setUsernameError] = useState(false);
 
     const usernameChangeHandler = (event) => {
+        event.target.validity.valid ? setUsernameError(false) : setUsernameError(true);
         setUsername(event.target.value);
     };
     const nameChangeHandler = (event) => {
+        event.target.validity.valid ? setNameError(false) : setNameError(true);
         setName(event.target.value);
     };
     const imageChangeHandler = (event) => {
-        if (event.target.files && event.target.files[0]) {
+        event.target.validity.valid ? setImageError(false) : setImageError(true);
+        if (event.target.files[0].size > 1048576 * 2) {
+            setImageError(true); //2MB
+            setTimeout(() => {
+                setImageError(false);
+            }, 5000);
+        } else if (event.target.validity.valid && event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
-            setUserImage({
-                image: URL.createObjectURL(img)
-            });
-    }
+            setUserImage(URL.createObjectURL(img));
+        }
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const userData = {
-            name: currentName, username: currentUsername, image: currentImage
-        };
-        user.onSaveUserData(userData);
+        if (!(nameError || usernameError)) {
+            const userData = {
+                name: currentName, username: currentUsername, image: currentImage
+            };
+            user.onSaveUserData(userData);
+        }
     };
 
-    return (<form onSubmit={submitHandler}>
-            <div className="flex flex-col gap-3 justify-center items-center">
-                {/*Profile Pic Row*/}
-                <div className="relative inline-block">
-                    <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
-                         src={currentImage}/>
-                </div>
-                <input type='file' onChange={imageChangeHandler}/>
-                {/*    username and edit */}
-                <input className="text-3xl font-bold" type='text' value={currentName} onChange={nameChangeHandler}/>
+    return (<form onSubmit={submitHandler} noValidate={true}>
+        <div className=" relative flex flex-col gap-3 justify-center items-center">
+            {/*Profile Pic Row*/}
+            <div className="relative inline-block">
+                <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
+                     src={currentImage}/>
+            </div>
+            <input type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
+
+
+            {/*    username and edit */}
+            <div className="py-1 px-2.5">
+                <input className={"rounded active:none text-3xl font-bold " + (nameError ? " border-2 border-rose-500" : "")}
+                       type='text' value={currentName}
+                       onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
+                {nameError &&
+                    <p className="text-red-500 text-xs italic">Valid names contain between 3 and 20
+                        non special characters.</p>
+                }
+            </div>
+            <div className="py-1 px-2.5">
                 <div className="flex justify-center items-center space-x-3">
                     <h4>Or as we like to call you:</h4>
-                    <input className="text-xl font-bold" type='text' value={currentUsername}
-                           onChange={usernameChangeHandler}/>
+                    <input
+                        className={"rounded active:none text-xl font-bold " + (usernameError ? " border-2 border-rose-500" : "")}
+                        type='text' value={currentUsername}
+                        pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
+                        onChange={usernameChangeHandler}/>
                 </div>
-                <button type="submit">Save Changes</button>
+                {usernameError &&
+                    <p className="text-red-500 text-xs italic text-center">Valid usernames contain between 1 and 20
+                        non special characters.</p>}
             </div>
-        </form>
-    );
+            {imageError && <div className="absolute bottom-0 collapse show z-50 fixed" id="alert">
+                <div className="alert bg-rose-500/90 text-gray-700 d-flex align-items-center shadow-lg"
+                     role="alert">
+                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <button onClick={() => setImageError(false)}><i className="fas fa-times"/></button>
+                            </span>
+                    <small className="text-gray-700 flex flex-wrap">
+                        It seems that your image is too big,<br/>
+                        or for some reason can't be uploaded at the moment.<br/>
+                        Please try again.<br/>
+                    </small>
+                </div>
+            </div>}
+        </div>
+        <div className="flex p-3 text-center justify-end">
+            <Link to='/user/a' className='mr-3'>
+                <button
+                    className="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                    <i className="fa fa-trash group-hover:text-white mr-2"/>
+                    Discard changes
+                </button>
+            </Link>
+            <button type="submit"
+                    className={((nameError || usernameError)?"disabled ":"")+"btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"}>
+                <i className="fas fa-check group-hover:text-white mr-2"/>Save Changes
+            </button>
+        </div>
+    </form>);
 }
 
 export default SettingsUserProfile;
