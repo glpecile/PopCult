@@ -4,9 +4,12 @@ import UserWatchedMedia from "./tabs/UserWatchedMedia";
 import UserFavoriteMedia from "./tabs/UserFavoriteMedia";
 import UserFavoriteLists from "./tabs/UserFavoriteLists";
 import UserToWatchMedia from "./tabs/UserToWatchMedia";
+import {Trans, useTranslation} from "react-i18next";
 
 
 const UserTabs = (props) => {
+    const {t} = useTranslation();
+
     const [userListsActive, setUserListsActive] = useState(true);
     const [userFavMediaActive, setUserFavMediaActive] = useState(false);
     const [userFavListsActive, setUserFavListsActive] = useState(false);
@@ -34,29 +37,31 @@ const UserTabs = (props) => {
             </button>));
     }
 
+    const Inter = () => {
+        console.log(props.username);
+        return (
+            <Trans i18nKey="profile_tabs_main">
+                {props.username}
+            </Trans>)
+    }
     const UserListsTab = () => {
-        const title = props.username + "'s Lists"
-        return toReturnValue(userListsActive, title, setUserListsActive);
+        return toReturnValue(userListsActive, <Inter/>, setUserListsActive);
     }
 
     const UserFavMediaTab = () => {
-        const title = "Favorite Media";
-        return toReturnValue(userFavMediaActive, title, setUserFavMediaActive);
+        return toReturnValue(userFavMediaActive, t('profile_tabs_favMedia'), setUserFavMediaActive);
     }
 
     const UserFavListsTab = () => {
-        const title = "Favorite Lists";
-        return toReturnValue(userFavListsActive, title, setUserFavListsActive);
+        return toReturnValue(userFavListsActive, t('profile_tabs_favLists'), setUserFavListsActive);
     }
 
     const UserWatchedMediaTab = () => {
-        const title = "Watched Media";
-        return toReturnValue(userWatchedMediaActive, title, setUserWatchedMediaActive);
+        return toReturnValue(userWatchedMediaActive, t('profile_tabs_watchedMedia'), setUserWatchedMediaActive);
     }
 
     const UserToWatchMediaTab = () => {
-        const title = "To Watch Media";
-        return toReturnValue(userToWatchMediaActive, title, setUserToWatchMediaActive);
+        return toReturnValue(userToWatchMediaActive, t('profile_tabs_watchedMedia'), setUserToWatchMediaActive);
     }
     return (<>
             <div className="flex justify-center items-center bg-transparent py-4">

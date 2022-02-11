@@ -22,5 +22,21 @@
   "admin_mods_description": "Aquí se pueden ver todos los moderadores activos al igual que las peticiones para ser moderador.",
   "report_title_plural": "Reportes",
   "bans_title": "Usuarios suspendidos",
-  "mods_title": "Moderadores"
+  "mods_title": "Moderadores",
+  "profile_description": "O como nos gusta llamarte: <1><0>{{username}}</0></1>",
+  "profile_edit": "Editar Perfil",
+  "discard_changes": "Descartar cambios",
+  "save_changes": "Guardar cambios",
+  "settings_description": "O como nos gusta llamarte:",
+  "settings_image_error": "Parece que la imagen seleccionada es demasiado grande<br/>\no no puede ser cargada en este momento.<br/>\nPor favor, intenta nuevamente.",
+  "username_error": "Los nombres de usuario validos contienen entre 1 y 20\ncaracteres no especiales.",
+  "name_error": "Los nombres de usuario contienen entre 3 y 20\ncaracteres no especiales.",
+  "profile_tabs_main": "Listas de <0>{{username}}</0>",
+  "profile_tabs_favMedia": "Contenido Favorito",
+  "profile_tabs_favLists": "Listas Favoritas",
+  "profile_tabs_watchedMedia": "Contenido Visto",
+  "profile_tabs_toWatchMedia": "Contenido A Ver"
+
+
+
 }

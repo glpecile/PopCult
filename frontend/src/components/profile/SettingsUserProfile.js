@@ -1,7 +1,10 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const SettingsUserProfile = (user) => {
+    const {t} = useTranslation();
+
     const [currentUsername, setUsername] = useState(user.username);
     const [currentName, setName] = useState(user.name);
     const [currentImage, setUserImage] = useState(user.image);
@@ -57,13 +60,14 @@ const SettingsUserProfile = (user) => {
                     type='text' value={currentName}
                     onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
-                    <p className="text-red-500 text-xs italic">Valid names contain between 3 and 20
-                        non special characters.</p>
+                    <p className="text-red-500 text-xs italic">
+                        {t('name_error')}
+                    </p>
                 }
             </div>
             <div className="py-1 px-2.5">
                 <div className="flex justify-center items-center space-x-3">
-                    <h4>Or as we like to call you:</h4>
+                    <h4 className="text-base">{t('settings_description')}</h4>
                     <input
                         className={"rounded active:none text-xl font-bold " + (usernameError ? " border-2 border-rose-500" : "")}
                         type='text' value={currentUsername}
@@ -71,8 +75,9 @@ const SettingsUserProfile = (user) => {
                         onChange={usernameChangeHandler}/>
                 </div>
                 {usernameError &&
-                    <p className="text-red-500 text-xs italic text-center">Valid usernames contain between 1 and 20
-                        non special characters.</p>}
+                    <p className="text-red-500 text-xs italic text-center">
+                        {t('username_error')}
+                    </p>}
             </div>
             {imageError && <div className="absolute bottom-0 collapse show z-50 fixed" id="alert">
                 <div className="alert bg-rose-500/90 text-gray-700 d-flex align-items-center shadow-lg"
@@ -81,9 +86,7 @@ const SettingsUserProfile = (user) => {
                                 <button onClick={() => setImageError(false)}><i className="fas fa-times"/></button>
                             </span>
                     <small className="text-gray-700 flex flex-wrap">
-                        It seems that your image is too big,<br/>
-                        or for some reason can't be uploaded at the moment.<br/>
-                        Please try again.<br/>
+                        {t('settings_image_error')}
                     </small>
                 </div>
             </div>}
@@ -92,12 +95,13 @@ const SettingsUserProfile = (user) => {
                     <button
                         className="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
                         <i className="fa fa-trash group-hover:text-white mr-2"/>
-                        Discard changes
+                        {t('discard_changes')}
                     </button>
                 </Link>
                 <button type="submit"
                         className={((nameError || usernameError) ? "disabled " : "") + "btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"}>
-                    <i className="fas fa-check group-hover:text-white mr-2"/>Save Changes
+                    <i className="fas fa-check group-hover:text-white mr-2"/>
+                    {t('save_changes')}
                 </button>
             </div>
         </div>
