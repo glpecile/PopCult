@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 
-function Error404() {
-    return(
+export default function Error404() {
+    return (
         <div className="flex-grow whitespace-pre-line">
             <div className="flex flex-wrap p-3.5 mx-auto my-auto">
                 <img className="w-80 pt-12" src={require('../../../images/PopCultLogoX.png')} alt="error_image"/>
@@ -18,5 +18,3 @@ function Error404() {
         </div>
     );
 }
-
-export default Error404;

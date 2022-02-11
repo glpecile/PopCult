@@ -12,10 +12,11 @@ import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
 import Error404 from "./pages/secondary/errors/Error404";
 import Layout from "./components/Layout/Layout";
+import Loader from "./pages/secondary/errors/Loader";
 
 export default function App() {
     return (
-        <Suspense fallback={<Error404/>}>
+        <Suspense fallback={<Loader/>}>
             <Layout>
                 <Routes>
                     <Route path='/' exact element={<Home/>}/>

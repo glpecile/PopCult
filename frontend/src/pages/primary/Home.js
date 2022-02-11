@@ -1,5 +1,5 @@
-function Home() {
-    return <div>Home Page</div>;
-}
+import Loader from "../secondary/errors/Loader";
 
-export default Home;
+export default function Home() {
+    return <Loader />;
+}
