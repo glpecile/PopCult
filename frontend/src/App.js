@@ -1,3 +1,4 @@
+import React,{ Suspense } from "react";
 import {Route, Routes} from "react-router-dom";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
@@ -12,25 +13,25 @@ import Settings from "./pages/secondary/user/Settings";
 import Error404 from "./pages/secondary/errors/Error404";
 import Layout from "./components/Layout/Layout";
 
-function App() {
+export default function App() {
     return (
-        <Layout>
-            <Routes>
-                <Route path='/' exact element={<Home/>}/>
-                <Route path='/media/films' exact element={<Films/>}/>
-                <Route path='/media/series' exact element={<Series/>}/>
-                <Route path='/lists' exact element={<Lists/>}/>
-                <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
-                <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
-                <Route path='/lists/:id' exact element={<ListsDescription/>}/>
-                <Route path='/login' exact element={<Login/>}/>
-                <Route path='/register' exact element={<Register/>}/>
-                <Route path='/user/:username' exact element={<Profile/>}/>
-                <Route path='/settings' exact element={<Settings/>}/>
-                <Route path='*' element={<Error404/>}/>
-            </Routes>
-        </Layout>
+        <Suspense fallback={<Error404/>}>
+            <Layout>
+                <Routes>
+                    <Route path='/' exact element={<Home/>}/>
+                    <Route path='/media/films' exact element={<Films/>}/>
+                    <Route path='/media/series' exact element={<Series/>}/>
+                    <Route path='/lists' exact element={<Lists/>}/>
+                    <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
+                    <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
+                    <Route path='/lists/:id' exact element={<ListsDescription/>}/>
+                    <Route path='/login' exact element={<Login/>}/>
+                    <Route path='/register' exact element={<Register/>}/>
+                    <Route path='/user/:username' exact element={<Profile/>}/>
+                    <Route path='/settings' exact element={<Settings/>}/>
+                    <Route path='*' element={<Error404/>}/>
+                </Routes>
+            </Layout>
+        </Suspense>
     );
 }
-
-export default App;
