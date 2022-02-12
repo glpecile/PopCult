@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
@@ -34,6 +35,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * https://www.toptal.com/spring/spring-security-tutorial
+ */
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
 @EnableWebSecurity
 @Configuration
@@ -63,13 +67,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        SimpleUrlAuthenticationFailureHandler simpleUrlAuthenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/loginFailed");
-        simpleUrlAuthenticationFailureHandler.setUseForward(true);
-        return simpleUrlAuthenticationFailureHandler;
-    }
-
-    @Bean
     public AccessDecisionManager accessDecisionManager() {
         List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
                 webExpressionVoter(),
@@ -87,7 +84,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public WebExpressionVoter webExpressionVoter() {
         WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
         webExpressionVoter.setExpressionHandler(webSecurityExpressionHandler());
-        return  webExpressionVoter;
+        return webExpressionVoter;
     }
 
     @Bean
@@ -117,25 +114,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .invalidSessionUrl("/")
-                .and().formLogin()
-                .defaultSuccessUrl("/", false)
-                .loginPage("/login")
-                .failureHandler(authenticationFailureHandler())
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and().rememberMe()
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .userDetailsService(pawUserDetailsService)
-                .rememberMeParameter("rememberme")
-                .key(FileCopyUtils.copyToString(new InputStreamReader(rememberMeKeyResource.getInputStream())))
-                .and().logout()
-                .deleteCookies("JSESSIONID")
-                .deleteCookies("remember-me")
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-//                .and().authorizeRequests()
+        http
+                .sessionManagement()
+                // Set session management to stateless
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                // Set exception handlers
+                .and().exceptionHandling()
+                    // Set unauthorized requests exception handler
+                    .authenticationEntryPoint(new UnauthorizedRequestHandler())
+                    // Set forbidden requests exception handler
+                    .accessDeniedHandler(new ForbiddenRequestHandler())
+
+                // Set permissions on endpoints
+                .and().authorizeRequests()
 //                .accessDecisionManager(accessDecisionManager())
 //                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
 //                .antMatchers("/settings", "/changePassword", "/deleteUser").authenticated()
@@ -144,9 +136,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/admin/**").hasRole("MOD")
 //                .antMatchers(HttpMethod.POST).hasRole("USER")
 //                .antMatchers(HttpMethod.DELETE).hasRole("USER")
-//                .antMatchers("/**").permitAll()
-//                .and().exceptionHandling()
-//                .accessDeniedPage("/403")
+                .antMatchers("/**").permitAll()
                 .and().csrf().disable();
     }
 
