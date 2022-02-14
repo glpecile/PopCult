@@ -56,6 +56,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
      * Access control methods
      */
     private static final String ACCESS_CONTROL_CHECK_USER = "@accessControl.checkUser(request, #username)";
+    private static final String ACCESS_CONTROL_CHECK_NOTIFICATION_OWNER = "@accessControl.checkNotificationOwner(request, #id)";
 
     /**
      * User Roles
@@ -139,6 +140,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Set permissions on endpoints
                 .and().authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
+
+                /**
+                 * Notification Controller
+                 */
+                .antMatchers("/notifications/{id}")
+                    .access(ACCESS_CONTROL_CHECK_NOTIFICATION_OWNER)
 
                 /**
                  * User Controller
