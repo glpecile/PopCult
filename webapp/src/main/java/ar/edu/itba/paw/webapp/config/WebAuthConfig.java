@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -17,6 +19,7 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,6 +41,7 @@ import java.util.List;
  */
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -45,6 +49,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private AccessControl accessControl;
+
+    /**
+     * Access control methods
+     */
+    private static final String ACCESS_CONTROL_CHECK_USER = "@accessControl.checkUser(request, #username)";
+
+    /**
+     * User Roles
+     */
+    private static final String ADMIN = UserRole.ADMIN.toString();
+    private static final String MOD = UserRole.MOD.toString();
+    private static final String USER = UserRole.USER.toString();
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -121,6 +139,34 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Set permissions on endpoints
                 .and().authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
+
+                /**
+                 * User Controller
+                 */
+                .antMatchers(HttpMethod.POST,"/users")
+                    .anonymous()
+
+                .antMatchers("/users/reset-password", "/users/verification")
+                    .anonymous()
+
+                .antMatchers("/users/{username}/mod")
+                    .hasRole(ADMIN)
+
+                .antMatchers("/users/{username}/locked")
+                    .hasRole(MOD)
+
+                .antMatchers(HttpMethod.POST, "/users/{username}/**")
+                .access(ACCESS_CONTROL_CHECK_USER)
+
+                .antMatchers(HttpMethod.DELETE, "/users/{username}/**")
+                    .access(ACCESS_CONTROL_CHECK_USER)
+
+                .antMatchers(HttpMethod.PUT, "/users/{username}/**")
+                    .access(ACCESS_CONTROL_CHECK_USER)
+
+                .antMatchers(HttpMethod.GET, "/users/{username}/notifications", "/users/{username}/collab-requests")
+                    .access(ACCESS_CONTROL_CHECK_USER)
+
 //                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
 //                .antMatchers("/settings", "/changePassword", "/deleteUser").authenticated()
 //                .antMatchers("/lists/new/**", "lists/edit/**", "/report/**").hasRole("USER")
