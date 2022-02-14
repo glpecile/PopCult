@@ -4,6 +4,7 @@ import {Trans, useTranslation} from "react-i18next";
 const UserProfile = (user) => {
     const {t} = useTranslation();
     const isCurrentUser = true;
+    const username = user.username;
 
     return (
         <div className="flex flex-col gap-3 justify-center items-center">
@@ -22,7 +23,7 @@ const UserProfile = (user) => {
             </div>
             <h4 className="text-base">
                 <Trans i18nKey="profile_description">
-                    Or as we like to call you<b>{user.username}</b>
+                    <b>{{username}}</b>
                 </Trans>
             </h4>
         </div>);

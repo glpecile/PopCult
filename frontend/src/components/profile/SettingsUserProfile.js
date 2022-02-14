@@ -50,7 +50,9 @@ const SettingsUserProfile = (user) => {
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src={currentImage}/>
             </div>
-            <input type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
+            <input
+                className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
 
 
             {/*    username and edit */}
@@ -85,7 +87,7 @@ const SettingsUserProfile = (user) => {
                             <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
                                 <button onClick={() => setImageError(false)}><i className="fas fa-times"/></button>
                             </span>
-                    <small className="text-gray-700 flex flex-wrap">
+                    <small className="text-gray-700 flex flex-wrap whitespace-pre-wrap">
                         {t('settings_image_error')}
                     </small>
                 </div>
