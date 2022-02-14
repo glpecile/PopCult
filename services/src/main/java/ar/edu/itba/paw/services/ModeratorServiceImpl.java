@@ -12,6 +12,8 @@ import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,9 +88,6 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Transactional(readOnly = true)
     @Override
     public boolean principalIsMod() {
-        //TODO migrate to JWT compatibility
-//        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
-        return false;
+        return roleHierarchy.getReachableGrantedAuthorities(SecurityContextHolder.getContext().getAuthentication().getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
     }
 }

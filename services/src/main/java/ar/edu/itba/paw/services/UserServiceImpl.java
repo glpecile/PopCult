@@ -136,11 +136,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getCurrentUser() {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return getByUsername(userDetails.getUsername());
-        }
-        return Optional.empty();
+        return getByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     @Transactional
@@ -152,19 +148,19 @@ public class UserServiceImpl implements UserService {
         }
         final User user = token.getUser();
         user.setEnabled(ENABLED_USER);
-        authWithoutPassword(user);
+//        authWithoutPassword(user);
         tokenService.deleteToken(token);
         return user;
     }
 
-    private void authWithoutPassword(User user) {
-        final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
-        org.springframework.security.core.userdetails.User userDetails =
-                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+//    private void authWithoutPassword(User user) {
+//        final Collection<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
+//        org.springframework.security.core.userdetails.User userDetails =
+//                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//    }
 
     @Transactional
     @Override
@@ -263,7 +259,7 @@ public class UserServiceImpl implements UserService {
         });
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
         return userDao.getUsers(page, pageSize, userRole, banned);
