@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -16,6 +15,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -26,17 +26,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * https://www.toptal.com/spring/spring-security-tutorial
+ * https://github.com/Yoh0xFF/java-spring-security-example
  */
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
 @EnableWebSecurity
@@ -44,22 +42,9 @@ import java.util.concurrent.TimeUnit;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsServiceImpl pawUserDetailsService;
-
+    private UserDetailsServiceImpl userDetailsService;
     @Autowired
-    private UserPanelManagerVoter userPanelManagerVoter;
-
-    @Autowired
-    private DeleteCommentVoter deleteCommentVoter;
-
-    @Autowired
-    private ListsManagerVoter listsManagerVoter;
-
-    @Autowired
-    private ListsVoter listsVoter;
-
-    @Value("classpath:rememberMe.key")
-    private Resource rememberMeKeyResource;
+    private JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -71,11 +56,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
                 webExpressionVoter(),
                 new RoleVoter(),
-                new AuthenticatedVoter(),
-                userPanelManagerVoter,
-                deleteCommentVoter,
-                listsManagerVoter,
-                listsVoter
+                new AuthenticatedVoter()
         );
         return new UnanimousBased(decisionVoters);
     }
@@ -106,9 +87,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return roleHierarchy;
     }
 
+    @Bean
+    public JwtTokenUtil jwtTokenUtil(@Value("classpath:jwt.key") Resource jwtKeyResource) throws IOException {
+        return new JwtTokenUtil(jwtKeyResource);
+    }
+
+    // Expose authentication manager bean
+    @Override @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(pawUserDetailsService)
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -128,7 +120,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // Set permissions on endpoints
                 .and().authorizeRequests()
-//                .accessDecisionManager(accessDecisionManager())
+                .accessDecisionManager(accessDecisionManager())
 //                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
 //                .antMatchers("/settings", "/changePassword", "/deleteUser").authenticated()
 //                .antMatchers("/lists/new/**", "lists/edit/**", "/report/**").hasRole("USER")
@@ -137,7 +129,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.POST).hasRole("USER")
 //                .antMatchers(HttpMethod.DELETE).hasRole("USER")
                 .antMatchers("/**").permitAll()
-                .and().csrf().disable();
+
+                // Disable CSRF
+                .and().csrf().disable()
+
+                // Add JWT Token Filter
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

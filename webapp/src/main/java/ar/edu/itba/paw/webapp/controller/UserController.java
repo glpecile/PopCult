@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
+import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
@@ -35,6 +36,8 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
     private UserService userService;
     @Autowired
     private MediaService mediaService;
@@ -52,9 +55,6 @@ public class UserController {
     private CommentService commentService;
     @Autowired
     private ModeratorService moderatorService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;
@@ -226,16 +226,18 @@ public class UserController {
     @Path("/verification")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response verificateUser(@Valid UserVerificationDto userVerificationDto) throws InvalidTokenException {
+    public Response verifyUser(@Valid UserVerificationDto userVerificationDto) throws InvalidTokenException {
         if (userVerificationDto == null) {
             throw new EmptyBodyException();
         }
 
         Token token = tokenService.getToken(userVerificationDto.getToken()).orElseThrow(TokenNotFoundException::new);
 
-        userService.confirmRegister(token);
+        User user = userService.confirmRegister(token);
         LOGGER.info("PUT /users/verification: User {} enabled", token.getUser().getUsername());
-        return Response.noContent().build();
+        return Response.noContent()
+                .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user))
+                .build();
     }
 
     /**

@@ -27,7 +27,7 @@ public class CustomExceptionMapper implements ExceptionMapper<CustomException> {
 
     @Override
     public Response toResponse(CustomException exception) {
-        LOGGER.error("{}: {}. Status code: {}",
+        LOGGER.error("{}: {} Status code: {}",
                 exception.getClass().getName(),
                 messageSource.getMessage(exception.getMessageCode(), null, Locale.ENGLISH),
                 exception.getStatusCode());

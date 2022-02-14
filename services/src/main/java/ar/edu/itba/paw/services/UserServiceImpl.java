@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void confirmRegister(Token token) throws InvalidTokenException {
+    public User confirmRegister(Token token) throws InvalidTokenException {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION);
         if (!isValidToken) {
             throw new InvalidTokenException();
@@ -154,6 +154,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(ENABLED_USER);
         authWithoutPassword(user);
         tokenService.deleteToken(token);
+        return user;
     }
 
     private void authWithoutPassword(User user) {

@@ -33,7 +33,7 @@ public interface UserService {
 
     Optional<User> getCurrentUser();
 
-    void confirmRegister(Token token) throws InvalidTokenException;
+    User confirmRegister(Token token) throws InvalidTokenException;
 
     void resendToken(Token token);
 
