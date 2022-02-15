@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -16,17 +18,17 @@ import javax.ws.rs.ext.Provider;
 @Singleton
 @Component
 @Provider
-public class NotAllowedExceptionMapper implements ExceptionMapper<NotAllowedException> {
+public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplicationException> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NotAllowedExceptionMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebApplicationExceptionMapper.class);
 
     @Override
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response toResponse(NotAllowedException exception) {
+    public Response toResponse(WebApplicationException exception) {
         LOGGER.error("{}: {}", exception.getClass().getName(), exception.getMessage());
 
         return Response
-                .status(Response.Status.METHOD_NOT_ALLOWED)
+                .status(exception.getResponse().getStatus())
                 .entity(ErrorDto.fromErrorMsg(exception.getMessage()))
                 .build();
     }
