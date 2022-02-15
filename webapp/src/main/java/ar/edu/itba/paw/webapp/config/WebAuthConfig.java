@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.config;
 import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.webapp.auth.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -140,6 +141,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Set permissions on endpoints
                 .and().authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
+
+                /**
+                 * ListCommentReport Controller
+                 * ListReport Controller
+                 * MediaCommentReport Controller
+                 */
+                .antMatchers("/lists-reports/**", "/lists-comments-reports/**", "/media-comments-reports/**")
+                    .hasRole(MOD)
 
                 /**
                  * ModRequest Controller
