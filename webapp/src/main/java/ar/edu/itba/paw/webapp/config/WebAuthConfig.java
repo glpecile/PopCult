@@ -142,6 +142,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDecisionManager(accessDecisionManager())
 
                 /**
+                 * ModRequest Controller
+                 */
+                .antMatchers("/mods-requests/**")
+                    .hasRole(ADMIN)
+
+                /**
                  * Notification Controller
                  */
                 .antMatchers("/notifications/{id}")

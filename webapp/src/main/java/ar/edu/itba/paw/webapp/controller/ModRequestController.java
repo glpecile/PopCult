@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.webapp.dto.output.ModRequestDto;
-import ar.edu.itba.paw.webapp.exceptions.NotificationNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.RequestNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getModRequest(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         LOGGER.info("GET /mods-requests/{}: Returning notification {}", requestId, requestId);
         return Response.ok(ModRequestDto.fromModRequest(uriInfo, modRequest)).build();
@@ -60,7 +60,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response setNotificationAsOpened(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.promoteToMod(modRequest.getUser());
 
@@ -72,7 +72,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteNotification(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(NotificationNotFoundException::new);
+        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.removeModRequest(modRequest);
 
