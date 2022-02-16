@@ -34,13 +34,17 @@ const Navbar = () => {
                         src={require('../../images/PopCultCompleteLogo.png')}
                         alt="popcult_text_logo"/>
                 </NavLink>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarScroll"
-                        aria-controls="navbarScroll"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <motion.button whileHover={{scale: 1.1}}
+                               whileTap={{scale: 0.9}}
+                               className="navbar-toggler"
+                               type="button"
+                               data-bs-toggle="collapse"
+                               data-bs-target="#navbarScroll"
+                               aria-controls="navbarScroll"
+                               aria-expanded="false" aria-label="Toggle navigation">
                     <i className="fas fa-bars navbar-toggler-icon">
                     </i>
-                </button>
+                </motion.button>
                 <div
                     className="collapse navbar-collapse flex space-x-8 justify-center items-center text-center sm:justify-end"
                     id="navbarScroll">
