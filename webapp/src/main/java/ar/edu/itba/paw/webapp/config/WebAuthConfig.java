@@ -18,7 +18,6 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -268,13 +267,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users/{username}/notifications", "/users/{username}/collab-requests")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-//                .antMatchers("/register/**", "/login", "/forgotPassword", "/resetPassword").anonymous()
-//                .antMatchers("/settings", "/changePassword", "/deleteUser").authenticated()
-//                .antMatchers("/lists/new/**", "lists/edit/**", "/report/**").hasRole("USER")
-//                .antMatchers("/admin/mods/**").hasRole("ADMIN")
-//                .antMatchers("/admin/**").hasRole("MOD")
-//                .antMatchers(HttpMethod.POST).hasRole("USER")
-//                .antMatchers(HttpMethod.DELETE).hasRole("USER")
                 .antMatchers("/**").permitAll()
 
                 // Disable CSRF
