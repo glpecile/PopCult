@@ -43,6 +43,8 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 /**
  * https://www.toptal.com/spring/spring-security-tutorial
  * https://github.com/Yoh0xFF/java-spring-security-example
+ *
+ * Endpoints: https://docs.google.com/spreadsheets/d/12-d4w7wpwGuRHetUvtA7HINCAAQFAsUD5CVlg7ucaQ8/edit?usp=sharing
  */
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
 @EnableWebSecurity
@@ -59,8 +61,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Access control methods
      */
+    // username is equal to authenticated username:
     private static final String ACCESS_CONTROL_CHECK_USER = "@accessControl.checkUser(request, #username)";
+    // notification(id) belongs to authenticated user:
     private static final String ACCESS_CONTROL_CHECK_NOTIFICATION_OWNER = "@accessControl.checkNotificationOwner(request, #id)";
+    // list(id) belongs to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_OWNER = "@accessControl.checkListOwner(request, #id)";
+    // list(id) does not belong to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_NOT_OWNER = "@accessControl.checkListNotOwner(request, #id)";
+    // list(id) is editable by authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_COLLABORATOR = "@accessControl.checkListCollaborator(request, #id)";
+    // collabRequest(id) is associated to a list that belong to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_COLLAB_REQUEST_LIST_OWNER = "@accessControl.checkCollabRequestListOwner(request, #id)";
+    // mediaComment(id) belongs to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER = "@accessControl.checkMediaCommentOwner(request, #id)";
+    // mediaComment(id) does not belong to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER = "@accessControl.checkMediaCommentNotOwner(request, #id)";
+    // listComment(id) belongs to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER = "@accessControl.checkListCommentOwner(request, #id)";
+    // listComment(id) does not belong to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER = "@accessControl.checkListCommentNotOwner(request, #id)";
 
     /**
      * User Roles
@@ -157,12 +177,57 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDecisionManager(accessDecisionManager())
 
                 /**
+                 * CollabRequest Controller
+                 */
+                .antMatchers("/collab-requests/{id}")
+                    .access(ACCESS_CONTROL_CHECK_COLLAB_REQUEST_LIST_OWNER)
+
+                /**
+                 * List Controller
+                 */
+                .antMatchers(HttpMethod.POST, "/lists", "lists/{id}/comments")
+                    .authenticated()
+                .antMatchers(HttpMethod.DELETE, "/lists/{id}", "/lists/{id}/collaborators/{username}")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
+                .antMatchers(HttpMethod.PUT, "/lists/{id}", "/lists/{id}/collaborators/{username}")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
+                .antMatchers(HttpMethod.DELETE, "/lists/{id}/media/{media-id}")
+                    .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
+                .antMatchers(HttpMethod.PUT, "/lists/{id}/media/{media-id}")
+                    .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
+                .antMatchers(HttpMethod.POST, "/lists/{id}/forks", "/lists/{id}/reports", "/lists/{id}/requests")
+                    .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
+
+                /**
+                 * ListComments Controller
+                 */
+                .antMatchers(HttpMethod.DELETE, "lists-comments/{id}")
+                .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
+                .antMatchers(HttpMethod.POST, "lists-comments/{id}/reports")
+                .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
+
+                /**
                  * ListCommentReport Controller
                  * ListReport Controller
                  * MediaCommentReport Controller
                  */
                 .antMatchers("/lists-reports/**", "/lists-comments-reports/**", "/media-comments-reports/**")
                     .hasRole(MOD)
+
+                /**
+                 * Media Controller
+                 */
+                .antMatchers(HttpMethod.POST, "/media/{id}/comments")
+                    .authenticated()
+
+                /**
+                 * MediaCommentController
+                 */
+                .antMatchers(HttpMethod.DELETE, "media-comments/{id}")
+                .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
+                .antMatchers(HttpMethod.POST, "media-comments/{id}/reports")
+                .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
+
 
                 /**
                  * ModRequest Controller
