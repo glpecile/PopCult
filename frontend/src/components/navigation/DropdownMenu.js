@@ -1,10 +1,13 @@
 import {NavLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
 
 const DropdownMenu = () => {
     const [t] = useTranslation();
     return (
-        <li className="z-50 nav-item dropdown transition duration-500 ease-in-out transform hover:-translate-y-1 hovƒer:scale-105">
+        <motion.li whileHover={{scale: 1.1}}
+                   whileTap={{scale: 0.9}}
+                   className="z-50 nav-item dropdown">
             <div className="nav-link dropdown-toggle active text-lg lg:text-right"
                  id="navbarDropdownMenuLink"
                  role="button"
@@ -43,6 +46,6 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
             </ul>
-        </li>);
+        </motion.li>);
 }
 export default DropdownMenu;
