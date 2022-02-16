@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from "react";
+import React, {Suspense, useEffect, useRef} from "react";
 import {Route, Routes} from "react-router-dom";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
@@ -17,18 +17,17 @@ import Layout from "./components/Layout/Layout";
 import userService from "./services/UserService";
 
 export default function App() {
-    const [user, setUser] = useState();
+    const mountedUser = useRef(true);
 
     useEffect(() => {
-        let mounted = true;
-        userService()
+        mountedUser.current = true;
+        userService("pau")
             .then(items => {
-                if (mounted) {
-                    setUser(items);
-                    console.log(items);
+                if (mountedUser.current) {
+                    localStorage.setItem("user",JSON.stringify(items));
                 }
             })
-        return () => mounted = false;
+        return () => mountedUser.current = false;
     }, []);
 
     return (
@@ -44,7 +43,7 @@ export default function App() {
                     <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                     <Route path='/login' exact element={<Login/>}/>
                     <Route path='/register' exact element={<Register/>}/>
-                    <Route path='/user/:username' exact element={<Profile user={user}/>}/>
+                    <Route path='/user/:username' exact element={<Profile/>}/>
                     <Route path='/settings' exact element={<Settings/>}/>
                     <Route path='/admin' exact element={<AdminPanel/>}/>
                     <Route path='/admin/reports' exact element={<AdminPanel/>}/>

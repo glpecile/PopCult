@@ -3,7 +3,7 @@ import {Trans, useTranslation} from "react-i18next";
 
 const UserProfile = (user) => {
     const {t} = useTranslation();
-    const isCurrentUser = true;
+    const isCurrentUser = user.isCurrentUser;
     const username = user.username;
 
     return (

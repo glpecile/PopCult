@@ -38,7 +38,6 @@ const UserTabs = (props) => {
     }
 
     const Inter = () => {
-        console.log(props.username);
         const username = props.username;
         return (
             <Trans i18nKey="profile_tabs_main">
