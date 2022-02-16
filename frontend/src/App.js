@@ -1,4 +1,4 @@
-import React,{ Suspense } from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
@@ -14,8 +14,23 @@ import Loader from "./pages/secondary/errors/Loader";
 import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Error404 from "./pages/secondary/errors/Error404";
 import Layout from "./components/Layout/Layout";
+import userService from "./services/UserService";
 
 export default function App() {
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        let mounted = true;
+        userService()
+            .then(items => {
+                if (mounted) {
+                    setUser(items);
+                    console.log(items);
+                }
+            })
+        return () => mounted = false;
+    }, []);
+
     return (
         <Suspense fallback={<Loader/>}>
             <Layout>
@@ -29,7 +44,7 @@ export default function App() {
                     <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                     <Route path='/login' exact element={<Login/>}/>
                     <Route path='/register' exact element={<Register/>}/>
-                    <Route path='/user/:username' exact element={<Profile/>}/>
+                    <Route path='/user/:username' exact element={<Profile user={user}/>}/>
                     <Route path='/settings' exact element={<Settings/>}/>
                     <Route path='/admin' exact element={<AdminPanel/>}/>
                     <Route path='/admin/reports' exact element={<AdminPanel/>}/>

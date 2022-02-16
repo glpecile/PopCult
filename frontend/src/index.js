@@ -10,9 +10,6 @@ import 'bootstrap/dist/js/bootstrap.js';
 import '@fortawesome/fontawesome-free/js/all.js'
 import "react-alice-carousel/lib/alice-carousel.css";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-import axios from "axios";
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:3000' // for all requests
-axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept' // for all requests
 
 ReactDOM.render(
     <React.StrictMode>
