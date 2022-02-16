@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 function ListsCard(content) {
     return (<div
-            className="flex flex-col h-full bg-white rounded-lg shadow-md hover:shadow-indigo-500/50 group transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-105">
+            className="flex flex-col h-full bg-white rounded-lg shadow-md hover:shadow-indigo-500/50 group transition duration-300 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-105">
             <Link className='text-decoration-none' to={'/lists/' + content.id}>
             <div className="row row-cols-2 mx-0 px-0">
                 <div className="col px-0 mx-0"><img className="img-fluid rounded-tl-lg" src={content.image1} alt=""/>

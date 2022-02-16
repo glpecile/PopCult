@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 function MediaCard(props) {
     return (
         <div
-            className="flex flex-col bg-white rounded-lg shadow-md hover:shadow-indigo-500/50 group transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-105">
+            className="flex flex-col bg-white rounded-lg shadow-md hover:shadow-indigo-500/50 group transition duration-300 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-105">
             <Link className="text-decoration-none" to={'/media/series/' + props.id}>
                 {/*TODO poner si es a /movies o /series cuando tengamos la api*/}
                 <img className="img-fluid rounded-t-lg" src={props.image} alt="media_image"/>
