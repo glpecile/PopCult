@@ -1,5 +1,8 @@
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
+import FadeIn from "../animation/FadeIn";
+import {motion} from "framer-motion";
+
 
 const RegisterForm = (props) => {
     const [enteredName, setEnteredName] = useState('');
@@ -110,19 +113,19 @@ const RegisterForm = (props) => {
                         </p>}
                 </div>
 
-                {/*TODO ayuda con el fading por favor*/}
-                {alertDisplay &&
-                    <div className="py-1 px-2.5 collapse show z-50 fixed absolute" id="alert">
-                        <div className="alert bg-purple-200/90 text-gray-500 d-flex align-items-center shadow-md"
+                <FadeIn isActive={alertDisplay}>
+                    <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
+                        <motion.div key="icon" className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
                              role="alert">
                             <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
                                 <button onClick={() => setAlertDisplay(false)}><i className="fas fa-times hover:text-gray-800"/></button>
                             </span>
-                            <small id="passwordHelpBlock" className="form-text text-muted whitespace-pre-wrap">
+                            <small key="text" id="passwordHelpBlock" className="form-text text-muted whitespace-pre-wrap">
                                 {t('register_password_hint')}
                             </small>
-                        </div>
-                    </div>}
+                        </motion.div>
+                    </motion.div>
+                </FadeIn>
 
                 {/*repPass*/}
                 <div className="py-1 px-2.5 text-semibold w-full">
