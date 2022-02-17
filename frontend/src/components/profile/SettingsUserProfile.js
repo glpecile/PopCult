@@ -1,6 +1,8 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {Trans, useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
+import FadeIn from "../animation/FadeIn";
 
 const SettingsUserProfile = () => {
     const {t} = useTranslation();
@@ -51,10 +53,31 @@ const SettingsUserProfile = () => {
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src={currentImage}/>
+
             </div>
             <input
                 className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                 type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
+
+
+            <FadeIn isActive={imageError}>
+                <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
+                    <motion.div key="icon"
+                                className="alert bg-red-200/95 text-gray-500 d-flex align-items-center shadow-md"
+                                role="alert">
+                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <button onClick={() => setImageError(false)}><i
+                                    className="fas fa-times hover:text-gray-800"/></button>
+                            </span>
+                        <small key="text" id="imageErrorTextBlock"
+                               className="form-text text-muted whitespace-pre-wrap">
+                            {t('settings_image_error')}
+                        </small>
+                    </motion.div>
+                </motion.div>
+            </FadeIn>
+
+
             {/*name input*/}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -70,17 +93,6 @@ const SettingsUserProfile = () => {
                     </p>
                 }
             </div>
-            {imageError && <div className="absolute bottom-0 collapse show z-50 fixed" id="alert">
-                <div className="alert bg-rose-500/90 text-gray-700 d-flex align-items-center shadow-lg"
-                     role="alert">
-                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button onClick={() => setImageError(false)}><i className="fas fa-times"/></button>
-                            </span>
-                    <small className="text-gray-700 flex flex-wrap whitespace-pre-wrap">
-                        {t('settings_image_error')}
-                    </small>
-                </div>
-            </div>}
             {/* username input*/}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
