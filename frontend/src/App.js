@@ -21,7 +21,7 @@ export default function App() {
 
     useEffect(() => {
         mountedUser.current = true;
-        userService("pau")
+        userService.getUser("pau")
             .then(items => {
                 if (mountedUser.current) {
                     localStorage.setItem("user",JSON.stringify(items));

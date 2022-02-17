@@ -5,7 +5,7 @@ import {useState} from "react";
 
 function Login() {
     const [logInState, setLogInState] = useState(false);
-    const logIn = () => {
+    const logIn = (props) => {
         setLogInState(true);
     }
     return <LoginWrapper>

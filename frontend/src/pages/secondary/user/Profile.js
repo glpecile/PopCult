@@ -13,7 +13,7 @@ const Profile = () => {
 
     useEffect(() => {
         mountedUser.current = true;
-        userService(username)
+        userService.getUser(username)
             .then(items => {
                 if (mountedUser.current) {
                     setShow(items);
