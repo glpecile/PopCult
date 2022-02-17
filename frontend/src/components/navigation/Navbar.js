@@ -6,7 +6,8 @@ import {motion} from "framer-motion";
 const Navbar = () => {
     const [t] = useTranslation();
     const SwitchOnLoggedUser = () => {
-        const isUserPresent = true;
+        const isUserPresent = localStorage.hasOwnProperty("user");
+
         return (
             <>
                 {isUserPresent &&

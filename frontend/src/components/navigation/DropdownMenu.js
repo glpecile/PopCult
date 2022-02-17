@@ -3,6 +3,8 @@ import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 
 const DropdownMenu = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const [t] = useTranslation();
     return (
         <motion.li whileHover={{scale: 1.1}}
@@ -12,7 +14,7 @@ const DropdownMenu = () => {
                  id="navbarDropdownMenuLink"
                  role="button"
                  data-bs-toggle="dropdown" aria-expanded="false">
-                username
+                {user.username}
             </div>
             <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
                 <li>
@@ -21,17 +23,17 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to='/user/a'>
+                    <NavLink className="dropdown-item" to={'/user/'+user.username}>
                         {t('nav_profile')}
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to='/user/b'>
+                    <NavLink className="dropdown-item" to={'/user/'+user.username}>
                         {t('nav_my_lists')}
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to='/user/c'>
+                    <NavLink className="dropdown-item" to={'/user/'+user.username}>
                         {t('nav_notifications')}
                     </NavLink>
                 </li>
@@ -41,7 +43,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to='/user/e'>
+                    <NavLink className="dropdown-item" to={'/user/'+user.username}>
                         {t('nav_sign_out')}
                     </NavLink>
                 </li>
