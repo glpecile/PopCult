@@ -1,8 +1,8 @@
 import api from './api'
 
 const userApi = (function () {
-    const login = ({email, password}) => {
-        return api.post('/authenticate', {email: email, password: password});
+    const login = ({username, password}) => {
+        return api.post('/authenticate', {username: username, password: password});
     }
 
     const getUser = (username) => {

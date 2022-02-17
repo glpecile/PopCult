@@ -29,10 +29,13 @@ function LoginForm(props) {
     const submitHandler = (event) => {
         event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
-            props.onSuccessfullLogIn();
-        } else {
-            setErrorMessageDisplay(true);
+            props.onSuccessfullLogIn(enteredUsername, enteredPassword);
         }
+        setErrorMessageDisplay(true);
+        setTimeout(() => {
+            setErrorMessageDisplay(false);
+        }, 5000);
+
     };
 
     return (
@@ -41,8 +44,9 @@ function LoginForm(props) {
                 <label className="py-2 text-semibold w-full">
                     {t('login_username')}
                 </label>
-                <input className="w-full rounded active:none shadow-sm accent-purple-400" type="text" value={enteredUsername}
-                       pattern="[a-zA-Z0-9]+" minLength={4} maxLength={100}
+                <input className="w-full rounded active:none shadow-sm accent-purple-400" type="text"
+                       value={enteredUsername}
+                       pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
                        onChange={UsernameChangeHandler}/>
 
                 <label className="py-2 text-semibold w-full">
