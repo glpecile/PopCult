@@ -18,7 +18,7 @@ const Navbar = () => {
                                    whileTap={{scale: 0.9}}
                                    className="nav-item">
                             <NavLink className="nav-link active text-lg lg:text-right" aria-current="page" to='/login'>
-                                {t('nav_sign_out')}
+                                {t('nav_sign_in')}
                             </NavLink>
                         </motion.li>)}
             </>);

@@ -1,21 +1,18 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 
-const SettingsUserProfile = (user) => {
+const SettingsUserProfile = () => {
     const {t} = useTranslation();
 
-    const [currentUsername, setUsername] = useState(user.username);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const currentUsername = user.username;
+    const currentEmail = user.email;
     const [currentName, setName] = useState(user.name);
     const [currentImage, setUserImage] = useState(user.image);
     const [imageError, setImageError] = useState(false);
     const [nameError, setNameError] = useState(false);
-    const [usernameError, setUsernameError] = useState(false);
 
-    const usernameChangeHandler = (event) => {
-        event.target.validity.valid ? setUsernameError(false) : setUsernameError(true);
-        setUsername(event.target.value);
-    };
     const nameChangeHandler = (event) => {
         event.target.validity.valid ? setNameError(false) : setNameError(true);
         setName(event.target.value);
@@ -35,7 +32,7 @@ const SettingsUserProfile = (user) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        if (!(nameError || usernameError)) {
+        if (!(nameError)) {
             const userData = {
                 name: currentName, username: currentUsername, image: currentImage
             };
@@ -43,8 +40,13 @@ const SettingsUserProfile = (user) => {
         }
     };
 
-    return (<form onSubmit={submitHandler} noValidate={true}>
-        <div className=" relative flex flex-col gap-3 justify-center items-center">
+    return (<form className="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" onSubmit={submitHandler} noValidate={true}>
+        <div className="flex flex-col justify-center items-center">
+            <h2 className="text-3xl mb-3">
+                <Trans i18nKey="profile_settings_title">
+                    {{username: currentUsername}}
+                </Trans>
+            </h2>
             {/*Profile Pic Row*/}
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
@@ -53,12 +55,13 @@ const SettingsUserProfile = (user) => {
             <input
                 className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                 type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
-
-
-            {/*    username and edit */}
-            <div className="py-1 px-2.5">
+            {/*name input*/}
+            <div className="py-1 text-semibold w-full">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                    {t('register_name')}
+                </label>
                 <input
-                    className={"rounded active:none text-3xl font-bold " + (nameError ? " border-2 border-rose-500" : "")}
+                    className={"rounded active:none w-full " + (nameError ? " border-2 border-rose-500" : "")}
                     type='text' value={currentName}
                     onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
@@ -66,20 +69,6 @@ const SettingsUserProfile = (user) => {
                         {t('name_error')}
                     </p>
                 }
-            </div>
-            <div className="py-1 px-2.5">
-                <div className="flex justify-center items-center space-x-3">
-                    <h4 className="text-base">{t('settings_description')}</h4>
-                    <input
-                        className={"rounded active:none text-xl font-bold " + (usernameError ? " border-2 border-rose-500" : "")}
-                        type='text' value={currentUsername}
-                        pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
-                        onChange={usernameChangeHandler}/>
-                </div>
-                {usernameError &&
-                    <p className="text-red-500 text-xs italic text-center">
-                        {t('username_error')}
-                    </p>}
             </div>
             {imageError && <div className="absolute bottom-0 collapse show z-50 fixed" id="alert">
                 <div className="alert bg-rose-500/90 text-gray-700 d-flex align-items-center shadow-lg"
@@ -92,16 +81,47 @@ const SettingsUserProfile = (user) => {
                     </small>
                 </div>
             </div>}
-            <div className="m-3">
-                <Link to='/user/a' className='mr-3'>
+            {/* username input*/}
+            <div className="py-1 text-semibold w-full">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                    {t('register_username')}
+                </label>
+                <input className="rounded w-full bg-gray-100" type='text' value={currentUsername} disabled={true}/>
+            </div>
+            {/* email input*/}
+            <div className="py-1 text-semibold w-full">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                    {t('register_email')}
+                </label>
+                <input className="rounded w-full bg-gray-100" type='text' value={currentEmail} disabled={true}/>
+            </div>
+        </div>
+        {/*Buttons */}
+        <div className="flex justify-between pt-3">
+            <div className="flex space-x-3">
+                {/*change password*/}
+                <button type="button"
+                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 hover:text-white text-gray-700">
+                    <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
+                    {t('profile_settings_changePassword')}
+                </button>
+                {/*delete user*/}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                        className="btn my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                    <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
+                    {t('profile_settings_deleteUser')}
+                </button>
+            </div>
+            <div className="flex space-x-3">
+                <Link to={'/user/' + currentUsername} className='mr-3'>
                     <button
-                        className="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        className="btn bg-gray-300 group hover:bg-yellow-400 text-gray-700 font-semibold hover:text-white my-2">
                         <i className="fa fa-trash group-hover:text-white mr-2"/>
                         {t('discard_changes')}
                     </button>
                 </Link>
                 <button type="submit"
-                        className={((nameError || usernameError) ? "disabled " : "") + "btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"}>
+                        className={(nameError ? "disabled " : "") + "btn bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white my-2"}>
                     <i className="fas fa-check group-hover:text-white mr-2"/>
                     {t('save_changes')}
                 </button>
@@ -109,5 +129,6 @@ const SettingsUserProfile = (user) => {
         </div>
     </form>);
 }
+
 
 export default SettingsUserProfile;
