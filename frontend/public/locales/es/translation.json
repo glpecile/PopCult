@@ -38,6 +38,7 @@
   "profile_tabs_toWatchMedia": "Contenido A Ver",
   "profile_settings_title": "Edicion de perfil de <0>{{username}}</0>",
   "profile_settings_changePassword": "Cambiar Contraseña",
+  "profile_settings_cancelChangePassword": "Cancelar Cambiar Contraseña",
   "profile_settings_deleteUser": "Eliminar Cuenta",
   "login_greeting": "¡Bienvenido De Vuelta!",
   "login_button": "Ingresa",

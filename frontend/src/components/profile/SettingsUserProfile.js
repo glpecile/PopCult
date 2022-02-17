@@ -14,6 +14,11 @@ const SettingsUserProfile = () => {
     const [currentImage, setUserImage] = useState(user.image);
     const [imageError, setImageError] = useState(false);
     const [nameError, setNameError] = useState(false);
+    const [changePasswordActive, setChangePassword] = useState(false);
+    const [enteredPassword, setEnteredPassword] = useState('');
+    const [enteredPasswordError, setPasswordError] = useState(false);
+    const [enteredRepeatedPassword, setEnteredRepeatedPassword] = useState('');
+    const [enteredRepeatedPasswordError, setRepeatedPasswordError] = useState(false);
 
     const nameChangeHandler = (event) => {
         event.target.validity.valid ? setNameError(false) : setNameError(true);
@@ -32,15 +37,32 @@ const SettingsUserProfile = () => {
         }
     }
 
+    const PasswordChangeHandler = (event) => {
+        setEnteredPassword(event.target.value);
+        event.target.validity.valid ? setPasswordError(false) : setPasswordError(true);
+        if (enteredRepeatedPassword.localeCompare('') !== 0) {
+            (event.target.value.localeCompare(enteredRepeatedPassword) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
+        }
+    };
+    
+    const RepeatedPasswordChangeHandler = (event) => {
+        setEnteredRepeatedPassword(event.target.value);
+        (enteredPassword.localeCompare(event.target.value) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
+    };
     const submitHandler = (event) => {
         event.preventDefault();
-        if (!(nameError)) {
+        if(changePasswordActive){
+            if (!(nameError || enteredPasswordError || enteredRepeatedPasswordError)) {
+                //    aca se estaria cambiando la contrasenia
+            }
+        }else if (!(nameError)) {
             const userData = {
                 name: currentName, username: currentUsername, image: currentImage
             };
             user.onSaveUserData(userData);
         }
     };
+    
 
     return (<form className="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" onSubmit={submitHandler} noValidate={true}>
         <div className="flex flex-col justify-center items-center">
@@ -77,7 +99,6 @@ const SettingsUserProfile = () => {
                 </motion.div>
             </FadeIn>
 
-
             {/*name input*/}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -107,15 +128,53 @@ const SettingsUserProfile = () => {
                 </label>
                 <input className="rounded w-full bg-gray-100" type='text' value={currentEmail} disabled={true}/>
             </div>
+
+            {/*change password*/}
+            {changePasswordActive && <>
+                <div className="flex flex-col justify-center items-center mt-5">
+                    <h2 className="text-2xl mb-1">
+                        {t('profile_settings_changePassword')}
+                    </h2>
+                </div>
+                <div className="py-1 text-semibold w-full">
+                    <label
+                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        {t('register_password')}
+                    </label>
+                    <input type="password"
+                           className={"w-full rounded active:none " + (enteredPasswordError ? "border-2 border-rose-500" : "")}
+                           minLength={8} maxLength={100}
+                           defaultValue={enteredPassword} onChange={PasswordChangeHandler}/>
+                    {enteredPasswordError &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('register_password_hint')}
+                        </p>}
+                </div>
+
+                <div className="py-1 text-semibold w-full">
+                    <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        {t('register_password_repeat')}
+                    </label>
+                    <input type="password"
+                           className={"w-full rounded active:none " + (enteredRepeatedPasswordError ? "border-2 border-rose-500" : "")}
+                           minLength={8} maxLength={100} onChange={RepeatedPasswordChangeHandler}/>
+                    {enteredRepeatedPasswordError &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('register_password_match_error')}
+                        </p>}
+                </div>
+            </>}
         </div>
+
         {/*Buttons */}
         <div className="flex justify-between pt-3">
             <div className="flex space-x-3">
                 {/*change password*/}
                 <button type="button"
-                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 hover:text-white text-gray-700">
+                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 hover:text-white text-gray-700"
+                        onClick={() => setChangePassword(!changePasswordActive)}>
                     <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
-                    {t('profile_settings_changePassword')}
+                    {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
                 </button>
                 {/*delete user*/}
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
