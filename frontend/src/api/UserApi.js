@@ -1,6 +1,6 @@
 import api from './api'
 
-const userApi = (function () {
+const userApi = (() => {
     const login = ({username, password}) => {
         return api.post('/authenticate', {username: username, password: password});
     }

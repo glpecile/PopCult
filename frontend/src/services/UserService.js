@@ -1,23 +1,20 @@
 import userApi from "../api/UserApi"
+import axios from "axios";
 
 const UserService = (function () {
 
-    async function getUser(username) {
+    const getUser = async (username) => {
         const res = await userApi.getUser(username).catch(
             e => {
-                console.log(e.response.data)
+                return axios.isCancel(e) ? e : e.response;
                 //    aca va el manejo de errores
             }
         );
         return res.data;
     }
 
-    async function login({username, password}) {
-        const res = await userApi.login({username, password}).catch(e => {
-            console.log(e)
-            //    aca va el manejo de errores
-        });
-        if (!res) return null;
+    const login = async ({username, password}) => {
+        const res = await userApi.login({username, password});
         return res.headers.authorization.split(' ')[1];
     }
 
