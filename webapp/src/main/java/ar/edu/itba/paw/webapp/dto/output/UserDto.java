@@ -23,6 +23,19 @@ public class UserDto {
     private String url;
 
     private String imageUrl;
+    private String changePasswordUrl;
+    private String resetPasswordUrl;
+    private String verificationUrl;
+    private String modRequestUrl;
+    private String removeModUrl;
+    private String lockedUrl;
+    private String favoriteMediaUrl;
+    private String favoriteListsUrl;
+    private String watchedMediaUrl;
+    private String toWatchMediaUrl;
+    private String notificationsUrl;
+    private String collabRequestsUrl;
+    private String authenticateUrl;
 
     public static UserDto fromUser(UriInfo url, User user) {
         UserDto userDto = new UserDto();
@@ -38,10 +51,23 @@ public class UserDto {
 
         userDto.url = url.getBaseUriBuilder().path("users").path(user.getUsername()).build().toString();
         userDto.imageUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("image").build().toString();
+        userDto.changePasswordUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("password").build().toString();
+        userDto.resetPasswordUrl = url.getBaseUriBuilder().path("users").path("reset-password").build().toString();
+        userDto.verificationUrl = url.getBaseUriBuilder().path("users").path("verification").build().toString();
+        userDto.modRequestUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("mod-requests").build().toString();
+        userDto.removeModUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("mod").build().toString();
+        userDto.lockedUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("locked").build().toString();
+        userDto.favoriteMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("favorite-media").build().toString();
+        userDto.favoriteListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("favorite-lists").build().toString();
+        userDto.watchedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("watched-media").build().toString();
+        userDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("to-watch-media").build().toString();
+        userDto.notificationsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("notification").build().toString();
+        userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
+        userDto.authenticateUrl = url.getBaseUriBuilder().path("authenticate").build().toString();
         return userDto;
     }
 
-    public static List<UserDto> fromUserList(UriInfo uriInfo, List<User> userList){
+    public static List<UserDto> fromUserList(UriInfo uriInfo, List<User> userList) {
         return userList.stream().map(u -> UserDto.fromUser(uriInfo, u)).collect(Collectors.toList());
     }
 
@@ -131,5 +157,109 @@ public class UserDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getChangePasswordUrl() {
+        return changePasswordUrl;
+    }
+
+    public void setChangePasswordUrl(String changePasswordUrl) {
+        this.changePasswordUrl = changePasswordUrl;
+    }
+
+    public String getResetPasswordUrl() {
+        return resetPasswordUrl;
+    }
+
+    public void setResetPasswordUrl(String resetPasswordUrl) {
+        this.resetPasswordUrl = resetPasswordUrl;
+    }
+
+    public String getVerificationUrl() {
+        return verificationUrl;
+    }
+
+    public void setVerificationUrl(String verificationUrl) {
+        this.verificationUrl = verificationUrl;
+    }
+
+    public String getModRequestUrl() {
+        return modRequestUrl;
+    }
+
+    public void setModRequestUrl(String modRequestUrl) {
+        this.modRequestUrl = modRequestUrl;
+    }
+
+    public String getRemoveModUrl() {
+        return removeModUrl;
+    }
+
+    public void setRemoveModUrl(String removeModUrl) {
+        this.removeModUrl = removeModUrl;
+    }
+
+    public String getLockedUrl() {
+        return lockedUrl;
+    }
+
+    public void setLockedUrl(String lockedUrl) {
+        this.lockedUrl = lockedUrl;
+    }
+
+    public String getFavoriteMediaUrl() {
+        return favoriteMediaUrl;
+    }
+
+    public void setFavoriteMediaUrl(String favoriteMediaUrl) {
+        this.favoriteMediaUrl = favoriteMediaUrl;
+    }
+
+    public String getFavoriteListsUrl() {
+        return favoriteListsUrl;
+    }
+
+    public void setFavoriteListsUrl(String favoriteListsUrl) {
+        this.favoriteListsUrl = favoriteListsUrl;
+    }
+
+    public String getWatchedMediaUrl() {
+        return watchedMediaUrl;
+    }
+
+    public void setWatchedMediaUrl(String watchedMediaUrl) {
+        this.watchedMediaUrl = watchedMediaUrl;
+    }
+
+    public String getToWatchMediaUrl() {
+        return toWatchMediaUrl;
+    }
+
+    public void setToWatchMediaUrl(String toWatchMediaUrl) {
+        this.toWatchMediaUrl = toWatchMediaUrl;
+    }
+
+    public String getNotificationsUrl() {
+        return notificationsUrl;
+    }
+
+    public void setNotificationsUrl(String notificationsUrl) {
+        this.notificationsUrl = notificationsUrl;
+    }
+
+    public String getCollabRequestsUrl() {
+        return collabRequestsUrl;
+    }
+
+    public void setCollabRequestsUrl(String collabRequestsUrl) {
+        this.collabRequestsUrl = collabRequestsUrl;
+    }
+
+    public String getAuthenticateUrl() {
+        return authenticateUrl;
+    }
+
+    public void setAuthenticateUrl(String authenticateUrl) {
+        this.authenticateUrl = authenticateUrl;
     }
 }
