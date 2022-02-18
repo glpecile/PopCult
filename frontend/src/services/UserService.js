@@ -14,9 +14,10 @@ const UserService = (function () {
 
     async function login({username, password}) {
         const res = await userApi.login({username, password}).catch(e => {
-            console.log(e.response.data)
+            console.log(e)
             //    aca va el manejo de errores
         });
+        if (!res) return null;
         return res.headers.authorization.split(' ')[1];
     }
 

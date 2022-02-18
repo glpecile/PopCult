@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
-function LoginWrapper(props) {
+function LoginCard(props) {
     const [t] = useTranslation();
     return (
             <div className="flex-grow space-y-2">
@@ -25,4 +25,4 @@ function LoginWrapper(props) {
     );
 }
 
-export default LoginWrapper;
+export default LoginCard;
