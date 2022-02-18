@@ -167,11 +167,11 @@ const SettingsUserProfile = () => {
         </div>
 
         {/*Buttons */}
-        <div className="flex justify-between pt-3">
+        <div className="flex flex-wrap justify-between pt-3">
             <div className="flex space-x-3">
                 {/*change password*/}
                 <button type="button"
-                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 hover:text-white text-gray-700"
+                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 font-semibold hover:text-white text-gray-700"
                         onClick={() => setChangePassword(!changePasswordActive)}>
                     <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
