@@ -37,8 +37,8 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize) {
-        return collaborativeListsDao.getRequestsByUserId(user, page, pageSize);
+    public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
+        return collaborativeListsDao.getRequestsByUser(user, page, pageSize);
     }
 
     @Transactional

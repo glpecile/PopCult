@@ -37,7 +37,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
-    public PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize) {
+    public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("status", false);
