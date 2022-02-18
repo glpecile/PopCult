@@ -38,10 +38,12 @@ public class ModRequestController {
             LOGGER.info("GET /mods-requests: Returning empty list");
             return Response.noContent().build();
         }
+
         final List<ModRequestDto> modRequestDtoList = ModRequestDto.fromModRequestList(uriInfo, modRequests.getElements());
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ModRequestDto>>(modRequestDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, modRequests, uriInfo);
+
         LOGGER.info("GET /mods-requests: Returning page {} with {} results", modRequests.getCurrentPage(), modRequests.getElements().size());
         return response.build();
     }
@@ -50,7 +52,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getModRequest(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
+        final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         LOGGER.info("GET /mods-requests/{}: Returning notification {}", requestId, requestId);
         return Response.ok(ModRequestDto.fromModRequest(uriInfo, modRequest)).build();
@@ -60,7 +62,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response setNotificationAsOpened(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
+        final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.promoteToMod(modRequest.getUser());
 
@@ -72,7 +74,7 @@ public class ModRequestController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteNotification(@PathParam("id") int requestId) {
-        ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
+        final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.removeModRequest(modRequest);
 

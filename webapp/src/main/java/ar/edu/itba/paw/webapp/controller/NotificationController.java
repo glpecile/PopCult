@@ -31,7 +31,7 @@ public class NotificationController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getNotification(@PathParam("id") int notificationId) {
-        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+        final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
         LOGGER.info("GET /notifications/{}: Returning notification {}", notificationId, notificationId);
         return Response.ok(NotificationDto.fromNotification(uriInfo, notification)).build();
@@ -41,7 +41,7 @@ public class NotificationController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response setNotificationAsOpened(@PathParam("id") int notificationId) {
-        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+        final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
         commentService.setListCommentNotificationAsOpened(notification);
 
@@ -53,7 +53,7 @@ public class NotificationController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteNotification(@PathParam("id") int notificationId) {
-        Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
+        final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
         commentService.deleteListCommentNotification(notification);
 

@@ -34,16 +34,18 @@ public class MediaCommentReportController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                           @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        PageContainer<MediaCommentReport> mediaCommentReports = reportService.getMediaCommentReports(page, pageSize);
+        final PageContainer<MediaCommentReport> mediaCommentReports = reportService.getMediaCommentReports(page, pageSize);
 
-        if(mediaCommentReports.getElements().isEmpty()) {
+        if (mediaCommentReports.getElements().isEmpty()) {
             LOGGER.info("GET /media-comments-reports: Returning empty list");
             return Response.noContent().build();
         }
+
         final List<ReportMediaCommentDto> reportMediaCommentDtoList = ReportMediaCommentDto.fromMediaCommentReportList(uriInfo, mediaCommentReports.getElements());
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReportMediaCommentDto>>(reportMediaCommentDtoList){
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReportMediaCommentDto>>(reportMediaCommentDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, mediaCommentReports, uriInfo);
+
         LOGGER.info("GET /media-comments-reports: Returning page {} with {} results", mediaCommentReports.getCurrentPage(), mediaCommentReports.getElements().size());
         return response.build();
     }
@@ -52,7 +54,7 @@ public class MediaCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListReport(@PathParam("id") int mediaCommentReportId) {
-        MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         LOGGER.info("GET /media-comments-reports({}: Returning list comment report {}", mediaCommentReportId, mediaCommentReportId);
         return Response.ok(ReportMediaCommentDto.fromMediaCommentReport(uriInfo, mediaCommentReport)).build();
@@ -62,7 +64,7 @@ public class MediaCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int mediaCommentReportId) {
-        MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.approveMediaCommentReport(mediaCommentReport);
 
@@ -74,7 +76,7 @@ public class MediaCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int mediaCommentReportId) {
-        MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.deleteMediaCommentReport(mediaCommentReport);
 

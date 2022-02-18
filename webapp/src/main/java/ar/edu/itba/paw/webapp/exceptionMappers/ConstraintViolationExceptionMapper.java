@@ -40,7 +40,8 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         return Response
                 .status(Response.Status.BAD_REQUEST)
-                .entity(new GenericEntity<Collection<ErrorValidationDto>>(errors) {})
+                .entity(new GenericEntity<Collection<ErrorValidationDto>>(errors) {
+                })
                 .build();
     }
 

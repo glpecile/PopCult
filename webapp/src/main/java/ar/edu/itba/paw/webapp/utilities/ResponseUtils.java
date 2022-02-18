@@ -11,15 +11,15 @@ public class ResponseUtils {
         throw new AssertionError();
     }
 
-    public static <T> void setPaginationLinks(Response.ResponseBuilder response, PageContainer<T> pageContainer, UriInfo uriInfo){
-        if(pageContainer.hasNextPage()){
+    public static <T> void setPaginationLinks(Response.ResponseBuilder response, PageContainer<T> pageContainer, UriInfo uriInfo) {
+        if (pageContainer.hasNextPage()) {
             response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getCurrentPage() + 1).build().toString(), "next");
         }
-        if(pageContainer.hasPrevPage()){
+        if (pageContainer.hasPrevPage()) {
             response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getCurrentPage() - 1).build().toString(), "prev");
         }
         response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getLastPage()).build().toString(), "last");
-        response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page",  pageContainer.getFirstPage()).build().toString(), "first");
+        response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getFirstPage()).build().toString(), "first");
     }
 
 }

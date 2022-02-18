@@ -33,17 +33,19 @@ public class ListCommentReportController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
-                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
+                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final  PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
 
-        if(listCommentReports.getElements().isEmpty()) {
+        if (listCommentReports.getElements().isEmpty()) {
             LOGGER.info("GET /lists-comments-reports: Returning empty list");
             return Response.noContent().build();
         }
+
         final List<ReportListCommentDto> reportListCommentDtoList = ReportListCommentDto.fromListCommentReportList(uriInfo, listCommentReports.getElements());
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReportListCommentDto>>(reportListCommentDtoList){
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReportListCommentDto>>(reportListCommentDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, listCommentReports, uriInfo);
+
         LOGGER.info("GET /lists-comments-reports: Returning page {} with {} results", listCommentReports.getCurrentPage(), listCommentReports.getElements().size());
         return response.build();
     }
@@ -52,7 +54,7 @@ public class ListCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListReport(@PathParam("id") int listCommentReportId) {
-        ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final  ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         LOGGER.info("GET /lists-comments-reports({}: Returning list comment report {}", listCommentReportId, listCommentReportId);
         return Response.ok(ReportListCommentDto.fromListCommentReport(uriInfo, listCommentReport)).build();
@@ -62,7 +64,7 @@ public class ListCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int listCommentReportId) {
-        ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.approveListCommentReport(listCommentReport);
 
@@ -74,7 +76,7 @@ public class ListCommentReportController {
     @Path("{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int listCommentReportId) {
-        ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.deleteListCommentReport(listCommentReport);
 

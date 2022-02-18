@@ -13,20 +13,21 @@ public class NormalizerUtils {
         throw new AssertionError();
     }
 
-    public static List<Genre> getNormalizedGenres(List<String> genres){
-        if(genres == null)
+    public static List<Genre> getNormalizedGenres(List<String> genres) {
+        if (genres == null)
             return Collections.emptyList();
         return genres.stream().map(g -> g.replaceAll("\\s+", "")).map(String::toUpperCase).map(Genre::valueOf).collect(Collectors.toList());
     }
 
-    public static List<MediaType> getNormalizedMediaType(List<String> mediaTypes){
-        if(mediaTypes == null)
+    public static List<MediaType> getNormalizedMediaType(List<String> mediaTypes) {
+        if (mediaTypes == null)
             return Collections.emptyList();
         return mediaTypes.stream().map(String::toUpperCase).map(MediaType::valueOf).collect(Collectors.toList());
 
     }
-     public static SortType getNormalizedSortType(String sortType){
+
+    public static SortType getNormalizedSortType(String sortType) {
         return SortType.valueOf(sortType.toUpperCase());
-     }
+    }
 
 }

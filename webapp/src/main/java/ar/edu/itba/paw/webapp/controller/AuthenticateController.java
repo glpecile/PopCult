@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
@@ -33,9 +32,6 @@ public class AuthenticateController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ModeratorService moderatorService;
-
     @Context
     private UriInfo uriInfo;
 
@@ -49,15 +45,15 @@ public class AuthenticateController {
             throw new EmptyBodyException();
         }
 
-        Authentication authentication = authenticationManager.authenticate(
+        final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAuthDto.getUsername(), userAuthDto.getPassword())
         );
 
-        User user = userService.getByUsername(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        final User user = userService.getByUsername(authentication.getName()).orElseThrow(UserNotFoundException::new);
+
         LOGGER.info("POST /authenticate: User {} authenticated", user.getUsername());
         return Response.noContent()
                 .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user))
                 .build();
     }
-
 }

@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
 
+/**
+ * Ignore "Method is never used"
+ */
 @Component
 public class AccessControl {
 
@@ -33,7 +36,7 @@ public class AccessControl {
     private UserService userService;
 
     public boolean checkUser(HttpServletRequest request, String username) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
@@ -42,11 +45,11 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkNotificationOwner(HttpServletRequest request, int notificationId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        Notification notification = commentService.getListCommentNotification(notificationId).orElse(null);
+        final Notification notification = commentService.getListCommentNotification(notificationId).orElse(null);
         if (notification == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -55,11 +58,11 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListOwner(HttpServletRequest request, int listId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
         if (mediaList == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -69,11 +72,11 @@ public class AccessControl {
     // It is not !checkListOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkListNotOwner(HttpServletRequest request, int listId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
         if (mediaList == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -82,15 +85,15 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListCollaborator(HttpServletRequest request, int listId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        User user = userService.getByUsername(userDetails.getUsername()).orElse(null);
+        final User user = userService.getByUsername(userDetails.getUsername()).orElse(null);
         if (user == null) {
             return false; // Jersey will throw 404 Response
         }
-        MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
         if (mediaList == null) {
             return true;
         }
@@ -99,11 +102,11 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkCollabRequestListOwner(HttpServletRequest request, int requestId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        Request collabRequest = collaborativeListService.getById(requestId).orElse(null);
+        final Request collabRequest = collaborativeListService.getById(requestId).orElse(null);
         if (collabRequest == null) {
             return true;
         }
@@ -112,11 +115,11 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkMediaCommentOwner(HttpServletRequest request, int commentId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        MediaComment mediaComment = commentService.getMediaCommentById(commentId).orElse(null);
+        final MediaComment mediaComment = commentService.getMediaCommentById(commentId).orElse(null);
         if (mediaComment == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -126,11 +129,11 @@ public class AccessControl {
     // It is not !checkMediaCommentOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkMediaCommentNotOwner(HttpServletRequest request, int commentId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        MediaComment mediaComment = commentService.getMediaCommentById(commentId).orElse(null);
+        final MediaComment mediaComment = commentService.getMediaCommentById(commentId).orElse(null);
         if (mediaComment == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -139,11 +142,11 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListCommentOwner(HttpServletRequest request, int commentId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        ListComment listComment = commentService.getListCommentById(commentId).orElse(null);
+        final ListComment listComment = commentService.getListCommentById(commentId).orElse(null);
         if (listComment == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -153,11 +156,11 @@ public class AccessControl {
     // It is not !checkListCommentOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkListCommentNotOwner(HttpServletRequest request, int commentId) {
-        UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromRequest(request);
         if (userDetails == null) {
             return false;
         }
-        ListComment listComment = commentService.getListCommentById(commentId).orElse(null);
+        final ListComment listComment = commentService.getListCommentById(commentId).orElse(null);
         if (listComment == null) {
             return true; // Jersey will throw 404 Response
         }
@@ -169,7 +172,6 @@ public class AccessControl {
         if (token == null) {
             return null;
         }
-
         return jwtTokenUtil.parseToken(token);
     }
 
@@ -177,7 +179,6 @@ public class AccessControl {
         if (header == null || !header.startsWith("Bearer ")) {
             return null;
         }
-
         return header.split(" ")[1].trim();
     }
 }

@@ -5,7 +5,7 @@ public class ErrorValidationDto {
     private String attribute;
     private String message;
 
-    public static ErrorValidationDto fromValidationError(String attribute, String message){
+    public static ErrorValidationDto fromValidationError(String attribute, String message) {
         ErrorValidationDto errorValidationDto = new ErrorValidationDto();
         errorValidationDto.attribute = attribute;
         errorValidationDto.message = message;

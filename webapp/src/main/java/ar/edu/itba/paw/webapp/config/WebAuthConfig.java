@@ -44,6 +44,8 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
  * https://github.com/Yoh0xFF/java-spring-security-example
  *
  * Endpoints: https://docs.google.com/spreadsheets/d/12-d4w7wpwGuRHetUvtA7HINCAAQFAsUD5CVlg7ucaQ8/edit?usp=sharing
+ *
+ * Do not execute Reformat Code
  */
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
 @EnableWebSecurity
@@ -55,10 +57,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
     @Autowired
-    private AccessControl accessControl;
+    private AccessControl accessControl; //Ignore Private field 'accessControl' is assigned but never accessed
 
     /**
      * Access control methods
+     * Ignore warnings.
      */
     // username is equal to authenticated username:
     private static final String ACCESS_CONTROL_CHECK_USER = "@accessControl.checkUser(request, #username)";
@@ -202,9 +205,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * ListComments Controller
                  */
                 .antMatchers(HttpMethod.DELETE, "lists-comments/{id}")
-                .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
+                    .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
                 .antMatchers(HttpMethod.POST, "lists-comments/{id}/reports")
-                .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
+                    .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
 
                 /**
                  * ListCommentReport Controller
@@ -224,9 +227,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * MediaCommentController
                  */
                 .antMatchers(HttpMethod.DELETE, "media-comments/{id}")
-                .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
+                    .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
                 .antMatchers(HttpMethod.POST, "media-comments/{id}/reports")
-                .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
+                    .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
 
 
                 /**
@@ -257,7 +260,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .hasRole(MOD)
 
                 .antMatchers(HttpMethod.POST, "/users/{username}/**")
-                .access(ACCESS_CONTROL_CHECK_USER)
+                    .access(ACCESS_CONTROL_CHECK_USER)
 
                 .antMatchers(HttpMethod.DELETE, "/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
@@ -268,17 +271,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users/{username}/notifications", "/users/{username}/collab-requests")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**")
+                    .permitAll()
 
+                // Enable CORS
+                .and().cors()
                 // Disable CSRF
-                .and().cors().and().csrf().disable()
+                .and().csrf().disable()
 
                 // Add JWT Token Filter
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().
                 antMatchers("/resources/**"); //Apago SpringSecurity para los assets publicos
     }

@@ -4,7 +4,7 @@ public class ErrorDto {
 
     private String message;
 
-    public static ErrorDto fromErrorMsg(String message){
+    public static ErrorDto fromErrorMsg(String message) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.message = message;
         return errorDto;
