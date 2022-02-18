@@ -24,10 +24,12 @@ export default function App() {
         userService.getUser("pau")
             .then(items => {
                 if (mountedUser.current) {
-                    localStorage.setItem("user",JSON.stringify(items));
+                    localStorage.setItem("user", JSON.stringify(items));
                 }
             })
-        return () => mountedUser.current = false;
+        return () => {
+            mountedUser.current = false;
+        }
     }, []);
 
     return (

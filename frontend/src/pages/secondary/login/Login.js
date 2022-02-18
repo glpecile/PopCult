@@ -3,6 +3,7 @@ import {Navigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
+import {StatusCodes} from "http-status-codes";
 
 function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
@@ -16,26 +17,26 @@ function Login() {
     const [logInState, setLogInState] = useState(false);
     const [loginCredentials, setCredentials] = useState({username: '', password: ''});
 
+    const login = async (username, password, mountedUser) => {
+        try {
+            const key = await UserService.login({username, password})
+            if (mountedUser) {
+                setErrorMessageDisplay(false);
+                setLogInState(true);
+                localStorage.setItem("userAuthToken", JSON.stringify(key));
+            }
+        } catch (error) {
+            console.log(error.response);
+            setErrorMessage();
+        }
+    }
+
     useEffect(() => {
         let mountedUser = true;
-        mountedUser = true;
         if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
             const username = loginCredentials.username;
             const password = loginCredentials.password;
-
-            UserService.login({username, password})
-                .then(key => {
-                    if (mountedUser) {
-                        console.log(key);
-                        setErrorMessageDisplay(false);
-                        if (key===null){
-                            setError();
-                        }else{
-                        //save key local storage
-                        setLogInState(true);
-                        }
-                    }
-                })
+            login(username, password, mountedUser);
         }
         return () => {
             mountedUser = false;
@@ -58,18 +59,19 @@ function Login() {
 
     };
 
-    const setError = () =>{
+    const setErrorMessage = () => {
         setErrorMessageDisplay(true);
-        setTimeout(()=>{
+        setTimeout(() => {
             setErrorMessageDisplay(false);
-        },5000);
+        }, 5000);
     }
+
     const submitHandler = (event) => {
         event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
             setCredentials({username: enteredUsername, password: enteredPassword});
-        }else{
-            setError();
+        } else {
+            setErrorMessage();
         }
     };
 
