@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
+import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
@@ -13,11 +15,11 @@ import java.util.Optional;
 
 public interface ReportDao {
 
-    ListReport reportList(MediaList mediaList, User reportee, String report);
+    ListReport reportList(MediaList mediaList, User reporter, String report) throws ListAlreadyReportedException;
 
-    ListCommentReport reportListComment(ListComment listComment, User reportee, String report);
+    ListCommentReport reportListComment(ListComment listComment, User reporter, String report) throws CommentAlreadyReportedException;
 
-    MediaCommentReport reportMediaComment(MediaComment mediaComment, User reportee, String report);
+    MediaCommentReport reportMediaComment(MediaComment mediaComment, User reporter, String report) throws CommentAlreadyReportedException;
 
     Optional<ListReport> getListReportById(int reportId);
 

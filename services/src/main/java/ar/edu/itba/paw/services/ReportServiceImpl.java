@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
+import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.comment.ListComment;
@@ -38,61 +40,80 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ModeratorService moderatorService;
 
+    /**
+     * A diferencia de todas las funciones que crean entidades y retornan la entidad,
+     * en este caso se retorna Optional debido a que dependiendo si el usuario es o no
+     * moderador, el contenido directamente se elimina y se informa al usuario.
+     * Si el usuario es moderador no se crea un reporte, por ende se retorna un Optional.empty().
+     * Si el usuario no es moderador, se crea el reporta y se retorna el Optional correspondiente.
+     */
     @Transactional
     @Override
-    public void reportList(MediaList mediaList, String report) {
+    public Optional<ListReport> reportList(MediaList mediaList, String report) throws ListAlreadyReportedException {
+        ListReport listReport = null;
         if (moderatorService.principalIsMod()) {
             listsService.deleteList(mediaList);
             userService.strikeUser(mediaList.getUser());
             sendDeletedListEmail(mediaList.getUser(), mediaList, report);
         } else {
-            userService.getCurrentUser().ifPresent(reportee -> {
-                reportDao.reportList(mediaList, reportee, report);
-                sendReportCreatedEmail(reportee, report);
-            });
+            Optional<User> user = userService.getCurrentUser();
+            if(user.isPresent()) {
+                listReport = reportDao.reportList(mediaList, user.get(), report);
+                sendReportCreatedEmail(user.get(), report);
+            }
         }
+        return Optional.ofNullable(listReport);
     }
 
     @Transactional
     @Override
-    public void reportListComment(ListComment comment, String report) {
+    public Optional<ListCommentReport> reportListComment(ListComment comment, String report) throws CommentAlreadyReportedException {
+        ListCommentReport listCommentReport = null;
         if (moderatorService.principalIsMod()) {
             commentService.deleteCommentFromList(comment);
             userService.strikeUser(comment.getUser());
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
-            userService.getCurrentUser().ifPresent(reportee -> {
-                reportDao.reportListComment(comment, reportee, report);
-                sendReportCreatedEmail(reportee, report);
-            });
+            Optional<User> user = userService.getCurrentUser();
+            if(user.isPresent()) {
+                listCommentReport = reportDao.reportListComment(comment, user.get(), report);
+                sendReportCreatedEmail(user.get(), report);
+            }
         }
+        return Optional.ofNullable(listCommentReport);
     }
 
     @Transactional
     @Override
-    public void reportMediaComment(MediaComment comment, String report) {
+    public Optional<MediaCommentReport> reportMediaComment(MediaComment comment, String report) throws CommentAlreadyReportedException {
+        MediaCommentReport mediaCommentReport = null;
         if (moderatorService.principalIsMod()) {
             commentService.deleteCommentFromMedia(comment);
             userService.strikeUser(comment.getUser());
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
-            userService.getCurrentUser().ifPresent(reportee -> {
-                reportDao.reportMediaComment(comment, reportee, report);
-                sendReportCreatedEmail(reportee, report);
-            });
+            Optional<User> user = userService.getCurrentUser();
+            if(user.isPresent()) {
+                mediaCommentReport = reportDao.reportMediaComment(comment, user.get(), report);
+                sendReportCreatedEmail(user.get(), report);
+            }
         }
+        return Optional.ofNullable(mediaCommentReport);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ListReport> getListReportById(int reportId) {
         return reportDao.getListReportById(reportId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ListCommentReport> getListCommentReportById(int reportId) {
         return reportDao.getListCommentReportById(reportId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<MediaCommentReport> getMediaCommentReportById(int reportId) {
         return reportDao.getMediaCommentReportById(reportId);
@@ -165,16 +186,16 @@ public class ReportServiceImpl implements ReportService {
         sendDeletedCommentEmail(mediaCommentReport.getComment().getUser(), mediaCommentReport.getComment(), mediaCommentReport.getReport());
     }
 
-    private void sendReportCreatedEmail(User user, String report) {
-        emailService.sendReportCreatedEmail(user, report, LocaleContextHolder.getLocale());
+    private void sendReportCreatedEmail(User reporter, String report) {
+        emailService.sendReportCreatedEmail(reporter, report, LocaleContextHolder.getLocale());
     }
 
-    private void sendReportRejectedEmail(User reportee, String report) {
-        emailService.sendReportRejectedEmail(reportee, report, LocaleContextHolder.getLocale());
+    private void sendReportRejectedEmail(User reporter, String report) {
+        emailService.sendReportRejectedEmail(reporter, report, LocaleContextHolder.getLocale());
     }
 
-    private void sendReportApprovedEmail(User reportee, String report) {
-        emailService.sendReportApprovedEmail(reportee, report, LocaleContextHolder.getLocale());
+    private void sendReportApprovedEmail(User reporter, String report) {
+        emailService.sendReportApprovedEmail(reporter, report, LocaleContextHolder.getLocale());
     }
 
     private void sendDeletedListEmail(User user, MediaList mediaList, String report) {

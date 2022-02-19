@@ -10,8 +10,12 @@ VALUES (5, 'mod@request.com', 'modRequestUser', 'password', true, true, 0, null,
 
 INSERT INTO listcomment(commentid, userid, listid, description, date)
 VALUES (2, 4, 2, 'List Comment', current_date);
+INSERT INTO listcomment(commentid, userid, listid, description, date)
+VALUES (3, 4, 2, 'List Comment 2', current_date);
 INSERT INTO mediacomment(commentid, userid, mediaid, description, date)
 VALUES (2, 4, 1, 'Media Comment', current_date);
+INSERT INTO mediacomment(commentid, userid, mediaid, description, date)
+VALUES (3, 4, 1, 'Media Comment 2', current_date);
 
 INSERT INTO collaborative(collabid, listid, collaboratorid, accepted)
 VALUES (2, 2, 4, false);
@@ -28,11 +32,11 @@ INSERT INTO modrequests(requestid, userid, date)
 VALUES (2, 5, current_timestamp);
 
 INSERT INTO listreport(reportid, listid, reporteeid, report, date)
-VALUES (2, 2, 4, 'Report', current_timestamp);
+VALUES (2, 3, 4, 'Report', current_timestamp);
 INSERT INTO listcommentreport(reportid, commentid, reporteeid, report, date)
-VALUES (2, 2, 4, 'Report', current_timestamp);
+VALUES (2, 3, 4, 'Report', current_timestamp);
 INSERT INTO mediacommentreport(reportid, commentid, reporteeid, report, date)
-VALUES (2, 2, 4, 'Report', current_timestamp);
+VALUES (2, 3, 4, 'Report', current_timestamp);
 
 INSERT INTO towatchmedia(watchedmediaid, userid, mediaid, watchdate)
 VALUES (2, 4, 2, null); --TO WATCH

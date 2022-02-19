@@ -87,7 +87,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
-        if (userCollaboratesInList(mediaList, user) || user.equals(mediaList.getUser())){
+        if (userCollaboratesInList(mediaList, user) || user.equals(mediaList.getUser())) {
             throw new UserAlreadyCollaboratesInListException();
         }
         em.persist(new Request(user, mediaList, true));
@@ -101,11 +101,11 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
-    public void addCollaborators(MediaList mediaList, List<User> users){
+    public void addCollaborators(MediaList mediaList, List<User> users) {
         for (User user : users) {
             try {
                 addCollaborator(mediaList, user);
-            } catch (UserAlreadyCollaboratesInListException e){
+            } catch (UserAlreadyCollaboratesInListException e) {
                 LOGGER.error("User {} already collaborates in medialist {}.", user.getUsername(), mediaList.getMediaListId());
             }
         }
