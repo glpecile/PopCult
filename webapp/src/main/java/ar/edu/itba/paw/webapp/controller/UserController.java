@@ -348,7 +348,7 @@ public class UserController {
     public Response getUserFavoriteMedia(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        final  User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         final PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page, pageSize);
 
@@ -422,7 +422,7 @@ public class UserController {
                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        final  PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, page, pageSize);
+        final PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, page, pageSize);
 
         if (watchedMedia.getElements().isEmpty()) {
             LOGGER.info("GET /users/{}/watched-media: Returning empty list.", username);
@@ -523,8 +523,8 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response isToWatchMedia(@PathParam("username") String username,
                                    @PathParam("mediaId") int mediaId) {
-        final  User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        final  Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
         if (!watchService.isToWatch(media, user)) {
             LOGGER.info("GET /users/{}/to-watch-media/{}: media {} is not to watch by {}.", username, mediaId, mediaId, username);
@@ -568,6 +568,42 @@ public class UserController {
     /**
      * Favorite Lists
      */
+    @GET
+    @Path("/{username}/favorite-lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserFavoriteLists(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        //TODO
+        return null;
+    }
+
+    @GET
+    @Path("/{username}/favorite-lists/{list-id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response isFavoriteList(@PathParam("username") String username,
+                                   @PathParam("list-id") int listId) {
+        //TODO
+        return null;
+    }
+
+    @PUT
+    @Path("/{username}/favorite-lists/{list-id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response addListToFavorites(@PathParam("username") String username,
+                                       @PathParam("list-id") int listId) {
+        //TODO
+        return null;
+    }
+
+    @DELETE
+    @Path("/{username}/favorite-lists/{list-id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response removeListFromFavorites(@PathParam("username") String username,
+                                            @PathParam("list-id") int listId) {
+        //TODO
+        return null;
+    }
 
     /**
      * Notifications
@@ -594,5 +630,18 @@ public class UserController {
 
         LOGGER.info("GET /users/{}/notifications: Returning page {} with {} results.", username, notifications.getCurrentPage(), notifications.getElements().size());
         return response.build();
+    }
+
+    /**
+     * Collab Requests
+     */
+    @GET
+    @Path("/{username}/notifications")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserCollaborationRequests(@PathParam("username") String username,
+                                                 @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                                 @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        //TODO
+        return null;
     }
 }
