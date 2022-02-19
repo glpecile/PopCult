@@ -74,6 +74,16 @@ public class CollaborativeHibernateDaoTest {
     }
 
     @Rollback
+    @Test
+    public void testAddCollaborator() throws UserAlreadyCollaboratesInListException {
+        collaborativeHibernateDao.addCollaborator(mediaList, user);
+
+        em.flush();
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, REQUEST_TABLE, String.format("listid = %d AND collaboratorid = %d", mediaList.getMediaListId(), user.getUserId())));
+    }
+
+    @Rollback
     @Test(expected = UserAlreadyCollaboratesInListException.class)
     public void testAddAlreadyExistsCollaborator() throws UserAlreadyCollaboratesInListException {
         MediaList canEditList = InstanceProvider.getCanEditMediaList();
