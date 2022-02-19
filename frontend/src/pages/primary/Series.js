@@ -1,5 +1,6 @@
 import MediaSlider from "../../components/media/MediaSlider";
 import {useTranslation} from "react-i18next";
+import {Helmet} from "react-helmet";
 
 const DUMMY_DATA = [
     {
@@ -40,8 +41,11 @@ function Series() {
     const [t] = useTranslation();
     return (
         <section>
+            <Helmet>
+                <title>{t('series_title')}</title>
+            </Helmet>
             <h4 className="font-bold text-2xl pt-2">
-                {t('popular_series')}
+                {t('series_popular')}
             </h4>
             <MediaSlider media={DUMMY_DATA}/>
         </section>

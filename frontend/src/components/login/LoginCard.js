@@ -1,9 +1,14 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {Helmet} from "react-helmet";
 
 function LoginCard(props) {
     const [t] = useTranslation();
     return (
+        <>
+            <Helmet>
+                <title>{t('login_title')}</title>
+            </Helmet>
             <div className="flex-grow space-y-2">
                 {/*Logo and card title*/}
                 <Link className="flex justify-center items-center pt-16" to='/'>
@@ -16,12 +21,14 @@ function LoginCard(props) {
                     {props.children}
                 </div>
                 <div className="flex justify-center">
-                    <Link className="text-white text-center text-sm hover:text-purple-900 uppercase py-2 transition duration-500 ease-in-out transform hover:translate-y-0.5 hover:scale-105"
-                      to='/register'>
+                    <Link
+                        className="text-white text-center text-sm uppercase py-2 transition duration-250 ease-in-out transform hover:translate-y-0.5 hover:scale-105"
+                        to='/register'>
                         {t('login_sign_up')}
                     </Link>
                 </div>
             </div>
+        </>
     );
 }
 

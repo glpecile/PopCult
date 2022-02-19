@@ -44,25 +44,24 @@ const SettingsUserProfile = () => {
             (event.target.value.localeCompare(enteredRepeatedPassword) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
         }
     };
-    
+
     const RepeatedPasswordChangeHandler = (event) => {
         setEnteredRepeatedPassword(event.target.value);
         (enteredPassword.localeCompare(event.target.value) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
     };
     const submitHandler = (event) => {
         event.preventDefault();
-        if(changePasswordActive){
+        if (changePasswordActive) {
             if (!(nameError || enteredPasswordError || enteredRepeatedPasswordError)) {
                 //    aca se estaria cambiando la contrasenia
             }
-        }else if (!(nameError)) {
+        } else if (!(nameError)) {
             const userData = {
                 name: currentName, username: currentUsername, image: currentImage
             };
             user.onSaveUserData(userData);
         }
     };
-    
 
     return (<form className="g-3 p-4 my-8 bg-white shadow-lg rounded-lg" onSubmit={submitHandler} noValidate={true}>
         <div className="flex flex-col justify-center items-center">
@@ -167,36 +166,40 @@ const SettingsUserProfile = () => {
         </div>
 
         {/*Buttons */}
-        <div className="flex flex-wrap justify-between pt-3">
-            <div className="flex space-x-3">
-                {/*change password*/}
+        <div className="pt-3 gap-2.5 flex flex-wrap justify-around">
+            {/*change password*/}
+            <Link to={'/#'}>
                 <button type="button"
-                        className="btn rounded my-2 bg-gray-300 group hover:bg-purple-400 font-semibold hover:text-white text-gray-700"
+                        className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-purple-400 hover:shadow-purple-500 font-semibold hover:text-white text-gray-700"
                         onClick={() => setChangePassword(!changePasswordActive)}>
                     <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
                 </button>
-                {/*delete user*/}
+            </Link>
+            {/*delete user*/}
+            <Link to={'/#'}>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                        className="btn my-2 bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white">
+                        className="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white">
                     <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
                     {t('profile_settings_deleteUser')}
                 </button>
-            </div>
-            <div className="flex space-x-3">
-                <Link to={'/user/' + currentUsername} className='mr-3'>
-                    <button
-                        className="btn bg-gray-300 group hover:bg-yellow-400 text-gray-700 font-semibold hover:text-white my-2">
-                        <i className="fa fa-trash group-hover:text-white mr-2"/>
-                        {t('discard_changes')}
-                    </button>
-                </Link>
+            </Link>
+            {/*Discard changes*/}
+            <Link to={'/user/' + currentUsername}>
+                <button
+                    className="btn bg-gray-300 shadow-md group hover:bg-yellow-400 hover:shadow-yellow-300 text-gray-700 font-semibold hover:text-white my-2">
+                    <i className="fa fa-trash group-hover:text-white mr-2"/>
+                    {t('discard_changes')}
+                </button>
+            </Link>
+            {/*Save changes*/}
+            <Link to={'/#'}>
                 <button type="submit"
-                        className={(nameError ? "disabled " : "") + "btn bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white my-2"}>
+                        className={(nameError ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
                     <i className="fas fa-check group-hover:text-white mr-2"/>
                     {t('save_changes')}
                 </button>
-            </div>
+            </Link>
         </div>
     </form>);
 }
