@@ -18,7 +18,7 @@ INSERT INTO mediacomment(commentid, userid, mediaid, description, date)
 VALUES (3, 4, 1, 'Media Comment 2', current_date);
 
 INSERT INTO collaborative(collabid, listid, collaboratorid, accepted)
-VALUES (2, 2, 4, false);
+VALUES (3, 2, 4, false);
 
 INSERT INTO favoritemedia(userid, mediaid)
 VALUES (4, 2);
@@ -26,7 +26,7 @@ INSERT INTO favoritelists(userid, medialistid)
 VALUES (4, 3);
 
 INSERT INTO collaborative(collabid, listid, collaboratorid, accepted)
-VALUES (3, 3, 4, true);
+VALUES (4, 3, 4, true);
 
 INSERT INTO modrequests(requestid, userid, date)
 VALUES (2, 5, current_timestamp);
@@ -42,3 +42,22 @@ INSERT INTO towatchmedia(watchedmediaid, userid, mediaid, watchdate)
 VALUES (2, 4, 2, null); --TO WATCH
 INSERT INTO towatchmedia(watchedmediaid, userid, mediaid, watchdate)
 VALUES (3, 4, 3, current_timestamp);  --WATCHED
+
+ALTER SEQUENCE collaborative_collabid_seq RESTART WITH 100;
+ALTER SEQUENCE commentnotifications_notificationid_seq RESTART WITH 100;
+-- ALTER SEQUENCE crew_crewid_seq RESTART WITH 100;
+-- ALTER SEQUENCE director_directorid_seq RESTART WITH 100;
+-- ALTER SEQUENCE genre_genreid_seq RESTART WITH 100;
+ALTER SEQUENCE image_imageid_seq RESTART WITH 100;
+ALTER SEQUENCE listcomment_commentid_seq RESTART WITH 100;
+ALTER SEQUENCE listcommentreport_reportid_seq RESTART WITH 100;
+ALTER SEQUENCE listreport_reportid_seq RESTART WITH 100;
+-- ALTER SEQUENCE media_mediaid_seq RESTART WITH 100;
+ALTER SEQUENCE mediacomment_commentid_seq RESTART WITH 100;
+ALTER SEQUENCE mediacommentreport_reportid_seq RESTART WITH 100;
+ALTER SEQUENCE medialist_medialistid_seq RESTART WITH 100;
+ALTER SEQUENCE modrequests_requestid_seq RESTART WITH 100;
+-- ALTER SEQUENCE staffmember_staffmemberid_seq RESTART WITH 100;
+-- ALTER SEQUENCE studio_studioid_seq RESTART WITH 100;
+ALTER SEQUENCE towatchmedia_watchedmediaid_seq RESTART WITH 100;
+ALTER SEQUENCE users_userid_seq RESTART WITH 100;
