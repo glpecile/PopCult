@@ -15,11 +15,11 @@ function Layout(props) {
     }, [location]);
 
     return <>
+        <Helmet>
+            <title>{t('default_title')}</title>
+        </Helmet>
         {layoutVisibility &&
-            (<>
-                <Helmet>
-                    <title>{t('default_title')}</title>
-                </Helmet>
+            (
                 <div className="bg-gray-50">
                     <div className="flex flex-col justify-between min-h-screen">
                         <Navbar/>
@@ -29,15 +29,18 @@ function Layout(props) {
                         <Footer styleName="text-slate-900"/>
                     </div>
                 </div>
-            </>)
+            )
         }
         {!layoutVisibility &&
-            <div className="bg-gradient-to-r from-amber-500 to-purple-900">
-                <div className="flex flex-col justify-between min-h-screen">
-                    <main>{props.children}</main>
-                    <Footer styleName="text-slate-50"/>
+            (
+                <div className="bg-gradient-to-r from-amber-500 to-purple-900">
+                    <div className="flex flex-col justify-between min-h-screen">
+                        <main>{props.children}</main>
+                        <Footer styleName="text-slate-50"/>
+                    </div>
                 </div>
-            </div>}
+            )
+        }
     </>
 }
 
