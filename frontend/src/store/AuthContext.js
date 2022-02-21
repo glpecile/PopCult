@@ -14,7 +14,7 @@ export const AuthContextProvider = (props) => {
     const [isLoggedIn, setLoggedIn] = useState(localStorage.hasOwnProperty("userAuthToken"));
     const token = isLoggedIn ? JSON.parse(localStorage.getItem("userAuthToken")) : '';
     const [authKey, setAuthKey] = useState(token);
-    const [username, setUsername] = useState(jwtDecode(token).sub);
+    const [username, setUsername] = useState(isLoggedIn? jwtDecode(token).sub: '');
 
     const logoutHandler = () => {
         setLoggedIn(false);

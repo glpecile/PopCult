@@ -8,6 +8,7 @@ const userApi = (() => {
     const getUser = (username) => {
         return api.get(`/users/${username}`);
     }
+
     const editUser = (username) => {
         return api.put(`users/${username}`);
     }
@@ -17,6 +18,7 @@ const userApi = (() => {
     }
 
     return {login, getUser, editUser, deleteUser};
+
 })();
 
 export default userApi;
