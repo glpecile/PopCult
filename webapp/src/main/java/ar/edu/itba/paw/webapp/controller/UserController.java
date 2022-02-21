@@ -636,7 +636,7 @@ public class UserController {
      * Collab Requests
      */
     @GET
-    @Path("/{username}/notifications")
+    @Path("/{username}/collab-requests")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getUserCollaborationRequests(@PathParam("username") String username,
                                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
