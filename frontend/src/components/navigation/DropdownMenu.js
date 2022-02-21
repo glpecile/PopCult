@@ -30,12 +30,12 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to={'/'}>
+                    <NavLink className="dropdown-item" to={'/user/a'}>
                         {t('nav_my_lists')}
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to={'/'}>
+                    <NavLink className="dropdown-item" to={'/user/b'}>
                         {t('nav_notifications')}
                     </NavLink>
                 </li>
@@ -45,7 +45,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to={'/login'} >
+                    <NavLink className="dropdown-item" to='/login' onClick={authContext.onLogout}>
                         {t('nav_sign_out')}
                     </NavLink>
                 </li>

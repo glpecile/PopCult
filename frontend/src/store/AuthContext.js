@@ -4,29 +4,40 @@ import jwtDecode from "jwt-decode";
 
 const AuthContext = React.createContext({
     isLoggedIn: false,
-    onLogout: () => {},
-    onLogin: (authKey, username) => {},
+    onLogout: () => {
+    },
+    onLogin: (authKey, username) => {
+    },
     authKey: '',
     username: ''
 });
 
 export const AuthContextProvider = (props) => {
     const [isLoggedIn, setLoggedIn] = useState(localStorage.hasOwnProperty("userAuthToken"));
-    const token = isLoggedIn ? JSON.parse(localStorage.getItem("userAuthToken")) : '';
-    const [authKey, setAuthKey] = useState(token);
-    const [username, setUsername] = useState(isLoggedIn? jwtDecode(token).sub: '');
+    console.log("is logged in: " + isLoggedIn);
+    const [authKey, setAuthKey] = useState(JSON.parse(localStorage.getItem("userAuthToken")));
+    const [username, setUsername] = useState(() => {
+        const token = JSON.parse(localStorage.getItem("userAuthToken"));
+        try {
+            return jwtDecode(token).sub;
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
     const logoutHandler = () => {
+        console.log("logging out");
+        localStorage.removeItem("userAuthToken");
         setLoggedIn(false);
         setAuthKey('');
         setUsername('');
     }
 
     const loginHandler = (authKey, username) => {
+        console.log("logging in");
         setAuthKey(authKey);
         setUsername(username);
         setLoggedIn(true);
-        console.log(username);
     }
 
     return <AuthContext.Provider
