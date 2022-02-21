@@ -7,9 +7,13 @@ const UserService = (function () {
         return res.data;
     }
 
-    // const editUser = async (username) => {
-    //
-    // }
+    const editUser = async ({name}) => {
+        await userApi.editUser({name});
+    }
+
+    const deleteUser = async () => {
+
+    }
 
     const login = async ({username, password}) => {
         const res = await userApi.login({username, password});
@@ -18,6 +22,8 @@ const UserService = (function () {
 
     return {
         getUser,
+        editUser,
+        deleteUser,
         login
     };
 
