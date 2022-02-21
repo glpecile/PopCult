@@ -4,10 +4,10 @@ import {Trans, useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import FadeIn from "../animation/FadeIn";
 
-const SettingsUserProfile = () => {
+const SettingsUserProfile = (user) => {
     const {t} = useTranslation();
+    console.log(user.name, user.username)
 
-    const user = JSON.parse(localStorage.getItem("user"));
     const currentUsername = user.username;
     const currentEmail = user.email;
     const [currentName, setName] = useState(user.name);
@@ -57,7 +57,7 @@ const SettingsUserProfile = () => {
             }
         } else if (!(nameError)) {
             const userData = {
-                name: currentName, username: currentUsername, image: currentImage
+                name: currentName, image: currentImage
             };
             user.onSaveUserData(userData);
         }
@@ -73,7 +73,7 @@ const SettingsUserProfile = () => {
             {/*Profile Pic Row*/}
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
-                     src={currentImage}/>
+                     src={currentImage || ''}/>
 
             </div>
             <input
@@ -105,7 +105,7 @@ const SettingsUserProfile = () => {
                 </label>
                 <input
                     className={"rounded active:none w-full " + (nameError ? " border-2 border-rose-500" : "")}
-                    type='text' value={currentName}
+                    type='text' value={currentName || ''}
                     onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
                     <p className="text-red-500 text-xs italic">
@@ -118,7 +118,7 @@ const SettingsUserProfile = () => {
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_username')}
                 </label>
-                <input className="rounded w-full bg-gray-100" type='text' value={currentUsername} disabled={true}/>
+                <input className="rounded w-full bg-gray-100" type='text' value={currentUsername || ''} disabled={true}/>
             </div>
             {/* email input*/}
             <div className="py-1 text-semibold w-full">
@@ -169,22 +169,18 @@ const SettingsUserProfile = () => {
         <div className="pt-3 gap-2.5 flex flex-wrap justify-between">
             <div className="flex justify-start space-x-2">
                 {/*change password*/}
-                <Link to={'/#'}>
-                    <button type="button"
-                            className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-purple-400 hover:shadow-purple-500 font-semibold hover:text-white text-gray-700"
-                            onClick={() => setChangePassword(!changePasswordActive)}>
-                        <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
-                        {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
-                    </button>
-                </Link>
+                <button type="button"
+                        className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-purple-400 hover:shadow-purple-500 font-semibold hover:text-white text-gray-700"
+                        onClick={() => setChangePassword(!changePasswordActive)}>
+                    <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
+                    {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
+                </button>
                 {/*delete user*/}
-                <Link to={'/#'}>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
                             className="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white">
                         <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
                         {t('profile_settings_deleteUser')}
                     </button>
-                </Link>
             </div>
             <div className="flex justify-end space-x-2">
                 {/*Discard changes*/}
@@ -196,13 +192,11 @@ const SettingsUserProfile = () => {
                     </button>
                 </Link>
                 {/*Save changes*/}
-                <Link to={'/#'}>
-                    <button type="submit"
-                            className={(nameError ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
-                        <i className="fas fa-check group-hover:text-white mr-2"/>
-                        {t('save_changes')}
-                    </button>
-                </Link>
+                <button type="submit"
+                        className={(nameError ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
+                    <i className="fas fa-check group-hover:text-white mr-2"/>
+                    {t('save_changes')}
+                </button>
             </div>
         </div>
     </form>);

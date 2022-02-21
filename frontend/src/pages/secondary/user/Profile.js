@@ -1,35 +1,27 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
-import userService from "../../../services/UserService";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
+import UserContext from "../../../store/UserContext";
 
 
 const Profile = () => {
     let {username} = useParams();
-    const loggedUsername = useContext(AuthContext);
+    const loggedUsername = useContext(AuthContext).username;
     const [userData, setUserData] = useState('');
     const mountedUser = useRef(true);
     const {t} = useTranslation();
+    const userContext = useContext(UserContext);
 
-    const getUser = useCallback(async () => {
-            try {
-                if (mountedUser.current) {
-                    const user = await userService.getUser(username);
-                    setUserData(user);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        [username]);
+    const getUser = userContext.getUser;
+
 
     useEffect(() => {
         mountedUser.current = true;
-        getUser();
+        getUser(mountedUser, username, setUserData);
         return () => {
             mountedUser.current = false
         };

@@ -5,20 +5,19 @@ import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {AuthContextProvider} from "../../store/AuthContext";
 import {Helmet, HelmetProvider} from "react-helmet-async";
+import ContextProviderWrapper from "../../store/ContextProviderWrapper";
 
 function Layout(props) {
     const location = useLocation()
     const [layoutVisibility, setLayoutVisibility] = useState(true);
     const {t} = useTranslation();
-    const helmetContext = {};
 
     useEffect(() => {
         setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register');
     }, [location]);
 
     return (
-        <AuthContextProvider>
-            <HelmetProvider context={helmetContext}>
+        <ContextProviderWrapper>
                 <Helmet>
                     <title>{t('default_title')}</title>
                 </Helmet>
@@ -45,8 +44,7 @@ function Layout(props) {
                         </div>
                     )
                 }
-            </HelmetProvider>
-        </AuthContextProvider>
+        </ContextProviderWrapper>
     );
 }
 
