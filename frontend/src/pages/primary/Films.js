@@ -1,6 +1,6 @@
 import MediaSlider from "../../components/media/MediaSlider";
 import {useTranslation} from "react-i18next";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const DUMMY_DATA = [
     {

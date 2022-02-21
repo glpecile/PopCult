@@ -3,7 +3,7 @@ import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
 import {useContext, useEffect, useRef, useState} from "react";
 import userService from "../../../services/UserService";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
 

@@ -1,7 +1,7 @@
 import SettingsUserProfile from "../../../components/profile/SettingsUserProfile";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 
 const DUMMY_USER = {
