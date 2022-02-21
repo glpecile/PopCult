@@ -1,7 +1,7 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import userService from "../../../services/UserService";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
@@ -15,16 +15,17 @@ const Profile = () => {
     const mountedUser = useRef(true);
     const {t} = useTranslation();
 
-    const getUser = async () => {
-        try {
-            if (mountedUser.current) {
-                const user = await userService.getUser(username);
-                setUserData(user);
+    const getUser = useCallback(async () => {
+            try {
+                if (mountedUser.current) {
+                    const user = await userService.getUser(username);
+                    setUserData(user);
+                }
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+        },
+        [username]);
 
     useEffect(() => {
         mountedUser.current = true;
@@ -32,7 +33,7 @@ const Profile = () => {
         return () => {
             mountedUser.current = false
         };
-    }, [username]);
+    }, [username, getUser]);
 
     return (
         <>

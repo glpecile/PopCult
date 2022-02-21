@@ -1,9 +1,10 @@
 import LoginCard from "../../../components/login/LoginCard";
 import {Navigate} from "react-router-dom";
-import {useEffect, useState, useContext, useRef} from "react";
+import {useEffect, useState, useContext, useRef, useCallback} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
+import jwtDecode from "jwt-decode";
 
 function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
@@ -20,6 +21,24 @@ function Login() {
     const [loginCredentials, setCredentials] = useState({username: '', password: ''});
     const authContext = useContext(AuthContext);
 
+    const login = useCallback(async (username, password) => {
+
+            try {
+                const key = await UserService.login({username, password})
+                if (mountedUser.current) {
+                    setErrorMessageDisplay(false);
+                    setLogInState(true);
+                    authContext.onLogin(key, username);
+                    console.log(jwtDecode(key));
+                    localStorage.setItem("userAuthToken", JSON.stringify(key));
+                }
+            } catch (error) {
+                console.log(error.response);
+                setErrorMessage();
+            }
+        },
+        [authContext]);
+
     useEffect(() => {
         mountedUser.current = true;
         if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
@@ -30,22 +49,8 @@ function Login() {
         return () => {
             mountedUser.current = false;
         }
-    }, [loginCredentials]);
+    }, [loginCredentials, authContext, login]);
 
-    const login = async (username, password) => {
-        try {
-            const key = await UserService.login({username, password})
-            if (mountedUser.current) {
-                setErrorMessageDisplay(false);
-                setLogInState(true);
-                authContext.onLogin(key, username);
-                // localStorage.setItem("userAuthToken", JSON.stringify(key));
-            }
-        } catch (error) {
-            console.log(error.response);
-            setErrorMessage();
-        }
-    }
 
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);
