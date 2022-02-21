@@ -10,7 +10,6 @@ const DropdownMenu = () => {
     const [t] = useTranslation();
     return (
         <motion.li whileHover={{scale: 1.1}}
-                   whileTap={{scale: 0.9}}
                    className="z-50 nav-item dropdown">
             <div className="nav-link dropdown-toggle active text-lg lg:text-right"
                  id="navbarDropdownMenuLink"
@@ -25,7 +24,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink className="dropdown-item" to={'/user/'+authContext.username}>
+                    <NavLink className="dropdown-item" to={'/user/' + authContext.username}>
                         {t('nav_profile')}
                     </NavLink>
                 </li>
