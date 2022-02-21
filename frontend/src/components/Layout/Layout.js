@@ -4,6 +4,7 @@ import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import {useTranslation} from "react-i18next";
+import {AuthContextProvider} from "../../store/AuthContext";
 
 function Layout(props) {
     const location = useLocation()
@@ -14,7 +15,7 @@ function Layout(props) {
         setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register');
     }, [location]);
 
-    return <>
+    return <AuthContextProvider>
         <Helmet>
             <title>{t('default_title')}</title>
         </Helmet>
@@ -41,7 +42,7 @@ function Layout(props) {
                 </div>
             )
         }
-    </>
+    </AuthContextProvider>
 }
 
 export default Layout;

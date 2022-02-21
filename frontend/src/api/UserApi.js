@@ -8,7 +8,15 @@ const userApi = (() => {
     const getUser = (username) => {
         return api.get(`/users/${username}`);
     }
-    return {login, getUser};
+    const editUser = (username) => {
+        return api.put(`users/${username}`);
+    }
+
+    const deleteUser = (username) => {
+        return api.delete(`/users/${username}`);
+    }
+
+    return {login, getUser, editUser, deleteUser};
 })();
 
 export default userApi;

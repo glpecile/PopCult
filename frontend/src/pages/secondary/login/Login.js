@@ -1,9 +1,9 @@
 import LoginCard from "../../../components/login/LoginCard";
 import {Navigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext, useRef} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
-import {StatusCodes} from "http-status-codes";
+import AuthContext from "../../../store/AuthContext";
 
 function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
@@ -12,36 +12,40 @@ function Login() {
     const [enteredUsernameError, setUsernameError] = useState(false);
     const [enteredPasswordError, setPasswordError] = useState(false);
     const [errorMessageDisplay, setErrorMessageDisplay] = useState(false);
+    const mountedUser = useRef(true);
+
     const [t] = useTranslation();
 
     const [logInState, setLogInState] = useState(false);
     const [loginCredentials, setCredentials] = useState({username: '', password: ''});
+    const authContext = useContext(AuthContext);
 
-    const login = async (username, password, mountedUser) => {
+    useEffect(() => {
+        mountedUser.current = true;
+        if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
+            const username = loginCredentials.username;
+            const password = loginCredentials.password;
+            login(username, password);
+        }
+        return () => {
+            mountedUser.current = false;
+        }
+    }, [loginCredentials]);
+
+    const login = async (username, password) => {
         try {
             const key = await UserService.login({username, password})
-            if (mountedUser) {
+            if (mountedUser.current) {
                 setErrorMessageDisplay(false);
                 setLogInState(true);
-                localStorage.setItem("userAuthToken", JSON.stringify(key));
+                authContext.onLogin(key, username);
+                // localStorage.setItem("userAuthToken", JSON.stringify(key));
             }
         } catch (error) {
             console.log(error.response);
             setErrorMessage();
         }
     }
-
-    useEffect(() => {
-        let mountedUser = true;
-        if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
-            const username = loginCredentials.username;
-            const password = loginCredentials.password;
-            login(username, password, mountedUser);
-        }
-        return () => {
-            mountedUser = false;
-        }
-    }, [loginCredentials]);
 
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);

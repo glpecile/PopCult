@@ -2,11 +2,13 @@ import {NavLink} from "react-router-dom";
 import DropdownMenu from "./DropdownMenu";
 import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
+import {useContext} from "react";
+import AuthContext from "../../store/AuthContext";
 
 const Navbar = () => {
     const [t] = useTranslation();
     const SwitchOnLoggedUser = () => {
-        const isUserPresent = localStorage.hasOwnProperty("user");
+        const isUserPresent = useContext(AuthContext).isLoggedIn;
 
         return (
             <>

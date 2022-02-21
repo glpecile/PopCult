@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useRef} from "react";
+import React, {Suspense} from "react";
 import {Route, Routes} from "react-router-dom";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
@@ -14,24 +14,8 @@ import Loader from "./pages/secondary/errors/Loader";
 import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Error404 from "./pages/secondary/errors/Error404";
 import Layout from "./components/Layout/Layout";
-import userService from "./services/UserService";
 
 export default function App() {
-    const mountedUser = useRef(true);
-
-    useEffect(() => {
-        mountedUser.current = true;
-        userService.getUser("pau")
-            .then(items => {
-                if (mountedUser.current) {
-                    localStorage.setItem("user", JSON.stringify(items));
-                }
-            })
-        return () => {
-            mountedUser.current = false;
-        }
-    }, []);
-
     return (
         <Suspense fallback={<Loader/>}>
             <Layout>

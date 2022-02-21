@@ -1,17 +1,15 @@
 import userApi from "../api/UserApi"
-import axios from "axios";
 
 const UserService = (function () {
 
     const getUser = async (username) => {
-        const res = await userApi.getUser(username).catch(
-            e => {
-                return axios.isCancel(e) ? e : e.response;
-                //    aca va el manejo de errores
-            }
-        );
+        const res = await userApi.getUser(username);
         return res.data;
     }
+
+    // const editUser = async (username) => {
+    //
+    // }
 
     const login = async ({username, password}) => {
         const res = await userApi.login({username, password});
