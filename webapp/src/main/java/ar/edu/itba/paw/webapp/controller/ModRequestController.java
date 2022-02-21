@@ -61,7 +61,7 @@ public class ModRequestController {
     @PUT
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response setNotificationAsOpened(@PathParam("id") int requestId) {
+    public Response promoteToMod(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.promoteToMod(modRequest.getUser());
@@ -73,7 +73,7 @@ public class ModRequestController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteNotification(@PathParam("id") int requestId) {
+    public Response rejectModRequest(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
         moderatorService.removeModRequest(modRequest);
