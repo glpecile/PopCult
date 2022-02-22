@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.Notification;
+import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.ModRequest;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -641,6 +643,53 @@ public class UserController {
     public Response getUserCollaborationRequests(@PathParam("username") String username,
                                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
                                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        //TODO
+        return null;
+    }
+
+    /**
+     * Recommended Content
+     */
+    @GET
+    @Path("/{username}/recommended-media")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserRecommendedMedia(@PathParam("username") String username,
+                                            @QueryParam("page") @DefaultValue(defaultPageSize) int page,
+                                            @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                                            @QueryParam("type") @NotNull ar.edu.itba.paw.models.media.MediaType mediaType) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Media> recommendedMedia = favoriteService.getRecommendationsBasedOnFavMedia(mediaType, user, page, pageSize);
+
+        if (recommendedMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/recommended-media: Returning empty list", username);
+            return Response.noContent().build();
+        }
+
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);
+
+        LOGGER.info("GET /users/{}/recommended-media: Returning page {} with {} results.", username, recommendedMedia.getCurrentPage(), recommendedMedia.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/recommended-lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserRecommendedLists(@PathParam("username") String username,
+                                            @QueryParam("page") @DefaultValue(defaultPageSize) int page,
+                                            @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> recommendedLists = favoriteService.getRecommendationsBasedOnFavLists(user, page, pageSize);
+
+        if(recommendedLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/recommended-lists: Returning empty list", username);
+            return Response.noContent().build();
+        }
+
         //TODO
         return null;
     }

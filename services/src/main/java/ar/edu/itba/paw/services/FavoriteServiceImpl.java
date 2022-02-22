@@ -82,7 +82,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public PageContainer<MediaList> getRecommendationsBasedOnFavLists(User user, int page, int pageSize) {
         PageContainer<MediaList> recommendations = favoriteDao.getRecommendationsBasedOnFavLists(user, page, pageSize);
         if (recommendations.getTotalCount() < pageSize) {
-            PageContainer<MediaList> filler = favoriteDao.getMostLikedLists(user, 0, pageSize * 2);
+            PageContainer<MediaList> filler = favoriteDao.getMostLikedLists(user, 1, pageSize * 2);
             Set<MediaList> toAdd = new HashSet<>(recommendations.getElements());
             for(MediaList list: filler.getElements()){
                 toAdd.add(list);
@@ -104,7 +104,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public PageContainer<Media> getRecommendationsBasedOnFavMedia(MediaType mediaType, User user, int page, int pageSize) {
         PageContainer<Media> recommendations = favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, user, page, pageSize);
         if (recommendations.getTotalCount() < pageSize) {
-            PageContainer<Media> filler = favoriteDao.getMostLikedMedia(mediaType,0, pageSize * 2);
+            PageContainer<Media> filler = favoriteDao.getMostLikedMedia(mediaType,1, pageSize * 2);
             Set<Media> toAdd = new HashSet<>(recommendations.getElements());
             for(Media media: filler.getElements()){
                 toAdd.add(media);
