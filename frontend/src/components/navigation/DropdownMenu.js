@@ -11,12 +11,13 @@ const DropdownMenu = () => {
     return (
         <motion.li whileHover={{scale: 1.1}}
                    className="z-50 nav-item dropdown">
-            <div className="nav-link dropdown-toggle active text-lg lg:text-right"
-                 id="navbarDropdownMenuLink"
-                 role="button"
-                 data-bs-toggle="dropdown" aria-expanded="false">
+            <motion.div whileTap={{scale: 0.9}}
+                        className="nav-link dropdown-toggle active text-lg lg:text-right"
+                        id="navbarDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                 {authContext.username}
-            </div>
+            </motion.div>
             <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdownMenuLink">
                 <li>
                     <NavLink to='/' className="dropdown-item">
