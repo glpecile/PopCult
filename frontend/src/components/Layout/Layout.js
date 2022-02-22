@@ -35,7 +35,7 @@ function Layout(props) {
                 }
                 {!layoutVisibility &&
                     (
-                        <div className="bg-gradient-to-r from-amber-500 to-purple-900">
+                        <div className="bg-gradient-to-r from-amber-500 to-violet-900">
                             <div className="flex flex-col justify-between min-h-screen">
                                 <main>{props.children}</main>
                                 <Footer styleName="text-slate-50"/>

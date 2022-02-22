@@ -1,6 +1,5 @@
 import {NavLink} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {motion} from "framer-motion";
 import {useContext, useState} from "react";
 import AuthContext from "../../store/AuthContext";
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
@@ -25,23 +24,23 @@ const DropdownMenu = () => {
         setAnchorEl(null);
     };
 
-
     const [t] = useTranslation();
     return (
         <>
-            <motion.div whileTap={{scale: 0.9}}
-                        whileHover={{scale: 1.1}}
-                        className="text-lg lg:text-right p-2"
-                        onClick={handleClick}
-                        aria-controls={open ? 'account-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
+            <div className="flex justify-end nav-item text-lg py-2 pl-2"
+                 onClick={handleClick}
+                 aria-controls={open ? 'account-menu' : undefined}
+                 aria-haspopup="true"
+                 aria-expanded={open ? 'true' : undefined}
             >
-                {authContext.username}{anchorEl ? <ArrowDropUpOutlinedIcon/> : <ArrowDropDownOutlinedIcon/>}
-            </motion.div>
+                <span className="transition duration-200 ease-in-out transform hover:-translate-1 active:scale-90 hover:scale-110">
+                    {authContext.username}
+                </span>
+                {anchorEl ? <ArrowDropUpOutlinedIcon/> : <ArrowDropDownOutlinedIcon/>}
+            </div>
 
             <Menu
-                className="px-2"
+                className="items-center"
                 anchorEl={anchorEl}
                 id="account-menu"
                 open={open}
@@ -51,7 +50,7 @@ const DropdownMenu = () => {
                     elevation: 0,
                     sx: {
                         overflow: 'visible',
-                        filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.32))',
+                        filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.16))',
                         mt: 1.5,
                         '& .MuiAvatar-root': {
                             width: 32,
