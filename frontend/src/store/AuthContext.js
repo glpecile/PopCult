@@ -14,11 +14,12 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-    const [isLoggedIn, setLoggedIn] = useState(localStorage.hasOwnProperty("userAuthToken"));
     const setCurrentUser = useContext(UserContext).setCurrentUser;
-    const [authKey, setAuthKey] = useState(JSON.parse(localStorage.getItem("userAuthToken")));
+    const isInLocalStorage = localStorage.hasOwnProperty("userAuthToken");
+    const [isLoggedIn, setLoggedIn] = useState(isInLocalStorage || sessionStorage.hasOwnProperty("userAuthToken"));
+    const token = isInLocalStorage ? JSON.parse(localStorage.getItem("userAuthToken")) : JSON.parse(sessionStorage.getItem("userAuthToken"))
+    const [authKey, setAuthKey] = useState(token);
     const [username, setUsername] = useState(() => {
-        const token = JSON.parse(localStorage.getItem("userAuthToken"));
         try {
             const username = jwtDecode(token).sub
             setCurrentUser(username);
@@ -30,6 +31,7 @@ export const AuthContextProvider = (props) => {
 
     const logoutHandler = () => {
         localStorage.removeItem("userAuthToken");
+        sessionStorage.removeItem("userAuthToken");
         setLoggedIn(false);
         setAuthKey('');
         setUsername('');
@@ -38,7 +40,7 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {
         let mountedUser = true;
         if (mountedUser)
-        setCurrentUser(username);
+            setCurrentUser(username);
         return () => {
             mountedUser = false
         };

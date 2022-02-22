@@ -29,7 +29,6 @@ const Profile = () => {
             mountedUser.current = false
         };
     }, [getUser, username, loggedUsername, userContext.getCurrentUser]);
-
     return (
         <>
             <Helmet>

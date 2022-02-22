@@ -18,10 +18,10 @@ function Login() {
     const [t] = useTranslation();
 
     const [logInState, setLogInState] = useState(false);
-    const [loginCredentials, setCredentials] = useState({username: '', password: ''});
+    const [loginCredentials, setCredentials] = useState({username: '', password: '', rememberMe: false});
     const authContext = useContext(AuthContext);
 
-    const login = useCallback(async (username, password) => {
+    const login = useCallback(async (username, password, rememberMe) => {
 
             try {
                 const key = await UserService.login({username, password})
@@ -30,7 +30,7 @@ function Login() {
                     setLogInState(true);
                     authContext.onLogin(key, username);
                     console.log(jwtDecode(key));
-                    localStorage.setItem("userAuthToken", JSON.stringify(key));
+                    rememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
                 }
             } catch (error) {
                 console.log(error.response);
@@ -44,7 +44,8 @@ function Login() {
         if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
             const username = loginCredentials.username;
             const password = loginCredentials.password;
-            login(username, password);
+            const rememberMe = loginCredentials.rememberMe;
+            login(username, password, rememberMe);
         }
         return () => {
             mountedUser.current = false;
@@ -78,7 +79,7 @@ function Login() {
     const submitHandler = (event) => {
         event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
-            setCredentials({username: enteredUsername, password: enteredPassword});
+            setCredentials({username: enteredUsername, password: enteredPassword, rememberMe: enteredRememberMe});
         } else {
             setErrorMessage();
         }
