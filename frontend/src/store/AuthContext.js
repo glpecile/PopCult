@@ -39,7 +39,7 @@ export const AuthContextProvider = (props) => {
 
     useEffect(() => {
         let mountedUser = true;
-        if (mountedUser)
+        if (mountedUser && username !== undefined)
             setCurrentUser(username);
         return () => {
             mountedUser = false

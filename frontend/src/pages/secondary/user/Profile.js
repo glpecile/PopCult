@@ -35,7 +35,7 @@ const Profile = () => {
                 <title>{t('profile_title')}</title>
             </Helmet>
             <UserProfile id={userData.username} name={userData.name} username={userData.username}
-                         image={''} isCurrentUser={username.localeCompare(loggedUsername) === 0}/>
+                         image={userData.imageUrl} isCurrentUser={username.localeCompare(loggedUsername) === 0}/>
             <UserTabs username={userData.username} id={userData.username}/>
         </>);
 }
