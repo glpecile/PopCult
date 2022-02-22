@@ -9,6 +9,10 @@ const userApi = (() => {
         return api.get(`/users/${username}`);
     }
 
+    const uploadUserImage = ({username, formData}) => {
+        return api.put(`/users/${username}/image`, {formData: formData});
+    }
+
     const editUser = ({username, name}) => {
         return api.put(`users/${username}`, {name: name});
     }
@@ -17,7 +21,7 @@ const userApi = (() => {
         return api.delete(`/users/${username}`);
     }
 
-    return {login, getUser, editUser, deleteUser};
+    return {login, getUser, editUser, deleteUser, uploadUserImage};
 
 })();
 

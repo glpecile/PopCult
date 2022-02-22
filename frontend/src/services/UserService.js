@@ -21,11 +21,16 @@ const UserService = (function () {
         return res.headers.authorization.split(' ')[1];
     }
 
+    const uploadUserImage = async ({username, formData}) =>{
+        await userApi.uploadUserImage({username: username, formData: formData});
+    }
+
     return {
         getUser,
         editUser,
         deleteUser,
-        login
+        login,
+        uploadUserImage,
     };
 
 })();

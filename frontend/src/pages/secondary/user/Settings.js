@@ -9,17 +9,16 @@ import UserContext from "../../../store/UserContext";
 const Settings = () => {
     const [successfulUpdate, setSuccessfulUpdate] = useState(false);
     const {t} = useTranslation();
-    const userContext = useContext(UserContext);
-    const userData = userContext.getCurrentUser;
+    const userContext = useRef(useContext(UserContext));
+    const userData = userContext.current.currentUser;
     const mountedUser = useRef(true);
-    const editData = userContext.editCurrentUser;
     const [editUserData, setEditUserData] = useState('');
 
     useEffect(() => {
         mountedUser.current = true;
         try {
             if (editUserData.name) {
-                editData(mountedUser, editUserData.name);
+                userContext.current.editCurrentUser(editUserData.name);
                 setSuccessfulUpdate(true);
             }
         } catch (error) {
@@ -28,7 +27,7 @@ const Settings = () => {
         return () => {
             mountedUser.current = false
         };
-    }, [editUserData, editData]);
+    }, [editUserData]);
 
     const updateUserData = (props) => {
         console.log(props.name);
@@ -39,7 +38,7 @@ const Settings = () => {
             <Helmet>
                 <title>{t('settings_title')}</title>
             </Helmet>
-            <SettingsUserProfile name={userData.name} username={userData.username} image={' '}
+            <SettingsUserProfile name={userData.name} username={userData.username} image={userData.imageUrl}
                                  email={userData.email}
                                  onSaveUserData={updateUserData}/>
             {successfulUpdate && <Navigate to={'/user/' + userData.username}/>}

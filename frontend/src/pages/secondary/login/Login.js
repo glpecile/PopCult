@@ -17,7 +17,7 @@ function Login() {
 
     const [t] = useTranslation();
 
-    const [logInState, setLogInState] = useState(false);
+    const [logInState, setLogInState] = useState(localStorage.hasOwnProperty("userAuthToken") || sessionStorage.hasOwnProperty("userAuthToken"));
     const [loginCredentials, setCredentials] = useState({username: '', password: '', rememberMe: false});
     const authContext = useContext(AuthContext);
 

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import React from "react";
 import jwtDecode from "jwt-decode";
 import UserContext from "./UserContext";
@@ -14,16 +14,16 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-    const setCurrentUser = useContext(UserContext).setCurrentUser;
+    const userContext = useRef(useContext(UserContext));
+    const mountedUser = useRef(true);
     const isInLocalStorage = localStorage.hasOwnProperty("userAuthToken");
     const [isLoggedIn, setLoggedIn] = useState(isInLocalStorage || sessionStorage.hasOwnProperty("userAuthToken"));
     const token = isInLocalStorage ? JSON.parse(localStorage.getItem("userAuthToken")) : JSON.parse(sessionStorage.getItem("userAuthToken"))
     const [authKey, setAuthKey] = useState(token);
+
     const [username, setUsername] = useState(() => {
         try {
-            const username = jwtDecode(token).sub
-            setCurrentUser(username);
-            return username;
+            return jwtDecode(token).sub;
         } catch (error) {
             console.log(error);
         }
@@ -38,13 +38,13 @@ export const AuthContextProvider = (props) => {
     }
 
     useEffect(() => {
-        let mountedUser = true;
-        if (mountedUser && username !== undefined)
-            setCurrentUser(username);
+        mountedUser.current= true;
+        if (mountedUser.current && username !== undefined)
+            userContext.current.setCurrentUser(username);
         return () => {
-            mountedUser = false
+            mountedUser.current = false
         };
-    }, [username, setCurrentUser]);
+    }, [username]);
 
     const loginHandler = (authKey, username) => {
         setAuthKey(authKey);

@@ -1,42 +1,52 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
 import UserContext from "../../../store/UserContext";
+import Error404 from "../errors/Error404";
 
 
 const Profile = () => {
     let {username} = useParams();
     const loggedUsername = useContext(AuthContext).username;
+    const [isCurrUser, setIsCurrUser] = useState(username.localeCompare(loggedUsername) === 0);
     const [userData, setUserData] = useState('');
+    const [userError, setUserError] = useState(false);
     const mountedUser = useRef(true);
     const {t} = useTranslation();
-    const userContext = useContext(UserContext);
-
-    const getUser = userContext.getUser;
+    const userContext = useRef(useContext(UserContext));
 
     useEffect(() => {
+        setIsCurrUser(username.localeCompare(loggedUsername) === 0);
+    }, [username, loggedUsername]);
+
+    const getUserData = useCallback((username) => {
+        userContext.current.getUser(username, isCurrUser, setUserData,setUserError);
+    }, [isCurrUser]);
+
+    useEffect(() => {
+        console.log('llamado');
         mountedUser.current = true;
-        if (username.localeCompare(loggedUsername) !== 0) {
-            getUser(mountedUser, username, setUserData);
-        }else{
-            setUserData(userContext.getCurrentUser)
+        if (mountedUser.current){
+            getUserData(username);
         }
         return () => {
             mountedUser.current = false
         };
-    }, [getUser, username, loggedUsername, userContext.getCurrentUser]);
+    }, [username, getUserData]);
+
     return (
-        <>
+        <>{!userError && <>
             <Helmet>
                 <title>{t('profile_title')}</title>
             </Helmet>
             <UserProfile id={userData.username} name={userData.name} username={userData.username}
                          image={userData.imageUrl} isCurrentUser={username.localeCompare(loggedUsername) === 0}/>
-            <UserTabs username={userData.username} id={userData.username}/>
+            <UserTabs username={userData.username} id={userData.username}/> </>}
+            {userError && <Error404/>}
         </>);
 }
 
