@@ -7,8 +7,9 @@ const UserService = (function () {
         return res.data;
     }
 
-    const editUser = async ({name}) => {
-        await userApi.editUser({name});
+    const editUser = async ({username, name}) => {
+        console.log(username, name);
+        await userApi.editUser({username, name});
     }
 
     const deleteUser = async () => {

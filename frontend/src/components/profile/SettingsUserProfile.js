@@ -6,12 +6,9 @@ import FadeIn from "../animation/FadeIn";
 
 const SettingsUserProfile = (user) => {
     const {t} = useTranslation();
-    console.log(user.name, user.username)
 
-    const currentUsername = user.username;
-    const currentEmail = user.email;
-    const [currentName, setName] = useState(user.name);
-    const [currentImage, setUserImage] = useState(user.image);
+    const [currentName, setName] = useState(user.name || '');
+    const [currentImage, setUserImage] = useState(user.image || '');
     const [imageError, setImageError] = useState(false);
     const [nameError, setNameError] = useState(false);
     const [changePasswordActive, setChangePassword] = useState(false);
@@ -53,6 +50,7 @@ const SettingsUserProfile = (user) => {
         event.preventDefault();
         if (changePasswordActive) {
             if (!(nameError || enteredPasswordError || enteredRepeatedPasswordError)) {
+                user.onSaveUserData()
                 //    aca se estaria cambiando la contrasenia
             }
         } else if (!(nameError)) {
@@ -67,7 +65,7 @@ const SettingsUserProfile = (user) => {
         <div className="flex flex-col justify-center items-center">
             <h2 className="text-3xl mb-3">
                 <Trans i18nKey="profile_settings_title">
-                    {{username: currentUsername}}
+                    {{username: user.username}}
                 </Trans>
             </h2>
             {/*Profile Pic Row*/}
@@ -105,7 +103,7 @@ const SettingsUserProfile = (user) => {
                 </label>
                 <input
                     className={"rounded active:none w-full " + (nameError ? " border-2 border-rose-500" : "")}
-                    type='text' value={currentName || ''}
+                    type='text' value={currentName||''}
                     onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
                     <p className="text-red-500 text-xs italic">
@@ -118,14 +116,14 @@ const SettingsUserProfile = (user) => {
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_username')}
                 </label>
-                <input className="rounded w-full bg-gray-100" type='text' value={currentUsername || ''} disabled={true}/>
+                <input className="rounded w-full bg-gray-100" type='text' value={user.username} disabled={true}/>
             </div>
             {/* email input*/}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_email')}
                 </label>
-                <input className="rounded w-full bg-gray-100" type='text' value={currentEmail} disabled={true}/>
+                <input className="rounded w-full bg-gray-100" type='text' value={user.email} disabled={true}/>
             </div>
 
             {/*change password*/}
@@ -184,7 +182,7 @@ const SettingsUserProfile = (user) => {
             </div>
             <div className="flex justify-end space-x-2">
                 {/*Discard changes*/}
-                <Link to={'/user/' + currentUsername}>
+                <Link to={'/user/' + user.username}>
                     <button
                         className="btn bg-gray-300 shadow-md group hover:bg-yellow-400 hover:shadow-yellow-300 text-gray-700 font-semibold hover:text-white my-2">
                         <i className="fa fa-trash group-hover:text-white mr-2"/>

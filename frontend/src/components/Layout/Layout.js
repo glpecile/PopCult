@@ -3,8 +3,7 @@ import Footer from "../navigation/Footer";
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {AuthContextProvider} from "../../store/AuthContext";
-import {Helmet, HelmetProvider} from "react-helmet-async";
+import {Helmet} from "react-helmet-async";
 import ContextProviderWrapper from "../../store/ContextProviderWrapper";
 
 function Layout(props) {

@@ -4,29 +4,35 @@ import {Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import UserContext from "../../../store/UserContext";
-import AuthContext from "../../../store/AuthContext";
 
 
 const Settings = () => {
     const [successfulUpdate, setSuccessfulUpdate] = useState(false);
     const {t} = useTranslation();
-    const authContext = useContext(AuthContext);
     const userContext = useContext(UserContext);
+    const userData = userContext.getCurrentUser;
     const mountedUser = useRef(true);
-    const getUser = userContext.getUser;
-    const username = authContext.username;
-    const [userData, setUserData] = useState('');
+    const editData = userContext.editCurrentUser;
+    const [editUserData, setEditUserData] = useState('');
 
     useEffect(() => {
         mountedUser.current = true;
-        getUser(mountedUser, username, setUserData);
+        try {
+            if (editUserData.name) {
+                editData(mountedUser, editUserData.name);
+                setSuccessfulUpdate(true);
+            }
+        } catch (error) {
+            console.log(error);
+        }
         return () => {
             mountedUser.current = false
         };
-    }, [username, getUser]);
+    }, [editUserData, editData]);
 
     const updateUserData = (props) => {
-        setSuccessfulUpdate(true);
+        console.log(props.name);
+        setEditUserData(props);
     }
     return (
         <>
@@ -34,8 +40,9 @@ const Settings = () => {
                 <title>{t('settings_title')}</title>
             </Helmet>
             <SettingsUserProfile name={userData.name} username={userData.username} image={' '}
+                                 email={userData.email}
                                  onSaveUserData={updateUserData}/>
-            {successfulUpdate && <Navigate to={'/user/'+userData.username}/>}
+            {successfulUpdate && <Navigate to={'/user/' + userData.username}/>}
         </>
     );
 }

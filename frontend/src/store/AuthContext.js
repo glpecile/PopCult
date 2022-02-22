@@ -1,6 +1,7 @@
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import React from "react";
 import jwtDecode from "jwt-decode";
+import UserContext from "./UserContext";
 
 const AuthContext = React.createContext({
     isLoggedIn: false,
@@ -14,27 +15,36 @@ const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) => {
     const [isLoggedIn, setLoggedIn] = useState(localStorage.hasOwnProperty("userAuthToken"));
-    console.log("is logged in: " + isLoggedIn);
+    const setCurrentUser = useContext(UserContext).setCurrentUser;
     const [authKey, setAuthKey] = useState(JSON.parse(localStorage.getItem("userAuthToken")));
     const [username, setUsername] = useState(() => {
         const token = JSON.parse(localStorage.getItem("userAuthToken"));
         try {
-            return jwtDecode(token).sub;
+            const username = jwtDecode(token).sub
+            setCurrentUser(username);
+            return username;
         } catch (error) {
             console.log(error);
         }
     });
 
     const logoutHandler = () => {
-        console.log("logging out");
         localStorage.removeItem("userAuthToken");
         setLoggedIn(false);
         setAuthKey('');
         setUsername('');
     }
 
+    useEffect(() => {
+        let mountedUser = true;
+        if (mountedUser)
+        setCurrentUser(username);
+        return () => {
+            mountedUser = false
+        };
+    }, [username, setCurrentUser]);
+
     const loginHandler = (authKey, username) => {
-        console.log("logging in");
         setAuthKey(authKey);
         setUsername(username);
         setLoggedIn(true);

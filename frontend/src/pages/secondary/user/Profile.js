@@ -18,14 +18,17 @@ const Profile = () => {
 
     const getUser = userContext.getUser;
 
-
     useEffect(() => {
         mountedUser.current = true;
-        getUser(mountedUser, username, setUserData);
+        if (username.localeCompare(loggedUsername) !== 0) {
+            getUser(mountedUser, username, setUserData);
+        }else{
+            setUserData(userContext.getCurrentUser)
+        }
         return () => {
             mountedUser.current = false
         };
-    }, [username, getUser]);
+    }, [getUser, username, loggedUsername, userContext.getCurrentUser]);
 
     return (
         <>

@@ -9,7 +9,7 @@ const userApi = (() => {
         return api.get(`/users/${username}`);
     }
 
-    const editUser = (username, name) => {
+    const editUser = ({username, name}) => {
         return api.put(`users/${username}`, {name: name});
     }
 
