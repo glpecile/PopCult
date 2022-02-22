@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
+import BrandingImg from "./BrandingImg";
 
-const RegisterWrapper = (props) => {
+const RegisterCard = (props) => {
     const [t] = useTranslation();
     return (
         <>
@@ -10,10 +11,8 @@ const RegisterWrapper = (props) => {
                 <title>{t('register_title')}</title>
             </Helmet>
             <div>
-                {/*    Logo and Card Title */}
-                <Link className="flex justify-center items-center pt-4" to='/'>
-                    <img className="w-32 scale-105" src={require("../../images/PopCultLogo.png")} alt="popcult_logo"/>
-                </Link>
+                {/* Logo & Card Title */}
+                <BrandingImg />
                 <h2 className="font-bold text-4xl text-center text-white py-2.5">
                     {t('register_greeting')}
                 </h2>
@@ -26,4 +25,4 @@ const RegisterWrapper = (props) => {
         </>
     )
 }
-export default RegisterWrapper;
+export default RegisterCard;

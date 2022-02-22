@@ -1,4 +1,4 @@
-import RegisterWrapper from "../../../components/login/RegisterWrapper";
+import RegisterCard from "../../../components/login/RegisterCard";
 import RegisterForm from "../../../components/login/RegisterForm";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
@@ -9,10 +9,10 @@ const Register = () => {
         setRegisterState(true);
     }
     return(
-        <RegisterWrapper>
+        <RegisterCard>
             <RegisterForm onSuccessfulRegister={SendRegForm}/>
             {registerState && <Navigate to='/login'/>}
-        </RegisterWrapper>
+        </RegisterCard>
     );
 }
 export default Register;

@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
+import BrandingImg from "./BrandingImg";
 
-function LoginCard(props) {
+const LoginCard = (props) => {
     const [t] = useTranslation();
     return (
         <>
@@ -10,10 +11,8 @@ function LoginCard(props) {
                 <title>{t('login_title')}</title>
             </Helmet>
             <div className="flex-grow space-y-2">
-                {/*Logo and card title*/}
-                <Link className="flex justify-center items-center pt-16" to='/'>
-                    <img className="w-32" src={require("../../images/PopCultLogo.png")} alt="popcult_logo"/>
-                </Link>
+                {/* Logo & Card Title */}
+                <BrandingImg />
                 <h2 className="font-bold text-4xl text-center text-white py-2">
                     {t('login_greeting')}
                 </h2>
@@ -22,7 +21,7 @@ function LoginCard(props) {
                 </div>
                 <div className="flex justify-center">
                     <Link
-                        className="text-white text-center text-sm uppercase py-2 transition duration-250 ease-in-out transform hover:translate-y-0.5 hover:scale-105"
+                        className="text-white text-center text-sm uppercase py-2 transition duration-300 ease-in-out transform hover:translate-y-0.5 hover:scale-105 active:scale-90"
                         to='/register'>
                         {t('login_sign_up')}
                     </Link>
