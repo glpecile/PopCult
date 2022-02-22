@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@mui/icons-material": "^5.4.2",
+    "@mui/material": "^5.4.3",
     "@tailwindcss/forms": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
