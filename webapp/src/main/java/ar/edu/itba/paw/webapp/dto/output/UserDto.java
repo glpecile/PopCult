@@ -35,6 +35,8 @@ public class UserDto {
     private String toWatchMediaUrl;
     private String notificationsUrl;
     private String collabRequestsUrl;
+    private String recommendedMediaUrl;
+    private String recommendedListsUrl;
     private String authenticateUrl;
 
     public static UserDto fromUser(UriInfo url, User user) {
@@ -63,6 +65,8 @@ public class UserDto {
         userDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("to-watch-media").build().toString();
         userDto.notificationsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("notification").build().toString();
         userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
+        userDto.recommendedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-media").build().toString();
+        userDto.recommendedListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-lists").build().toString();
         userDto.authenticateUrl = url.getBaseUriBuilder().path("authenticate").build().toString();
         return userDto;
     }
@@ -253,6 +257,22 @@ public class UserDto {
 
     public void setCollabRequestsUrl(String collabRequestsUrl) {
         this.collabRequestsUrl = collabRequestsUrl;
+    }
+
+    public String getRecommendedMediaUrl() {
+        return recommendedMediaUrl;
+    }
+
+    public void setRecommendedMediaUrl(String recommendedMediaUrl) {
+        this.recommendedMediaUrl = recommendedMediaUrl;
+    }
+
+    public String getRecommendedListsUrl() {
+        return recommendedListsUrl;
+    }
+
+    public void setRecommendedListsUrl(String recommendedListsUrl) {
+        this.recommendedListsUrl = recommendedListsUrl;
     }
 
     public String getAuthenticateUrl() {
