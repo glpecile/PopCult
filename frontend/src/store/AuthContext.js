@@ -1,7 +1,6 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import React from "react";
 import jwtDecode from "jwt-decode";
-import UserContext from "./UserContext";
 
 const AuthContext = React.createContext({
     isLoggedIn: false,
@@ -14,7 +13,6 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-    const userContext = useRef(useContext(UserContext));
     const mountedUser = useRef(true);
     const isInLocalStorage = localStorage.hasOwnProperty("userAuthToken");
     const [isLoggedIn, setLoggedIn] = useState(isInLocalStorage || sessionStorage.hasOwnProperty("userAuthToken"));
@@ -40,7 +38,6 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {
         mountedUser.current= true;
         if (mountedUser.current && username !== undefined)
-            userContext.current.setCurrentUser(username);
         return () => {
             mountedUser.current = false
         };

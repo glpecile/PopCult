@@ -10,7 +10,7 @@ const userApi = (() => {
     }
 
     const uploadUserImage = ({username, formData}) => {
-        return api.put(`/users/${username}/image`, {formData: formData});
+        return api.put(`/users/${username}/image`, formData);
     }
 
     const editUser = ({username, name}) => {

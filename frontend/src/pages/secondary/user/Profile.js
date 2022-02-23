@@ -1,12 +1,12 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
-import UserContext from "../../../store/UserContext";
 import Error404 from "../errors/Error404";
+import UserService from "../../../services/UserService";
 
 
 const Profile = () => {
@@ -17,26 +17,27 @@ const Profile = () => {
     const [userError, setUserError] = useState(false);
     const mountedUser = useRef(true);
     const {t} = useTranslation();
-    const userContext = useRef(useContext(UserContext));
 
     useEffect(() => {
         setIsCurrUser(username.localeCompare(loggedUsername) === 0);
+        setUserError(false);
     }, [username, loggedUsername]);
 
-    const getUserData = useCallback((username) => {
-        userContext.current.getUser(username, isCurrUser, setUserData,setUserError);
-    }, [isCurrUser]);
+    const getUser = async () => {
+        if (username){
+            try {
+                const user = await UserService.getUser(username);
+                setUserData(user);
+            }catch (error){
+                console.log(error);
+                setUserError(true);
+            }
+        }
+    }
 
     useEffect(() => {
-        console.log('llamado');
-        mountedUser.current = true;
-        if (mountedUser.current){
-            getUserData(username);
-        }
-        return () => {
-            mountedUser.current = false
-        };
-    }, [username, getUserData]);
+        getUser();
+    }, [username])
 
     return (
         <>{!userError && <>

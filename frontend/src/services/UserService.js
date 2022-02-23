@@ -8,7 +8,6 @@ const UserService = (function () {
     }
 
     const editUser = async ({username, name}) => {
-        console.log(username, name);
         await userApi.editUser({username, name});
     }
 

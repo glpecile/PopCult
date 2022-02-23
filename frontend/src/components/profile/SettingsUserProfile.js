@@ -7,8 +7,9 @@ import FadeIn from "../animation/FadeIn";
 const SettingsUserProfile = (user) => {
     const {t} = useTranslation();
 
-    const [currentName, setName] = useState(user.name || '');
-    const [currentImage, setUserImage] = useState(user.image || '');
+    const [currentName, setName] = useState(user.name);
+    const [currentImage, setUserImage] = useState(user.image);
+    const [imgBinary, setBinary] = useState(undefined);
     const [imageError, setImageError] = useState(false);
     const [nameError, setNameError] = useState(false);
     const [changePasswordActive, setChangePassword] = useState(false);
@@ -30,6 +31,7 @@ const SettingsUserProfile = (user) => {
             }, 5000);
         } else if (event.target.validity.valid && event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
+            setBinary(img);
             setUserImage(URL.createObjectURL(img));
         }
     }
@@ -50,12 +52,14 @@ const SettingsUserProfile = (user) => {
         event.preventDefault();
         if (changePasswordActive) {
             if (!(nameError || enteredPasswordError || enteredRepeatedPasswordError)) {
-                user.onSaveUserData()
-                //    aca se estaria cambiando la contrasenia
+                const userData = {
+                    name: currentName, image: imgBinary, password: enteredPassword
+                };
+                user.onSaveUserData(userData);
             }
         } else if (!(nameError)) {
             const userData = {
-                name: currentName, image: currentImage
+                name: currentName, imageUrl: imgBinary, password: null
             };
             user.onSaveUserData(userData);
         }
@@ -71,7 +75,7 @@ const SettingsUserProfile = (user) => {
             {/*Profile Pic Row*/}
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
-                     src={currentImage || ''}/>
+                     src={currentImage}/>
 
             </div>
             <input
@@ -103,7 +107,7 @@ const SettingsUserProfile = (user) => {
                 </label>
                 <input
                     className={"rounded active:none w-full " + (nameError ? " border-2 border-rose-500" : "")}
-                    type='text' value={currentName||''}
+                    type='text' value={currentName}
                     onChange={nameChangeHandler} minLength={3} maxLength={100} pattern="[a-zA-Z0-9\s]+"/>
                 {nameError &&
                     <p className="text-red-500 text-xs italic">
