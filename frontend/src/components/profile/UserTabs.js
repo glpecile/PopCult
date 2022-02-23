@@ -1,86 +1,74 @@
 import {useState} from "react";
-import UserLists from "./tabs/UserLists";
-import UserWatchedMedia from "./tabs/UserWatchedMedia";
-import UserFavoriteMedia from "./tabs/UserFavoriteMedia";
-import UserFavoriteLists from "./tabs/UserFavoriteLists";
-import UserToWatchMedia from "./tabs/UserToWatchMedia";
-import {Trans, useTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
+import {Tab, Tabs} from "@mui/material";
 
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`tabpanel-${index}`}
+            aria-labelledby={`tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <div className="p-3">
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function a11yProps(index) {
+    return {
+        id: `tab-${index}`,
+        'aria-controls': `tabpanel-${index}`,
+    };
+}
 
 const UserTabs = (props) => {
     const {t} = useTranslation();
+    const [value, setValue] = useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
-    const [userListsActive, setUserListsActive] = useState(true);
-    const [userFavMediaActive, setUserFavMediaActive] = useState(false);
-    const [userFavListsActive, setUserFavListsActive] = useState(false);
-    const [userWatchedMediaActive, setUserWatchedMediaActive] = useState(false);
-    const [userToWatchMediaActive, setUserToWatchMediaActive] = useState(false);
+    return (
+        <>
+            <Tabs value={value}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="tabs">
+                <Tab label={t('profile_tabs_main', {username: props.username})} {...a11yProps(0)}/>
+                <Tab label={t('profile_tabs_favMedia')} {...a11yProps(1)}/>
+                <Tab label={t('profile_tabs_favLists')} {...a11yProps(2)}/>
+                <Tab label={t('profile_tabs_watchedMedia')} {...a11yProps(3)}/>
+                <Tab label={t('profile_tabs_watchedMedia')} {...a11yProps(4)}/>
+            </Tabs>
 
-    const setTabsActiveFalse = () => {
-        setUserListsActive(false);
-        setUserFavMediaActive(false);
-        setUserFavListsActive(false);
-        setUserWatchedMediaActive(false);
-        setUserToWatchMediaActive(false);
-    }
-    const toReturnValue = (bool, title, setTabActiveTrue) => {
-        return (bool ? (
-            <button
-                className="py-2 px-6 block hover:text-purple-500 focus:outline-none text-purple-500 border-b-2 font-medium border-purple-500">
-                {title}
-            </button>) : (
-            <button onClick={() => {
-                setTabsActiveFalse();
-                setTabActiveTrue(true);
-            }} className="text-gray-600 py-2 px-6 block hover:text-purple-500 focus:outline-none">
-                {title}
-            </button>));
-    }
+            <TabPanel value={value} index={0}>
+                Content 1
+            </TabPanel>
 
-    const Inter = () => {
-        const username = props.username;
-        return (
-            <Trans i18nKey="profile_tabs_main">
-                {{username}}
-            </Trans>)
-    }
-    const UserListsTab = () => {
-        return toReturnValue(userListsActive, <Inter/>, setUserListsActive);
-    }
+            <TabPanel value={value} index={1}>
+                Content 2
+            </TabPanel>
 
-    const UserFavMediaTab = () => {
-        return toReturnValue(userFavMediaActive, t('profile_tabs_favMedia'), setUserFavMediaActive);
-    }
+            <TabPanel value={value} index={2}>
+                Content 3
+            </TabPanel>
 
-    const UserFavListsTab = () => {
-        return toReturnValue(userFavListsActive, t('profile_tabs_favLists'), setUserFavListsActive);
-    }
+            <TabPanel value={value} index={3}>
+                Content 4
+            </TabPanel>
 
-    const UserWatchedMediaTab = () => {
-        return toReturnValue(userWatchedMediaActive, t('profile_tabs_watchedMedia'), setUserWatchedMediaActive);
-    }
-
-    const UserToWatchMediaTab = () => {
-        return toReturnValue(userToWatchMediaActive, t('profile_tabs_watchedMedia'), setUserToWatchMediaActive);
-    }
-    return (<>
-            <div className="flex justify-center items-center bg-transparent py-4">
-                <nav className="flex flex-col sm:flex-row">
-                    <UserListsTab/>
-                    <UserFavMediaTab/>
-                    <UserFavListsTab/>
-                    <UserWatchedMediaTab/>
-                    <UserToWatchMediaTab/>
-
-                </nav>
-            </div>
-            <div className="row">
-                {userListsActive && <UserLists/>}
-                {userFavMediaActive && <UserFavoriteMedia/>}
-                {userFavListsActive && <UserFavoriteLists/>}
-                {userWatchedMediaActive && <UserWatchedMedia/>}
-                {userToWatchMediaActive && <UserToWatchMedia/>}
-            </div>
+            <TabPanel value={value} index={4}>
+                Content 5
+            </TabPanel>
         </>
     );
 }

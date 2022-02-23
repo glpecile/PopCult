@@ -39,7 +39,7 @@
   "settings_image_error": "Parece que la imagen seleccionada es demasiado grande \no no puede ser cargada en este momento.\nPor favor, intenta nuevamente.",
   "username_error": "Los nombres de usuario validos contienen entre 1 y 20\ncaracteres no especiales.",
   "name_error": "Los nombres de usuario contienen entre 3 y 20\ncaracteres no especiales.",
-  "profile_tabs_main": "Listas de <0>{{username}}</0>",
+  "profile_tabs_main": "Listas de {{username}}",
   "profile_tabs_favMedia": "Contenido Favorito",
   "profile_tabs_favLists": "Listas Favoritas",
   "profile_tabs_watchedMedia": "Contenido Visto",
