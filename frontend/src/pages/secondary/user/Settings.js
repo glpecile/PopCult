@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import UserService from "../../../services/UserService";
 import AuthContext from "../../../store/AuthContext";
 import * as PropTypes from "prop-types";
-import Loader from "../errors/Loader";
+import Spinner from "../../../components/animation/Spinner";
 
 
 function Suspense(props) {
@@ -25,6 +25,7 @@ const Settings = () => {
     const mountedEditUser = useRef(true);
     const [toEditData, setToEditData] = useState(undefined);
     const [userData, setUserData] = useState(undefined);
+    const [passwordError, setPasswordError] = useState(false);
     const username = useRef(useContext(AuthContext)).current.username;
 
     const getUser = useCallback(async () => {
@@ -48,33 +49,50 @@ const Settings = () => {
     }, [username, getUser])
 
 
-    useEffect(() => {
-        mountedEditUser.current = true;
-        const editUser = async () => {
-            if (toEditData !== undefined && mountedEditUser.current) {
+    const editUser = useCallback(async () => {
+        if (toEditData !== undefined && mountedEditUser.current) {
+            if ((toEditData.name).localeCompare(userData.name) !== 0) {
                 try {
                     await UserService.editUser({username, name: toEditData.name});
                 } catch (error) {
                     console.log(error);
                 }
-                if (toEditData.imageUrl !== undefined) {
-                    try {
-                        let formData = new FormData();
-                        formData.append('image', toEditData.imageUrl);
-                        await UserService.uploadUserImage({username, formData});
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-                setSuccessfulUpdate(true);
             }
-        };
+            if (toEditData.imageUrl !== undefined) {
+                try {
+                    let formData = new FormData();
+                    formData.append('image', toEditData.imageUrl);
+                    await UserService.uploadUserImage({username, formData});
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            let wrongPass = false;
+            if (toEditData.password !== undefined) {
+                try {
+                    console.log(userData);
+                    await UserService.changeUserPassword({
+                        username,
+                        currentPassword: toEditData.currentPassword,
+                        newPassword: toEditData.password
+                    });
+                } catch (error) {
+                    wrongPass = true;
+                    setPasswordError(true);
+                    console.log(error);
+                }
+            }
+            if (!wrongPass) setSuccessfulUpdate(true);
+        }
+    }, [toEditData, username, userData]);
 
+    useEffect(() => {
+        mountedEditUser.current = true;
         editUser();
         return () => {
             mountedEditUser.current = false;
         }
-    }, [username, toEditData]);
+    }, [username, editUser]);
 
     const updateUserData = (props) => {
         setToEditData(props);
@@ -84,10 +102,10 @@ const Settings = () => {
             <Helmet>
                 <title>{t('settings_title')}</title>
             </Helmet>
-            {userData === undefined && <Loader/>}
+            {userData === undefined && <Spinner/>}
             {userData !== undefined && <>
                 <SettingsUserProfile name={userData.name} username={userData.username} image={userData.imageUrl}
-                                     email={userData.email}
+                                     email={userData.email} isIncorrectPassword={passwordError}
                                      onSaveUserData={updateUserData}/>
                 {successfulUpdate && <Navigate to={'/user/' + userData.username}/>}
             </>

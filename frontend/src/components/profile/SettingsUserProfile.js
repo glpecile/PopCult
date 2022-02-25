@@ -12,6 +12,8 @@ const SettingsUserProfile = (user) => {
     const [imgBinary, setBinary] = useState(undefined);
     const [imageError, setImageError] = useState(false);
     const [nameError, setNameError] = useState(false);
+    const [prevPassword, setPrevPassword] = useState('');
+    const [prevPasswordError, setPrevPasswordError] = useState(false);
     const [changePasswordActive, setChangePassword] = useState(false);
     const [enteredPassword, setEnteredPassword] = useState('');
     const [enteredPasswordError, setPasswordError] = useState(false);
@@ -36,30 +38,55 @@ const SettingsUserProfile = (user) => {
         }
     }
 
+    const ValidatePrevPassword = () => {
+        if (prevPassword.length === 0 && (enteredPassword.length!== 0 && enteredRepeatedPassword.length !== 0 && enteredRepeatedPasswordError)) {
+            setPrevPasswordError(true);
+        }else{
+            setPrevPasswordError(false);
+        }
+
+    }
     const PasswordChangeHandler = (event) => {
         setEnteredPassword(event.target.value);
         event.target.validity.valid ? setPasswordError(false) : setPasswordError(true);
         if (enteredRepeatedPassword.localeCompare('') !== 0) {
             (event.target.value.localeCompare(enteredRepeatedPassword) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
+            ValidatePrevPassword();
         }
     };
+
+    const PrevPasswordHandler = (event) => {
+        setPrevPassword(event.target.value);
+        event.target.validity.valid ? ValidatePrevPassword() : setPrevPasswordError(true);
+    }
 
     const RepeatedPasswordChangeHandler = (event) => {
         setEnteredRepeatedPassword(event.target.value);
         (enteredPassword.localeCompare(event.target.value) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
+        if (event.target.value.length !== 0 && prevPassword.length === 0) setPrevPasswordError(true);
+        ValidatePrevPassword();
     };
+    const inputHasErrors = () => {
+        if (nameError) return true;
+        if (changePasswordActive) {
+            if (enteredPasswordError || enteredRepeatedPasswordError || prevPasswordError)
+                return true;
+        }
+        return false;
+
+    }
     const submitHandler = (event) => {
         event.preventDefault();
-        if (changePasswordActive) {
+        if (changePasswordActive && enteredPassword.length !== 0 && enteredRepeatedPassword.length !== 0) {
             if (!(nameError || enteredPasswordError || enteredRepeatedPasswordError)) {
                 const userData = {
-                    name: currentName, image: imgBinary, password: enteredPassword
+                    name: currentName, image: imgBinary, password: enteredPassword, currentPassword: prevPassword
                 };
                 user.onSaveUserData(userData);
             }
         } else if (!(nameError)) {
             const userData = {
-                name: currentName, imageUrl: imgBinary, password: null
+                name: currentName, imageUrl: imgBinary, password: undefined, currentPassword: undefined
             };
             user.onSaveUserData(userData);
         }
@@ -137,6 +164,26 @@ const SettingsUserProfile = (user) => {
                         {t('profile_settings_changePassword')}
                     </h2>
                 </div>
+                {/*Current Password*/}
+                <div className="py-1 text-semibold w-full">
+                    <label
+                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        {t('profile_settings_oldPassword')}
+                    </label>
+                    <input type="password"
+                           className={"w-full rounded active:none " + (user.isIncorrectPassword || prevPasswordError ? "border-2 border-rose-500" : "")}
+                           minLength={8} maxLength={100}
+                           defaultValue={prevPassword} onChange={PrevPasswordHandler}/>
+                    {user.isIncorrectPassword &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('profile_settings_oldPassword_verification_error')}
+                        </p>}
+                    {prevPasswordError &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('profile_settings_oldPassword_error')}
+                        </p>}
+                </div>
+                {/*New Password*/}
                 <div className="py-1 text-semibold w-full">
                     <label
                         className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -151,7 +198,7 @@ const SettingsUserProfile = (user) => {
                             {t('register_password_hint')}
                         </p>}
                 </div>
-
+                {/*Repeat Password*/}
                 <div className="py-1 text-semibold w-full">
                     <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                         {t('register_password_repeat')}
@@ -178,11 +225,11 @@ const SettingsUserProfile = (user) => {
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
                 </button>
                 {/*delete user*/}
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                            className="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white">
-                        <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
-                        {t('profile_settings_deleteUser')}
-                    </button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                        className="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white">
+                    <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
+                    {t('profile_settings_deleteUser')}
+                </button>
             </div>
             <div className="flex justify-end space-x-2">
                 {/*Discard changes*/}
@@ -195,7 +242,7 @@ const SettingsUserProfile = (user) => {
                 </Link>
                 {/*Save changes*/}
                 <button type="submit"
-                        className={(nameError ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
+                        className={(inputHasErrors() ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
                     <i className="fas fa-check group-hover:text-white mr-2"/>
                     {t('save_changes')}
                 </button>
