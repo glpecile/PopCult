@@ -20,16 +20,20 @@ const UserService = (function () {
         return res.headers.authorization.split(' ')[1];
     }
 
-    const uploadUserImage = async ({username, formData}) =>{
+    const uploadUserImage = async ({username, formData}) => {
         await userApi.uploadUserImage({username: username, formData: formData});
     }
 
+    const changeUserPassword = async ({username, currentPassword, newPassword}) => {
+        await userApi.changePassword({username, currentPassword, newPassword})
+    }
     return {
         getUser,
         editUser,
         deleteUser,
         login,
         uploadUserImage,
+        changeUserPassword
     };
 
 })();

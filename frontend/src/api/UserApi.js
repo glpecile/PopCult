@@ -22,12 +22,17 @@ const userApi = (() => {
         return api.delete(`/users/${username}`);
     }
 
+    const changePassword = ({username, currentPassword, newPassword}) => {
+        console.log(currentPassword + '.' + newPassword);
+        return api.put(`/users/${username}/password`, {currentPassword, newPassword});
+    }
     return {
         login,
         getUser,
         editUser,
         deleteUser,
-        uploadUserImage
+        uploadUserImage,
+        changePassword
     };
 
 })();
