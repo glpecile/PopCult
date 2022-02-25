@@ -1,4 +1,4 @@
-import userApi from "../api/UserApi"
+import userApi from '../api/UserApi'
 
 const UserService = (function () {
 
