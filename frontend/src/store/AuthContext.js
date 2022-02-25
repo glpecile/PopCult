@@ -1,4 +1,4 @@
-import {useContext, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import React from "react";
 import jwtDecode from "jwt-decode";
 
@@ -23,7 +23,9 @@ export const AuthContextProvider = (props) => {
         try {
             return jwtDecode(token).sub;
         } catch (error) {
-            console.log(error);
+            if (isLoggedIn) {
+                console.log(error);
+            }
         }
     });
 
@@ -36,11 +38,11 @@ export const AuthContextProvider = (props) => {
     }
 
     useEffect(() => {
-        mountedUser.current= true;
+        mountedUser.current = true;
         if (mountedUser.current && username !== undefined)
-        return () => {
-            mountedUser.current = false
-        };
+            return () => {
+                mountedUser.current = false
+            };
     }, [username]);
 
     const loginHandler = (authKey, username) => {

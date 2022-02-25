@@ -1,5 +1,5 @@
 import SettingsUserProfile from "../../../components/profile/SettingsUserProfile";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
@@ -22,51 +22,62 @@ const Settings = () => {
     const [successfulUpdate, setSuccessfulUpdate] = useState(false);
     const {t} = useTranslation();
     const mountedUser = useRef(true);
-    const [toEditData, settoEditData] = useState(undefined);
+    const mountedEditUser = useRef(true);
+    const [toEditData, setToEditData] = useState(undefined);
     const [userData, setUserData] = useState(undefined);
     const username = useRef(useContext(AuthContext)).current.username;
 
-    const getUser = async () => {
+    const getUser = useCallback(async () => {
         if (username) {
             try {
                 const user = await UserService.getUser(username);
                 setUserData(user);
             } catch (error) {
                 console.log(error);
+                setSuccessfulUpdate(true);
             }
         }
-    }
+    }, [username]);
 
     useEffect(() => {
+        mountedUser.current = true;
         getUser();
-    }, [])
+        return () => {
+            mountedUser.current = false;
+        }
+    }, [username, getUser])
 
-    const editUser = async () => {
-        if (toEditData !== undefined) {
-            try {
-                await UserService.editUser({username, name: toEditData.name});
-            } catch (error) {
-                console.log(error);
-            }
-            if (toEditData.imageUrl !== undefined) {
+
+    useEffect(() => {
+        mountedEditUser.current = true;
+        const editUser = async () => {
+            if (toEditData !== undefined && mountedEditUser.current) {
                 try {
-                    let formData = new FormData();
-                    formData.append('image', toEditData.imageUrl);
-                    await UserService.uploadUserImage({username, formData});
+                    await UserService.editUser({username, name: toEditData.name});
                 } catch (error) {
                     console.log(error);
                 }
+                if (toEditData.imageUrl !== undefined) {
+                    try {
+                        let formData = new FormData();
+                        formData.append('image', toEditData.imageUrl);
+                        await UserService.uploadUserImage({username, formData});
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                setSuccessfulUpdate(true);
             }
-            setSuccessfulUpdate(true);
-        }
-    }
+        };
 
-    useEffect(() => {
         editUser();
-    }, [toEditData]);
+        return () => {
+            mountedEditUser.current = false;
+        }
+    }, [username, toEditData]);
 
     const updateUserData = (props) => {
-        settoEditData(props);
+        setToEditData(props);
     }
     return (
         <>

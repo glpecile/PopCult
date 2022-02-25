@@ -1,7 +1,7 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
@@ -23,21 +23,25 @@ const Profile = () => {
         setUserError(false);
     }, [username, loggedUsername]);
 
-    const getUser = async () => {
-        if (username){
+    const getUser = useCallback(async () => {
+        if (username && mountedUser.current) {
             try {
                 const user = await UserService.getUser(username);
                 setUserData(user);
-            }catch (error){
+            } catch (error) {
                 console.log(error);
                 setUserError(true);
             }
         }
-    }
+    }, [username]);
 
     useEffect(() => {
+        mountedUser.current = true;
         getUser();
-    }, [username])
+        return () => {
+            mountedUser.current = false;
+        }
+    }, [username, getUser])
 
     return (
         <>{!userError && <>
@@ -45,7 +49,7 @@ const Profile = () => {
                 <title>{t('profile_title')}</title>
             </Helmet>
             <UserProfile id={userData.username} name={userData.name} username={userData.username}
-                         image={userData.imageUrl} isCurrentUser={username.localeCompare(loggedUsername) === 0}/>
+                         image={userData.imageUrl} isCurrentUser={isCurrUser}/>
             <UserTabs username={userData.username} id={userData.username}/> </>}
             {userError && <Error404/>}
         </>);
