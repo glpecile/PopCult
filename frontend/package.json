@@ -22,6 +22,7 @@
     "jwt-decode": "^3.1.2",
     "mdb-react-ui-kit": "^2.3.0",
     "parse-link-header": "^2.0.0",
+    "querystring": "^0.2.1",
     "react": "^17.0.2",
     "react-alice-carousel": "^2.5.1",
     "react-dom": "^17.0.2",
@@ -29,6 +30,7 @@
     "react-i18next": "^11.15.4",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "url": "^0.11.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
