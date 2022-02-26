@@ -79,5 +79,8 @@
   "media_details_add_watchlist": "Add to watchlist",
   "media_details_remove_liked": "Remove from favorite media",
   "media_details_remove_watched": "Mark as not watched",
-  "media_details_remove_watchlist": "Remove from watchlist"
+  "media_details_remove_watchlist": "Remove from watchlist",
+  "register_error": "Please make sure that all mandatory* fields are filled in correctly.",
+  "register_username_exists": "It seems this username is already in use",
+  "register_email_exists": "It seems this email is already in use"
 }

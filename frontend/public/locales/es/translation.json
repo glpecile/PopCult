@@ -79,5 +79,8 @@
   "media_details_add_watchlist": "Agregar a lista de contenido para ver",
   "media_details_remove_liked": "Borrar de contenido favorito",
   "media_details_remove_watched": "Marcar como contenido no visto",
-  "media_details_remove_watchlist": "Borrar de lista de contenido para ver"
+  "media_details_remove_watchlist": "Borrar de lista de contenido para ver",
+  "register_error": "Por favor, asegurese que todos los campos obligatorios* hayan sido completados correctamente.",
+  "register_username_exists": "Parece que este nombre de usuario esta siendo utilizado por alguien mas",
+  "register_email_exists": "Parece que este email esta siendo utilizado por alguien mas"
 }
