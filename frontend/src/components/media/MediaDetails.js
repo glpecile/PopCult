@@ -1,10 +1,13 @@
+import MediaOptions from "./MediaOptions";
+
 function MediaDetails(media) {
     return (
         <div className="row">
             <div className="col-12 col-lg-4">
-                <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-fuchsia-300 my-3 bg-white">
+                <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
                     <img className="img-fluid rounded-t-lg" src={media.image} alt="Media Details"/>
                     {/*    aca va la parte del cuadro de compartir, likear, etc, etc -> de esto hacmos otro componente*/}
+                    <MediaOptions />
                 </div>
             </div>
             <div className="col-12 col-lg-8 mb-1.5">
@@ -17,7 +20,6 @@ function MediaDetails(media) {
                     <span>{media.countryName}</span>
                 </div>
                 <p className="lead text-justify">{media.description}</p>
-                <br/>
             {/*    Aca van los chips con los actores, etc etc -> tambien otro componente*/}
             </div>
         </div>

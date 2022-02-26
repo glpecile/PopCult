@@ -73,5 +73,11 @@
   "register_username_error": "Los nombres de usuarios válidos deben tener entre 1-20 caracteres no especiales.",
   "register_name": "Nombre",
   "register_name_error": "Su nombre ingresado debe tener entre 3-20 caracteres no especiales.",
-  "register_button": "Registrate"
+  "register_button": "Registrate",
+  "media_details_add_liked": "Agregar a contenido favorita",
+  "media_details_add_watched": "Marcar como contenido visto",
+  "media_details_add_watchlist": "Agregar a lista de contenido para ver",
+  "media_details_remove_liked": "Borrar de contenido favorito",
+  "media_details_remove_watched": "Marcar como contenido no visto",
+  "media_details_remove_watchlist": "Borrar de lista de contenido para ver"
 }

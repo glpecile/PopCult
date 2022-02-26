@@ -73,5 +73,11 @@
   "register_username_error": "Valid usernames contain between 1 and 20 non special characters.",
   "register_name": "Name",
   "register_name_error": "Valid names contain between 3 and 20 non special characters.",
-  "register_button": "Sign Up"
+  "register_button": "Sign Up",
+  "media_details_add_liked": "Add to favorite media",
+  "media_details_add_watched": "Mark as watched",
+  "media_details_add_watchlist": "Add to watchlist",
+  "media_details_remove_liked": "Remove from favorite media",
+  "media_details_remove_watched": "Mark as not watched",
+  "media_details_remove_watchlist": "Remove from watchlist"
 }
