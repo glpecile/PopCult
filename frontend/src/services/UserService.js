@@ -80,114 +80,6 @@ const UserService = (function () {
         await userApi.unbanUser(username);
     }
 
-    const getUserFavoriteMedia = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserFavoriteMedia({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const isFavoriteMedia = async ({username, mediaId}) => {
-        const res = await userApi.isFavoriteMedia({username, mediaId});
-        return res.data;
-    }
-
-    const addMediaToFavorites = async ({username, mediaId}) => {
-        await userApi.addMediaToFavorites({username, mediaId});
-    }
-
-    const removeMediaFromFavorites = async ({username, mediaId}) => {
-        await userApi.removeMediaFromFavorites({username, mediaId});
-    }
-
-    const getUserWatchedMedia = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserWatchedMedia({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const isWatchedMedia = async ({username, mediaId}) => {
-        const res = await userApi.isWatchedMedia({username, mediaId});
-        return res.data;
-    }
-
-    const addMediaToWatched = async ({username, mediaId, dateTime}) => {
-        await userApi.addMediaToWatched({username, mediaId, dateTime});
-    }
-
-    const removeMediaFromWatched = async ({username, mediaId}) => {
-        await userApi.removeMediaFromWatched({username, mediaId});
-    }
-
-    const getUserToWatchMedia = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserToWatchMedia({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const isToWatchMedia = async ({username, mediaId}) => {
-        const res = await userApi.isToWatchMedia({username, mediaId});
-        return res.data;
-    }
-
-    const addMediaToWatch = async ({username, mediaId}) => {
-        await userApi.addMediaToWatch({username, mediaId});
-    }
-
-    const removeMediaFromToWatch = async ({username, mediaId}) => {
-        await userApi.removeMediaFromToWatch({username, mediaId});
-    }
-
-    const getUserFavoriteLists = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserFavoriteLists({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const isFavoriteList = async ({username, listId}) => {
-        const res = await userApi.isFavoriteList({username, listId});
-        return res.data;
-    }
-
-    const addListToFavorites = async ({username, listId}) => {
-        await userApi.addListToFavorites({username, listId});
-    }
-
-    const removeListFromFavorites = async ({username, listId}) => {
-        await userApi.removeListFromFavorites({username, listId});
-    }
-
-    const getUserNotifications = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserNotifications({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const getUserCollaborationRequests = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserCollaborationRequests({username, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const getUserRecommendedMedia = async ({username, page, pageSize, mediaType}) => {
-        const res = await userApi.getUserRecommendedMedia({username, page, pageSize, mediaType})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    const getUserRecommendedLists = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserRecommendedLists({username, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
     return {
         login,
         getUsers,
@@ -206,28 +98,7 @@ const UserService = (function () {
         removeMod,
         banUser,
         unbanUser,
-        getUserFavoriteMedia,
-        isFavoriteMedia,
-        addMediaToFavorites,
-        removeMediaFromFavorites,
-        getUserWatchedMedia,
-        isWatchedMedia,
-        addMediaToWatched,
-        removeMediaFromWatched,
-        getUserToWatchMedia,
-        isToWatchMedia,
-        addMediaToWatch,
-        removeMediaFromToWatch,
-        getUserFavoriteLists,
-        isFavoriteList,
-        addListToFavorites,
-        removeListFromFavorites,
-        getUserNotifications,
-        getUserCollaborationRequests,
-        getUserRecommendedMedia,
-        getUserRecommendedLists
     };
-
 })();
 
 export default UserService;
