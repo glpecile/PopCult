@@ -1,11 +1,11 @@
 import modRequestApi from '../api/ModRequestApi'
-import parse from 'parse-link-header'
+import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const modRequestService = (() => {
 
     const getModRequests = async ({page, pageSize}) => {
         const res = await modRequestApi.getModRequests({page, pageSize});
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }

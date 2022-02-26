@@ -1,11 +1,11 @@
 import reportApi from '../api/ReportApi'
-import parse from 'parse-link-header'
+import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const reportService = (() => {
 
     const getListReports = async ({page, pageSize}) => {
         const res = await reportApi.getListReports({page, pageSize});
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }

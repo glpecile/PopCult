@@ -1,5 +1,5 @@
 import userApi from '../api/UserApi'
-import parse from 'parse-link-header'
+import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const UserService = (function () {
 
@@ -10,7 +10,7 @@ const UserService = (function () {
 
     const getUsers = async ({page, pageSize, userRole, banned}) => {
         const res = await userApi.getUsers({page, pageSize, userRole, banned});
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data}
     }
@@ -81,7 +81,7 @@ const UserService = (function () {
 
     const getUserFavoriteMedia = async ({username, page, pageSize}) => {
         const res = await userApi.getUserFavoriteMedia({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
@@ -101,7 +101,7 @@ const UserService = (function () {
 
     const getUserWatchedMedia = async ({username, page, pageSize}) => {
         const res = await userApi.getUserWatchedMedia({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
@@ -121,7 +121,7 @@ const UserService = (function () {
 
     const getUserToWatchMedia = async ({username, page, pageSize}) => {
         const res = await userApi.getUserToWatchMedia({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
@@ -141,7 +141,7 @@ const UserService = (function () {
 
     const getUserFavoriteLists = async ({username, page, pageSize}) => {
         const res = await userApi.getUserFavoriteLists({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
@@ -161,28 +161,28 @@ const UserService = (function () {
 
     const getUserNotifications = async ({username, page, pageSize}) => {
         const res = await userApi.getUserNotifications({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     const getUserCollaborationRequests = async ({username, page, pageSize}) => {
         const res = await userApi.getUserCollaborationRequests({username, page, pageSize})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     const getUserRecommendedMedia = async ({username, page, pageSize, mediaType}) => {
         const res = await userApi.getUserRecommendedMedia({username, page, pageSize, mediaType})
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     const getUserRecommendedLists = async ({username, page, pageSize}) => {
         const res = await userApi.getUserRecommendedLists({username, page, pageSize});
-        const links = parse(res.headers.link);
+        const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
