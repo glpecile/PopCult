@@ -47,12 +47,13 @@ const UserService = (function () {
     }
 
     const sendVerificationToken = async (email) => {
-        const res = await userApi.sendVerificationToken(email);
-        return res.headers.authorization.split(' ')[1];
+        await userApi.sendVerificationToken(email);
     }
 
-    const verifyUser = async ({token, newPassword}) => {
-        await userApi.verifyUser({token, newPassword});
+    const verifyUser = async ({token}) => {
+        const res = await userApi.verifyUser(token);
+        return res.headers.authorization.split(' ')[1];
+
     }
 
     const uploadUserImage = async ({username, formData}) => {
