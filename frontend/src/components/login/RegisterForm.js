@@ -16,6 +16,7 @@ const RegisterForm = (props) => {
     const [enteredEmail, setEnteredEmail] = useState('');
     const [enteredEmailError, setEmailError] = useState(false);
     const [alertDisplay, setAlertDisplay] = useState(false);
+    const [badAttempt, setBadAttempt] = useState(false);
     const [t] = useTranslation();
 
     const NameChangeHandler = (event) => {
@@ -50,7 +51,7 @@ const RegisterForm = (props) => {
             setAlertDisplay(false);
         }, 5000);
     }
-    const formHasErrors = () => {
+    const formIsValid = () => {
         const hasErrors = !(enteredEmailError || enteredUsernameError || enteredNameError || enteredPasswordError || enteredRepeatedPasswordError);
         const isEmpty = !(enteredEmail.length === 0 || enteredUsername.length === 0 || enteredName.length === 0 || enteredPassword.length === 0 || enteredRepeatedPassword.length === 0);
         return hasErrors && isEmpty;
@@ -58,13 +59,23 @@ const RegisterForm = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        if (formHasErrors()) {
-            props.onSuccessfulRegister();
+        if (formIsValid()) {
+            props.onSuccessfulRegister({
+                email: enteredEmail,
+                username: enteredUsername,
+                password: enteredPassword,
+                name: enteredName
+            });
+        }else{
+            setBadAttempt(true);
+            setTimeout(() => {
+                setBadAttempt(false);
+            }, 5000);
         }
     }
 
     return (
-        <form className="m-0 p-0" onSubmit={submitHandler}>
+        <form className="m-0 p-0" onSubmit={submitHandler} noValidate={true}>
             {/*Email*/}
             <div className="flex flex-col justify-center items-center">
                 <div className="pb-1 px-2.5 text-semibold w-full">
@@ -72,11 +83,12 @@ const RegisterForm = (props) => {
                         {enteredEmailError &&
                             <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
                                 className="fas fa-exclamation-circle"/></span>}
-                        <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        <label
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_email')}
                         </label>
                         <input type="text"
-                               className={"w-full rounded active:none " + (enteredEmailError ? "border-2 border-rose-500" : "")}
+                               className={"w-full rounded active:none " + (enteredEmailError || props.emailExists ? "border-2 border-rose-500" : "")}
                                pattern="[^@]+@[^@]+\.[^@]+" minLength={6} maxLength={100} defaultValue={enteredEmail}
                                onChange={EmailChangeHandler}/>
                     </div>
@@ -85,6 +97,11 @@ const RegisterForm = (props) => {
                         <p className="text-red-500 text-xs italic my-1.5 whitespace-pre-wrap">
                             {t('register_email_validation')}
                         </p>}
+                    {props.emailExists &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('register_email_exists')}
+                        </p>
+                    }
                 </div>
 
                 {/*Pass*/}
@@ -99,7 +116,8 @@ const RegisterForm = (props) => {
                                    onClick={displayAlert}>
                                     <i className="fas fa-question-circle"/>
                             </span>)}
-                        <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        <label
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_password')}
                         </label>
                         <input type="password"
@@ -115,12 +133,15 @@ const RegisterForm = (props) => {
 
                 <FadeIn isActive={alertDisplay}>
                     <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
-                        <motion.div key="icon" className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
-                             role="alert">
+                        <motion.div key="icon"
+                                    className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
+                                    role="alert">
                             <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button onClick={() => setAlertDisplay(false)}><i className="fas fa-times hover:text-gray-800"/></button>
+                                <button onClick={() => setAlertDisplay(false)}><i
+                                    className="fas fa-times hover:text-gray-800"/></button>
                             </span>
-                            <small key="text" id="passwordHelpBlock" className="form-text text-muted whitespace-pre-wrap">
+                            <small key="text" id="passwordHelpBlock"
+                                   className="form-text text-muted whitespace-pre-wrap">
                                 {t('register_password_hint')}
                             </small>
                         </motion.div>
@@ -130,7 +151,8 @@ const RegisterForm = (props) => {
                 {/*repPass*/}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
-                        <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        <label
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_password_repeat')}
                         </label>
                         {enteredRepeatedPasswordError &&
@@ -148,14 +170,15 @@ const RegisterForm = (props) => {
                 {/*Username*/}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
-                        <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        <label
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_username')}
                         </label>
                         {enteredUsernameError &&
                             <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
                                 className="fas fa-exclamation-circle"/></span>}
                         <input type="text"
-                               className={"w-full rounded active:none " + (enteredUsernameError ? "border-2 border-rose-500" : "")}
+                               className={"w-full rounded active:none " + (enteredUsernameError || props.usernameExists ? "border-2 border-rose-500" : "")}
                                pattern="[a-zA-Z0-9]+" minLength={1}
                                maxLength={100} defaultValue={enteredUsername} onChange={UsernameChangeHandler}/>
                     </div>
@@ -164,12 +187,18 @@ const RegisterForm = (props) => {
                             {t('register_username_error')}
                         </p>
                     }
+                    {props.usernameExists &&
+                        <p className="text-red-500 text-xs italic my-1.5">
+                            {t('register_username_exists')}
+                        </p>
+                    }
                 </div>
 
                 {/*Name*/}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
-                        <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        <label
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_name')}
                         </label>
                         {enteredNameError &&
@@ -191,6 +220,11 @@ const RegisterForm = (props) => {
                     <button className="btn btn-secondary px-2.5 mt-2 w-full" type="submit">
                         {t('register_button')}
                     </button>
+                    {(badAttempt || props.registrationError) &&
+                        <p className="text-red-500 text-xs text-center italic my-1.5">
+                            {t('register_error')}
+                        </p>
+                    }
                 </div>
             </div>
         </form>);

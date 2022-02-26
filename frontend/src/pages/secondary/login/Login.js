@@ -4,7 +4,6 @@ import {useEffect, useState, useContext, useRef, useCallback} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
-import jwtDecode from "jwt-decode";
 
 function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
@@ -24,12 +23,11 @@ function Login() {
     const login = useCallback(async (username, password, rememberMe) => {
 
             try {
-                const key = await UserService.login({username, password})
                 if (mountedUser.current) {
+                    const key = await UserService.login({username, password})
                     setErrorMessageDisplay(false);
                     setLogInState(true);
                     authContext.onLogin(key, username);
-                    console.log(jwtDecode(key));
                     rememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
                 }
             } catch (error) {
@@ -50,7 +48,7 @@ function Login() {
         return () => {
             mountedUser.current = false;
         }
-    }, [loginCredentials, authContext, login]);
+    }, [loginCredentials, login]);
 
 
     const UsernameChangeHandler = (event) => {
