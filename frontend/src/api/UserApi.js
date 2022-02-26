@@ -204,12 +204,13 @@ const userApi = (() => {
             });
     }
 
-    const getUserRecommendedMedia = ({username, page, pageSize}) => {
+    const getUserRecommendedMedia = ({username, page, pageSize, mediaType}) => {
         return api.get(`/users/${username}/recommended-media`,
             {
                 params: {
                     'page': page,
-                    'page-size': pageSize
+                    'page-size': pageSize,
+                    'type': mediaType
                 }
             });
     }

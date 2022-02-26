@@ -173,8 +173,8 @@ const UserService = (function () {
         return {links, data};
     }
 
-    const getUserRecommendedMedia = async ({username, page, pageSize}) => {
-        const res = await userApi.getUserRecommendedMedia({username, page, pageSize})
+    const getUserRecommendedMedia = async ({username, page, pageSize, mediaType}) => {
+        const res = await userApi.getUserRecommendedMedia({username, page, pageSize, mediaType})
         const links = parse(res.headers.link);
         const data = res.data;
         return {links, data};
