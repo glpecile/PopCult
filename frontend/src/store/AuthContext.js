@@ -1,7 +1,7 @@
-import {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import React from "react";
 import jwtDecode from "jwt-decode";
-
+import api from "../api/api";
 const AuthContext = React.createContext({
     isLoggedIn: false,
     onLogout: () => {
@@ -13,11 +13,11 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-    const mountedUser = useRef(true);
     const isInLocalStorage = localStorage.hasOwnProperty("userAuthToken");
     const [isLoggedIn, setLoggedIn] = useState(isInLocalStorage || sessionStorage.hasOwnProperty("userAuthToken"));
     const token = isInLocalStorage ? JSON.parse(localStorage.getItem("userAuthToken")) : JSON.parse(sessionStorage.getItem("userAuthToken"))
     const [authKey, setAuthKey] = useState(token);
+    api.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("userAuthToken")) || JSON.parse(sessionStorage.getItem("userAuthToken"))|| ''}`;
 
     const [username, setUsername] = useState(() => {
         try {
@@ -29,6 +29,7 @@ export const AuthContextProvider = (props) => {
         }
     });
 
+
     const logoutHandler = () => {
         localStorage.removeItem("userAuthToken");
         sessionStorage.removeItem("userAuthToken");
@@ -37,18 +38,12 @@ export const AuthContextProvider = (props) => {
         setUsername('');
     }
 
-    useEffect(() => {
-        mountedUser.current = true;
-        if (mountedUser.current && username !== undefined)
-            return () => {
-                mountedUser.current = false
-            };
-    }, [username]);
 
     const loginHandler = (authKey, username) => {
         setAuthKey(authKey);
         setUsername(username);
         setLoggedIn(true);
+        api.defaults.headers.common['Authorization'] = `Bearer ${authKey}`;
     }
 
     return <AuthContext.Provider
