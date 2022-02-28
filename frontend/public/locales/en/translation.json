@@ -82,5 +82,10 @@
   "media_details_remove_watchlist": "Remove from watchlist",
   "register_error": "Please make sure that all mandatory* fields are filled in correctly.",
   "register_username_exists": "It seems this username is already in use",
-  "register_email_exists": "It seems this email is already in use"
+  "register_email_exists": "It seems this email is already in use",
+  "user_panel_title": "{{username}}'s Panel",
+  "user_panel_requests": "Collaboration Requests",
+  "user_panel_requests_detail": "See all the requests from people who wish to collaborate in your lists",
+  "user_panel_comments": "Lists Comments",
+  "user_panel_comments_detail": "See everything that was discussed in your lists comment section"
 }

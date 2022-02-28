@@ -82,5 +82,10 @@
   "media_details_remove_watchlist": "Borrar de lista de contenido para ver",
   "register_error": "Por favor, asegurese que todos los campos obligatorios* hayan sido completados correctamente.",
   "register_username_exists": "Parece que este nombre de usuario esta siendo utilizado por alguien mas",
-  "register_email_exists": "Parece que este email esta siendo utilizado por alguien mas"
+  "register_email_exists": "Parece que este email esta siendo utilizado por alguien mas",
+  "user_panel_title": "El panel de {{username}}",
+  "user_panel_requests": "Collaboration Requests",
+  "user_panel_requests_detail": "See all the requests from people who wish to collaborate in your lists",
+  "user_panel_comments": "Lists Comments",
+  "user_panel_comments_detail": "See everything that was discussed in your lists comment section"
 }

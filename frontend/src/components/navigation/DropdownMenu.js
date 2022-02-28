@@ -81,7 +81,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </MenuItem>
                 <MenuItem>
-                    <NavLink className="stretched-link text-slate-800" to={'/user/' + authContext.username}>
+                    <NavLink className="stretched-link text-slate-800" to={`/user/${authContext.username}`}>
                         <AccountCircleOutlinedIcon/> {t('nav_profile')}
                     </NavLink>
                 </MenuItem>
@@ -91,7 +91,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </MenuItem>
                 <MenuItem>
-                    <NavLink className="stretched-link text-slate-800" to={'/user/b'}>
+                    <NavLink className="stretched-link text-slate-800" to={`/user/${authContext.username}/panel`}>
                         <NotificationsNoneOutlinedIcon/> {t('nav_notifications')}
                     </NavLink>
                 </MenuItem>
