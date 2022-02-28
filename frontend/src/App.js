@@ -16,6 +16,9 @@ import Verification from "./pages/secondary/login/Verification";
 import UserPanel from "./pages/secondary/user/UserPanel";
 import UserLists from "./pages/secondary/user/UserLists";
 import AdminPanel from "./pages/secondary/admin/AdminPanel";
+import Reports from "./pages/secondary/admin/Reports";
+import BannedUsers from "./pages/secondary/admin/BannedUsers";
+import Moderators from "./pages/secondary/admin/Moderators";
 import Error404 from "./pages/secondary/errors/Error404";
 import Loader from "./pages/secondary/errors/Loader";
 import Layout from "./components/Layout/Layout";
@@ -42,9 +45,9 @@ export default function App() {
                     <Route path='/user/:username/panel' exact element={<UserPanel/>}/>
                     <Route path='/user/:username/lists' exact element={<UserLists/>}/>
                     <Route path='/admin' exact element={<AdminPanel/>}/>
-                    <Route path='/admin/reports' exact element={<AdminPanel/>}/>
-                    <Route path='/admin/bans' exact element={<AdminPanel/>}/>
-                    <Route path='/admin/mods' exact element={<AdminPanel/>}/>
+                    <Route path='/admin/reports' exact element={<Reports/>}/>
+                    <Route path='/admin/bans' exact element={<BannedUsers/>}/>
+                    <Route path='/admin/mods' exact element={<Moderators/>}/>
                     <Route path='*' element={<Error404/>}/>
                 </Routes>
             </Layout>

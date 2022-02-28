@@ -31,7 +31,10 @@
   "mods_title": "Moderadores",
   "profile_title": "Perfil • PopCult",
   "profile_description": "O como nos gusta llamarte: <0>{{username}}</0>",
+  "profile_secondary_description": "Tambien conocido como: {{username}} ",
   "profile_edit": "Editar Perfil",
+  "profile_strikes": " Infracciones {{strikes}}",
+  "profile_unbanDate": "Suspendido hasta {{date}}",
   "discard_changes": "Descartar cambios",
   "save_changes": "Guardar cambios",
   "settings_title": "Actualiza Tu Perfil • PopCult",
@@ -104,7 +107,9 @@
   "expiredToken_body": "Por favor, recuerdanos el email con el cual te registraste. Te enviaremos un nuevo token de autenticacion a tu casilla de correo.",
   "expiredToken_emailError": "Parece que este email no pertenece a ninguno de nuestros usuarios. Estas seguro que este es tu email?",
   "expiredToken_greet": "Nos vemos pronto!!\nEl equipo de PopCult",
-  "send": "Enviar"
+  "send": "Enviar",
+  "banned_users_empty": "Parece que no hay usuarios suspendidos en el momento."
+
 
 
 }
