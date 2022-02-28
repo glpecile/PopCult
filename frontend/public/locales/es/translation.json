@@ -19,7 +19,7 @@
   "nav_profile": "Perfil",
   "nav_my_lists": "Mis Listas",
   "nav_notifications": "Notificaciones",
-  "nav_admin" : "Panel de Admin",
+  "nav_admin": "Panel de Admin",
   "nav_sign_out": "Cerrar Sesión",
   "admin_title": "Panel Admin • PopCult",
   "admin_header": "Panel Administrativo",
@@ -87,5 +87,10 @@
   "user_panel_requests": "Pedidos para Colaborar",
   "user_panel_requests_detail": "Mira todas las peticiones de personas que desean colaborar en tus listas",
   "user_panel_comments": "Comentarios en Listas",
-  "user_panel_comments_detail": "Mira todo lo que fue discutido en la sección de comentarios de tus listas"
+  "user_panel_comments_detail": "Mira todo lo que fue discutido en la sección de comentarios de tus listas",
+  "user_lists_title": "¡Todas tus listas que puedes editar y colaborar!",
+  "user_lists_header": "Listas de {{username}}",
+  "lists_newList": "+ CREA UNA NUEVA LISTA",
+  "user_lists_empty": "Parece que no tienes listas para mostrar :c"
+
 }

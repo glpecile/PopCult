@@ -15,7 +15,7 @@ const UserPanel = () => {
     }, [requestsView])
     return (<>
         <Helmet>
-            user panel
+            <title>{t('user_panel_title', {username: username})}</title>
         </Helmet>
         {/*Title*/}
         <h1 className="text-center display-5 fw-bolder py-4">

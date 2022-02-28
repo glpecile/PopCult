@@ -86,7 +86,7 @@ const DropdownMenu = () => {
                     </NavLink>
                 </MenuItem>
                 <MenuItem>
-                    <NavLink className="stretched-link text-slate-800" to={'/user/a'}>
+                    <NavLink className="stretched-link text-slate-800" to={`/user/${authContext.username}/lists`}>
                         <ListOutlinedIcon/> {t('nav_my_lists')}
                     </NavLink>
                 </MenuItem>

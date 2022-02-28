@@ -12,6 +12,7 @@ import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
 import Verification from "./pages/secondary/login/Verification";
 import UserPanel from "./pages/secondary/user/UserPanel";
+import UserLists from "./pages/secondary/user/UserLists";
 import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Error404 from "./pages/secondary/errors/Error404";
 import Loader from "./pages/secondary/errors/Loader";
@@ -35,6 +36,7 @@ export default function App() {
                     <Route path='/settings' exact element={<Settings/>}/>
                     <Route path='/verification' exact element={<Verification/>}/>
                     <Route path='/user/:username/panel' exact element={<UserPanel/>}/>
+                    <Route path='/user/:username/lists' exact element={<UserLists/>}/>
                     <Route path='/admin' exact element={<AdminPanel/>}/>
                     <Route path='/admin/reports' exact element={<AdminPanel/>}/>
                     <Route path='/admin/bans' exact element={<AdminPanel/>}/>

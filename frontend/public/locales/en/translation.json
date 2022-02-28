@@ -87,5 +87,10 @@
   "user_panel_requests": "Collaboration Requests",
   "user_panel_requests_detail": "See all the requests from people who wish to collaborate in your lists",
   "user_panel_comments": "Lists Comments",
-  "user_panel_comments_detail": "See everything that was discussed in your lists comment section"
+  "user_panel_comments_detail": "See everything that was discussed in your lists comment section",
+  "user_lists_title": "Every list you can edit and collaborate in!",
+  "user_lists_header": "{{username}} Lists",
+  "lists_newList": "+ CREATE NEW LIST",
+  "user_lists_empty": "You don't seem to have any lists to show! :c"
+
 }
