@@ -1,4 +1,4 @@
 export const MediaType = {
     FILMS: 'FILMS',
-    SERIE: 'SERIE'
+    SERIES: 'SERIE'
 }
