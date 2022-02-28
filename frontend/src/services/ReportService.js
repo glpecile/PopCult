@@ -1,6 +1,5 @@
 import reportApi from '../api/ReportApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
-import api from "../api/api";
 
 const reportService = (() => {
 
@@ -53,6 +52,7 @@ const reportService = (() => {
 
     const getMediaCommentReport = async (id) => {
         const res = await reportApi.getMediaCommentReport(id);
+        return res.data;
     }
 
     const approveMediaCommentReport = async (id) => {
