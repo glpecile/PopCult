@@ -1,15 +1,15 @@
 import RegisterCard from "../../../components/login/RegisterCard";
 import RegisterForm from "../../../components/login/RegisterForm";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {Navigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import UserService from "../../../services/UserService";
 
 const Register = () => {
-    const [registerState, setRegisterState] = useState(false);
     const [registerError, setRegisterError] = useState(false);
     const [userToRegister, setUserToRegister] = useState(undefined);
     const [usernameExists, setUsernameExists] = useState(false);
     const [emailExists, setEmailExists] = useState(false);
+    const navigate = useNavigate();
 
     const mountedUser = useRef(true);
 
@@ -36,9 +36,9 @@ const Register = () => {
                 setRegisterError(true);
                 console.log(error.response.data);
             }
-            if (!regError) setRegisterState(true);
+            if (!regError) navigate("/register/success")
         }
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         mountedUser.current = true;
@@ -57,7 +57,6 @@ const Register = () => {
         <RegisterCard>
             <RegisterForm onSuccessfulRegister={SendRegForm} registrationError={registerError}
                           usernameExists={usernameExists} emailExists={emailExists}/>
-            {registerState && <Navigate to='/login'/>}
         </RegisterCard>
     );
 }
