@@ -1,5 +1,6 @@
-import favoriteApi from '../api/FavoriteApi';
+import favoriteApi from '../api/FavoriteApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {MediaType} from '../enums/MediaType'
 
 const favoriteService = (() => {
 
@@ -50,6 +51,16 @@ const favoriteService = (() => {
         return {links, data};
     }
 
+    const getUserRecommendedFilms = async ({username, page, pageSize}) => {
+        const mediaType = MediaType.FILMS;
+        return await getUserRecommendedMedia({username, page, pageSize, mediaType})
+    }
+
+    const getUserRecommendedSeries = async ({username, page, pageSize}) => {
+        const mediaType = MediaType.SERIES;
+        return await getUserRecommendedMedia({username, page, pageSize, mediaType})
+    }
+
     const getUserRecommendedLists = async ({username, page, pageSize}) => {
         const res = await favoriteApi.getUserRecommendedLists({username, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
@@ -67,6 +78,8 @@ const favoriteService = (() => {
         addListToFavorites,
         removeListFromFavorites,
         getUserRecommendedMedia,
+        getUserRecommendedFilms,
+        getUserRecommendedSeries,
         getUserRecommendedLists
     }
 })();
