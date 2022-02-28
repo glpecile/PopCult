@@ -99,7 +99,12 @@
   "modal_user_delete_success": "Tu cuenta ha sido eliminada correctamente. En breve seras redirigido a la pantalla de inicio",
   "modal_user_delete_error": "No hemos podido eliminar tu cuenta. Por favor, intenta nuevamente en breve.",
   "welcome_popcult": "Bienvenido a PopCult!",
-  "welcome_body": "Gracias por elegirnos! Se te enviara un email a tu casilla de correo para que puedas verificar y comenzar a utilizar tu cuenta. Esperamos que puedas disfrutar todo lo que PopCult tiene para ofrecer! \n\nNos vemos pronto!!\nEl equipo de PopCult."
+  "welcome_body": "Gracias por elegirnos! Se te enviara un email a tu casilla de correo para que puedas verificar y comenzar a utilizar tu cuenta. Esperamos que puedas disfrutar todo lo que PopCult tiene para ofrecer! \n\nNos vemos pronto!!\nEl equipo de PopCult.",
+  "expiredToken_title": "Parece que tu token ha expirado",
+  "expiredToken_body": "Por favor, recuerdanos el email con el cual te registraste. Te enviaremos un nuevo token de autenticacion a tu casilla de correo.",
+  "expiredToken_emailError": "Parece que este email no pertenece a ninguno de nuestros usuarios. Estas seguro que este es tu email?",
+  "expiredToken_greet": "Nos vemos pronto!!\nEl equipo de PopCult",
+  "send": "Enviar"
 
 
 }

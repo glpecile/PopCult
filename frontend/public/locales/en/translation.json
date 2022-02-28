@@ -99,6 +99,11 @@
   "modal_user_delete_success": "Your account has been successfully deleted. You will be redirected to Home soon.",
   "modal_user_delete_error": "There has been an error with your request. This one is on us. Please try again later.",
   "welcome_popcult": "Welcome to PopCult!",
-  "welcome_body": "Thanks for choosing us! An email will be sent to your inbox for you to verify and start using you account. We hope you enjoy everything PopCult has to offer! \n\nSee you soon!\nThe PopCult Team."
+  "welcome_body": "Thanks for choosing us! An email will be sent to your inbox for you to verify and start using you account. We hope you enjoy everything PopCult has to offer! \n\nSee you soon!\nThe PopCult Team.",
+  "expiredToken_title": "It seems your token has expired",
+  "expiredToken_body": "Please, remember us your email down below so we can send you a new authentication token.",
+  "expiredToken_emailError": "It seems this email does not match any of our users emails. Are you sure this is your email?",
+  "expiredToken_greet": "See you soon!\nThe PopCult Team",
+  "send": "Send"
 
 }

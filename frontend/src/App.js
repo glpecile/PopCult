@@ -8,6 +8,8 @@ import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Login from "./pages/secondary/login/Login";
 import Register from "./pages/secondary/login/Register";
+import SuccessfulRegister from "./pages/secondary/login/SuccessfulRegister";
+import ExpiredToken from "./pages/secondary/login/ExpiredToken";
 import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
 import Verification from "./pages/secondary/login/Verification";
@@ -17,7 +19,6 @@ import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Error404 from "./pages/secondary/errors/Error404";
 import Loader from "./pages/secondary/errors/Loader";
 import Layout from "./components/Layout/Layout";
-import SuccessfulRegister from "./pages/secondary/login/SuccessfulRegister";
 
 export default function App() {
     return (
@@ -34,6 +35,7 @@ export default function App() {
                     <Route path='/login' exact element={<Login/>}/>
                     <Route path='/register' exact element={<Register/>}/>
                     <Route path='/register/success' exact element={<SuccessfulRegister/>}/>
+                    <Route path='/register/expired' exact element={<ExpiredToken/>}/>
                     <Route path='/user/:username' exact element={<Profile/>}/>
                     <Route path='/settings' exact element={<Settings/>}/>
                     <Route path='/verification' exact element={<Verification/>}/>

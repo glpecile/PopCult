@@ -12,7 +12,8 @@ function Layout(props) {
     const {t} = useTranslation();
 
     useEffect(() => {
-        setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register' && location.pathname !== '/register/success');
+        setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register'
+            && location.pathname !== '/register/success' && location.pathname !== '/register/expired');
     }, [location]);
 
     return (
