@@ -19,11 +19,6 @@ Suspense.propTypes = {
     children: PropTypes.node
 };
 
-function Navigate(props) {
-    return null;
-}
-
-Navigate.propTypes = {to: PropTypes.string};
 const Settings = () => {
     const {t} = useTranslation();
     const mountedUser = useRef(true);
