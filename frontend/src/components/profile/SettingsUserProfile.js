@@ -231,9 +231,10 @@ const SettingsUserProfile = (user) => {
                     buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
                     buttonText={t('profile_settings_deleteUser')}
                     title={t('profile_settings_deleteUser')}
-                    body='Are you sure you want to permanently delete your user?'
-                    actionTitle='Yes, delete my user'
-                    onActionAccepted={user.onDeleteAccount}/>
+                    body={t('modal_user_delete_body')}
+                    actionTitle={t('modal_user_delete_confirmation')}
+                    onActionAccepted={user.onDeleteAccount}
+                    isOpened={false}/>
             </div>
             <div className="flex justify-end space-x-2">
                 {/*Discard changes*/}

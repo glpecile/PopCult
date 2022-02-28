@@ -91,6 +91,8 @@
   "user_lists_title": "¡Todas tus listas que puedes editar y colaborar!",
   "user_lists_header": "Listas de {{username}}",
   "lists_newList": "+ CREA UNA NUEVA LISTA",
-  "user_lists_empty": "Parece que no tienes listas para mostrar :c"
+  "user_lists_empty": "Parece que no tienes listas para mostrar :c",
+  "modal_user_delete_body": "¿Estas seguro que deseas eliminar tu cuenta? Esta accion es permamente",
+  "modal_user_delete_confirmation": "Si, elimina mi cuenta"
 
 }

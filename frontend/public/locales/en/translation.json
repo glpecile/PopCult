@@ -91,6 +91,8 @@
   "user_lists_title": "Every list you can edit and collaborate in!",
   "user_lists_header": "{{username}} Lists",
   "lists_newList": "+ CREATE NEW LIST",
-  "user_lists_empty": "You don't seem to have any lists to show! :c"
+  "user_lists_empty": "You don't seem to have any lists to show! :c",
+  "modal_user_delete_body": "Are you sure you wish to permanently delete your user?",
+  "modal_user_delete_confirmation": "Yes, delete my account"
 
 }
