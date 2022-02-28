@@ -21,13 +21,13 @@ const Register = () => {
                 setRegisterError(false);
             } catch (error) {
                 regError = true;
-                if (error.response.data.message.localeCompare("Username already exists") === 0) {
+                if (error.response.data.message.localeCompare("Username already exists") === 0 || error.response.data.message.localeCompare("El nombre de usuario ingresado ya existe") === 0) {
                     setUsernameExists(true);
                     setTimeout(() => {
                         setUsernameExists(false);
                     }, 5000)
                 }
-                if (error.response.data.message.localeCompare("Email already exists") === 0) {
+                if (error.response.data.message.localeCompare("Email already exists") === 0 || error.response.data.message.localeCompare("El email ingresado ya existe") === 0) {
                     setEmailExists(true);
                     setTimeout(() => {
                         setEmailExists(false);
