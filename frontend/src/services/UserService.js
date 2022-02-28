@@ -1,5 +1,6 @@
 import userApi from '../api/UserApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {UserRole} from '../enums/UserRole'
 
 const UserService = (function () {
 
@@ -13,6 +14,14 @@ const UserService = (function () {
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data}
+    }
+
+    const getModerators = async ({page, pageSize}) => {
+        return await getUsers({page, pageSize, userRole: UserRole.MOD});
+    }
+
+    const getBannedUsers = async ({page, pageSize}) => {
+        return await getUsers({page, pageSize, userRole: null, banned: true});
     }
 
     const getUser = async (username) => {
@@ -83,6 +92,8 @@ const UserService = (function () {
     return {
         login,
         getUsers,
+        getModerators,
+        getBannedUsers,
         getUser,
         createUser,
         deleteUser,
