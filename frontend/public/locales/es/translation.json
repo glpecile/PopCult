@@ -93,6 +93,9 @@
   "lists_newList": "+ CREA UNA NUEVA LISTA",
   "user_lists_empty": "Parece que no tienes listas para mostrar :c",
   "modal_user_delete_body": "¿Estas seguro que deseas eliminar tu cuenta? Esta accion es permamente",
-  "modal_user_delete_confirmation": "Si, elimina mi cuenta"
-
+  "modal_user_delete_confirmation": "Si, elimina mi cuenta",
+  "modal_success": "Exito!",
+  "modal_error": "Ha ocurrido un error",
+  "modal_user_delete_success": "Tu cuenta ha sido eliminada correctamente. En breve seras redirigido a la pantalla de inicio",
+  "modal_user_delete_error": "No hemos podido eliminar tu cuenta. Por favor, intenta nuevamente en breve."
 }

@@ -1,12 +1,13 @@
 import SettingsUserProfile from "../../../components/profile/SettingsUserProfile";
 import {useCallback, useContext, useEffect, useRef, useState} from "react";
-import {Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import UserService from "../../../services/UserService";
 import AuthContext from "../../../store/AuthContext";
 import * as PropTypes from "prop-types";
 import Spinner from "../../../components/animation/Spinner";
+import {useNavigate} from 'react-router-dom'
+import NoButtonDialog from "../../../components/modal/NoButtonDialog";
 
 
 function Suspense(props) {
@@ -18,8 +19,12 @@ Suspense.propTypes = {
     children: PropTypes.node
 };
 
+function Navigate(props) {
+    return null;
+}
+
+Navigate.propTypes = {to: PropTypes.string};
 const Settings = () => {
-    const [successfulUpdate, setSuccessfulUpdate] = useState(false);
     const {t} = useTranslation();
     const mountedUser = useRef(true);
     const mountedEditUser = useRef(true);
@@ -27,8 +32,12 @@ const Settings = () => {
     const [userData, setUserData] = useState(undefined);
     const [passwordError, setPasswordError] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
+    const [successModal, setSuccessModal] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
     const username = useRef(useContext(AuthContext)).current.username;
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+
 
     const getUser = useCallback(async () => {
         if (username) {
@@ -37,10 +46,10 @@ const Settings = () => {
                 setUserData(user);
             } catch (error) {
                 console.log(error);
-                setSuccessfulUpdate(true);
+               navigate(`/user/${username}`);
             }
         }
-    }, [username]);
+    }, [username, navigate]);
 
     useEffect(() => {
         mountedUser.current = true;
@@ -84,9 +93,9 @@ const Settings = () => {
                     console.log(error);
                 }
             }
-            if (!wrongPass) setSuccessfulUpdate(true);
+            if (!wrongPass) navigate(`/user/${username}`);
         }
-    }, [toEditData, username, userData]);
+    }, [toEditData, username, userData, navigate]);
 
     useEffect(() => {
         mountedEditUser.current = true;
@@ -97,16 +106,32 @@ const Settings = () => {
     }, [username, editUser]);
 
     const deleteUserAccount = useCallback(async () => {
-        await UserService.deleteUser(username);
-        authContext.onLogout();
-    }, [username, authContext]);
+        try {
+            await UserService.deleteUser(username);
+            authContext.onLogout();
+            setSuccessModal(true);
+            setTimeout(() => {
+                setSuccessModal(false);
+                setErrorModal(false);
+                navigate('/');
+            }, 5000);
+        } catch (error) {
+            setErrorModal(true);
+            console.log(error.response);
+            setTimeout(() => {
+                setSuccessModal(false);
+                setErrorModal(false);
+                // navigate(`/user/${username}`);
+            }, 5000);
+        }
+    }, [username, authContext, navigate]);
 
     useEffect(() => {
         if (deleteUser) {
             deleteUserAccount();
             setDeleteUser(false);
         }
-    }, [deleteUser, deleteUserAccount])
+    }, [deleteUser, deleteUserAccount, navigate])
 
     const updateUserData = (props) => {
         setToEditData(props);
@@ -125,9 +150,20 @@ const Settings = () => {
                                      email={userData.email} isIncorrectPassword={passwordError}
                                      onSaveUserData={updateUserData}
                                      onDeleteAccount={deleteAccount}/>
-
-                {successfulUpdate && <Navigate to={'/user/' + userData.username}/>}
-                {deleteUser && <Navigate to='/'/>}
+                {successModal && <NoButtonDialog
+                    buttonClassName="btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"
+                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonText={t('profile_settings_deleteUser')}
+                    title={t('modal_success')}
+                    body={t('modal_user_delete_success')}
+                    isOpened={true}/>}
+                {errorModal && <NoButtonDialog
+                    buttonClassName="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
+                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonText={t('profile_settings_deleteUser')}
+                    title={t('modal_error')}
+                    body={t('modal_delete_user_error')}
+                    isOpened={true}/>}
             </>
             }
         </>

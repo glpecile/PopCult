@@ -93,6 +93,10 @@
   "lists_newList": "+ CREATE NEW LIST",
   "user_lists_empty": "You don't seem to have any lists to show! :c",
   "modal_user_delete_body": "Are you sure you wish to permanently delete your user?",
-  "modal_user_delete_confirmation": "Yes, delete my account"
+  "modal_user_delete_confirmation": "Yes, delete my account",
+  "modal_success": "Success!",
+  "modal_error": "The has been an error",
+  "modal_user_delete_success": "Your account has been successfully deleted. You will be redirected to Home soon.",
+  "modal_user_delete_error": "There has been an error with your request. This one is on us. Please try again later."
 
 }
