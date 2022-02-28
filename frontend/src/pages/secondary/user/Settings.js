@@ -26,7 +26,9 @@ const Settings = () => {
     const [toEditData, setToEditData] = useState(undefined);
     const [userData, setUserData] = useState(undefined);
     const [passwordError, setPasswordError] = useState(false);
+    const [deleteUser, setDeleteUser] = useState(false);
     const username = useRef(useContext(AuthContext)).current.username;
+    const authContext = useContext(AuthContext);
 
     const getUser = useCallback(async () => {
         if (username) {
@@ -94,8 +96,23 @@ const Settings = () => {
         }
     }, [username, editUser]);
 
+    const deleteUserAccount = useCallback(async () => {
+        await UserService.deleteUser(username);
+        authContext.onLogout();
+    }, [username, authContext]);
+
+    useEffect(() => {
+        if (deleteUser) {
+            deleteUserAccount();
+            setDeleteUser(false);
+        }
+    }, [deleteUser, deleteUserAccount])
+
     const updateUserData = (props) => {
         setToEditData(props);
+    }
+    const deleteAccount = () => {
+        setDeleteUser(true);
     }
     return (
         <>
@@ -106,8 +123,11 @@ const Settings = () => {
             {userData !== undefined && <>
                 <SettingsUserProfile name={userData.name} username={userData.username} image={userData.imageUrl}
                                      email={userData.email} isIncorrectPassword={passwordError}
-                                     onSaveUserData={updateUserData}/>
+                                     onSaveUserData={updateUserData}
+                                     onDeleteAccount={deleteAccount}/>
+
                 {successfulUpdate && <Navigate to={'/user/' + userData.username}/>}
+                {deleteUser && <Navigate to='/'/>}
             </>
             }
         </>

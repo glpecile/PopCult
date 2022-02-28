@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {Trans, useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import FadeIn from "../animation/FadeIn";
+import OneButtonDialog from "../modal/OneButtonDialog";
 
 const SettingsUserProfile = (user) => {
     const {t} = useTranslation();
@@ -39,9 +40,9 @@ const SettingsUserProfile = (user) => {
     }
 
     const ValidatePrevPassword = () => {
-        if (prevPassword.length === 0 && (enteredPassword.length!== 0 && enteredRepeatedPassword.length !== 0 && enteredRepeatedPasswordError)) {
+        if (prevPassword.length === 0 && (enteredPassword.length !== 0 && enteredRepeatedPassword.length !== 0 && enteredRepeatedPasswordError)) {
             setPrevPasswordError(true);
-        }else{
+        } else {
             setPrevPasswordError(false);
         }
 
@@ -225,11 +226,14 @@ const SettingsUserProfile = (user) => {
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
                 </button>
                 {/*delete user*/}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                        className="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white">
-                    <i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>
-                    {t('profile_settings_deleteUser')}
-                </button>
+                <OneButtonDialog
+                    buttonClassName="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
+                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonText={t('profile_settings_deleteUser')}
+                    title={t('profile_settings_deleteUser')}
+                    body='Are you sure you want to permanently delete your user?'
+                    actionTitle='Yes, delete my user'
+                    onActionAccepted={user.onDeleteAccount}/>
             </div>
             <div className="flex justify-end space-x-2">
                 {/*Discard changes*/}
