@@ -108,7 +108,9 @@
   "expiredToken_emailError": "Parece que este email no pertenece a ninguno de nuestros usuarios. Estas seguro que este es tu email?",
   "expiredToken_greet": "Nos vemos pronto!!\nEl equipo de PopCult",
   "send": "Enviar",
-  "banned_users_empty": "Parece que no hay usuarios suspendidos en el momento."
+  "banned_users_empty": "Parece que no hay usuarios suspendidos en el momento.",
+  "banned_users": "Usuarios Suspendidos"
+
 
 
 

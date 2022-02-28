@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router-dom";
 import UserService from "../../../services/UserService";
-import Loader from "../errors/Loader";
 import BannedUserCard from "../../../components/admin/BannedUserCard";
 import {useTranslation} from "react-i18next";
+import Spinner from "../../../components/animation/Spinner";
 
 const BannedUsers = () => {
     const query = new URLSearchParams(useLocation().search);
@@ -43,9 +43,9 @@ const BannedUsers = () => {
 
     return (<>
         <h1 className="text-3xl fw-bolder fw-bolder py-4">
-            Banned Users
+            {t('banned_users')}
         </h1>
-        {bannedUsers === undefined && <Loader/>}
+        {bannedUsers === undefined && <Spinner/>}
         {bannedUsers !== undefined && bannedUsers.data.length === 0 &&
             <div className="flex-col flex-wrap p-4 space-x-4">
                 <img className="w-36 object-center mx-auto" src={require("../../../images/PopCultLogoExclamation.png")}

@@ -108,5 +108,6 @@
   "expiredToken_emailError": "It seems this email does not match any of our users emails. Are you sure this is your email?",
   "expiredToken_greet": "See you soon!\nThe PopCult Team",
   "send": "Send",
-  "banned_users_empty": "It seems there are no banned users to show"
+  "banned_users_empty": "It seems there are no banned users to show",
+  "banned_users": "Banned Users"
 }
