@@ -17,4 +17,6 @@ const genreService = (() => {
         getGenres,
         getGenre
     }
-})
+})();
+
+export default genreService;
