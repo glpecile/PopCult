@@ -12,7 +12,6 @@ const BannedUsers = () => {
     const [bannedUsers, setBannedUsers] = useState(undefined);
     const [refresh, setRefresh] = useState(false);
     const bannedUsersMounted = useRef(true);
-    console.log(page, pageSize);
     const {t} = useTranslation();
 
     const getBannedUsers = useCallback(async () => {
@@ -20,9 +19,6 @@ const BannedUsers = () => {
             try {
                 const users = await UserService.getBannedUsers({page, pageSize});
                 setBannedUsers(users);
-                console.log(users);
-                users.data.map(user => console.log(user))
-                console.log(users.data.length)
             } catch (error) {
                 console.log(error);
             }
