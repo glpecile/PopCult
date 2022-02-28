@@ -68,6 +68,51 @@ const reportApi = (() => {
         return api.delete(`/media-comment-reports/${id}`);
     }
 
+    const getReportsFromList = ({id, page, pageSize}) => {
+        return api.get(`/lists/${id}/reports`,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
+    //TODO define dto
+    const createListReport = (id) => {
+        return api.post(`/lists/${id}/reports`)
+    }
+
+    const getReportsFromListComment = ({id, page, pageSize}) => {
+        return api.get(`/lists-comments/${id}/reports`,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
+    //TODO define dto
+    const createListCommentReport = (id) => {
+        return api.post(`/lists-comments/${id}/reports`)
+    }
+
+    const getReportsFromMediaComment = ({id, page, pageSize}) => {
+        return api.get(`/media-comments/${id}/reports`,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
+    //TODO define dto
+    const createMediaCommentReport = (id) => {
+        return api.post(`/media-comments/${id}/reports`)
+    }
+
     return {
         getListReports,
         getListReport,
@@ -80,7 +125,13 @@ const reportApi = (() => {
         getMediaCommentReports,
         getMediaCommentReport,
         approveMediaCommentReport,
-        deleteMediaCommentReport
+        deleteMediaCommentReport,
+        getReportsFromList,
+        createListReport,
+        getReportsFromListComment,
+        createListCommentReport,
+        getReportsFromMediaComment,
+        createMediaCommentReport
     }
 })();
 
