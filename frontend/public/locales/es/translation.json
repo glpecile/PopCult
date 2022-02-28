@@ -84,8 +84,8 @@
   "register_username_exists": "Parece que este nombre de usuario esta siendo utilizado por alguien mas",
   "register_email_exists": "Parece que este email esta siendo utilizado por alguien mas",
   "user_panel_title": "El panel de {{username}}",
-  "user_panel_requests": "Collaboration Requests",
-  "user_panel_requests_detail": "See all the requests from people who wish to collaborate in your lists",
-  "user_panel_comments": "Lists Comments",
-  "user_panel_comments_detail": "See everything that was discussed in your lists comment section"
+  "user_panel_requests": "Pedidos para Colaborar",
+  "user_panel_requests_detail": "Mira todas las peticiones de personas que desean colaborar en tus listas",
+  "user_panel_comments": "Comentarios en Listas",
+  "user_panel_comments_detail": "Mira todo lo que fue discutido en la sección de comentarios de tus listas"
 }
