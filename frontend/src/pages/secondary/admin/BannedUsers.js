@@ -43,7 +43,7 @@ const BannedUsers = () => {
     }, [getBannedUsers, refresh]);
 
     return (<>
-        <h1 className="text-3xl fw-bolder fw-bolder py-4">
+        <h1 className="text-3xl fw-bolder fw-bolder text-center py-4">
             {t('banned_users')}
         </h1>
         {bannedUsers === undefined && <Spinner/>}
