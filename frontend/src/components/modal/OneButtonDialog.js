@@ -71,7 +71,7 @@ export default function OneButtonDialog(props) {
                     <button autoFocus onClick={() => {
                         handleState();
                         props.onActionAccepted();
-                    }} className={props.buttonClassName}>
+                    }} className={props.submitButtonClassName || props.buttonClassName}>
                         {props.actionTitle}
                     </button>
                 </DialogActions>

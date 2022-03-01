@@ -17,19 +17,19 @@ export default function AdminPanel() {
             {/*Link to Reports*/}
             <IconLinkCard icon={<i
                 className="fas fa-exclamation-circle text-purple-500 group-hover:text-purple-900 fa-2x mt-3"/>}
-                          linkTo='/admin/reports'
+                          linkTo='/admin/reports?page=1&page-size=2'
                           title={t('report_title_plural')}
                           description={t('admin_reports_description')}/>
             {/*Link to Bans*/}
             <IconLinkCard
                 icon={<i className="fas fa-user-alt-slash text-purple-500 group-hover:text-purple-900 fa-2x mt-3"/>}
-                linkTo='/admin/bans'
+                linkTo='/admin/bans?page=1&page-size=2'
                 title={t('bans_title')}
                 description={t('admin_bans_description')}/>
             {/*Link to Mods*/}
             {isAdmin && <IconLinkCard
                 icon={<i className="fas fa-users text-purple-500 group-hover:text-purple-900 fa-2x mt-3"/>}
-                linkTo='/admin/mods'
+                linkTo='/admin/mods?page=1&page-size=2'
                 title={t('mods_title')}
                 description={t('admin_mods_description')}/>
             }

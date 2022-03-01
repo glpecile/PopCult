@@ -109,5 +109,19 @@
   "expiredToken_greet": "See you soon!\nThe PopCult Team",
   "send": "Send",
   "banned_users_empty": "It seems there are no banned users to show",
-  "banned_users": "Banned Users"
+  "banned_users": "Banned Users",
+  "moderators": "Moderators",
+  "moderators_active": "Active Moderators",
+  "moderators_request": "Moderators Request",
+  "moderators_request_empty": "It seems there are no moderation requests to show",
+  "moderators_active_empty": "It seems that currently there are no PopCult Moderators",
+  "moderator_accept": "Accept Moderator",
+  "moderator_accept_body": "Are you sure you want to accept {{username}} as a moderator?",
+  "accept": "Accept",
+  "moderator_reject": "Reject Moderator",
+  "moderator_reject_body": "Are you sure you want to reject {{username}} from being a moderator?",
+  "reject": "Reject",
+  "moderator_remove": "Remove Moderator",
+  "moderator_remove_body": "Are you sure you want to quit {{username}} moderator access?",
+  "remove": "Remove"
 }

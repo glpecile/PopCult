@@ -109,9 +109,6 @@
   "expiredToken_greet": "Nos vemos pronto!!\nEl equipo de PopCult",
   "send": "Enviar",
   "banned_users_empty": "Parece que no hay usuarios suspendidos en el momento.",
-  "banned_users": "Usuarios Suspendidos"
-
-
-
-
+  "banned_users": "Usuarios Suspendidos",
+  "moderators": "Moderadores"
 }

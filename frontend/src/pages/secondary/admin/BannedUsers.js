@@ -4,11 +4,12 @@ import UserService from "../../../services/UserService";
 import BannedUserCard from "../../../components/admin/BannedUserCard";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../../components/animation/Spinner";
+import NothingToShow from "../../../components/admin/NothingToShow";
 
 const BannedUsers = () => {
     const query = new URLSearchParams(useLocation().search);
-    const page = query.get('page') || 1;
-    const pageSize = query.get('page-size') || 2;
+    const [page, setPage] = useState(query.get('page') || 1); // set state queda para paginacion
+    const [pageSize, setPageSize] = useState(query.get('page-size') || 2);
     const [bannedUsers, setBannedUsers] = useState(undefined);
     const [refresh, setRefresh] = useState(false);
     const bannedUsersMounted = useRef(true);
@@ -46,14 +47,7 @@ const BannedUsers = () => {
             {t('banned_users')}
         </h1>
         {bannedUsers === undefined && <Spinner/>}
-        {bannedUsers !== undefined && bannedUsers.data.length === 0 &&
-            <div className="flex-col flex-wrap p-4 space-x-4">
-                <img className="w-36 object-center mx-auto" src={require("../../../images/PopCultLogoExclamation.png")}
-                     alt="no_results_image"/>
-                <h3 className="text-xl text-gray-400 py-2 mt-3 text-center">
-                    {t('banned_users_empty')}
-                </h3>
-            </div>}
+        {bannedUsers !== undefined && bannedUsers.data.length === 0 && <NothingToShow text={t('banned_users_empty')}/>}
         {bannedUsers !== undefined && bannedUsers.data.length !== 0 && (bannedUsers.data.map(user => {
             return <BannedUserCard key={user.username} username={user.username} strikes={user.strikes}
                                    unbanDate={user.banDate}
