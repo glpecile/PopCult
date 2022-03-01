@@ -32,24 +32,26 @@ function a11yProps(index) {
 const UserTabs = (props) => {
     const {t} = useTranslation();
     const [value, setValue] = useState(0);
+    let tabStyle = "capitalize";
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
     return (
         <>
-            <Tabs value={value}
-                  onChange={handleChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="tabs">
-                <Tab label={t('profile_tabs_main', {username: props.username})} {...a11yProps(0)}/>
-                <Tab label={t('profile_tabs_favMedia')} {...a11yProps(1)}/>
-                <Tab label={t('profile_tabs_favLists')} {...a11yProps(2)}/>
-                <Tab label={t('profile_tabs_watchedMedia')} {...a11yProps(3)}/>
-                <Tab label={t('profile_tabs_watchedMedia')} {...a11yProps(4)}/>
-            </Tabs>
-
+            <div className="flex justify-center">
+                <Tabs value={value}
+                      onChange={handleChange}
+                      textColor="secondary"
+                      indicatorColor="secondary"
+                      aria-label="tabs">
+                    <Tab className={tabStyle} label={t('profile_tabs_main', {username: props.username})} {...a11yProps(0)}/>
+                    <Tab className={tabStyle} label={t('profile_tabs_favMedia')} {...a11yProps(1)}/>
+                    <Tab className={tabStyle} label={t('profile_tabs_favLists')} {...a11yProps(2)}/>
+                    <Tab className={tabStyle} label={t('profile_tabs_watchedMedia')} {...a11yProps(3)}/>
+                    <Tab className={tabStyle} label={t('profile_tabs_watchedMedia')} {...a11yProps(4)}/>
+                </Tabs>
+            </div>
             <TabPanel value={value} index={0}>
                 Content 1
             </TabPanel>

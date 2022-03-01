@@ -52,6 +52,7 @@ const Moderators = () => {
     const moderatorsUsersMounted = useRef(true);
     const moderatorsRequestMounted = useRef(true);
     const [value, setValue] = useState(0);
+    let tabStyle = "capitalize";
 
     const getModerators = useCallback(async () => {
         if (moderatorsUsersMounted.current) {
@@ -141,8 +142,8 @@ const Moderators = () => {
                       textColor="secondary"
                       indicatorColor="secondary"
                       aria-label="tabs">
-                    <Tab label={t('moderators_active')} {...a11yProps(0)}/>
-                    <Tab label={t('moderators_request')} {...a11yProps(1)}/>
+                    <Tab className={tabStyle} label={t('moderators_active')} {...a11yProps(0)}/>
+                    <Tab className={tabStyle} label={t('moderators_request')} {...a11yProps(1)}/>
                 </Tabs>
             </div>
             <TabPanel value={value} index={0}>
