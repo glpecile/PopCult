@@ -41,18 +41,25 @@ function a11yProps(index) {
 
 const Moderators = () => {
     const query = new URLSearchParams(useLocation().search);
+
     const [requestsPage, setRequestsPage] = useState(query.get('page') || 1);
     const [requestsPageSize, setRequestsPageSize] = useState(query.get('page-size') || 2);
     const [moderatorsPage, setModeratorsPage] = useState(query.get('page') || 1);
     const [moderatorsPageSize, setModeratorsPageSize] = useState(query.get('page-size') || 2);
+
     const [moderatorsRequests, setModeratorsRequests] = useState(undefined);
     const [activeModerators, setActiveModerators] = useState(undefined);
+
     const [activeModeratorsRefresh, setActiveModeratorsRefresh] = useState(false);
     const [moderatorsRequestRefresh, setModeratorsRequestRefresh] = useState(false);
+
     const moderatorsUsersMounted = useRef(true);
     const moderatorsRequestMounted = useRef(true);
+
     const [value, setValue] = useState(0);
     let tabStyle = "capitalize";
+    const {t} = useTranslation();
+
 
     const getModerators = useCallback(async () => {
         if (moderatorsUsersMounted.current) {
@@ -129,7 +136,6 @@ const Moderators = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    const {t} = useTranslation();
 
     return (
         <>

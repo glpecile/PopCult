@@ -123,5 +123,20 @@
   "reject": "Reject",
   "moderator_remove": "Remove Moderator",
   "moderator_remove_body": "Are you sure you want to quit {{username}} moderator access?",
-  "remove": "Remove"
+  "remove": "Remove",
+  "reports": "Reports",
+  "report": "Report",
+  "comment": "Comment",
+  "reports_list": "List Reports",
+  "reports_list_comments": "List Comments Reports",
+  "reports_media_comments": "Media Comments Reports",
+  "report_reject": "Reject Report",
+  "report_accept": "Accept Report",
+  "report_reject_modal_title": "Reject this report",
+  "report_reject_modal_body": "Are you sure you want to reject this report?",
+  "report_accept_modal_title": "Approve this report",
+  "report_accept_modal_body": "Are you sure you want to approve this report?",
+  "reports_lists_empty": "It seems there are no lists reported at the moment",
+  "reports_lists_comments_empty": "It seems there are no list comments reported at the moment",
+  "reports_media_comments_empty": "It seems there are no media comments reported at the moment"
 }

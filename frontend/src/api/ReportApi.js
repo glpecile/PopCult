@@ -47,7 +47,7 @@ const reportApi = (() => {
     }
 
     const getMediaCommentReports = ({page, pageSize}) => {
-        return api.get(`/media-comment-reports`,
+        return api.get(`/media-comments-reports`,
             {
                 params: {
                     'page': page,
