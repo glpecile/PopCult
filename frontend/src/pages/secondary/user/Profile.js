@@ -7,13 +7,14 @@ import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
 import Error404 from "../errors/Error404";
 import UserService from "../../../services/UserService";
+import Spinner from "../../../components/animation/Spinner";
 
 
 const Profile = () => {
     let {username} = useParams();
     const loggedUsername = useContext(AuthContext).username;
     const [isCurrUser, setIsCurrUser] = useState(username.localeCompare(loggedUsername) === 0);
-    const [userData, setUserData] = useState('');
+    const [userData, setUserData] = useState(undefined);
     const [userError, setUserError] = useState(false);
     const mountedUser = useRef(true);
     const {t} = useTranslation();
@@ -44,15 +45,29 @@ const Profile = () => {
     }, [username, getUser])
 
     return (
-        <>{!userError && <>
-            <Helmet>
-                <title>{t('profile_title')}</title>
-            </Helmet>
-            <UserProfile id={userData.username} name={userData.name} username={userData.username}
-                         image={userData.imageUrl} isCurrentUser={isCurrUser}/>
-            <UserTabs username={userData.username} id={userData.username}/> </>}
+        <>
+            {!userError &&
+                <>
+                    <Helmet>
+                        <title>{t('profile_title')}</title>
+                    </Helmet>
+                    {userData === undefined && <Spinner/>}
+                    {
+                        userData !== undefined &&
+                        <>
+                            <UserProfile id={userData.username}
+                                         name={userData.name}
+                                         username={userData.username}
+                                         image={userData.imageUrl}
+                                         isCurrentUser={isCurrUser}/>
+                            <UserTabs username={userData.username} id={userData.username}/>
+                        </>
+                    }
+                </>
+            }
             {userError && <Error404/>}
-        </>);
+        </>
+    );
 }
 
 export default Profile;
