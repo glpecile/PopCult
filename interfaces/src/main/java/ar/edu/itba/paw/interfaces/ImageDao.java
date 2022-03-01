@@ -8,4 +8,6 @@ public interface ImageDao {
     Optional<Image> getImage(int imageId);
 
     Image uploadImage(byte[] photoBlob);
+
+    void deleteImage(Image image);
 }

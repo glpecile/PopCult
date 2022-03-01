@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -61,7 +62,7 @@ public class CommentHibernateDao implements CommentDao {
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM mediacomment WHERE mediaid = :mediaId " +
                         "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("mediaId", media.getMediaId())
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> commentIds = nativeQuery.getResultList();
@@ -82,7 +83,7 @@ public class CommentHibernateDao implements CommentDao {
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM listcomment WHERE listid = :listId " +
                         "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("listId", mediaList.getMediaListId())
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> commentIds = nativeQuery.getResultList();
@@ -109,13 +110,25 @@ public class CommentHibernateDao implements CommentDao {
     }
 
     @Override
+    public Optional<Notification> getListCommentNotification(int notificationId) {
+        return Optional.ofNullable(em.find(Notification.class, notificationId));
+    }
+
+    @Override
+    public void deleteListCommentNotification(Notification notification) {
+        em.remove(notification);
+    }
+
+    @Override
     public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT notificationid FROM commentnotifications NATURAL JOIN listcomment " +
                         "WHERE commentid IN (SELECT lc.commentid FROM listcomment lc JOIN medialist ml ON lc.listid = ml.medialistid WHERE ml.userid = :userId)" +
                         "ORDER BY date DESC " +
                         "OFFSET :offset LIMIT :limit")
                 .setParameter("userId", user.getUserId())
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> notificationIds = nativeQuery.getResultList();

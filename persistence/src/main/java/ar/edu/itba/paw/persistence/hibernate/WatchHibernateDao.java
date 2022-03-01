@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Primary
 @Repository
@@ -69,10 +70,18 @@ public class WatchHibernateDao implements WatchDao {
     }
 
     @Override
+    public Optional<WatchedMedia> getWatchedMedia(User user, Media media) {
+        return em.createQuery("FROM WatchedMedia WHERE media = :media AND user = :user AND watchDate IS NOT NULL", WatchedMedia.class)
+                .setParameter("media", media)
+                .setParameter("user", user)
+                .getResultList().stream().findFirst();
+    }
+
+    @Override
     public PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT watchedmediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page*pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -90,7 +99,7 @@ public class WatchHibernateDao implements WatchDao {
     public PageContainer<Media> getToWatchMedia(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page*pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();

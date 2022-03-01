@@ -1,5 +1,10 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class MediaAlreadyInListException extends Exception {
-    private static final long serialVersionUID = -6013918724502446165L;
+import ar.edu.itba.paw.interfaces.utils.HttpStatusCodes;
+
+public class MediaAlreadyInListException extends CustomException {
+
+    public MediaAlreadyInListException() {
+        super(HttpStatusCodes.BAD_REQUEST, "exception.mediaAlreadyExistsInList");
+    }
 }

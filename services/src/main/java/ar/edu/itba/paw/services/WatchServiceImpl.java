@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.WatchDao;
 import ar.edu.itba.paw.interfaces.WatchService;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidDateException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class WatchServiceImpl implements WatchService {
@@ -20,13 +22,23 @@ public class WatchServiceImpl implements WatchService {
 
     @Transactional
     @Override
-    public void addWatchedMedia(Media media, User user) {
-        watchDao.addWatchMedia(media, user, LocalDateTime.now());
+    public void addWatchedMedia(Media media, User user, LocalDateTime dateTime) {
+        if(dateTime == null || dateTime.isAfter(LocalDateTime.now()) || dateTime.isBefore(media.getReleaseDate())) {
+            throw new InvalidDateException();
+        }
+        if (isWatched(media, user)) {
+            watchDao.updateWatchedMediaDate(media, user, dateTime);
+        } else {
+            watchDao.addWatchMedia(media, user, dateTime);
+        }
     }
 
     @Transactional
     @Override
     public void addMediaToWatch(Media media, User user) {
+        if(isToWatch(media, user)) {
+            return;
+        }
         watchDao.addWatchMedia(media, user, null);
     }
 
@@ -42,11 +54,11 @@ public class WatchServiceImpl implements WatchService {
         watchDao.deleteToWatchMedia(media, user);
     }
 
-    @Transactional
-    @Override
-    public void updateWatchedMediaDate(Media media, User user, LocalDateTime date) {
-        watchDao.updateWatchedMediaDate(media, user, date);
-    }
+//    @Transactional
+//    @Override
+//    public void updateWatchedMediaDate(Media media, User user, LocalDateTime date) {
+//        watchDao.updateWatchedMediaDate(media, user, date);
+//    }
 
     @Transactional(readOnly = true)
     @Override
@@ -62,13 +74,19 @@ public class WatchServiceImpl implements WatchService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<WatchedMedia> getWatchedMediaId(User user, int page, int pageSize) {
+    public Optional<WatchedMedia> getWatchedMedia(User user, Media media) {
+        return watchDao.getWatchedMedia(user, media);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize) {
         return watchDao.getWatchedMedia(user, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getToWatchMediaId(User user, int page, int pageSize) {
+    public PageContainer<Media> getToWatchMedia(User user, int page, int pageSize) {
         return watchDao.getToWatchMedia(user, page, pageSize);
 
     }

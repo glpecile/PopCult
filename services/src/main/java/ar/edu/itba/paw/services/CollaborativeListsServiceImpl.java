@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -37,8 +38,8 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize) {
-        return collaborativeListsDao.getRequestsByUserId(user, page, pageSize);
+    public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
+        return collaborativeListsDao.getRequestsByUser(user, page, pageSize);
     }
 
     @Transactional
@@ -70,6 +71,12 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Override
     public Optional<Request> getById(int collabId) {
         return collaborativeListsDao.getById(collabId);
+    }
+
+    @Transactional
+    @Override
+    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
+        collaborativeListsDao.addCollaborator(mediaList, user);
     }
 
     @Transactional

@@ -50,7 +50,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<Media> getUserFavoriteMedia(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM favoritemedia WHERE userId = :userId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -88,7 +88,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<MediaList> getUserFavoriteLists(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM favoritelists WHERE userId = :userId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
@@ -103,7 +103,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<MediaList> getUserPublicFavoriteLists(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialist.medialistid FROM favoritelists NATURAL JOIN medialist WHERE userId = :userId AND visibility = :visibility OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("visibility", true);
         @SuppressWarnings("unchecked")
@@ -119,7 +119,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<MediaList> getRecommendationsBasedOnFavLists(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("((SELECT medialistid FROM medialist NATURAL JOIN (SELECT medialistid FROM favoritelists WHERE userid IN (SELECT l.userid FROM favoritelists f JOIN favoritelists l ON f.medialistid = l.medialistid WHERE f.userid = :userId) EXCEPT SELECT m.medialistid FROM medialist m RIGHT JOIN favoritelists f ON m.userid=f.userid WHERE f.userid = :userId) as AUX) OFFSET :offset LIMIT :limit)");
         nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
@@ -133,7 +133,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     @Override
     public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialist.medialistid FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = :visibility GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("visibility", true);
         @SuppressWarnings("unchecked")
@@ -150,8 +150,8 @@ public class FavoriteHibernateDao implements FavoriteDao {
         final Query nativeQuery = em.createNativeQuery("(SELECT media.mediaid FROM media NATURAL JOIN (SELECT mediaid FROM favoritemedia WHERE userid IN (SELECT m.userid FROM favoritemedia f JOIN favoritemedia m ON f.mediaid = m.mediaid WHERE f.userid = :userId) EXCEPT SELECT mediaId FROM favoritemedia WHERE userid = :userId) as AUX WHERE type = :mediaType) OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("mediaType", mediaType.ordinal());
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
-        nativeQuery.setParameter("offset", page * pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("(SELECT COUNT(media.mediaid) FROM media NATURAL JOIN (SELECT mediaid FROM favoritemedia WHERE userid IN (SELECT m.userid FROM favoritemedia f JOIN favoritemedia m ON f.mediaid = m.mediaid WHERE f.userid = :userId) EXCEPT SELECT mediaId FROM favoritemedia WHERE userid = :userId) as AUX WHERE type = :mediaType)");
@@ -163,7 +163,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     @Override
     public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT media.mediaid FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -175,7 +175,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     public PageContainer<Media> getMostLikedMedia(MediaType mediaType, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT media.mediaid FROM media LEFT JOIN favoritemedia ON media.mediaId = favoritemedia.mediaId WHERE type = :mediaType GROUP BY media.mediaid ORDER BY COUNT(favoritemedia.userid) DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("mediaType", mediaType.ordinal());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -197,7 +197,7 @@ public class FavoriteHibernateDao implements FavoriteDao {
     @Override
     public PageContainer<MediaList> getMostLikedLists(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialist.medialistid FROM medialist LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid WHERE visibility = :visibility AND medialist.userid != :userId GROUP BY medialist.medialistid ORDER BY COUNT(favoritelists.userid) DESC OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("visibility", true);
         nativeQuery.setParameter("userId", user.getUserId());

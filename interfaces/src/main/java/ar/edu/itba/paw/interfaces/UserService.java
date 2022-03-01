@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,23 +21,27 @@ public interface UserService {
 
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
+    Token createVerificationToken(User user);
+
     void deleteUser(User user);
 
     Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException;
 
-    void forgotPassword(String email) throws EmailNotExistsException;
+    Token forgotPassword(User user);
 
-    boolean resetPassword(Token token, String newPassword);
+    void resetPassword(Token token, String newPassword) throws InvalidTokenException;
 
     Optional<User> getCurrentUser();
 
-    boolean confirmRegister(Token token);
+    User confirmRegister(Token token) throws InvalidTokenException;
 
     void resendToken(Token token);
 
     Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
 
     void uploadUserProfileImage(User user, byte[] photoBlob);
+
+    void deleteUserProfileImage(User user);
 
     void updateUserData(User user, String name);
 
@@ -50,5 +55,5 @@ public interface UserService {
 
     void unbanUsers();
 
-    PageContainer<User> getUsers(int page, int pageSize);
+    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned);
 }

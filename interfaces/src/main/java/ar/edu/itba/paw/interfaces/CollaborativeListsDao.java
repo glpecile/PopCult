@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CollaborativeListsDao {
     Request makeNewRequest(MediaList mediaList, User user);
 
-    PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize);
+    PageContainer<Request> getRequestsByUser(User user, int page, int pageSize);
 
     void rejectRequest(Request request);
 
@@ -22,7 +22,7 @@ public interface CollaborativeListsDao {
 
     void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException;
 
-    void addCollaborators(MediaList mediaList, List<User> users) ;
+    void addCollaborators(MediaList mediaList, List<User> users);
 
     Optional<Request> getUserListCollabRequest(MediaList mediaList, User user);
 

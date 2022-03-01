@@ -208,7 +208,7 @@ public class MediaController {
         User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         LOGGER.debug("{} is trying to add media {} to watched", user.getUsername(), mediaId);
-        watchService.addWatchedMedia(media, user);
+//        watchService.addWatchedMedia(media, user);
         LOGGER.info("{} added media {} to watched", user.getUsername(), mediaId);
         return new ModelAndView("redirect:/media/" + mediaId);
     }

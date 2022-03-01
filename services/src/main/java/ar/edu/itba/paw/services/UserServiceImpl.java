@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.image.Image;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,12 +84,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name);
-
-        Token token = tokenService.createToken(user, TokenType.VERIFICATION);
-
-        emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
-
+        createVerificationToken(user);
         return user;
+    }
+
+    @Transactional
+    @Override
+    public Token createVerificationToken(User user) {
+        Token token = tokenService.createToken(user, TokenType.VERIFICATION);
+        emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
+        return token;
     }
 
     @Transactional
@@ -102,7 +107,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> changePassword(User user, String currentPassword, String newPassword) throws InvalidCurrentPasswordException {
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            LOGGER.error("userId: {} changing password failed.", user.getUserId());
+            LOGGER.error("userId: {} changing password failed. Incorrect password", user.getUserId());
             throw new InvalidCurrentPasswordException();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -111,54 +116,51 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void forgotPassword(String email) throws EmailNotExistsException {
-        User user = getByEmail(email).orElseThrow(EmailNotExistsException::new);
+    public Token forgotPassword(User user) {
         Token token = tokenService.createToken(user, TokenType.RESET_PASS);
         emailService.sendResetPasswordEmail(user, token.getToken(), LocaleContextHolder.getLocale());
+        return token;
     }
 
     @Transactional
     @Override
-    public boolean resetPassword(Token token, String newPassword) {
+    public void resetPassword(Token token, String newPassword) throws InvalidTokenException {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.RESET_PASS);
-        if (isValidToken) {
-            token.getUser().setPassword(passwordEncoder.encode(newPassword));
-            tokenService.deleteToken(token);
+        if (!isValidToken) {
+            throw new InvalidTokenException();
         }
-        return isValidToken;
+        token.getUser().setPassword(passwordEncoder.encode(newPassword));
+        tokenService.deleteToken(token);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getCurrentUser() {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return getByUsername(userDetails.getUsername());
-        }
-        return Optional.empty();
+        return getByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     @Transactional
     @Override
-    public boolean confirmRegister(Token token) {
+    public User confirmRegister(Token token) throws InvalidTokenException {
         boolean isValidToken = tokenService.isValidToken(token, TokenType.VERIFICATION);
-        if (isValidToken) {
-            final User user = token.getUser();
-            user.setEnabled(ENABLED_USER);
-            authWithoutPassword(user);
-            tokenService.deleteToken(token);
+        if (!isValidToken) {
+            throw new InvalidTokenException();
         }
-        return isValidToken;
+        final User user = token.getUser();
+        user.setEnabled(ENABLED_USER);
+//        authWithoutPassword(user);
+        tokenService.deleteToken(token);
+        return user;
     }
 
-    private void authWithoutPassword(User user) {
-        final Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
-        org.springframework.security.core.userdetails.User userDetails =
-                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+//    private void authWithoutPassword(User user) {
+//        final Collection<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
+//        org.springframework.security.core.userdetails.User userDetails =
+//                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//    }
 
     @Transactional
     @Override
@@ -184,7 +186,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void uploadUserProfileImage(User user, byte[] photoBlob) {
         final Image image = imageService.uploadImage(photoBlob);
+        if(user.getImage() != null) {
+            imageService.deleteImage(user.getImage());
+        }
         user.setImage(image);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserProfileImage(User user) {
+        if(user.getImage() != null) {
+            imageService.deleteImage(user.getImage());
+            user.setImage(null);
+        }
     }
 
     @Transactional
@@ -203,7 +217,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void strikeUser(User user) {
         int userStrikes = user.addStrike();
-        switch(userStrikes) {
+        switch (userStrikes) {
             case FIRST_BAN_STRIKES:
             case SECOND_BAN_STRIKES:
                 banUser(user);
@@ -238,17 +252,17 @@ public class UserServiceImpl implements UserService {
         LocalDateTime actualDate = LocalDateTime.now();
         userDao.getBannedUsers().forEach(user -> {
             LOGGER.info("Checking ban for {}", user.getUsername());
-            if(user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
+            if (user.getUnbanDate() != null && user.getUnbanDate().isBefore(actualDate)) {
                 unbanUser(user);
                 LOGGER.info("{} unbanned", user.getUsername());
             }
         });
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize){
-        return userDao.getUsers(page, pageSize);
+    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
+        return userDao.getUsers(page, pageSize, userRole, banned);
     }
 
 }

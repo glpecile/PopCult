@@ -73,6 +73,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
+    public Optional<Notification> getListCommentNotification(int notificationId) {
+        return commentDao.getListCommentNotification(notificationId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteListCommentNotification(Notification notification) {
+        commentDao.deleteListCommentNotification(notification);
+    }
+
+    @Transactional
+    @Override
+    public void setListCommentNotificationAsOpened(Notification notification) {
+        notification.setOpened(true);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize) {
         return commentDao.getUserListsCommentsNotifications(user, page, pageSize);
     }
