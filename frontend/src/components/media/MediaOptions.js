@@ -33,21 +33,24 @@ const MediaOptions = () => {
             <Tooltip title={isLiked ? t('media_details_remove_liked') : t('media_details_add_liked')} arrow>
                 <IconButton onClick={handleLike} className={buttonStyle}>
                     {
-                        isLiked ? <FavoriteIcon className={iconStyle}/> : <FavoriteBorderOutlinedIcon className={iconStyle}/>
+                        isLiked ? <FavoriteIcon fontSize="large" className={iconStyle}/> :
+                            <FavoriteBorderOutlinedIcon fontSize="large" className={iconStyle}/>
                     }
                 </IconButton>
             </Tooltip>
-            <Tooltip title={isWatched ? t('media_details_add_watched') : t('media_details_remove_liked')} arrow>
+            <Tooltip title={isWatched ? t('media_details_add_watched') : t('media_details_remove_watched')} arrow>
                 <IconButton onClick={handleWatched} className={buttonStyle}>
                     {
-                        isWatched ? <VisibilityIcon className={iconStyle}/> : <VisibilityOffOutlinedIcon className={iconStyle}/>
+                        isWatched ? <VisibilityIcon fontSize="large" className={iconStyle}/> :
+                            <VisibilityOffOutlinedIcon fontSize="large" className={iconStyle}/>
                     }
                 </IconButton>
             </Tooltip>
             <Tooltip title={isInWatchlist ? t('media_details_add_watchlist') : t('media_details_remove_watchlist')} arrow>
                 <IconButton onClick={handleInWatchlist} className={buttonStyle}>
                     {
-                        isInWatchlist ? <EventBusyIcon className={iconStyle}/> : <EventAvailableOutlinedIcon className={iconStyle}/>
+                        isInWatchlist ? <EventBusyIcon fontSize="large" className={iconStyle}/> :
+                            <EventAvailableOutlinedIcon fontSize="large" className={iconStyle}/>
                     }
                 </IconButton>
             </Tooltip>
