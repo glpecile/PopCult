@@ -33,7 +33,8 @@ const ModeratorCard = (moderator) => {
                 actionTitle={t('remove')}
                 onActionAccepted={removeMod}
                 isOpened={false}
-                submitButtonClassName="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"/>
+                submitButtonClassName="btn btn-danger my-1 shadow-md bg-gray-300 hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
+            />
         </div>
     </div>);
 }

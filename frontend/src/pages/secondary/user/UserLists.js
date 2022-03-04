@@ -32,7 +32,7 @@ const UserLists = () => {
                     <h2 className="text-3xl fw-bolder py-2">
                         {t('user_lists_title')}
                     </h2>
-                    <button className="btn btn-link my-2.5 text-purple-500 hover:text-purple-900 btn-rounded">
+                    <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded">
                         {t('lists_newList')}
                     </button>
                     <div className="row py-2">
