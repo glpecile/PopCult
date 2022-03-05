@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AccessControl {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private CollaborativeListService collaborativeListService;
     @Autowired
