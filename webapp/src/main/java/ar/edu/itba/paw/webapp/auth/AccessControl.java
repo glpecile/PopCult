@@ -11,12 +11,12 @@ import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Ignore "Method is never used"
@@ -27,6 +27,8 @@ public class AccessControl {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
+    UserDetailsServiceImpl userDetailsService;
+    @Autowired
     private CollaborativeListService collaborativeListService;
     @Autowired
     private CommentService commentService;
@@ -36,7 +38,7 @@ public class AccessControl {
     private UserService userService;
 
     public boolean checkUser(HttpServletRequest request, String username) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -45,7 +47,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkNotificationOwner(HttpServletRequest request, int notificationId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -58,7 +60,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListOwner(HttpServletRequest request, int listId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -72,7 +74,7 @@ public class AccessControl {
     // It is not !checkListOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkListNotOwner(HttpServletRequest request, int listId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -85,7 +87,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListCollaborator(HttpServletRequest request, int listId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -102,7 +104,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkCollabRequestListOwner(HttpServletRequest request, int requestId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -115,7 +117,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkMediaCommentOwner(HttpServletRequest request, int commentId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -129,7 +131,7 @@ public class AccessControl {
     // It is not !checkMediaCommentOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkMediaCommentNotOwner(HttpServletRequest request, int commentId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -142,7 +144,7 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListCommentOwner(HttpServletRequest request, int commentId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -156,7 +158,7 @@ public class AccessControl {
     // It is not !checkListCommentOwner because first two cases are the same.
     @Transactional(readOnly = true)
     public boolean checkListCommentNotOwner(HttpServletRequest request, int commentId) {
-        final UserDetails userDetails = getUserDetailsFromRequest(request);
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
         }
@@ -167,18 +169,11 @@ public class AccessControl {
         return !userDetails.getUsername().equals(listComment.getUser().getUsername());
     }
 
-    private UserDetails getUserDetailsFromRequest(HttpServletRequest request) {
-        final String token = parseAuthHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
-        if (token == null) {
-            return null;
+    private UserDetails getUserDetailsFromSecurityContext() {
+        UserDetails userDetails = null;
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            userDetails = userDetailsService.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         }
-        return jwtTokenUtil.parseToken(token);
-    }
-
-    private String parseAuthHeader(String header) {
-        if (header == null || !header.startsWith("Bearer ")) {
-            return null;
-        }
-        return header.split(" ")[1].trim();
+        return userDetails;
     }
 }

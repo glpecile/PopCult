@@ -37,7 +37,6 @@ public class UserDto {
     private String collabRequestsUrl;
     private String recommendedMediaUrl;
     private String recommendedListsUrl;
-    private String authenticateUrl;
 
     public static UserDto fromUser(UriInfo url, User user) {
         UserDto userDto = new UserDto();
@@ -67,7 +66,6 @@ public class UserDto {
         userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
         userDto.recommendedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-media").build().toString();
         userDto.recommendedListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-lists").build().toString();
-        userDto.authenticateUrl = url.getBaseUriBuilder().path("authenticate").build().toString();
         return userDto;
     }
 
@@ -275,11 +273,4 @@ public class UserDto {
         this.recommendedListsUrl = recommendedListsUrl;
     }
 
-    public String getAuthenticateUrl() {
-        return authenticateUrl;
-    }
-
-    public void setAuthenticateUrl(String authenticateUrl) {
-        this.authenticateUrl = authenticateUrl;
-    }
 }
