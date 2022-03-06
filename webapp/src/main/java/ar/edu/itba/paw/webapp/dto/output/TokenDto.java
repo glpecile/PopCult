@@ -17,7 +17,7 @@ public class TokenDto {
         tokenDto.token = token.getToken();
         tokenDto.expiryDate = token.getExpiryDate();
 
-        tokenDto.url = url.getAbsolutePathBuilder().toString();
+        tokenDto.url = url.getAbsolutePathBuilder().path(token.getToken()).toString();
         return tokenDto;
     }
 

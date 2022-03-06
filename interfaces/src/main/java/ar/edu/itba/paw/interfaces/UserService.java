@@ -21,7 +21,7 @@ public interface UserService {
 
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
-    Token createVerificationToken(User user);
+    Token createVerificationToken(User user) throws EmailAlreadyVerifiedException;
 
     void deleteUser(User user);
 

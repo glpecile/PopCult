@@ -208,10 +208,10 @@ public class UserController {
      * User verification
      */
     @POST
-    @Path("/verification")
+    @Path("/verification-token")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) {
+    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
         if (userEmailDto == null) {
             throw new EmptyBodyException();
         }
@@ -221,21 +221,15 @@ public class UserController {
         final Token token = userService.createVerificationToken(user);
 
         LOGGER.info("POST /users/verification: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path("verification").build())
-                .entity(TokenDto.fromToken(uriInfo, token))
-                .build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
     }
 
     @PUT
-    @Path("/verification")
+    @Path("/verification-token/{token}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response verifyUser(@Valid UserVerificationDto userVerificationDto) throws InvalidTokenException {
-        if (userVerificationDto == null) {
-            throw new EmptyBodyException();
-        }
-
-        final Token token = tokenService.getToken(userVerificationDto.getToken()).orElseThrow(TokenNotFoundException::new);
+    public Response verifyUser(@PathParam("token") String tokenString) throws InvalidTokenException {
+        final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
         final User user = userService.confirmRegister(token);
 

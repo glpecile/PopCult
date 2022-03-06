@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.EmailAlreadyVerifiedException;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
 import ar.edu.itba.paw.interfaces.exceptions.UsernameAlreadyExistsException;
 import ar.edu.itba.paw.models.user.Token;
@@ -80,5 +81,13 @@ public class UserServiceImplTest {
         Assert.fail();
     }
 
+    @Test(expected = EmailAlreadyVerifiedException.class)
+    public void testCreateVerificationTokenWithVerifiedEmail() throws EmailAlreadyVerifiedException {
+        user.setEnabled(true);
+
+        userService.createVerificationToken(user);
+
+        Assert.fail();
+    }
 
 }
