@@ -3,7 +3,13 @@ import api from './api'
 const userApi = (() => {
 
     const login = ({username, password}) => {
-        return api.post('/authenticate', {username: username, password: password});
+        const credentials = btoa(`${username}:${password}`)
+        return api.get('/users',
+            {
+                headers: {
+                    'Authorization': `Basic ${credentials}`
+                }
+            });
     }
 
     const getUsers = ({page, pageSize, userRole, banned}) => {
