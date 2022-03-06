@@ -258,7 +258,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/users")
                     .anonymous()
 
-                .antMatchers("/users/reset-password", "/users/verification-token/**")
+                .antMatchers("/users/password-token/**", "/users/verification-token/**")
                     .anonymous()
 
                 .antMatchers("/users/{username}/mod")
