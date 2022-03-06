@@ -6,10 +6,10 @@ const ModeratorsRequest = (user) => {
     const {t} = useTranslation();
 
     const acceptRequest = () => {
-        user.acceptModerator(user.username);
+        user.acceptModerator(user.url);
     }
     const rejectRequest = () => {
-        user.rejectModerator(user.username);
+        user.rejectModerator(user.url);
     }
     return (<div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
         <div className="flex">

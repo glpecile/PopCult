@@ -87,8 +87,8 @@ const userApi = (() => {
         return api.post(`/users/${username}/mod-requests`);
     }
 
-    const removeMod = (username) => {
-        return api.delete(`/users/${username}/mod`);
+    const removeMod = (url) => {
+        return api.delete(url);
     }
 
     const banUser = (username) => {

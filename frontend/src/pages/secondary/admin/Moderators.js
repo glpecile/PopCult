@@ -66,6 +66,7 @@ const Moderators = () => {
             try {
                 const mods = await UserService.getModerators({page: moderatorsPage, pageSize: moderatorsPageSize});
                 setActiveModerators(mods);
+                console.log(mods);
             } catch (error) {
                 console.log(error);
             }
@@ -80,34 +81,34 @@ const Moderators = () => {
                     pageSize: requestsPageSize
                 });
                 setModeratorsRequests(requests);
-                console.log(requests)
+                console.log(requests);
             } catch (error) {
                 console.log(error);
             }
         }
     }, [requestsPage, requestsPageSize]);
 
-    const removeModerator = useCallback(async (username) => {
+    const removeModerator = useCallback(async (url) => {
         try {
-            await UserService.removeMod(username);
+            await UserService.removeMod(url);
             setActiveModeratorsRefresh((prevState => !prevState));
         } catch (error) {
             console.log(error);
         }
     }, []);
 
-    const rejectModerator = useCallback(async (id) => {
+    const rejectModerator = useCallback(async (url) => {
         try {
-            await ModRequestService.rejectModRequest(id);
+            await ModRequestService.rejectModRequest(url);
             setModeratorsRequestRefresh((prevState => !prevState));
         } catch (error) {
             console.log(error);
         }
     }, []);
 
-    const acceptModerator = useCallback(async (id) => {
+    const acceptModerator = useCallback(async (url) => {
         try {
-            await ModRequestService.promoteToMod(id);
+            await ModRequestService.promoteToMod(url);
             setModeratorsRequestRefresh((prevState => !prevState));
         } catch (error) {
             console.log(error);
@@ -131,7 +132,7 @@ const Moderators = () => {
             moderatorsUsersMounted.current = false;
         }
 
-    }, [getModerators, activeModeratorsRefresh]);
+    }, [getModerators, activeModeratorsRefresh, moderatorsRequestRefresh]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -159,6 +160,7 @@ const Moderators = () => {
                 {activeModerators !== undefined && activeModerators.data.length !== 0 && (activeModerators.data.map(user => {
                     return <ModeratorCard key={user.username} username={user.username}
                                           image={user.imageUrl}
+                                          url={user.removeModUrl}
                                           removeModerator={removeModerator}
                     />;
                 }))}
@@ -171,9 +173,10 @@ const Moderators = () => {
                     <NothingToShow text={t('moderators_request_empty')}/>}
                 {moderatorsRequests !== undefined && moderatorsRequests.data.length !== 0 && (moderatorsRequests.data.map(user => {
                     return <ModeratorsRequest key={user.username} username={user.username}
-                                          image={user.imageUrl}
-                                          rejectModerator={rejectModerator}
-                                          acceptModerator={acceptModerator}
+                                              image={user.imageUrl}
+                                              url={user.url}
+                                              rejectModerator={rejectModerator}
+                                              acceptModerator={acceptModerator}
                     />;
                 }))}
             </TabPanel>

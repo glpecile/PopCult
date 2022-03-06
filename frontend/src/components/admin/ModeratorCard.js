@@ -7,7 +7,7 @@ const ModeratorCard = (moderator) => {
     const {t} = useTranslation();
 
     const removeMod = () => {
-        moderator.removeModerator(moderator.username);
+        moderator.removeModerator(moderator.url);
     }
 
     return (<div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">

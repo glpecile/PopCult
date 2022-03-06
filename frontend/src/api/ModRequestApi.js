@@ -16,12 +16,12 @@ const modRequestApi = (() => {
         return api.get(`/mods-requests/${id}`);
     }
 
-    const promoteToMod = (id) => {
-        return api.put(`/mods-requests/${id}`);
+    const promoteToMod = (url) => {
+        return api.put(url);
     }
 
-    const rejectModRequest = (id) => {
-        return api.delete(`/mods-requests/${id}`);
+    const rejectModRequest = (url) => {
+        return api.delete(url);
     }
 
     return {

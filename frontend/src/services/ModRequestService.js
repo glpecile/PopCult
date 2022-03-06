@@ -15,12 +15,12 @@ const modRequestService = (() => {
         return res.data;
     }
 
-    const promoteToMod = async (id) => {
-        await modRequestApi.promoteToMod(id);
+    const promoteToMod = async (url) => {
+        await modRequestApi.promoteToMod(url);
     }
 
-    const rejectModRequest = async (id) => {
-        await modRequestApi.rejectModRequest(id);
+    const rejectModRequest = async (url) => {
+        await modRequestApi.rejectModRequest(url);
     }
 
     return {

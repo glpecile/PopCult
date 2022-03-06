@@ -77,8 +77,8 @@ const UserService = (function () {
         await userApi.createModRequest(username);
     }
 
-    const removeMod = async (username) => {
-        await userApi.removeMod(username);
+    const removeMod = async (url) => {
+        await userApi.removeMod(url);
     }
 
     const banUser = async (username) => {
