@@ -38,17 +38,17 @@ const userApi = (() => {
             });
     }
 
-    const deleteUser = (username) => {
-        return api.delete(`/users/${username}`);
+    const deleteUser = (url) => {
+        return api.delete(url);
     }
 
-    const editUser = ({username, name}) => {
-        return api.put(`users/${username}`, {'name': name});
+    const editUser = ({url, name}) => {
+        return api.put(url, {'name': name});
     }
 
-    const changePassword = ({username, currentPassword, newPassword}) => {
+    const changePassword = ({url, currentPassword, newPassword}) => {
         console.log(currentPassword + '.' + newPassword);
-        return api.put(`/users/${username}/password`,
+        return api.put(url,
             {
                 'currentPassword': currentPassword,
                 'newPassword': newPassword
@@ -56,31 +56,30 @@ const userApi = (() => {
     }
 
     const createPasswordResetToken = (email) => {
-        return api.post(`/users/reset-password`, {'email': email});
+        return api.post(`/users/password-token`, {'email': email});
     }
 
     const resetPassword = ({token, newPassword}) => {
-        return api.put(`/users/reset-password`,
+        return api.put(`/users/password-token/${token}`,
             {
-                'token': token,
                 'newPassword': newPassword
             });
     }
 
     const sendVerificationToken = (email) => {
-        return api.post(`/users/verification`, {'email': email});
+        return api.post(`/users/verification-token`, {'email': email});
     }
 
     const verifyUser = (token) => {
-        return api.put(`/users/verification`, {'token': token})
+        return api.put(`/users/verification-token/${token}`);
     }
 
-    const uploadUserImage = ({username, formData}) => {
-        return api.put(`/users/${username}/image`, formData);
+    const uploadUserImage = ({url, formData}) => {
+        return api.put(url, formData);
     }
 
-    const deleteProfileImage = (username) => {
-        return api.delete(`/users/${username}/image`);
+    const deleteProfileImage = (url) => {
+        return api.delete(url);
     }
 
     const createModRequest = (username) => {

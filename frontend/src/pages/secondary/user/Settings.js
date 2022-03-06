@@ -39,6 +39,7 @@ const Settings = () => {
             try {
                 const user = await UserService.getUser(username);
                 setUserData(user);
+                console.log(user);
             } catch (error) {
                 console.log(error);
                navigate(`/user/${username}`);
@@ -59,7 +60,7 @@ const Settings = () => {
         if (toEditData !== undefined && mountedEditUser.current) {
             if ((toEditData.name).localeCompare(userData.name) !== 0) {
                 try {
-                    await UserService.editUser({username, name: toEditData.name});
+                    await UserService.editUser({url: userData.url, name: toEditData.name});
                 } catch (error) {
                     console.log(error);
                 }
@@ -68,7 +69,7 @@ const Settings = () => {
                 try {
                     let formData = new FormData();
                     formData.append('image', toEditData.imageUrl);
-                    await UserService.uploadUserImage({username, formData});
+                    await UserService.uploadUserImage({url: userData.imageUrl, formData});
                 } catch (error) {
                     console.log(error);
                 }
@@ -78,7 +79,7 @@ const Settings = () => {
                 try {
                     console.log(userData);
                     await UserService.changeUserPassword({
-                        username,
+                        url: userData.changePasswordUrl,
                         currentPassword: toEditData.currentPassword,
                         newPassword: toEditData.password
                     });
@@ -102,7 +103,7 @@ const Settings = () => {
 
     const deleteUserAccount = useCallback(async () => {
         try {
-            await UserService.deleteUser(username);
+            await UserService.deleteUser(userData.url);
             authContext.onLogout();
             setSuccessModal(true);
             setTimeout(() => {
@@ -119,7 +120,7 @@ const Settings = () => {
                 // navigate(`/user/${username}`);
             }, 5000);
         }
-    }, [username, authContext, navigate]);
+    }, [userData, authContext, navigate]);
 
     useEffect(() => {
         if (deleteUser) {

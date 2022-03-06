@@ -34,16 +34,16 @@ const UserService = (function () {
         //el response retorna el header location con la url del usuario nuevo. Se puede llegar a usar
     }
 
-    const deleteUser = async (username) => {
-        await userApi.deleteUser(username);
+    const deleteUser = async (url) => {
+        await userApi.deleteUser(url);
     }
 
-    const editUser = async ({username, name}) => {
-        await userApi.editUser({username, name});
+    const editUser = async ({url, name}) => {
+        await userApi.editUser({url, name});
     }
 
-    const changeUserPassword = async ({username, currentPassword, newPassword}) => {
-        await userApi.changePassword({username, currentPassword, newPassword})
+    const changeUserPassword = async ({url, currentPassword, newPassword}) => {
+        await userApi.changePassword({url, currentPassword, newPassword})
     }
 
     const createPasswordResetToken = async (email) => {
@@ -65,12 +65,12 @@ const UserService = (function () {
 
     }
 
-    const uploadUserImage = async ({username, formData}) => {
-        await userApi.uploadUserImage({username: username, formData: formData});
+    const uploadUserImage = async ({url, formData}) => {
+        await userApi.uploadUserImage({url: url, formData: formData});
     }
 
-    const deleteProfileImage = async (username) => {
-        await userApi.deleteProfileImage(username);
+    const deleteProfileImage = async (url) => {
+        await userApi.deleteProfileImage(url);
     }
 
     const createModRequest = async (username) => {
