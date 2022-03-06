@@ -66,7 +66,6 @@ const Moderators = () => {
             try {
                 const mods = await UserService.getModerators({page: moderatorsPage, pageSize: moderatorsPageSize});
                 setActiveModerators(mods);
-                console.log(mods);
             } catch (error) {
                 console.log(error);
             }
@@ -81,7 +80,6 @@ const Moderators = () => {
                     pageSize: requestsPageSize
                 });
                 setModeratorsRequests(requests);
-                console.log(requests);
             } catch (error) {
                 console.log(error);
             }

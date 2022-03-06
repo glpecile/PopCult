@@ -85,8 +85,8 @@ const UserService = (function () {
         await userApi.banUser(username);
     }
 
-    const unbanUser = async (username) => {
-        await userApi.unbanUser(username);
+    const unbanUser = async (url) => {
+        await userApi.unbanUser(url);
     }
 
     return {

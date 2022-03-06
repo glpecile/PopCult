@@ -24,7 +24,7 @@ const BannedUserCard = (props) => {
             </div>
             <div className="flex justify-between p-3 text-center justify-center items-center">
                 <button onClick={ () => {
-                    props.unbanUser(props.username);
+                    props.unbanUser(props.url);
                 }}>
                     <Close/>
                 </button>

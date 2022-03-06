@@ -95,8 +95,8 @@ const userApi = (() => {
         return api.put(`/users/${username}/locked`);
     }
 
-    const unbanUser = (username) => {
-        return api.delete(`/users/${username}/locked`);
+    const unbanUser = (url) => {
+        return api.delete(url);
     }
 
     return {

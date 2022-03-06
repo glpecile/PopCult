@@ -25,9 +25,9 @@ const BannedUsers = () => {
             }
     }, [page, pageSize]);
 
-    const unbanUser = useCallback(async (username) => {
+    const unbanUser = useCallback(async (url) => {
         try {
-            await UserService.unbanUser(username);
+            await UserService.unbanUser(url);
             setRefresh((prevState => !prevState));
         } catch (error) {
             console.log(error);
@@ -52,6 +52,7 @@ const BannedUsers = () => {
             return <BannedUserCard key={user.username} username={user.username} strikes={user.strikes}
                                    unbanDate={user.banDate}
                                    image={user.imageUrl}
+                                   url={user.lockedUrl}
                                    unbanUser={unbanUser}
             />;
         }))}
