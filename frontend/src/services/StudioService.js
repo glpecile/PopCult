@@ -3,8 +3,8 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const studioService = (() => {
 
-    const getMediaStudios = async (id) => {
-        const res = await studioApi.getMediaStudios(id);
+    const getMediaStudios = async (url) => {
+        const res = await studioApi.getMediaStudios(url);
         return res.data;
     }
 

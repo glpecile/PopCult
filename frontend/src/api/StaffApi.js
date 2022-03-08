@@ -2,12 +2,15 @@ import api from './api'
 
 const staffApi = (() => {
 
-    //TODO add staffType enum
-    const getMediaStaff = (id) => {
-        return api.get(`/media/${id}/staff`);
+    const getMediaStaff = ({url, staffType}) => {
+        return api.get(url,
+            {
+                params: {
+                    ...(staffType && {'type': staffType})
+                }
+            });
     }
 
-    //TODO define staffType enum
     const getStaffMembers = ({page, pageSize, staffType}) => {
         return api.get(`/staff`,
             {

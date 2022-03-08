@@ -4,65 +4,63 @@ import {MediaType} from '../enums/MediaType'
 
 const favoriteService = (() => {
 
-    const getUserFavoriteMedia = async ({username, page, pageSize}) => {
+    const getUserFavoriteMedia = async ({url, page, pageSize}) => {
         const res = await favoriteApi.getUserFavoriteMedia({username, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const isFavoriteMedia = async ({username, mediaId}) => {
-        const res = await favoriteApi.isFavoriteMedia({username, mediaId});
+    const isFavoriteMedia = async (url) => {
+        const res = await favoriteApi.isFavoriteMedia(url);
         return res.data;
     }
 
-    const addMediaToFavorites = async ({username, mediaId}) => {
-        await favoriteApi.addMediaToFavorites({username, mediaId});
+    const addMediaToFavorites = async (url) => {
+        await favoriteApi.addMediaToFavorites(url);
     }
 
-    const removeMediaFromFavorites = async ({username, mediaId}) => {
-        await favoriteApi.removeMediaFromFavorites({username, mediaId});
+    const removeMediaFromFavorites = async (url) => {
+        await favoriteApi.removeMediaFromFavorites(url);
     }
 
-    const getUserFavoriteLists = async ({username, page, pageSize}) => {
-        const res = await favoriteApi.getUserFavoriteLists({username, page, pageSize})
+    const getUserFavoriteLists = async ({url, page, pageSize}) => {
+        const res = await favoriteApi.getUserFavoriteLists({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const isFavoriteList = async ({username, listId}) => {
-        const res = await favoriteApi.isFavoriteList({username, listId});
+    const isFavoriteList = async (url) => {
+        const res = await favoriteApi.isFavoriteList(url);
         return res.data;
     }
 
-    const addListToFavorites = async ({username, listId}) => {
-        await favoriteApi.addListToFavorites({username, listId});
+    const addListToFavorites = async (url) => {
+        await favoriteApi.addListToFavorites(url);
     }
 
-    const removeListFromFavorites = async ({username, listId}) => {
-        await favoriteApi.removeListFromFavorites({username, listId});
+    const removeListFromFavorites = async (url) => {
+        await favoriteApi.removeListFromFavorites(url);
     }
 
-    const getUserRecommendedMedia = async ({username, page, pageSize, mediaType}) => {
-        const res = await favoriteApi.getUserRecommendedMedia({username, page, pageSize, mediaType})
+    const getUserRecommendedMedia = async ({url, page, pageSize, mediaType}) => {
+        const res = await favoriteApi.getUserRecommendedMedia({url, page, pageSize, mediaType})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const getUserRecommendedFilms = async ({username, page, pageSize}) => {
-        const mediaType = MediaType.FILMS;
-        return await getUserRecommendedMedia({username, page, pageSize, mediaType})
+    const getUserRecommendedFilms = async ({url, page, pageSize}) => {
+        return await getUserRecommendedMedia({url, page, pageSize, mediaType: MediaType.FILMS})
     }
 
-    const getUserRecommendedSeries = async ({username, page, pageSize}) => {
-        const mediaType = MediaType.SERIES;
-        return await getUserRecommendedMedia({username, page, pageSize, mediaType})
+    const getUserRecommendedSeries = async ({url, page, pageSize}) => {
+        return await getUserRecommendedMedia({url, page, pageSize, mediaType: MediaType.SERIES})
     }
 
-    const getUserRecommendedLists = async ({username, page, pageSize}) => {
-        const res = await favoriteApi.getUserRecommendedLists({username, page, pageSize});
+    const getUserRecommendedLists = async ({url, page, pageSize}) => {
+        const res = await favoriteApi.getUserRecommendedLists({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};

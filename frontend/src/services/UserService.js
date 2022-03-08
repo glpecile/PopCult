@@ -66,23 +66,23 @@ const UserService = (function () {
     }
 
     const uploadUserImage = async ({url, formData}) => {
-        await userApi.uploadUserImage({url: url, formData: formData});
+        await userApi.uploadUserImage({url, formData});
     }
 
     const deleteProfileImage = async (url) => {
         await userApi.deleteProfileImage(url);
     }
 
-    const createModRequest = async (username) => {
-        await userApi.createModRequest(username);
+    const createModRequest = async (url) => {
+        await userApi.createModRequest(url);
     }
 
     const removeMod = async (url) => {
         await userApi.removeMod(url);
     }
 
-    const banUser = async (username) => {
-        await userApi.banUser(username);
+    const banUser = async (url) => {
+        await userApi.banUser(url);
     }
 
     const unbanUser = async (url) => {

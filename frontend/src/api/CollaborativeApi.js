@@ -2,8 +2,8 @@ import api from './api'
 
 const collaborativeApi = (() => {
 
-    const getUserCollaborationRequests = ({username, page, pageSize}) => {
-        return api.get(`/users/${username}/collab-requests`,
+    const getUserCollaborationRequests = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -16,16 +16,16 @@ const collaborativeApi = (() => {
         return api.get(`/collab-requests/${id}`);
     }
 
-    const acceptCollaborationRequest = (id) => {
-        return api.put(`/collab-requests/${id}`);
+    const acceptCollaborationRequest = (url) => {
+        return api.put(url);
     }
 
-    const deleteCollaborationRequest = (id) => {
-        return api.delete(`/collab-requests/${id}`);
+    const deleteCollaborationRequest = (url) => {
+        return api.delete(url);
     }
 
-    const getListCollaborators = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/collaborators`,
+    const getListCollaborators = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -34,20 +34,20 @@ const collaborativeApi = (() => {
             });
     }
 
-    const isListCollaborator = ({listId, username}) => {
-        return api.get(`/lists/${listId}/collaborators/${username}`);
+    const isListCollaborator = (url) => {
+        return api.get(url);
     }
 
-    const addListCollaborator = ({listId, username}) => {
-        return api.put(`/lists/${listId}/collaborators/${username}`);
+    const addListCollaborator = (url) => {
+        return api.put(url);
     }
 
-    const deleteListCollaborator = ({listId, username}) => {
-        return api.delete(`/lists/${listId}/collaborators/${username}`);
+    const deleteListCollaborator = (url) => {
+        return api.delete(url);
     }
 
-    const getListCollaborationRequests = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/requests`,
+    const getListCollaborationRequests = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -57,8 +57,8 @@ const collaborativeApi = (() => {
     }
 
     //TODO Define dto
-    const createListCollaborationRequest = ({id}) => {
-        return api.post(`/lists/${id}/requests`);
+    const createListCollaborationRequest = ({url}) => {
+        return api.post(url);
     }
 
     return {

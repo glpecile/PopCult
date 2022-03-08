@@ -16,12 +16,12 @@ const reportApi = (() => {
         return api.get(`/lists-reports/${id}`);
     }
 
-    const approveListReport = (id) => {
-        return api.put(`/lists-reports/${id}`);
+    const approveListReport = (url) => {
+        return api.put(url);
     }
 
-    const deleteListReport = (id) => {
-        return api.delete(`/lists-reports/${id}`);
+    const deleteListReport = (url) => {
+        return api.delete(url);
     }
 
     const getListCommentReports = ({page, pageSize}) => {
@@ -38,12 +38,12 @@ const reportApi = (() => {
         return api.get(`/lists-comments-reports/${id}`);
     }
 
-    const approveListCommentReport = (id) => {
-        return api.put(`/lists-comments-reports/${id}`);
+    const approveListCommentReport = (url) => {
+        return api.put(url);
     }
 
-    const deleteListCommentReport = (id) => {
-        return api.delete(`/lists-comments-reports/${id}`);
+    const deleteListCommentReport = (url) => {
+        return api.delete(url);
     }
 
     const getMediaCommentReports = ({page, pageSize}) => {
@@ -60,16 +60,16 @@ const reportApi = (() => {
         return api.get(`/media-comment-reports/${id}`);
     }
 
-    const approveMediaCommentReport = (id) => {
-        return api.put(`/media-comment-reports/${id}`);
+    const approveMediaCommentReport = (url) => {
+        return api.put(url);
     }
 
-    const deleteMediaCommentReport = (id) => {
-        return api.delete(`/media-comment-reports/${id}`);
+    const deleteMediaCommentReport = (url) => {
+        return api.delete(url);
     }
 
-    const getReportsFromList = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/reports`,
+    const getReportsFromList = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -79,12 +79,12 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createListReport = (id) => {
-        return api.post(`/lists/${id}/reports`)
+    const createListReport = ({url}) => {
+        return api.post(url)
     }
 
-    const getReportsFromListComment = ({id, page, pageSize}) => {
-        return api.get(`/lists-comments/${id}/reports`,
+    const getReportsFromListComment = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -94,12 +94,12 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createListCommentReport = (id) => {
-        return api.post(`/lists-comments/${id}/reports`)
+    const createListCommentReport = ({url}) => {
+        return api.post(url)
     }
 
-    const getReportsFromMediaComment = ({id, page, pageSize}) => {
-        return api.get(`/media-comments/${id}/reports`,
+    const getReportsFromMediaComment = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -109,8 +109,8 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createMediaCommentReport = (id) => {
-        return api.post(`/media-comments/${id}/reports`)
+    const createMediaCommentReport = ({url}) => {
+        return api.post(url)
     }
 
     return {

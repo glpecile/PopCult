@@ -3,9 +3,14 @@ import api from './api'
 const listApi = (() => {
 
     //Retrieve the lists that contain media id
-    // TODO define pagination
-    const getMediaLists = (id) => {
-        return api.get(`/media/${id}/lists`);
+    const getMediaLists = ({url, page, pageSize}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
     }
 
     const getLists = ({page, pageSize}) => {
@@ -28,16 +33,16 @@ const listApi = (() => {
     }
 
     //TODO define listEditDto
-    const editList = (id) => {
-        return api.put(`/lists/${id}`);
+    const editList = ({url}) => {
+        return api.put(url);
     }
 
-    const deleteList = (id) => {
-        return api.delete(`/lists/${id}`);
+    const deleteList = (url) => {
+        return api.delete(url);
     }
 
-    const getMediaInList = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/media`,
+    const getMediaInList = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -46,20 +51,20 @@ const listApi = (() => {
             });
     }
 
-    const isMediaInList = ({listId, mediaId}) => {
-        return api.get(`/lists/${listId}/media/${mediaId}`);
+    const isMediaInList = (url) => {
+        return api.get(url);
     }
 
-    const addMediaToList = ({listId, mediaId}) => {
-        return api.put(`/lists/${listId}/media/${mediaId}`);
+    const addMediaToList = (url) => {
+        return api.put(url);
     }
 
-    const removeMediaFromList = ({listId, mediaId}) => {
-        return api.delete(`/lists/${listId}/media/${mediaId}`);
+    const removeMediaFromList = (url) => {
+        return api.delete(url);
     }
 
-    const getListForks = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/forks`,
+    const getListForks = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -68,8 +73,8 @@ const listApi = (() => {
             });
     }
 
-    const forkList = (id) => {
-        return api.post(`/lists/${id}/forks`);
+    const forkList = (url) => {
+        return api.post(url);
     }
 
     return {

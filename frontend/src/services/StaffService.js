@@ -3,18 +3,18 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const staffService = (() => {
 
-    //TODO add staffType enum
-    const getMediaStaff = async (id) => {
+    //TODO
+    const getMediaStaff = async (url) => {
 
     }
 
     //TODO
-    const getMediaDirectors = async (id) => {
+    const getMediaDirectors = async (url) => {
 
     }
 
     //TODO
-    const getMediaCrew = async (id) => {
+    const getMediaCrew = async (url) => {
 
     }
 

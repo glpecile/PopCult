@@ -3,8 +3,8 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const commentService = (() => {
 
-    const getMediaComments = async ({id, page, pageSize}) => {
-        const res = await commentApi.getMediaComments({id, page, pageSize});
+    const getMediaComments = async ({url, page, pageSize}) => {
+        const res = await commentApi.getMediaComments({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
@@ -12,12 +12,12 @@ const commentService = (() => {
 
 
     //TODO define commentDto
-    const createMediaComment = async (id) => {
-        await commentApi.createMediaComment(id);
+    const createMediaComment = async (url) => {
+        await commentApi.createMediaComment(url);
     }
 
-    const getListComments = async ({id, page, pageSize}) => {
-        const res = await commentApi.getListComments({id, page, pageSize});
+    const getListComments = async ({url, page, pageSize}) => {
+        const res = await commentApi.getListComments({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
@@ -25,8 +25,8 @@ const commentService = (() => {
 
 
     //TODO define commentDto
-    const createListComment = async (id) => {
-        await commentApi.createListComment(id);
+    const createListComment = async ({url}) => {
+        await commentApi.createListComment(url);
     }
 
     const getMediaComment = async (id) => {
@@ -34,8 +34,8 @@ const commentService = (() => {
         return res.data;
     }
 
-    const deleteMediaComment = async (id) => {
-        await commentApi.deleteMediaComment(id);
+    const deleteMediaComment = async (url) => {
+        await commentApi.deleteMediaComment(url);
     }
 
     const getListComment = async (id) => {
@@ -43,8 +43,8 @@ const commentService = (() => {
         return res.data;
     }
 
-    const deleteListComment = async (id) => {
-        await commentApi.deleteListComment(id);
+    const deleteListComment = async (url) => {
+        await commentApi.deleteListComment(url);
     }
 
     return {

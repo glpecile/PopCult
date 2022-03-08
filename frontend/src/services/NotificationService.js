@@ -3,8 +3,8 @@ import {parseLinkHeader} from "@web3-storage/parse-link-header";
 
 const notificationService = (() => {
 
-    const getUserNotifications = async ({username, page, pageSize}) => {
-        const res = await notificationApi.getUserNotifications({username, page, pageSize})
+    const getUserNotifications = async ({url, page, pageSize}) => {
+        const res = await notificationApi.getUserNotifications({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
@@ -15,12 +15,12 @@ const notificationService = (() => {
         return res.data;
     }
 
-    const setNotificationAsOpened = async (id) => {
-        await notificationApi.setNotificationAsOpened(id);
+    const setNotificationAsOpened = async (url) => {
+        await notificationApi.setNotificationAsOpened(url);
     }
 
-    const deleteNotification = async (id) => {
-        await notificationApi.deleteNotification(id);
+    const deleteNotification = async (url) => {
+        await notificationApi.deleteNotification(url);
     }
 
     return {

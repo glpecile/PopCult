@@ -22,10 +22,43 @@ const mediaApi = (() => {
         return api.get(`/media/${id}`);
     }
 
+    const getGenreMedia = ({url, page, pageSize}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
+    const getStaffMedia = ({url, page, pageSize, staffRole}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize,
+                    ...(staffRole && {'type': staffRole})
+                }
+            });
+    }
+
+    const getStudioMedia = ({url, page, pageSize}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
 
     return {
         getMediaList,
-        getMedia
+        getMedia,
+        getGenreMedia,
+        getStaffMedia,
+        getStudioMedia
     }
 })();
 

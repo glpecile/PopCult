@@ -4,8 +4,11 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 const listService = (() => {
 
     //TODO
-    const getMediaLists = async (id) => {
-
+    const getMediaLists = async ({url, page, pageSize}) => {
+        const res = await listApi.getMediaLists({url, page, pageSize});
+        const links = parseLinkHeader(res.headers.link);
+        const data = res.data;
+        return {links, data};
     }
 
     const getLists = async ({page, pageSize}) => {
@@ -30,39 +33,39 @@ const listService = (() => {
 
     }
 
-    const deleteList = async (id) => {
-        await listApi.deleteList(id);
+    const deleteList = async (url) => {
+        await listApi.deleteList(url);
     }
 
-    const getMediaInList = async ({id, page, pageSize}) => {
-        const res = await listApi.getMediaInList({id, page, pageSize});
+    const getMediaInList = async ({url, page, pageSize}) => {
+        const res = await listApi.getMediaInList({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const isMediaInList = async ({listId, mediaId}) => {
-        const res = await listApi.isMediaInList({listId, mediaId});
+    const isMediaInList = async (url) => {
+        const res = await listApi.isMediaInList(url);
         return res.data;
     }
 
-    const addMediaToList = async ({listId, mediaId}) => {
-        await listApi.addMediaToList({listId, mediaId});
+    const addMediaToList = async (url) => {
+        await listApi.addMediaToList(url);
     }
 
-    const removeMediaFromList = async ({listId, mediaId}) => {
-        await listApi.removeMediaFromList({listId, mediaId});
+    const removeMediaFromList = async (url) => {
+        await listApi.removeMediaFromList(url);
     }
 
-    const getListForks = async ({id, page, pageSize}) => {
-        const res = await listApi.getListForks({id, page, pageSize});
+    const getListForks = async ({url, page, pageSize}) => {
+        const res = await listApi.getListForks({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const forkList = async (id) => {
-        await listApi.forkList(id);
+    const forkList = async (url) => {
+        await listApi.forkList(url);
     }
 
     return {

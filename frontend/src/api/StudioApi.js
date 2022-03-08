@@ -2,8 +2,8 @@ import api from './api'
 
 const studioApi = (() => {
 
-    const getMediaStudios = (id) => {
-        return api.get(`/media/${id}/studios`)
+    const getMediaStudios = (url) => {
+        return api.get(url);
     }
 
     const getStudios = ({page, pageSize}) => {

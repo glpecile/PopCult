@@ -2,8 +2,8 @@ import api from './api'
 
 const commentApi = (() => {
 
-    const getMediaComments = ({id, page, pageSize}) => {
-        return api.get(`/media/${id}/comments`,
+    const getMediaComments = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -13,12 +13,12 @@ const commentApi = (() => {
     }
 
     //TODO define commentDto
-    const createMediaComment = (id) => {
-        return api.post(`/media/${id}/comments`);
+    const createMediaComment = ({url}) => {
+        return api.post(url);
     }
 
-    const getListComments = ({id, page, pageSize}) => {
-        return api.get(`/lists/${id}/comments`,
+    const getListComments = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -28,24 +28,24 @@ const commentApi = (() => {
     }
 
     //TODO define commentDto
-    const createListComment = (id) => {
-        return api.post(`/lists/${id}/comments`);
+    const createListComment = ({url}) => {
+        return api.post(url);
     }
 
     const getMediaComment = (id) => {
         return api.get(`/media-comments/${id}`);
     }
 
-    const deleteMediaComment = (id) => {
-        return api.delete(`/media-comments/${id}`);
+    const deleteMediaComment = (url) => {
+        return api.delete(url);
     }
 
     const getListComment = (id) => {
         return api.get(`/lists-comments/${id}`);
     }
 
-    const deleteListComment = (id) => {
-        return api.delete(`/lists-comments/${id}`);
+    const deleteListComment = (url) => {
+        return api.delete(url);
     }
 
     return {

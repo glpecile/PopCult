@@ -2,8 +2,8 @@ import api from './api'
 
 const watchApi = (() => {
 
-    const getUserWatchedMedia = ({username, page, pageSize}) => {
-        return api.get(`/users/${username}/watched-media`,
+    const getUserWatchedMedia = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -12,23 +12,23 @@ const watchApi = (() => {
             });
     }
 
-    const isWatchedMedia = ({username, mediaId}) => {
-        return api.get(`/users/${username}/watched-media/${mediaId}`);
+    const isWatchedMedia = (url) => {
+        return api.get(url);
     }
 
-    const addMediaToWatched = ({username, mediaId, dateTime}) => {
-        return api.put(`/users/${username}/watched-media/${mediaId}`,
+    const addMediaToWatched = ({url, dateTime}) => {
+        return api.put(url,
             {
                 'dateTime': dateTime //"dateTime": "2019-12-03T10:15:30"
             });
     }
 
-    const removeMediaFromWatched = ({username, mediaId}) => {
-        return api.delete(`/users/${username}/watched-media/${mediaId}`);
+    const removeMediaFromWatched = (url) => {
+        return api.delete(url);
     }
 
-    const getUserToWatchMedia = ({username, page, pageSize}) => {
-        return api.get(`/users/${username}/to-watch-media`,
+    const getUserToWatchMedia = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -37,16 +37,16 @@ const watchApi = (() => {
             });
     }
 
-    const isToWatchMedia = ({username, mediaId}) => {
-        return api.get(`/users/${username}/to-watch-media/${mediaId}`);
+    const isToWatchMedia = (url) => {
+        return api.get(url);
     }
 
-    const addMediaToWatch = ({username, mediaId}) => {
-        return api.put(`/users/${username}/to-watch-media/${mediaId}`);
+    const addMediaToWatch = (url) => {
+        return api.put(url);
     }
 
-    const removeMediaFromToWatch = ({username, mediaId}) => {
-        return api.delete(`/users/${username}/to-watch-media/${mediaId}`);
+    const removeMediaFromToWatch = (url) => {
+        return api.delete(url);
     }
 
     return {

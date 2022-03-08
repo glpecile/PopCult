@@ -2,8 +2,8 @@ import api from './api'
 
 const notificationApi = (() => {
 
-    const getUserNotifications = ({username, page, pageSize}) => {
-        return api.get(`/users/${username}/notifications`,
+    const getUserNotifications = ({url, page, pageSize}) => {
+        return api.get(url,
             {
                 params: {
                     'page': page,
@@ -16,12 +16,12 @@ const notificationApi = (() => {
         return api.get(`/notifications/${id}`);
     }
 
-    const setNotificationAsOpened = (id) => {
-        return api.put(`/notifications/${id}`);
+    const setNotificationAsOpened = (url) => {
+        return api.put(url);
     }
 
-    const deleteNotification = (id) => {
-        return api.delete(`/notifications/${id}`);
+    const deleteNotification = (url) => {
+        return api.delete(url);
     }
 
     return {

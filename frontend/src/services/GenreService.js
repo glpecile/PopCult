@@ -1,7 +1,14 @@
 import genreApi from '../api/GenreApi';
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import api from "../api/api";
 
 const genreService = (() => {
+
+    const getMediaGenres = async (url) => {
+        const res = await genreApi.getMediaGenres(url);
+        return res.data;
+    }
+
 
     const getGenres = async () => {
         const res = await genreApi.getGenres();
@@ -14,6 +21,7 @@ const genreService = (() => {
     }
 
     return {
+        getMediaGenres,
         getGenres,
         getGenre
     }

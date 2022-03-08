@@ -2,6 +2,10 @@ import api from './api'
 
 const genreApi = (() => {
 
+    const getMediaGenres = (url) => {
+        return api.get(url);
+    }
+
     const getGenres = () => {
         return api.get(`/genres`);
     }
@@ -11,6 +15,7 @@ const genreApi = (() => {
     }
 
     return {
+        getMediaGenres,
         getGenres,
         getGenre
     }

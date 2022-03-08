@@ -3,8 +3,8 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const collaborativeService = (() => {
 
-    const getUserCollaborationRequests = async ({username, page, pageSize}) => {
-        const res = await collaborativeApi.getUserCollaborationRequests({username, page, pageSize})
+    const getUserCollaborationRequests = async ({url, page, pageSize}) => {
+        const res = await collaborativeApi.getUserCollaborationRequests({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
@@ -15,43 +15,43 @@ const collaborativeService = (() => {
         return res.data;
     }
 
-    const acceptCollaborationRequest = async (id) => {
-        await collaborativeApi.acceptCollaborationRequest(id);
+    const acceptCollaborationRequest = async (url) => {
+        await collaborativeApi.acceptCollaborationRequest(url);
     }
 
-    const deleteCollaborationRequest = async (id) => {
-        await collaborativeApi.deleteCollaborationRequest(id);
+    const deleteCollaborationRequest = async (url) => {
+        await collaborativeApi.deleteCollaborationRequest(url);
     }
 
-    const getListCollaborators = async ({id, page, pageSize}) => {
-        const res = await collaborativeApi.getListCollaborators({username, page, pageSize})
+    const getListCollaborators = async ({url, page, pageSize}) => {
+        const res = await collaborativeApi.getListCollaborators({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const isListCollaborator = async ({listId, username}) => {
-        const res = await collaborativeApi.isListCollaborator({listId, username});
+    const isListCollaborator = async (url) => {
+        const res = await collaborativeApi.isListCollaborator(url);
         return res.data;
     }
 
-    const addListCollaborator = async ({listId, username}) => {
-        await collaborativeApi.addListCollaborator({listId, username});
+    const addListCollaborator = async (url) => {
+        await collaborativeApi.addListCollaborator(url);
     }
 
-    const deleteListCollaborator = async ({listId, username}) => {
-        await collaborativeApi.deleteListCollaborator({listId, username});
+    const deleteListCollaborator = async (url) => {
+        await collaborativeApi.deleteListCollaborator(url);
     }
 
-    const getListCollaborationRequests = async ({id, page, pageSize}) => {
-        const res = await collaborativeApi.getListCollaborationRequests({id, page, pageSize})
+    const getListCollaborationRequests = async ({url, page, pageSize}) => {
+        const res = await collaborativeApi.getListCollaborationRequests({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     //TODO Define dto
-    const createListCollaborationRequest = async ({id}) => {
+    const createListCollaborationRequest = async ({url}) => {
 
     }
 

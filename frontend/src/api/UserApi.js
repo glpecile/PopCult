@@ -82,16 +82,16 @@ const userApi = (() => {
         return api.delete(url);
     }
 
-    const createModRequest = (username) => {
-        return api.post(`/users/${username}/mod-requests`);
+    const createModRequest = (url) => {
+        return api.post(url);
     }
 
     const removeMod = (url) => {
         return api.delete(url);
     }
 
-    const banUser = (username) => {
-        return api.put(`/users/${username}/locked`);
+    const banUser = (url) => {
+        return api.put(url);
     }
 
     const unbanUser = (url) => {

@@ -15,12 +15,12 @@ const reportService = (() => {
         return res.data;
     }
 
-    const approveListReport = async (id) => {
-        await reportApi.approveListReport(id);
+    const approveListReport = async (url) => {
+        await reportApi.approveListReport(url);
     }
 
-    const deleteListReport = async (id) => {
-        await reportApi.deleteListReport(id);
+    const deleteListReport = async (url) => {
+        await reportApi.deleteListReport(url);
     }
 
     const getListCommentReports = async ({page, pageSize}) => {
@@ -35,12 +35,12 @@ const reportService = (() => {
         return res.data;
     }
 
-    const approveListCommentReport = async (id) => {
-        await reportApi.approveListCommentReport(id);
+    const approveListCommentReport = async (url) => {
+        await reportApi.approveListCommentReport(url);
     }
 
-    const deleteListCommentReport = async (id) => {
-        await reportApi.deleteListCommentReport(id);
+    const deleteListCommentReport = async (url) => {
+        await reportApi.deleteListCommentReport(url);
     }
 
     const getMediaCommentReports = async ({page, pageSize}) => {
@@ -55,47 +55,47 @@ const reportService = (() => {
         return res.data;
     }
 
-    const approveMediaCommentReport = async (id) => {
-        await reportApi.approveMediaCommentReport(id);
+    const approveMediaCommentReport = async (url) => {
+        await reportApi.approveMediaCommentReport(url);
     }
 
-    const deleteMediaCommentReport = async (id) => {
-        await reportApi.deleteMediaCommentReport(id);
+    const deleteMediaCommentReport = async (url) => {
+        await reportApi.deleteMediaCommentReport(url);
     }
 
-    const getReportsFromList = async ({id, page, pageSize}) => {
-        const res = await reportApi.getReportsFromList({id, page, pageSize});
+    const getReportsFromList = async ({url, page, pageSize}) => {
+        const res = await reportApi.getReportsFromList({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     //TODO define dto
-    const createListReport = async (id) => {
+    const createListReport = async (url) => {
 
     }
 
-    const getReportsFromListComment = async ({id, page, pageSize}) => {
-        const res = await reportApi.getReportsFromListComment({id, page, pageSize});
+    const getReportsFromListComment = async ({url, page, pageSize}) => {
+        const res = await reportApi.getReportsFromListComment({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     //TODO define dto
-    const createListCommentReport = async (id) => {
+    const createListCommentReport = async (url) => {
 
     }
 
-    const getReportsFromMediaComment = async ({id, page, pageSize}) => {
-        const res = await reportApi.getReportsFromMediaComment({id, page, pageSize});
+    const getReportsFromMediaComment = async ({url, page, pageSize}) => {
+        const res = await reportApi.getReportsFromMediaComment({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
     //TODO define dto
-    const createMediaCommentReport = async (id) => {
+    const createMediaCommentReport = async (url) => {
 
     }
 
