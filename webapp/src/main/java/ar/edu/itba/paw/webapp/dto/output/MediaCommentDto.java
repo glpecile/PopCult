@@ -4,19 +4,25 @@ import ar.edu.itba.paw.models.comment.MediaComment;
 
 import javax.ws.rs.core.UriInfo;
 
-public class MediaCommentDto extends CommentDto{
+public class MediaCommentDto extends CommentDto {
+
     private String mediaTitle;
 
+    private String url;
+
     private String commentMediaUrl;
-    private String commentUrl;
 
-    public static MediaCommentDto fromMediaCommentDto(UriInfo url, MediaComment mediaComment){
+    public static MediaCommentDto fromMediaComment(UriInfo url, MediaComment mediaComment) {
         MediaCommentDto mediaCommentDto = new MediaCommentDto();
-        CommentDto.fillFromMediaComment(mediaCommentDto,url,mediaComment);
+        mediaCommentDto.setId(mediaComment.getCommentId());
+        mediaCommentDto.setCommentBody(mediaComment.getCommentBody());
+        mediaCommentDto.setCreationDate(mediaComment.getCreationDate());
+        mediaCommentDto.setUser(mediaComment.getUser().getUsername());
+        mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(mediaComment.getUser().getUsername()).build().toString());
         mediaCommentDto.mediaTitle = mediaComment.getMedia().getTitle();
-        mediaCommentDto.commentUrl = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build().toString();
-        mediaCommentDto.commentMediaUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(mediaComment.getMedia().getMediaId())).build().toString();
 
+        mediaCommentDto.url = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build().toString();
+        mediaCommentDto.commentMediaUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(mediaComment.getMedia().getMediaId())).build().toString();
         return mediaCommentDto;
     }
 
@@ -36,11 +42,11 @@ public class MediaCommentDto extends CommentDto{
         this.commentMediaUrl = commentMediaUrl;
     }
 
-    public String getCommentUrl() {
-        return commentUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCommentUrl(String commentUrl) {
-        this.commentUrl = commentUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

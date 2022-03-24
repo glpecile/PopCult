@@ -1,27 +1,24 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 
-import ar.edu.itba.paw.models.comment.MediaComment;
-
-
-import javax.ws.rs.core.UriInfo;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public abstract class CommentDto {
+
     private Integer id;
     private String commentBody;
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
     private String user;
 
     private String userUrl;
 
-    protected static void fillFromMediaComment(MediaCommentDto mediaCommentDto, UriInfo url, MediaComment mediaComment) {
-        mediaCommentDto.setId(mediaComment.getCommentId());
-        mediaCommentDto.setCommentBody(mediaComment.getCommentBody());
-        mediaCommentDto.setCreationDate(mediaComment.getCreationDate().toLocalDate());
-        mediaCommentDto.setUser(mediaComment.getUser().getUsername());
-        mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(String.valueOf(mediaComment.getUser().getUserId())).build().toString());
-    }
+//    protected static void fillFromMediaComment(MediaCommentDto mediaCommentDto, UriInfo url, MediaComment mediaComment) {
+//        mediaCommentDto.setId(mediaComment.getCommentId());
+//        mediaCommentDto.setCommentBody(mediaComment.getCommentBody());
+//        mediaCommentDto.setCreationDate(mediaComment.getCreationDate());
+//        mediaCommentDto.setUser(mediaComment.getUser().getUsername());
+//        mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(String.valueOf(mediaComment.getUser().getUsername())).build().toString());
+//    } //TODO DELETE
 
     public Integer getId() {
         return id;
@@ -39,11 +36,11 @@ public abstract class CommentDto {
         this.commentBody = commentBody;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
