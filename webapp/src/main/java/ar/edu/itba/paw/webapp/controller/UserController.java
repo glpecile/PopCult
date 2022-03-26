@@ -109,7 +109,7 @@ public class UserController {
         final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
         LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build()).build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build()).build();
     }
 
     @DELETE
