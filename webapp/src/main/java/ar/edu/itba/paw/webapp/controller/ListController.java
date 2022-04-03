@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.dto.input.ListDto;
+import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
+import ar.edu.itba.paw.webapp.dto.output.ListDto;
 import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
+import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class ListController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createList(@Valid ListDto listDto) {
+    public Response createList(@Valid ListInputDto listDto) {
         if (listDto == null) {
             throw new EmptyBodyException();
         }
@@ -56,5 +58,42 @@ public class ListController {
 
         LOGGER.info("POST /lists: List {} created with id {}", mediaList.getListName(), mediaList.getMediaListId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(mediaList.getMediaListId())).build()).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getList(@PathParam("id") int listId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getCurrentUser().orElse(null);
+
+        LOGGER.info("GET /lists/{}: Returning list {} {}", listId, listId, mediaList.getListName());
+        return Response.ok(ListDto.fromList(uriInfo, mediaList, user)).build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response editList(@PathParam("id") int listId,
+                             @Valid ListInputDto listDto) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        listsService.updateList(mediaList, listDto.getName(), listDto.getDescription(), listDto.isVisible(), listDto.isCollaborative());
+
+        LOGGER.info("PUT /lists/{}: list {} updated", listId, listId);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response deleteList(@PathParam("id") int listId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        listsService.deleteList(mediaList);
+
+        LOGGER.info("DELETE /lists/{}: list {} deleted", listId, listId);
+        return Response.noContent().build();
     }
 }
