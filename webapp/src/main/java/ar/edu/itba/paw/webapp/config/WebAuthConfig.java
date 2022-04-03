@@ -25,6 +25,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -56,6 +57,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private BasicAuthFilter basicAuthFilter;
     @Autowired
     private AccessControl accessControl; //Ignore Private field 'accessControl' is assigned but never accessed
 
@@ -138,7 +141,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
@@ -153,6 +156,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint () {
+        return new UnauthorizedRequestHandler();
     }
 
     @Override
@@ -250,7 +258,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/users")
                     .anonymous()
 
-                .antMatchers("/users/reset-password", "/users/verification")
+                .antMatchers("/users/password-token/**", "/users/verification-token/**")
                     .anonymous()
 
                 .antMatchers("/users/{username}/mod")
@@ -280,7 +288,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
 
                 // Add JWT Token Filter
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                // Add Basic Auth Filter
+                .addFilterBefore(basicAuthFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

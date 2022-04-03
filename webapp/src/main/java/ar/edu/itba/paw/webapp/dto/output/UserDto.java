@@ -24,8 +24,6 @@ public class UserDto {
 
     private String imageUrl;
     private String changePasswordUrl;
-    private String resetPasswordUrl;
-    private String verificationUrl;
     private String modRequestUrl;
     private String removeModUrl;
     private String lockedUrl;
@@ -37,7 +35,6 @@ public class UserDto {
     private String collabRequestsUrl;
     private String recommendedMediaUrl;
     private String recommendedListsUrl;
-    private String authenticateUrl;
 
     public static UserDto fromUser(UriInfo url, User user) {
         UserDto userDto = new UserDto();
@@ -54,8 +51,6 @@ public class UserDto {
         userDto.url = url.getBaseUriBuilder().path("users").path(user.getUsername()).build().toString();
         userDto.imageUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("image").build().toString();
         userDto.changePasswordUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("password").build().toString();
-        userDto.resetPasswordUrl = url.getBaseUriBuilder().path("users").path("reset-password").build().toString();
-        userDto.verificationUrl = url.getBaseUriBuilder().path("users").path("verification").build().toString();
         userDto.modRequestUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("mod-requests").build().toString();
         userDto.removeModUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("mod").build().toString();
         userDto.lockedUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("locked").build().toString();
@@ -67,7 +62,6 @@ public class UserDto {
         userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
         userDto.recommendedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-media").build().toString();
         userDto.recommendedListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-lists").build().toString();
-        userDto.authenticateUrl = url.getBaseUriBuilder().path("authenticate").build().toString();
         return userDto;
     }
 
@@ -171,22 +165,6 @@ public class UserDto {
         this.changePasswordUrl = changePasswordUrl;
     }
 
-    public String getResetPasswordUrl() {
-        return resetPasswordUrl;
-    }
-
-    public void setResetPasswordUrl(String resetPasswordUrl) {
-        this.resetPasswordUrl = resetPasswordUrl;
-    }
-
-    public String getVerificationUrl() {
-        return verificationUrl;
-    }
-
-    public void setVerificationUrl(String verificationUrl) {
-        this.verificationUrl = verificationUrl;
-    }
-
     public String getModRequestUrl() {
         return modRequestUrl;
     }
@@ -275,11 +253,4 @@ public class UserDto {
         this.recommendedListsUrl = recommendedListsUrl;
     }
 
-    public String getAuthenticateUrl() {
-        return authenticateUrl;
-    }
-
-    public void setAuthenticateUrl(String authenticateUrl) {
-        this.authenticateUrl = authenticateUrl;
-    }
 }

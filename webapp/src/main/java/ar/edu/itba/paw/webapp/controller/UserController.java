@@ -169,7 +169,7 @@ public class UserController {
      * Reset password - Recover
      */
     @POST
-    @Path("/reset-password")
+    @Path("/password-token")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response createPasswordResetToken(@Valid UserEmailDto userEmailDto) {
@@ -182,21 +182,20 @@ public class UserController {
         final Token token = userService.forgotPassword(user);
 
         LOGGER.info("POST /users/reset-password: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path("reset-password").build())
-                .entity(TokenDto.fromToken(uriInfo, token))
-                .build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
     }
 
     @PUT
-    @Path("/reset-password")
+    @Path("/password-token/{token}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response resetPassword(@Valid UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
+    public Response resetPassword(@PathParam("token") String tokenString,
+                                  @Valid UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
         if (userResetPasswordDto == null) {
             throw new EmptyBodyException();
         }
 
-        final Token token = tokenService.getToken(userResetPasswordDto.getToken()).orElseThrow(TokenNotFoundException::new);
+        final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
         userService.resetPassword(token, userResetPasswordDto.getNewPassword());
 
@@ -208,10 +207,10 @@ public class UserController {
      * User verification
      */
     @POST
-    @Path("/verification")
+    @Path("/verification-token")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) {
+    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
         if (userEmailDto == null) {
             throw new EmptyBodyException();
         }
@@ -221,21 +220,15 @@ public class UserController {
         final Token token = userService.createVerificationToken(user);
 
         LOGGER.info("POST /users/verification: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path("verification").build())
-                .entity(TokenDto.fromToken(uriInfo, token))
-                .build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
     }
 
     @PUT
-    @Path("/verification")
+    @Path("/verification-token/{token}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response verifyUser(@Valid UserVerificationDto userVerificationDto) throws InvalidTokenException {
-        if (userVerificationDto == null) {
-            throw new EmptyBodyException();
-        }
-
-        final Token token = tokenService.getToken(userVerificationDto.getToken()).orElseThrow(TokenNotFoundException::new);
+    public Response verifyUser(@PathParam("token") String tokenString) throws InvalidTokenException {
+        final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
         final User user = userService.confirmRegister(token);
 
@@ -685,7 +678,7 @@ public class UserController {
 
         final PageContainer<MediaList> recommendedLists = favoriteService.getRecommendationsBasedOnFavLists(user, page, pageSize);
 
-        if(recommendedLists.getElements().isEmpty()) {
+        if (recommendedLists.getElements().isEmpty()) {
             LOGGER.info("GET /users/{}/recommended-lists: Returning empty list", username);
             return Response.noContent().build();
         }

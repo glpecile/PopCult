@@ -79,13 +79,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         User user = userDao.register(email, username, passwordEncoder.encode(password), name);
-        createVerificationToken(user);
+        try {
+            createVerificationToken(user);
+        } catch (EmailAlreadyVerifiedException ignored) {
+            // Never thrown
+        }
         return user;
     }
 
     @Transactional
     @Override
-    public Token createVerificationToken(User user) {
+    public Token createVerificationToken(User user) throws EmailAlreadyVerifiedException {
+        if (user.isEnabled()) {
+            throw new EmailAlreadyVerifiedException();
+        }
         Token token = tokenService.createToken(user, TokenType.VERIFICATION);
         emailService.sendVerificationEmail(user, token.getToken(), LocaleContextHolder.getLocale());
         return token;
