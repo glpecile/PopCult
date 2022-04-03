@@ -104,10 +104,9 @@ const SettingsUserProfile = (user) => {
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src={currentImage}/>
-
             </div>
             <input
-                className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                className="text-sm text-slate-500 pt-2 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                 type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
 
 

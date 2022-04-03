@@ -87,6 +87,7 @@
   "media_share_header": "Compartir Via",
   "media_share_clipboard": "Copiar Enlace",
   "media_share_clipboard_message": "¡El enlace se ha copiado exitosamente!",
+  "comments_header": "Discusión",
   "register_error": "Por favor, asegurese que todos los campos obligatorios* hayan sido completados correctamente.",
   "register_username_exists": "Parece que este nombre de usuario esta siendo utilizado por alguien mas",
   "register_email_exists": "Parece que este email esta siendo utilizado por alguien mas",

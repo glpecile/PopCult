@@ -1,8 +1,7 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import FadeIn from "../animation/FadeIn";
 import {motion} from "framer-motion";
-
 
 const RegisterForm = (props) => {
     const [enteredName, setEnteredName] = useState('');
@@ -36,21 +35,17 @@ const RegisterForm = (props) => {
             (event.target.value.localeCompare(enteredRepeatedPassword) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
         }
     };
+
     const RepeatedPasswordChangeHandler = (event) => {
         setEnteredRepeatedPassword(event.target.value);
         (enteredPassword.localeCompare(event.target.value) === 0) ? setRepeatedPasswordError(false) : setRepeatedPasswordError(true);
     };
+
     const EmailChangeHandler = (event) => {
         setEnteredEmail(event.target.value);
         event.target.validity.valid ? setEmailError(false) : setEmailError(true);
     };
 
-    const displayAlert = () => {
-        setAlertDisplay(true);
-        setTimeout(() => {
-            setAlertDisplay(false);
-        }, 5000);
-    }
     const formIsValid = () => {
         const hasErrors = !(enteredEmailError || enteredUsernameError || enteredNameError || enteredPasswordError || enteredRepeatedPasswordError);
         const isEmpty = !(enteredEmail.length === 0 || enteredUsername.length === 0 || enteredName.length === 0 || enteredPassword.length === 0 || enteredRepeatedPassword.length === 0);
@@ -66,13 +61,23 @@ const RegisterForm = (props) => {
                 password: enteredPassword,
                 name: enteredName
             });
-        }else{
+        } else {
             setBadAttempt(true);
-            setTimeout(() => {
-                setBadAttempt(false);
-            }, 5000);
         }
     }
+
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                if (alertDisplay) {
+                    setAlertDisplay(false);
+                }
+                if (badAttempt) {
+                    setBadAttempt(false);
+                }
+            }, 3000)
+            return () => clearTimeout(timeOut);
+        }
+        , [alertDisplay, badAttempt]);
 
     return (
         <form className="m-0 p-0" onSubmit={submitHandler} noValidate={true}>
@@ -109,11 +114,11 @@ const RegisterForm = (props) => {
                     <div className="relative">
                         {enteredPasswordError ?
                             (<span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"
-                                   onClick={displayAlert}>
+                                   onClick={() => setAlertDisplay(true)}>
                                 <i className="fas fa-exclamation-circle"/>
                             </span>) :
                             (<span className="absolute inset-y-0 -top-10 right-3 flex items-center pl-2"
-                                   onClick={displayAlert}>
+                                   onClick={() => setAlertDisplay(true)}>
                                     <i className="fas fa-question-circle"/>
                             </span>)}
                         <label

@@ -22,7 +22,7 @@ const ClipboardIcon = () => {
                     setAlert(true);
                 }}>
                     <IconButton
-                        className="rounded-full bg-violet-400 w-20 h-20 flex items-center justify-center transition duration-300 ease-in-out transform hover:-translate-1 hover:scale-105 active:scale-90">
+                        className="rounded-full shadow-md w-20 h-20 flex items-center justify-center transition duration-300 ease-in-out transform hover:-translate-1 hover:scale-105 active:scale-90 bg-violet-400 hover:shadow-violet-400/50">
                         <ContentCopyIcon fontSize="large" className="text-white"/>
                     </IconButton>
                 </CopyToClipboard>

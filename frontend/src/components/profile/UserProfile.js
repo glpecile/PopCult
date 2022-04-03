@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
 import {Trans, useTranslation} from "react-i18next";
+import {IconButton} from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 
 const UserProfile = (user) => {
     const {t} = useTranslation();
@@ -12,14 +14,18 @@ const UserProfile = (user) => {
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src={user.image}/>
             </div>
-            <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-3xl font-bold">
+            <div className="flex items-center space-x-1">
+                <h2 className="text-3xl font-bold mb-0">
                     {user.name}
                 </h2>
-                {isCurrentUser && (
-                    <Link className="object-center inline-block" to='/settings'>
-                        <button title={t('profile_edit')}><i className="fas fa-user-edit text-purple-500 hover:text-purple-900"/></button>
-                    </Link>)}
+                {
+                    isCurrentUser &&
+                    (<Link to='/settings'>
+                        <IconButton size={"small"} title={t('profile_edit')}>
+                            <EditIcon className="text-violet-500 hover:text-violet-900"/>
+                        </IconButton>
+                    </Link>)
+                }
             </div>
             <h4 className="text-base">
                 <Trans i18nKey="profile_description">
