@@ -359,7 +359,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaList(uriInfo, favoriteMedia.getElements(), user);
+        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaFavoriteList(uriInfo, favoriteMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaFavoriteDto>>(mediaFavoriteDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, favoriteMedia, uriInfo);
@@ -511,7 +511,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaList(uriInfo, toWatchMedia.getElements(), user);
+        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaToWatchList(uriInfo, toWatchMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaToWatchDto>>(mediaToWatchDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, toWatchMedia, uriInfo);
@@ -666,7 +666,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtoList = (List<MediaDto>) MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(),user);
+        final List<MediaDto> mediaDtoList =  MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(),user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);

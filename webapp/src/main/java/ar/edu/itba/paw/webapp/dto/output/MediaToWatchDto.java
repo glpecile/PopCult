@@ -28,7 +28,11 @@ public class MediaToWatchDto extends MediaDto {
         return mediaToWatchDto;
     }
 
-    public static List<MediaToWatchDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User user) {
+    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser){
+        throw new AssertionError();
+    }
+
+    public static List<MediaToWatchDto> fromMediaToWatchList(UriInfo uriInfo, List<Media> mediaList, User user) {
         return mediaList.stream().map(m -> MediaToWatchDto.fromMediaAndUser(uriInfo, m, user)).collect(Collectors.toList());
     }
 

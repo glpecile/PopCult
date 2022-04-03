@@ -64,7 +64,7 @@ public class MediaDto {
         mediaDto.setImageUrl(media.getImage());
     }
 
-    public static List<? extends MediaDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
+    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
         return mediaList.stream().map(m -> MediaDto.fromMedia(uriInfo, m, currentUser)).collect(Collectors.toList());
     }
 
