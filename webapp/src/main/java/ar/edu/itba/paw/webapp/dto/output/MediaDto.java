@@ -8,11 +8,11 @@ import ar.edu.itba.paw.models.user.User;
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MediaDto {
 
+    // Fields
     private int id;
     private MediaType type;
     private String title;
@@ -22,15 +22,16 @@ public class MediaDto {
     private int seasons;
     private Country country;
 
-    private String isFavoriteUrl;
-
-    private String listsContainUrl;
-
+    // Entity url
     private String url;
 
+    // Auxiliar urls
     private String imageUrl;
-
     private String genreUrl;
+    private String listsContainUrl;
+
+    // Related to current user
+    private String favoriteUrl;
 
     public static MediaDto fromMedia(UriInfo url, Media media, User currentUser) {
         MediaDto mediaDto = new MediaDto();
@@ -42,12 +43,15 @@ public class MediaDto {
         mediaDto.releaseDate = media.getReleaseDate().toLocalDate();
         mediaDto.seasons = media.getSeasons();
         mediaDto.country = media.getCountry();
-        if(currentUser != null)
-            mediaDto.isFavoriteUrl = url.getBaseUriBuilder().path("users").path(String.valueOf(currentUser.getUserId())).path("favorite-media").path(String.valueOf(media.getMediaId())).build().toString();
-        mediaDto.listsContainUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
+
         mediaDto.url = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).build().toString();
         mediaDto.imageUrl = media.getImage();
+        mediaDto.listsContainUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
         mediaDto.genreUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
+
+        if(currentUser != null) {
+            mediaDto.favoriteUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("favorite-media").path(String.valueOf(media.getMediaId())).build().toString();
+        }
 
         return mediaDto;
     }
@@ -66,6 +70,14 @@ public class MediaDto {
 
     public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
         return mediaList.stream().map(m -> MediaDto.fromMedia(uriInfo, m, currentUser)).collect(Collectors.toList());
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public MediaType getType() {
@@ -138,5 +150,29 @@ public class MediaDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getGenreUrl() {
+        return genreUrl;
+    }
+
+    public void setGenreUrl(String genreUrl) {
+        this.genreUrl = genreUrl;
+    }
+
+    public String getListsContainUrl() {
+        return listsContainUrl;
+    }
+
+    public void setListsContainUrl(String listsContainUrl) {
+        this.listsContainUrl = listsContainUrl;
+    }
+
+    public String getFavoriteUrl() {
+        return favoriteUrl;
+    }
+
+    public void setFavoriteUrl(String favoriteUrl) {
+        this.favoriteUrl = favoriteUrl;
     }
 }
