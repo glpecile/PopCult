@@ -666,7 +666,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(),user);
+        final List<MediaDto> mediaDtoList = (List<MediaDto>) MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(),user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);
