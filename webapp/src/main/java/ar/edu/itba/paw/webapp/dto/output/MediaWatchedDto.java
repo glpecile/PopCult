@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 
@@ -33,7 +34,7 @@ public class MediaWatchedDto extends MediaDto {
         return mediaWatchedDto;
     }
 
-    public static List<MediaWatchedDto> fromMediaList(UriInfo uriInfo, List<WatchedMedia> mediaList, User user) {
+    public static List<MediaWatchedDto> fromWatchedMediaList(UriInfo uriInfo, List<WatchedMedia> mediaList, User user) {
         return mediaList.stream().map(m -> MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, m, user)).collect(Collectors.toList());
     }
 

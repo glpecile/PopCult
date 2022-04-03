@@ -109,7 +109,7 @@ public class UserController {
         final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
         LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build()).build();
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build()).build();
     }
 
     @DELETE
@@ -352,7 +352,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaList(uriInfo, favoriteMedia.getElements(), user);
+        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaFavoriteList(uriInfo, favoriteMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaFavoriteDto>>(mediaFavoriteDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, favoriteMedia, uriInfo);
@@ -424,7 +424,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromMediaList(uriInfo, watchedMedia.getElements(), user);
+        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromWatchedMediaList(uriInfo, watchedMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaWatchedDto>>(mediaWatchedDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, watchedMedia, uriInfo);
@@ -504,7 +504,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaList(uriInfo, toWatchMedia.getElements(), user);
+        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaToWatchList(uriInfo, toWatchMedia.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaToWatchDto>>(mediaToWatchDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, toWatchMedia, uriInfo);
@@ -659,7 +659,7 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements());
+        final List<MediaDto> mediaDtoList =  MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(),user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
         });
         ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);

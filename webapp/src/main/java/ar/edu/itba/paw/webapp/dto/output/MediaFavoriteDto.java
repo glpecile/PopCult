@@ -29,7 +29,11 @@ public class MediaFavoriteDto extends MediaDto {
         return mediaFavoriteDto;
     }
 
-    public static List<MediaFavoriteDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User user) {
+    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser){
+        throw new AssertionError();
+    }
+
+    public static List<MediaFavoriteDto> fromMediaFavoriteList(UriInfo uriInfo, List<Media> mediaList, User user) {
         return mediaList.stream().map(m -> MediaFavoriteDto.fromMediaAndUser(uriInfo, m, user)).collect(Collectors.toList());
     }
 
