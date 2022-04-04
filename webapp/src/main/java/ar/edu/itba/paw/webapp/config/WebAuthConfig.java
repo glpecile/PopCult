@@ -74,6 +74,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String ACCESS_CONTROL_CHECK_LIST_OWNER = "@accessControl.checkListOwner(request, #id)";
     // list(id) does not belong to authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_NOT_OWNER = "@accessControl.checkListNotOwner(request, #id)";
+    //  list(id) is public or belongs to authenticated user:
+    private static final String ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC = "@accessControl.checkListOwnerCollaboratorOrPublic(request, #id)";
     // list(id) is editable by authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_COLLABORATOR = "@accessControl.checkListCollaborator(request, #id)";
     // collabRequest(id) is associated to a list that belong to authenticated user:
@@ -208,7 +210,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.POST, "/lists/{id}/forks", "/lists/{id}/reports", "/lists/{id}/requests")
                     .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
-
+                .antMatchers(HttpMethod.GET, "/lists/{id}", "/lists/{id}/media/*")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
                 /**
                  * ListComments Controller
                  */

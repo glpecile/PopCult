@@ -84,6 +84,23 @@ public class AccessControl {
     }
 
     @Transactional(readOnly = true)
+    public boolean checkListOwnerCollaboratorOrPublic(HttpServletRequest request, int listId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
+        if (mediaList == null || mediaList.getVisible()) {
+            return true; // Jersey will throw 404 Response if null, else returns the list correctly
+        }
+        final UserDetails userDetails = getUserDetailsFromSecurityContext();
+        if (userDetails == null) {
+            return false;
+        }
+        final User user = userService.getByUsername(userDetails.getUsername()).orElse(null);
+        if (user == null) {
+            return false;
+        }
+        return listsService.canEditList(user, mediaList);
+    }
+
+    @Transactional(readOnly = true)
     public boolean checkListCollaborator(HttpServletRequest request, int listId) {
         final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
@@ -91,11 +108,11 @@ public class AccessControl {
         }
         final User user = userService.getByUsername(userDetails.getUsername()).orElse(null);
         if (user == null) {
-            return false; // Jersey will throw 404 Response
+            return false;
         }
         final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
         if (mediaList == null) {
-            return true;
+            return true; // Jersey will throw 404 Response
         }
         return listsService.canEditList(user, mediaList);
     }
@@ -108,7 +125,7 @@ public class AccessControl {
         }
         final Request collabRequest = collaborativeListService.getById(requestId).orElse(null);
         if (collabRequest == null) {
-            return true;
+            return true; // Jersey will throw 404 Response
         }
         return userDetails.getUsername().equals(collabRequest.getMediaList().getUser().getUsername());
     }
