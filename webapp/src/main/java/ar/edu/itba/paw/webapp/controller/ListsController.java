@@ -24,13 +24,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
@@ -107,7 +104,7 @@ public class ListsController {
         final ModelAndView mav = new ModelAndView("lists/listDescription");
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User u = mediaList.getUser();
-        final PageContainer<Media> mediaFromList = listsService.getMediaIdInList(mediaList,  page - 1, listsPerPage);
+        final PageContainer<Media> mediaFromList = listsService.getMediaInList(mediaList,  page - 1, listsPerPage);
         final PageContainer<ListComment> listCommentsContainer = commentService.getListComments(mediaList, defaultValue - 1, itemsPerPage);
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, defaultValue - 1, collaboratorsAmount);
         final PageContainer<MediaList> forks = listsService.getListForks(mediaList, defaultValue - 1, itemsPerPage);
@@ -430,7 +427,7 @@ public class ListsController {
                                          @ModelAttribute("usernameForm") UsernameForm usernameForm,
                                          @RequestParam(value = "page", defaultValue = "1") final int page, ModelAndView mav) {
         MediaList mediaList = listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new);
-        PageContainer<Media> pageContainer = listsService.getMediaIdInList(mediaList, page - 1, itemsPerPage);
+        PageContainer<Media> pageContainer = listsService.getMediaInList(mediaList, page - 1, itemsPerPage);
         mav.addObject("list", listsService.getMediaListById(mediaListId).orElseThrow(ListNotFoundException::new));
         mav.addObject("mediaContainer", pageContainer);
         mav.addObject("mediaListId", mediaListId);

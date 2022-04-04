@@ -38,7 +38,7 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public PageContainer<MediaList> getAllLists(int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
@@ -54,7 +54,7 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("userid", user.getUserId());
         @SuppressWarnings("unchecked")
@@ -72,7 +72,7 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid AND visibility = :visibility OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("userid", user);
         nativeQuery.setParameter("visibility", true);
@@ -95,9 +95,9 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
+    public PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         nativeQuery.setParameter("mediaListId", mediaList.getMediaListId());
         @SuppressWarnings("unchecked")
@@ -120,7 +120,7 @@ public class ListsHibernateDao implements ListsDao {
     public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE visibility = :visibility ORDER BY creationDate DESC OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("visibility", true);
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
@@ -134,7 +134,7 @@ public class ListsHibernateDao implements ListsDao {
         return new PageContainer<>(list, page, pageSize, count);
     }
 
-    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, String term,boolean visibility, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate){
+    private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, String term, boolean visibility, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate) {
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -142,19 +142,19 @@ public class ListsHibernateDao implements ListsDao {
         LinkedList<String> groupBy = new LinkedList<>();
         LinkedList<String> having = new LinkedList<>();
 
-        if(term != null){
-            where.add( SortType.TITLE.getNameMediaList() + " ILIKE CONCAT('%', :listname, '%')");
+        if (term != null) {
+            where.add(SortType.TITLE.getNameMediaList() + " ILIKE CONCAT('%', :listname, '%')");
             parameters.put("listname", term);
         }
-        if(!genre.isEmpty()){
+        if (!genre.isEmpty()) {
 
             where.add(" genreid IN ( :genres) ");
             parameters.put("genres", genre.stream().map(Genre::ordinal).collect(Collectors.toList()));
             groupBy.add(" medialistid ");
             groupBy.add(" visibility ");
-            if(sort !=null)
+            if (sort != null)
                 groupBy.add(sort.getNameMediaList());
-            if(fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.getNameMediaList())){
+            if (fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.getNameMediaList())) {
                 groupBy.add(SortType.DATE.getNameMediaList());
             }
             having.add(" COUNT(mediaId) >= :minMatches ");
@@ -163,38 +163,38 @@ public class ListsHibernateDao implements ListsDao {
         where.add(" visibility = :visibility ");
         parameters.put("visibility", visibility);
 
-        if(fromDate != null && toDate != null) {
+        if (fromDate != null && toDate != null) {
             where.add(" creationdate BETWEEN :fromDate AND :toDate ");
             parameters.put("fromDate", fromDate.toLocalDate());
             parameters.put("toDate", toDate.toLocalDate());
         }
-        if(!where.isEmpty()){
+        if (!where.isEmpty()) {
             toReturn.append("WHERE ");
             toReturn.append(where.removeFirst());
             where.forEach(w -> toReturn.append(" AND ").append(w));
         }
 
-        if(!groupBy.isEmpty()){
+        if (!groupBy.isEmpty()) {
             toReturn.append(" GROUP BY ");
             toReturn.append(groupBy.removeFirst());
             groupBy.forEach(w -> toReturn.append(" , ").append(w));
         }
-        if(!having.isEmpty()){
+        if (!having.isEmpty()) {
             toReturn.append(" HAVING ");
             toReturn.append(having.removeFirst());
             having.forEach(w -> toReturn.append(" AND ").append(w));
         }
-        if(sort != null) {
+        if (sort != null) {
             toReturn.append(" ORDER BY ");
-            if(sort == SortType.TITLE)
+            if (sort == SortType.TITLE)
                 toReturn.append(" LOWER(").append(sort.getNameMediaList()).append(") ");
             else
                 toReturn.append(sort.getNameMediaList());
         }
 
-        if(page != null && pageSize != null){
-            toReturn.append( " OFFSET :offset LIMIT :limit ");
-            parameters.put("offset", page*pageSize);
+        if (page != null && pageSize != null) {
+            toReturn.append(" OFFSET :offset LIMIT :limit ");
+            parameters.put("offset", (page - 1) * pageSize);
             parameters.put("limit", pageSize);
         }
         toReturn.append(" ) AS aux");
@@ -209,23 +209,22 @@ public class ListsHibernateDao implements ListsDao {
         //Pedimos el contenido paginado.
         String sortBaseString = "";
         String sortCountString = "";
-        if(sort != null){
-            if(sort == SortType.TITLE) {
+        if (sort != null) {
+            if (sort == SortType.TITLE) {
                 sortBaseString = ", LOWER(" + sort.getNameMediaList() + ") ";
                 sortCountString = "order by lower(" + sort.getNameMediaList() + ")";
-            }
-            else {
+            } else {
                 sortBaseString = ", " + sort.getNameMediaList();
                 sortCountString = "order by " + sort.getNameMediaList();
             }
         }
         final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortBaseString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
-        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,term,true,sort, genre, minMatches,fromDate,toDate);
+        final Query nativeQuery = buildAndWhereStatement(baseQuery, page, pageSize, term, true, sort, genre, minMatches, fromDate, toDate);
         @SuppressWarnings("unchecked")
         List<Long> mediaListIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
         final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
-        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,term,true,null,genre,minMatches,fromDate,toDate);
+        final Query countQuery = buildAndWhereStatement(countBaseQuery, null, null, term, true, null, genre, minMatches, fromDate, toDate);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
@@ -240,7 +239,7 @@ public class ListsHibernateDao implements ListsDao {
     public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM listelement WHERE mediaid = :mediaid OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("mediaid", media.getMediaId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
@@ -263,7 +262,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
-        if(mediaAlreadyInList(mediaList, media)) {
+        if (mediaAlreadyInList(mediaList, media)) {
             throw new MediaAlreadyInListException();
         }
         em.createNativeQuery("INSERT INTO listelement (mediaid, medialistid) VALUES (:mediaId, :mediaListId)")
@@ -280,11 +279,11 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias){
+    public void addToMediaList(MediaList mediaList, List<Media> medias) {
         for (Media media : medias) {
             try {
                 addToMediaList(mediaList, media);
-            }catch (MediaAlreadyInListException e){
+            } catch (MediaAlreadyInListException e) {
                 LOGGER.error("Cannot add media {} to list {}: List already contains this media.", media.getMediaId(), mediaList.getMediaListId());
             }
         }
@@ -327,7 +326,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public boolean canEditList(User user, MediaList mediaList) {
-        return !(((Number)em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR " +
+        return !(((Number) em.createNativeQuery("SELECT COUNT(*) FROM medialist ml LEFT JOIN collaborative c on ml.medialistid = c.listid WHERE medialistid = :medialistid AND ((userid = :userid) OR " +
                         "(collaboratorid = :userid AND accepted = :accepted))")
                 .setParameter("userid", user.getUserId())
                 .setParameter("accepted", true)
@@ -344,7 +343,7 @@ public class ListsHibernateDao implements ListsDao {
                         "OFFSET :offset LIMIT :limit")
                 .setParameter("userId", user.getUserId())
                 .setParameter("accepted", true)
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize)
                 .getResultList();
 
@@ -365,7 +364,7 @@ public class ListsHibernateDao implements ListsDao {
                         "OFFSET :offset LIMIT :limit")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("visibility", true)
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize)
                 .getResultList();
 

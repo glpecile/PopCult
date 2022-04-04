@@ -1,14 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ListsService;
+import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
+import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
 import ar.edu.itba.paw.webapp.dto.output.ListDto;
+import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
 import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
 import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +23,8 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.util.List;
 
 @Path("lists")
 @Component
@@ -29,6 +34,8 @@ public class ListController {
     private UserService userService;
     @Autowired
     private ListsService listsService;
+    @Autowired
+    private MediaService mediaService;
 
     @Context
     private UriInfo uriInfo;
@@ -94,6 +101,58 @@ public class ListController {
         listsService.deleteList(mediaList);
 
         LOGGER.info("DELETE /lists/{}: list {} deleted", listId, listId);
+        return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/{id}/media")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getMediaInList(@PathParam("id") int listId,
+                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        final PageContainer<Media> mediaInList = listsService.getMediaInList(mediaList, page, pageSize);
+
+        if (mediaInList.getElements().isEmpty()) {
+            LOGGER.info("GET /lists/{}/media: Returning empty list.", listId);
+            return Response.noContent().build();
+        }
+
+        final List<MediaInListDto> mediaInListDtoList = MediaInListDto.fromMediaList(uriInfo, mediaList, mediaInList.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaInListDto>>(mediaInListDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, mediaInList, uriInfo);
+
+        LOGGER.info("GET /lists/{}/media: Returning page {} with {} results.", listId, mediaInList.getCurrentPage(), mediaInList.getElements().size());
+        return response.build();
+    }
+
+    @PUT
+    @Path("/{listId}/media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response addMediaToList(@PathParam("listId") int listId,
+                                   @PathParam("mediaId") int mediaId) throws MediaAlreadyInListException {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        listsService.addToMediaList(mediaList, media);
+
+        LOGGER.info("PUT /lists/{}/media/{}: media {} added to list {}.", listId, mediaId, mediaId, listId);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{listId}/media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response removeMediaFromList(@PathParam("listId") int listId,
+                                        @PathParam("mediaId") int mediaId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        listsService.deleteMediaFromList(mediaList, media);
+
+        LOGGER.info("DELETE /lists/{}/media/{}: media {} removed from list {}.", listId, mediaId, mediaId, listId);
         return Response.noContent().build();
     }
 }

@@ -21,7 +21,7 @@ public interface ListsDao {
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
+    PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 

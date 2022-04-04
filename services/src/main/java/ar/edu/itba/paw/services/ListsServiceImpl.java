@@ -53,8 +53,8 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize) {
-        return listsDao.getMediaIdInList(mediaList, page, pageSize);
+    public PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize) {
+        return listsDao.getMediaInList(mediaList, page, pageSize);
     }
 
     @Transactional(readOnly = true)
