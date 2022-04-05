@@ -38,6 +38,24 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional(readOnly = true)
     @Override
+    public Optional<Request> getById(int collabId) {
+        return collaborativeListsDao.getById(collabId);
+    }
+
+    @Override
+    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
+        return collaborativeListsDao.getUserListCollabRequest(mediaList, user);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+        return collaborativeListsDao.getListCollaborators(mediaList, page, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
         return collaborativeListsDao.getRequestsByUser(user, page, pageSize);
     }
@@ -57,26 +75,14 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public void deleteCollaborator(Request request) {
-        collaborativeListsDao.rejectRequest(request);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
-        return collaborativeListsDao.getListCollaborators(mediaList, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Request> getById(int collabId) {
-        return collaborativeListsDao.getById(collabId);
+    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
+        collaborativeListsDao.addCollaborator(mediaList, user);
     }
 
     @Transactional
     @Override
-    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
-        collaborativeListsDao.addCollaborator(mediaList, user);
+    public void deleteCollaborator(Request request) {
+        collaborativeListsDao.rejectRequest(request);
     }
 
     @Transactional

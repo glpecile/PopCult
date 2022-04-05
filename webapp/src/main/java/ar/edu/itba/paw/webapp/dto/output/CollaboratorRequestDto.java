@@ -7,7 +7,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserCollaboratorDto {
+public class CollaboratorRequestDto {
 
     private boolean accepted;
     private String username;
@@ -18,21 +18,20 @@ public class UserCollaboratorDto {
     private String userUrl;
     private String listUrl;
 
-    public static UserCollaboratorDto fromRequest(UriInfo url, Request request) {
-        UserCollaboratorDto userCollaboratorDto = new UserCollaboratorDto();
-        userCollaboratorDto.accepted = request.isAccepted();
-        userCollaboratorDto.username = request.getCollaborator().getUsername();
-        userCollaboratorDto.list = request.getMediaList().getListName();
+    public static CollaboratorRequestDto fromRequest(UriInfo url, Request request) {
+        CollaboratorRequestDto collaboratorRequestDto = new CollaboratorRequestDto();
+        collaboratorRequestDto.accepted = request.isAccepted();
+        collaboratorRequestDto.username = request.getCollaborator().getUsername();
 
-        userCollaboratorDto.url = url.getBaseUriBuilder().path("lists").path(String.valueOf(request.getMediaList().getMediaListId())).path("collaborators").path(request.getCollaborator().getUsername()).build().toString();
-        userCollaboratorDto.userUrl = url.getBaseUriBuilder().path("users").path(request.getCollaborator().getUsername()).build().toString();
-        userCollaboratorDto.listUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(request.getMediaList().getMediaListId())).build().toString();
+        collaboratorRequestDto.url = url.getBaseUriBuilder().path("collab-requests").path(String.valueOf(request.getCollabId())).build().toString();
+        collaboratorRequestDto.userUrl = url.getBaseUriBuilder().path("users").path(request.getCollaborator().getUsername()).build().toString();
 
-        return userCollaboratorDto;
+
+        return collaboratorRequestDto;
     }
 
-    public static List<UserCollaboratorDto> fromRequestList(UriInfo url, List<Request> requestList) {
-        return requestList.stream().map(r -> UserCollaboratorDto.fromRequest(url, r)).collect(Collectors.toList());
+    public static List<CollaboratorRequestDto> fromRequestList(UriInfo url, List<Request> requestList) {
+        return requestList.stream().map(r -> CollaboratorRequestDto.fromRequest(url, r)).collect(Collectors.toList());
     }
 
     public boolean isAccepted() {

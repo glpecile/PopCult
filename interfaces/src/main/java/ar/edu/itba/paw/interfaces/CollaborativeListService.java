@@ -12,19 +12,22 @@ import java.util.Optional;
 public interface CollaborativeListService {
     Request makeNewRequest(MediaList mediaList, User user);
 
+    Optional<Request> getById(int collabId);
+
+    Optional<Request> getUserListCollabRequest(MediaList mediaList, User user);
+
+    PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
+
     PageContainer<Request> getRequestsByUser(User user, int page, int pageSize);
 
     void acceptRequest(Request collaborationRequest);
 
     void rejectRequest(Request request);
 
-    void deleteCollaborator(Request request);
-
-    PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
-
-    Optional<Request> getById(int collabId);
-
     void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException;
 
+    void deleteCollaborator(Request request);
+
     void addCollaborators(MediaList mediaList, List<User> users);
+
 }

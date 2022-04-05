@@ -1,24 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.CommentService;
-import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.interfaces.MediaService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
+import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
-import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
-import ar.edu.itba.paw.webapp.dto.output.ListDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
-import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
-import ar.edu.itba.paw.webapp.exceptions.ListNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +37,8 @@ public class ListController {
     private MediaService mediaService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private CollaborativeListService collaborativeListService;
 
     @Context
     private UriInfo uriInfo;
@@ -214,6 +211,72 @@ public class ListController {
     /**
      * Collaborators
      */
+    @GET
+    @Path("/{id}/collaborators")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getListCollaborators(@PathParam("id") int listId,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, page, pageSize);
+
+        if (collaborators.getElements().isEmpty()) {
+            LOGGER.info("GET /lists/{}/collaborators: Returning empty list.", listId);
+            return Response.noContent().build();
+        }
+
+        final List<UserCollaboratorDto> userCollaboratorDtoList = UserCollaboratorDto.fromRequestList(uriInfo, collaborators.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<UserCollaboratorDto>>(userCollaboratorDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, collaborators, uriInfo);
+
+        LOGGER.info("GET /lists/{}/collaborators: Returning page {} with {} results.", listId, collaborators.getCurrentPage(), collaborators.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{id}/collaborators/{username}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response isCollaborator(@PathParam("id") int listId,
+                                   @PathParam("username") String username) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
+
+        LOGGER.info("GET /lists/{}/collaborators/{}: Returning user {} collaboration in list {}", listId, username, username, listId);
+        return Response.ok(UserCollaboratorDto.fromRequest(uriInfo, request)).build();
+    }
+
+    @PUT
+    @Path("/{id}/collaborators/{username}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response addCollaborator(@PathParam("id") int listId,
+                                    @PathParam("username") String username) throws UserAlreadyCollaboratesInListException {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        collaborativeListService.addCollaborator(mediaList, user);
+
+        LOGGER.info("PUT /lists/{}/collaborators/{}: User {} added to list {} as collaborator", listId, username, username, listId);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}/collaborators/{username}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response deleteNotification(@PathParam("id") int listId,
+                                       @PathParam("username") String username) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
+
+        collaborativeListService.deleteCollaborator(request);
+
+        LOGGER.info("DELETE /lists/{}/collaborators/{}: User {} removed from list {} as collaborator", listId, username, username, listId);
+        return Response.noContent().build();
+    }
 
     /**
      * Forks

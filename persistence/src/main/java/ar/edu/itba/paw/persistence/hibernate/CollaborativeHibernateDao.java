@@ -37,11 +37,43 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
+    public Optional<Request> getById(int collabId) {
+        return Optional.ofNullable(em.find(Request.class, collabId));
+    }
+
+    @Override
+    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
+        final TypedQuery<Request> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", Request.class);
+        query.setParameter("mediaList", mediaList);
+        query.setParameter("user", user);
+        return query.getResultList().stream().findFirst();
+    }
+
+    @Override
+    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit");
+        nativeQuery.setParameter("listId", mediaList.getMediaListId());
+        nativeQuery.setParameter("status", true);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
+        nativeQuery.setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> collabIds = nativeQuery.getResultList();
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(collabid) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status");
+        countQuery.setParameter("listId", mediaList.getMediaListId());
+        countQuery.setParameter("status", true);
+        long count = ((Number) countQuery.getSingleResult()).longValue();
+        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", Request.class)
+                .setParameter("collabIds", collabIds);
+        List<Request> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
+        return new PageContainer<>(requestList, page, pageSize, count);
+    }
+
+    @Override
     public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("status", false);
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> collabIds = nativeQuery.getResultList();
@@ -59,30 +91,6 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     @Override
     public void rejectRequest(Request request) {
         em.remove(request);
-    }
-
-    @Override
-    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
-        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("listId", mediaList.getMediaListId());
-        nativeQuery.setParameter("status", true);
-        nativeQuery.setParameter("offset", page * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> collabIds = nativeQuery.getResultList();
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(collabid) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status");
-        countQuery.setParameter("listId", mediaList.getMediaListId());
-        countQuery.setParameter("status", true);
-        long count = ((Number) countQuery.getSingleResult()).longValue();
-        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", Request.class)
-                .setParameter("collabIds", collabIds);
-        List<Request> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
-        return new PageContainer<>(requestList, page, pageSize, count);
-    }
-
-    @Override
-    public Optional<Request> getById(int collabId) {
-        return Optional.ofNullable(em.find(Request.class, collabId));
     }
 
     @Override
@@ -111,12 +119,6 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         }
     }
 
-    @Override
-    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
-        final TypedQuery<Request> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", Request.class);
-        query.setParameter("mediaList", mediaList);
-        query.setParameter("user", user);
-        return query.getResultList().stream().findFirst();
-    }
+
 
 }
