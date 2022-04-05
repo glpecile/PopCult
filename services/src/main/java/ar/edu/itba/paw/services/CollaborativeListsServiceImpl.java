@@ -75,7 +75,7 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
+    public void addCollaborator(MediaList mediaList, User user) {
         collaborativeListsDao.addCollaborator(mediaList, user);
     }
 

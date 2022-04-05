@@ -66,7 +66,7 @@ public class ListsServiceImpl implements ListsService {
     @Transactional(readOnly = true)
     @Override
     public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term) {
-        return listsDao.getMediaListByFilters(page,pageSize,sort,genre, minMatches, fromDate, toDate, term);
+        return listsDao.getMediaListByFilters(page, pageSize, sort, genre, minMatches, fromDate, toDate, term);
     }
 
     @Transactional(readOnly = true)
@@ -83,25 +83,21 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd){
+    public MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd) {
         MediaList mediaList = listsDao.createMediaList(user, title, description, visibility, collaborative);
-        try{
-            listsDao.addToMediaList(mediaList, mediaToAdd);
-        } catch (MediaAlreadyInListException e){
-            LOGGER.error("Media already exists in Media List");
-        }
+        listsDao.addToMediaList(mediaList, mediaToAdd);
         return mediaList;
     }
 
     @Transactional
     @Override
-    public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
+    public void addToMediaList(MediaList mediaList, Media media) {
         listsDao.addToMediaList(mediaList, media);
     }
 
     @Transactional
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias){
+    public void addToMediaList(MediaList mediaList, List<Media> medias) {
         listsDao.addToMediaList(mediaList, medias);
     }
 

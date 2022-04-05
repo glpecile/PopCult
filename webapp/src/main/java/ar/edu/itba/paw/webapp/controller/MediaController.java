@@ -175,7 +175,7 @@ public class MediaController {
         Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         try {
             listsService.addToMediaList(mediaList, media);
-        } catch (MediaAlreadyInListException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Media {} is already in list {}.", mediaId, mediaListId);
             return new ModelAndView("redirect:/media/" + mediaId);
         }

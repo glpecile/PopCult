@@ -138,7 +138,7 @@ public class ListController {
     @Path("/{listId}/media/{mediaId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToList(@PathParam("listId") int listId,
-                                   @PathParam("mediaId") int mediaId) throws MediaAlreadyInListException {
+                                   @PathParam("mediaId") int mediaId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
@@ -253,7 +253,7 @@ public class ListController {
     @Path("/{id}/collaborators/{username}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addCollaborator(@PathParam("id") int listId,
-                                    @PathParam("username") String username) throws UserAlreadyCollaboratesInListException {
+                                    @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -266,8 +266,8 @@ public class ListController {
     @DELETE
     @Path("/{id}/collaborators/{username}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteNotification(@PathParam("id") int listId,
-                                       @PathParam("username") String username) {
+    public Response removeFromCollaborators(@PathParam("id") int listId,
+                                            @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);

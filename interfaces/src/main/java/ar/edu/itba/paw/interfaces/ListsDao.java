@@ -31,7 +31,7 @@ public interface ListsDao {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
-    void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, Media media);
 
     void addToMediaList(MediaList mediaList, List<Media> medias);
 

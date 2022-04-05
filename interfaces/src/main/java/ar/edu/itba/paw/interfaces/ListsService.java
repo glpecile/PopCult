@@ -33,7 +33,7 @@ public interface ListsService {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd);
 
-    void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, Media media);
 
     void addToMediaList(MediaList mediaList, List<Media> medias);
 

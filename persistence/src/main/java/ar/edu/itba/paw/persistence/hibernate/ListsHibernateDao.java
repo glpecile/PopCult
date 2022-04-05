@@ -261,9 +261,9 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException {
+    public void addToMediaList(MediaList mediaList, Media media) {
         if (mediaAlreadyInList(mediaList, media)) {
-            throw new MediaAlreadyInListException();
+            return;
         }
         em.createNativeQuery("INSERT INTO listelement (mediaid, medialistid) VALUES (:mediaId, :mediaListId)")
                 .setParameter("mediaId", media.getMediaId())
@@ -281,11 +281,7 @@ public class ListsHibernateDao implements ListsDao {
     @Override
     public void addToMediaList(MediaList mediaList, List<Media> medias) {
         for (Media media : medias) {
-            try {
-                addToMediaList(mediaList, media);
-            } catch (MediaAlreadyInListException e) {
-                LOGGER.error("Cannot add media {} to list {}: List already contains this media.", media.getMediaId(), mediaList.getMediaListId());
-            }
+            addToMediaList(mediaList, media);
         }
     }
 

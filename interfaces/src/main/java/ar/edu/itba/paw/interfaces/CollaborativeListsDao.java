@@ -22,7 +22,7 @@ public interface CollaborativeListsDao {
 
     void rejectRequest(Request request);
 
-    void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException;
+    void addCollaborator(MediaList mediaList, User user);
 
     void addCollaborators(MediaList mediaList, List<User> users);
 

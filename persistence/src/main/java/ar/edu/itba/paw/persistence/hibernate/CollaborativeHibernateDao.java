@@ -94,15 +94,20 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
-    public void addCollaborator(MediaList mediaList, User user) throws UserAlreadyCollaboratesInListException {
-        if (userCollaboratesInList(mediaList, user) || user.equals(mediaList.getUser())) {
-            throw new UserAlreadyCollaboratesInListException();
+    public void addCollaborator(MediaList mediaList, User user) {
+        if (user.equals(mediaList.getUser()) || userCollaboratesInList(mediaList, user)) {
+            return;
+        }
+        Optional<Request> request = getUserListCollabRequest(mediaList, user);
+        if (request.isPresent()) {
+            request.get().setAccepted(true);
+            return;
         }
         em.persist(new Request(user, mediaList, true));
     }
 
     private boolean userCollaboratesInList(MediaList mediaList, User user) {
-        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :mediaListId AND collaboratorid = :userId")
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :mediaListId AND collaboratorid = :userId AND accepted = true")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("userId", user.getUserId())
                 .getSingleResult()).intValue() != 0;
@@ -111,14 +116,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     @Override
     public void addCollaborators(MediaList mediaList, List<User> users) {
         for (User user : users) {
-            try {
-                addCollaborator(mediaList, user);
-            } catch (UserAlreadyCollaboratesInListException e) {
-                LOGGER.error("User {} already collaborates in medialist {}.", user.getUsername(), mediaList.getMediaListId());
-            }
+            addCollaborator(mediaList, user);
         }
     }
-
-
-
 }

@@ -78,17 +78,6 @@ public class ListsHibernateDaoTest {
     }
 
     @Rollback
-    @Test(expected = MediaAlreadyInListException.class)
-    public void testAddMediaAlreadyInList() throws MediaAlreadyInListException {
-        MediaList mediaList = InstanceProvider.getMediaList();
-        Media media = InstanceProvider.getMediaAlreadyInList();
-
-        listsHibernateDao.addToMediaList(mediaList, media);
-
-        Assert.fail();
-    }
-
-    @Rollback
     @Test
     public void testCanEditList() {
         MediaList mediaList = InstanceProvider.getCanEditMediaList();
