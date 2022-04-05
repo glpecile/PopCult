@@ -1,14 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.MediaService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
+import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
 import ar.edu.itba.paw.webapp.dto.output.ListDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
 import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
@@ -36,6 +40,8 @@ public class ListController {
     private ListsService listsService;
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private CommentService commentService;
 
     @Context
     private UriInfo uriInfo;
@@ -104,6 +110,9 @@ public class ListController {
         return Response.noContent().build();
     }
 
+    /**
+     * Media In List
+     */
     @GET
     @Path("/{id}/media")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -155,4 +164,66 @@ public class ListController {
         LOGGER.info("DELETE /lists/{}/media/{}: media {} removed from list {}.", listId, mediaId, mediaId, listId);
         return Response.noContent().build();
     }
+
+    /**
+     * Comments
+     */
+    @GET
+    @Path("/{id}/comments")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getListComments(@PathParam("id") int listId,
+                                    @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        final PageContainer<ListComment> listComments = commentService.getListComments(mediaList, page, pageSize);
+
+        if (listComments.getElements().isEmpty()) {
+            LOGGER.info("GET /lists/{}/comments: Returning empty list.", listId);
+            return Response.noContent().build();
+        }
+
+        final List<ListCommentDto> listCommentDtoList = ListCommentDto.fromListCommentList(uriInfo, listComments.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListCommentDto>>(listCommentDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, listComments, uriInfo);
+
+        LOGGER.info("GET /lists/{}/comments: Returning page {} with {} results.", listId, listComments.getCurrentPage(), listComments.getElements().size());
+        return response.build();
+    }
+
+    @POST
+    @Path("/{id}/comments")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response createListComments(@PathParam("id") int listId,
+                                       @Valid CommentInputDto commentInputDto) {
+        if (commentInputDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+
+        final ListComment listComment = commentService.addCommentToList(user, mediaList, commentInputDto.getBody());
+
+        LOGGER.info("POST /lists/{}/comments: Comment created with id {}", listId, listComment.getCommentId());
+        return Response.created(uriInfo.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).build()).build();
+    }
+
+    /**
+     * Collaborators
+     */
+
+    /**
+     * Forks
+     */
+
+    /**
+     * Collaborator Requests
+     */
+
+    /**
+     * Reports
+     */
 }

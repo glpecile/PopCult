@@ -198,8 +198,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * List Controller
                  */
-                .antMatchers(HttpMethod.POST, "/lists", "lists/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/lists")
                     .authenticated()
+                .antMatchers(HttpMethod.POST, "/lists/{id}/comments")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
                 .antMatchers(HttpMethod.DELETE, "/lists/{id}", "/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
                 .antMatchers(HttpMethod.PUT, "/lists/{id}", "/lists/{id}/collaborators/{username}")
@@ -210,8 +212,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.POST, "/lists/{id}/forks", "/lists/{id}/reports", "/lists/{id}/requests")
                     .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
-                .antMatchers(HttpMethod.GET, "/lists/{id}", "/lists/{id}/media/**")
+                .antMatchers(HttpMethod.GET, "/lists/{id}/**")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
+
                 /**
                  * ListComments Controller
                  */
