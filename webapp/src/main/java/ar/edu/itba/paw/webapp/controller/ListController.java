@@ -281,6 +281,42 @@ public class ListController {
     /**
      * Forks
      */
+    @GET
+    @Path("/{id}/forks")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getListFork(@PathParam("id") int listId,
+                                @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        final PageContainer<MediaList> listForks = listsService.getListForks(mediaList, page, pageSize);
+
+        if (listForks.getElements().isEmpty()) {
+            LOGGER.info("GET /lists/{}/collaborators: Returning empty list.", listId);
+            return Response.noContent().build();
+        }
+
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, listForks.getElements(), userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, listForks, uriInfo);
+
+        LOGGER.info("GET /lists/{}/forks: Returning page {} with {} results.", listId, listForks.getCurrentPage(), listForks.getElements().size());
+        return response.build();
+    }
+
+    @POST
+    @Path("/{id}/forks")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getListFork(@PathParam("id") int listId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+
+        final MediaList forkedList = listsService.createMediaListCopy(user, mediaList);
+
+        LOGGER.info("POST /lists/{}/forks: List {} created with id {} forked from list {}", listId, forkedList.getListName(), forkedList.getMediaListId(), listId);
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(forkedList.getMediaListId())).build()).build();
+    }
 
     /**
      * Collaborator Requests
