@@ -35,6 +35,8 @@ public interface ListsService {
 
     void addToMediaList(MediaList mediaList, Media media);
 
+    boolean mediaAlreadyInList(MediaList mediaList, Media media);
+
     void addToMediaList(MediaList mediaList, List<Media> medias);
 
     void deleteMediaFromList(MediaList mediaList, Media media);

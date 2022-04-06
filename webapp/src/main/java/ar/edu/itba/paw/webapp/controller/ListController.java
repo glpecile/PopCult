@@ -134,6 +134,23 @@ public class ListController {
         return response.build();
     }
 
+    @GET
+    @Path("/{listId}/media/{mediaId}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response isMediaInList(@PathParam("listId") int listId,
+                                  @PathParam("mediaId") int mediaId) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        if (!listsService.mediaAlreadyInList(mediaList, media)) {
+            LOGGER.info("GET /lists/{}/media/{}: media {} is not in list {}.", listId, mediaId, mediaId, listId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /lists/{}/media/{}: media {} is in list {}.", listId, mediaId, mediaId, listId);
+        return Response.ok(MediaInListDto.fromMedia(uriInfo, mediaList, media)).build();
+    }
+
     @PUT
     @Path("/{listId}/media/{mediaId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -308,7 +325,7 @@ public class ListController {
     @POST
     @Path("/{id}/forks")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getListFork(@PathParam("id") int listId) {
+    public Response createListFork(@PathParam("id") int listId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
 

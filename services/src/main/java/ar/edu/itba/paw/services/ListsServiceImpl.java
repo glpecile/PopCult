@@ -95,6 +95,12 @@ public class ListsServiceImpl implements ListsService {
         listsDao.addToMediaList(mediaList, media);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean mediaAlreadyInList(MediaList mediaList, Media media) {
+        return listsDao.mediaAlreadyInList(mediaList, media);
+    }
+
     @Transactional
     @Override
     public void addToMediaList(MediaList mediaList, List<Media> medias) {

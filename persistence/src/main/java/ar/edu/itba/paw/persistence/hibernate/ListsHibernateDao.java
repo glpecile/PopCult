@@ -271,7 +271,7 @@ public class ListsHibernateDao implements ListsDao {
                 .executeUpdate();
     }
 
-    private boolean mediaAlreadyInList(MediaList mediaList, Media media) {
+    public boolean mediaAlreadyInList(MediaList mediaList, Media media) {
         return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM listelement WHERE medialistid = :mediaListId AND mediaid = :mediaId")
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .setParameter("mediaId", media.getMediaId())
