@@ -12,6 +12,7 @@ import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,9 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Transactional(readOnly = true)
     @Override
     public boolean principalIsMod() {
-        return roleHierarchy.getReachableGrantedAuthorities(SecurityContextHolder.getContext().getAuthentication().getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null)
+            return false;
+        return roleHierarchy.getReachableGrantedAuthorities(auth.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
     }
 }

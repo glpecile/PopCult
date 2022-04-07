@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
@@ -10,9 +11,11 @@ import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
+import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
@@ -25,6 +28,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Optional;
 
 @Path("lists")
 @Component
@@ -357,4 +361,25 @@ public class ListController {
     /**
      * Reports
      */
+    @POST
+    @Path("/{id}/reports")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response createListReport(@PathParam("id") int listId,
+                                     @Valid ReportDto reportDto) throws ListAlreadyReportedException {
+        if (reportDto == null) {
+            throw new EmptyBodyException();
+        }
+
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        Optional<ListReport> listReport = reportService.reportList(mediaList, reportDto.getReport());
+
+        if (listReport.isPresent()) {
+            LOGGER.info("POST /lists/{}/reports: Report created with id {}", listId, listReport.get().getReportId());
+            return Response.created(uriInfo.getBaseUriBuilder().path("lists-reports").path(String.valueOf(listReport.get().getReportId())).build()).build();
+        } else {
+            LOGGER.info("POST /lists/{}/reports: List {} deleted", listId, listId);
+            return Response.noContent().build();
+        }
+    }
 }
