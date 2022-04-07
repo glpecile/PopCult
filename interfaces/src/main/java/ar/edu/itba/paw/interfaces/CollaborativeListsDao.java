@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CollaborativeListsDao {
-    Request makeNewRequest(MediaList mediaList, User user);
+    Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException;
 
     Optional<Request> getById(int collabId);
 

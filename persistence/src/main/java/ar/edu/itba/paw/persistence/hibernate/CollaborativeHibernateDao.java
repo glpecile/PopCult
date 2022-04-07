@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -30,10 +32,20 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CollaborativeHibernateDao.class);
 
     @Override
-    public Request makeNewRequest(MediaList mediaList, User user) {
+    public Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
+        if(collabRequestAlreadyExists(mediaList, user)) {
+            throw new CollaboratorRequestAlreadyExistsException();
+        }
         final Request request = new Request(user, mediaList);
         em.persist(request);
         return request;
+    }
+
+    private boolean collabRequestAlreadyExists(MediaList mediaList, User user) {
+        return ((Number)em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :listId AND collaboratorid = :userId")
+                .setParameter("listId", mediaList.getMediaListId())
+                .setParameter("userId", user.getUserId())
+                .getSingleResult()).intValue() != 0;
     }
 
     @Override

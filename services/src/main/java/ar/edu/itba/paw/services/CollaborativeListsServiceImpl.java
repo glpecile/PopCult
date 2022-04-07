@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
@@ -27,13 +28,10 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public Request makeNewRequest(MediaList mediaList, User user) {
-        Optional<Request> request = collaborativeListsDao.getUserListCollabRequest(mediaList, user);
-        if (request.isPresent()) {
-            return request.get();
-        }
+    public Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
+        Request request = collaborativeListsDao.makeNewRequest(mediaList, user);
         emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser(), LocaleContextHolder.getLocale());
-        return collaborativeListsDao.makeNewRequest(mediaList, user);
+        return request;
     }
 
     @Transactional(readOnly = true)

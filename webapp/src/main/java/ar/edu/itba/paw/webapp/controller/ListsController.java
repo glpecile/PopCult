@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
@@ -162,7 +163,7 @@ public class ListsController {
     }
 
     @RequestMapping(value = "/lists/{listId}/sendRequest", method = {RequestMethod.POST})
-    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId) {
+    public ModelAndView sendRequestToCollab(@PathVariable("listId") final int listId) throws CollaboratorRequestAlreadyExistsException {
 
         User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         MediaList list = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);

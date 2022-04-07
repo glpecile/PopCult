@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
@@ -39,6 +40,8 @@ public class ListController {
     private CommentService commentService;
     @Autowired
     private CollaborativeListService collaborativeListService;
+    @Autowired
+    private ReportService reportService;
 
     @Context
     private UriInfo uriInfo;
@@ -338,6 +341,18 @@ public class ListController {
     /**
      * Collaborator Requests
      */
+    @POST
+    @Path("/{id}/requests")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response createListRequest(@PathParam("id") int listId) throws CollaboratorRequestAlreadyExistsException {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
+
+        Request request = collaborativeListService.makeNewRequest(mediaList, user);
+
+        LOGGER.info("POST /lists/{}/requests: Collaboration request created with id {} for list {} and user {}", listId, request.getCollabId(), listId, user.getUsername());
+        return Response.created(uriInfo.getBaseUriBuilder().path("collab-requests").path(String.valueOf(request.getCollabId())).build()).build();
+    }
 
     /**
      * Reports
