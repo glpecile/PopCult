@@ -70,6 +70,7 @@
   "recovery_check_inbox": "Un email fue enviado a su casilla, vealo para reiniciar su contraseña.",
   "recovery_reset_password": "Restablecer Contraseña",
   "recovery_reset_password_button": "Restablecer",
+  "recovery_password_error": "Token expirado o inválido, por favor intentar nuevamente.",
   "register_title": "Registrate • PopCult",
   "register_greeting": "¡Empieza Ya!",
   "register_email": "Email",

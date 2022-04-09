@@ -7,6 +7,8 @@ import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Login from "./pages/secondary/login/Login";
+import Recovery from "./pages/secondary/login/Recovery";
+import ResetPassword from "./pages/secondary/login/ResetPassword";
 import Register from "./pages/secondary/login/Register";
 import SuccessfulRegister from "./pages/secondary/login/SuccessfulRegister";
 import ExpiredToken from "./pages/secondary/login/ExpiredToken";
@@ -36,6 +38,8 @@ export default function App() {
                     <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
                     <Route path='/lists/:id' exact element={<ListsDescription/>}/>
                     <Route path='/login' exact element={<Login/>}/>
+                    <Route path='/recovery' exact element={<Recovery/>}/>
+                    <Route path='/resetPassword' exact element={<ResetPassword/>}/>
                     <Route path='/register' exact element={<Register/>}/>
                     <Route path='/register/success' exact element={<SuccessfulRegister/>}/>
                     <Route path='/register/expired' exact element={<ExpiredToken/>}/>

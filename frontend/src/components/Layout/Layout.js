@@ -13,7 +13,7 @@ function Layout(props) {
 
     useEffect(() => {
         setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register'
-            && location.pathname !== '/register/success' && location.pathname !== '/register/expired');
+            && location.pathname !== '/recovery' && location.pathname !== '/resetPassword' && location.pathname !== '/register/success' && location.pathname !== '/register/expired');
     }, [location]);
 
     return (

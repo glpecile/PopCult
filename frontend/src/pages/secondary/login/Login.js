@@ -1,11 +1,11 @@
 import LoginCard from "../../../components/login/LoginCard";
-import {Navigate} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import {useEffect, useState, useContext, useRef, useCallback} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
 
-function Login() {
+export default function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
     const [enteredRememberMe, setEnteredRememberMe] = useState(false);
@@ -21,7 +21,6 @@ function Login() {
     const authContext = useContext(AuthContext);
 
     const login = useCallback(async (username, password, rememberMe) => {
-
             try {
                 if (mountedUser.current) {
                     const key = await UserService.login({username, password})
@@ -54,8 +53,6 @@ function Login() {
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);
         event.target.validity.valid ? setUsernameError(false) : setUsernameError(true);
-
-
     };
     const PasswordChangeHandler = (event) => {
         setEnteredPassword(event.target.value);
@@ -64,7 +61,6 @@ function Login() {
     };
     const RememberMeChangeHandler = (event) => {
         setEnteredRememberMe(event.target.value);
-
     };
 
     const setErrorMessage = () => {
@@ -103,7 +99,7 @@ function Login() {
                        onChange={PasswordChangeHandler}/>
 
                 <div className="flex py-2.5 justify-start">
-                    <input className="shadow-sm mt-1.5 accent-purple-400" type="checkbox"
+                    <input className="shadow-sm mt-1.5 checked:bg-purple-500" type="checkbox"
                            defaultChecked={enteredRememberMe}
                            onChange={RememberMeChangeHandler}/>
                     <label className="text-semibold pl-1.5">
@@ -113,16 +109,13 @@ function Login() {
                 {errorMessageDisplay && <div className="py-1 text-semibold text-danger w-full">
                     {t('login_error')}
                 </div>}
-                <button className="btn btn-secondary my-2 w-full hover:shadow-indigo-50" type="submit">
+                <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-purple-400" type="submit">
                     {t('login_button')}
                 </button>
-                <button className="text-purple-800 hover:text-indigo-900 text-sm uppercase">
-                    {t('login_recovery')}
-                </button>
+                <Link className="text-center text-slate-700 text-sm uppercase hover:text-purple-800" to="/recovery">
+                        {t('login_recovery')}
+                </Link>
             </div>
         </form>
     </LoginCard>
-
 }
-
-export default Login;
