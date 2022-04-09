@@ -658,6 +658,81 @@ public class UserController {
     }
 
     /**
+     * User Lists
+     */
+    @GET
+    @Path("/{username}/lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserLists(@PathParam("username") String username,
+                                 @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                 @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userLists = listsService.getMediaListByUser(user, page, pageSize);
+
+        if (userLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/lists: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, userLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/lists: Returning page {} with {} results.", username, userLists.getCurrentPage(), userLists.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/public-lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserPublicLists(@PathParam("username") String username,
+                                       @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page, pageSize);
+
+        if (userPublicLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/public-lists: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userPublicLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, userPublicLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/public-lists: Returning page {} with {} results.", username, userPublicLists.getCurrentPage(), userPublicLists.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/editable-lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserEditableLists(@PathParam("username") String username,
+                                       @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userEditableLists = listsService.getUserEditableLists(user, page, pageSize);
+
+        if (userEditableLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/editable-lists: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userEditableLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, userEditableLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/editable-lists: Returning page {} with {} results.", username, userEditableLists.getCurrentPage(), userEditableLists.getElements().size());
+        return response.build();
+    }
+
+    /**
      * Notifications
      */
     @GET

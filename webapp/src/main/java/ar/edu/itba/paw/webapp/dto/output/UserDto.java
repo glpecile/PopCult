@@ -29,8 +29,12 @@ public class UserDto {
     private String lockedUrl;
     private String favoriteMediaUrl;
     private String favoriteListsUrl;
+    private String publicFavoriteListsUrl;
     private String watchedMediaUrl;
     private String toWatchMediaUrl;
+    private String listsUrl;
+    private String publicListsUrl;
+    private String editableListsUrl;
     private String notificationsUrl;
     private String collabRequestsUrl;
     private String recommendedMediaUrl;
@@ -56,8 +60,12 @@ public class UserDto {
         userDto.lockedUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("locked").build().toString();
         userDto.favoriteMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("favorite-media").build().toString();
         userDto.favoriteListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("favorite-lists").build().toString();
+        userDto.publicFavoriteListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("public-favorite-lists").build().toString();
         userDto.watchedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("watched-media").build().toString();
         userDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("to-watch-media").build().toString();
+        userDto.listsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("lists").build().toString();
+        userDto.publicListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("public-lists").build().toString();
+        userDto.editableListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("editable-lists").build().toString();
         userDto.notificationsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("notification").build().toString();
         userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
         userDto.recommendedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-media").build().toString();
@@ -205,6 +213,14 @@ public class UserDto {
         this.favoriteListsUrl = favoriteListsUrl;
     }
 
+    public String getPublicFavoriteListsUrl() {
+        return publicFavoriteListsUrl;
+    }
+
+    public void setPublicFavoriteListsUrl(String publicFavoriteListsUrl) {
+        this.publicFavoriteListsUrl = publicFavoriteListsUrl;
+    }
+
     public String getWatchedMediaUrl() {
         return watchedMediaUrl;
     }
@@ -219,6 +235,22 @@ public class UserDto {
 
     public void setToWatchMediaUrl(String toWatchMediaUrl) {
         this.toWatchMediaUrl = toWatchMediaUrl;
+    }
+
+    public String getListsUrl() {
+        return listsUrl;
+    }
+
+    public void setListsUrl(String listsUrl) {
+        this.listsUrl = listsUrl;
+    }
+
+    public String getPublicListsUrl() {
+        return publicListsUrl;
+    }
+
+    public void setPublicListsUrl(String publicListsUrl) {
+        this.publicListsUrl = publicListsUrl;
     }
 
     public String getNotificationsUrl() {
@@ -252,5 +284,4 @@ public class UserDto {
     public void setRecommendedListsUrl(String recommendedListsUrl) {
         this.recommendedListsUrl = recommendedListsUrl;
     }
-
 }
