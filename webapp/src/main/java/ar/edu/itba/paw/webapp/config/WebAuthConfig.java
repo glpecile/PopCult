@@ -282,7 +282,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers(HttpMethod.GET, "/users/{username}/notifications", "/users/{username}/collab-requests")
+                .antMatchers(HttpMethod.GET, "/users/{username}/lists/**", "/users/{username}/favorite-lists/**", "/users/{username}/notifications", "/users/{username}/collab-requests")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
                 .antMatchers("/**")

@@ -569,35 +569,91 @@ public class UserController {
     public Response getUserFavoriteLists(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        //TODO
-        return null;
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> favoriteLists = favoriteService.getUserFavoriteLists(user, page, pageSize);
+
+        if (favoriteLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/favorite-lists: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, favoriteLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListFavoriteDto>>(listFavoriteDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, favoriteLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/favorite-lists: Returning page {} with {} results.", username, favoriteLists.getCurrentPage(), favoriteLists.getElements().size());
+        return response.build();
     }
 
     @GET
-    @Path("/{username}/favorite-lists/{list-id}")
+    @Path("/{username}/public-favorite-lists")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUserPublicFavoriteLists(@PathParam("username") String username,
+                                               @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> publicFavoriteLists = favoriteService.getUserPublicFavoriteLists(user, page, pageSize);
+
+        if (publicFavoriteLists.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/public-favorite-lists: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, publicFavoriteLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListFavoriteDto>>(listFavoriteDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, publicFavoriteLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/public-favorite-lists: Returning page {} with {} results.", username, publicFavoriteLists.getCurrentPage(), publicFavoriteLists.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/favorite-lists/{listId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response isFavoriteList(@PathParam("username") String username,
-                                   @PathParam("list-id") int listId) {
-        //TODO
-        return null;
+                                   @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        if (!favoriteService.isFavoriteList(mediaList, user)) {
+            LOGGER.info("GET /users/{}/favorite-lists/{}: list {} is not favorite of {}.", username, listId, listId, username);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /users/{}/favorite-lists/{}: list {} is favorite of {}.", username, listId, listId, username);
+        return Response.ok(ListFavoriteDto.fromList(uriInfo, mediaList, user)).build();
     }
 
     @PUT
-    @Path("/{username}/favorite-lists/{list-id}")
+    @Path("/{username}/favorite-lists/{listId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addListToFavorites(@PathParam("username") String username,
-                                       @PathParam("list-id") int listId) {
-        //TODO
-        return null;
+                                       @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        favoriteService.addListToFav(mediaList, user);
+
+        LOGGER.info("PUT /users/{}/favorite-lists/{}: list {} added to {}'s favorites.", username, listId, listId, username);
+        return Response.noContent().build();
     }
 
     @DELETE
-    @Path("/{username}/favorite-lists/{list-id}")
+    @Path("/{username}/favorite-lists/{listId}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeListFromFavorites(@PathParam("username") String username,
-                                            @PathParam("list-id") int listId) {
-        //TODO
-        return null;
+                                            @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        favoriteService.deleteListFromFav(mediaList, user);
+
+        LOGGER.info("DELETE /users/{}/favorite-lists/{}: list {} removed from {}'s favorites.", username, listId, listId, username);
+        return Response.noContent().build();
     }
 
     /**
