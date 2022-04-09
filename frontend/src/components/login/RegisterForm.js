@@ -142,8 +142,9 @@ const RegisterForm = (props) => {
                                     className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
                                     role="alert">
                             <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button onClick={() => setAlertDisplay(false)}><i
-                                    className="fas fa-times hover:text-gray-800"/></button>
+                                <button type="button" onClick={() => setAlertDisplay(false)}>
+                                    <i className="fas fa-times hover:text-gray-800"/>
+                                </button>
                             </span>
                             <small key="text" id="passwordHelpBlock"
                                    className="form-text text-muted whitespace-pre-wrap">
@@ -172,6 +173,7 @@ const RegisterForm = (props) => {
                             {t('register_password_match_error')}
                         </p>}
                 </div>
+
                 {/*Username*/}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
@@ -222,7 +224,7 @@ const RegisterForm = (props) => {
                 </div>
 
                 <div className="py-1 px-2.5 text-semibold w-full">
-                    <button className="btn btn-secondary px-2.5 mt-2 w-full" type="submit">
+                    <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-purple-400" type="submit">
                         {t('register_button')}
                     </button>
                     {(badAttempt || props.registrationError) &&
