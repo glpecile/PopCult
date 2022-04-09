@@ -754,7 +754,12 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        //TODO
-        return null;
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, recommendedLists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, recommendedLists, uriInfo);
+
+        LOGGER.info("GET /users/{}/recommended-lists: Returning page {} with {} results.", username, recommendedLists.getCurrentPage(), recommendedLists.getElements().size());
+        return response.build();
     }
 }

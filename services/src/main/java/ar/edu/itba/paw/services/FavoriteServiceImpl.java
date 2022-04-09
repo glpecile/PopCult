@@ -88,7 +88,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 toAdd.add(list);
                 if(toAdd.size()==pageSize) break;
             }
-            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalCount() + filler.getTotalCount());
         }
         return recommendations;
     }
@@ -110,7 +110,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 toAdd.add(media);
                 if(toAdd.size()==pageSize) break;
             }
-            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalPages() + filler.getTotalPages());
+            return new PageContainer<>(new ArrayList<>(toAdd), page, pageSize, recommendations.getTotalCount() + filler.getTotalCount());
         }
         return recommendations;
     }
