@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -692,8 +693,22 @@ public class UserController {
     public Response getUserCollaborationRequests(@PathParam("username") String username,
                                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
                                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        //TODO
-        return null;
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Request> collaborationRequests = collaborativeListService.getRequestsByUser(user, page, pageSize);
+
+        if (collaborationRequests.getElements().isEmpty()) {
+            LOGGER.info("GET /users/{}/collab-requests: Returning empty list.", username);
+            return Response.noContent().build();
+        }
+
+        final List<CollaboratorRequestDto> collaboratorRequestDtoList = CollaboratorRequestDto.fromRequestList(uriInfo, collaborationRequests.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<CollaboratorRequestDto>>(collaboratorRequestDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, collaborationRequests, uriInfo);
+
+        LOGGER.info("GET /users/{}/collab-requests: Returning page {} with {} results.", username, collaborationRequests.getCurrentPage(), collaborationRequests.getElements().size());
+        return response.build();
     }
 
     /**
