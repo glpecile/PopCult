@@ -1,13 +1,15 @@
-import RecoveryCard from "../../../components/login/RecoveryCard";
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {motion} from "framer-motion";
 import {IconButton} from "@mui/material";
+import RecoveryCard from "../../../components/login/RecoveryCard";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import FadeIn from "../../../components/animation/FadeIn";
 import UserService from "../../../services/UserService";
+import HelpIcon from '@mui/icons-material/Help';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function ResetPassword() {
     const navigate = useNavigate();
@@ -73,13 +75,15 @@ export default function ResetPassword() {
                         <div className="relative">
                             {/* Visibility */}
                             <IconButton size="small" className={"absolute top-8 my-3.5 right-2" + (enteredPasswordError ? " text-rose-500" : "")}
-                                        onClick={() => {setPasswordShown(!passwordShown)}}>
+                                        onClick={() => {
+                                            setPasswordShown(!passwordShown)
+                                        }}>
                                 {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                             </IconButton>
                             {/* Hint */}
                             <IconButton size="small" className="absolute top-1.5 right-2 text-purple-400"
                                         onClick={() => setAlertDisplay(!alertDisplay)}>
-                                <i className="fas fa-question-circle"/>
+                                <HelpIcon fontSize="small"/>
                             </IconButton>
                             <label
                                 className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -101,10 +105,10 @@ export default function ResetPassword() {
                             <motion.div key="icon"
                                         className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
                                         role="alert">
-                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button type="button" onClick={() => setAlertDisplay(false)}>
-                                    <i className="fas fa-times hover:text-gray-800"/>
-                                </button>
+                            <span className="absolute -top-1 bottom-0 -right-2 px-4 py-3">
+                                <IconButton size="small" type="button" onClick={() => setAlertDisplay(false)}>
+                                    <CloseIcon className="hover:text-gray-800"/>
+                                </IconButton>
                             </span>
                                 <small key="text" id="passwordHelpBlock"
                                        className="form-text text-muted whitespace-pre-wrap">
@@ -118,8 +122,11 @@ export default function ResetPassword() {
                     <div className="py-1 text-semibold w-full">
                         <div className="relative">
                             {/* Visibility */}
-                            <IconButton size="small" className={"absolute top-8 my-3.5 right-2" + (enteredRepeatedPasswordError ? " text-rose-500" : "")}
-                                        onClick={() => {setRepeatedPasswordShown(!repeatedPasswordShown)}}>
+                            <IconButton size="small"
+                                        className={"absolute top-8 my-3.5 right-2" + (enteredRepeatedPasswordError ? " text-rose-500" : "")}
+                                        onClick={() => {
+                                            setRepeatedPasswordShown(!repeatedPasswordShown)
+                                        }}>
                                 {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                             </IconButton>
                             <label

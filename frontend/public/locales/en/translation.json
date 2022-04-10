@@ -49,7 +49,7 @@
   "profile_tabs_toWatchMedia": "To Watch Media",
   "profile_settings_title": "<0>{{username}}</0>'s Profile Editing",
   "profile_settings_changePassword": "Change Password",
-  "profile_settings_cancelChangePassword": "Discard Password Changes",
+  "profile_settings_cancelChangePassword": "Discard Changes",
   "profile_settings_deleteUser": "Delete Account",
   "profile_settings_oldPassword": "Current Password",
   "profile_settings_oldPassword_error": "Please, enter your current password",

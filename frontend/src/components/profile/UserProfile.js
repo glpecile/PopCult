@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {Trans, useTranslation} from "react-i18next";
 import {IconButton} from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const UserProfile = (user) => {
     const {t} = useTranslation();
@@ -22,7 +22,7 @@ const UserProfile = (user) => {
                     isCurrentUser &&
                     (<Link to='/settings'>
                         <IconButton size={"small"} title={t('profile_edit')}>
-                            <EditIcon className="text-violet-500 hover:text-violet-900"/>
+                            <SettingsOutlinedIcon className="text-violet-500 hover:text-violet-900"/>
                         </IconButton>
                     </Link>)
                 }

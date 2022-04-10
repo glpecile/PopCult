@@ -1,9 +1,10 @@
-import RecoveryCard from "../../../components/login/RecoveryCard";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import {Slide} from "@mui/material";
+import RecoveryCard from "../../../components/login/RecoveryCard";
 import UserService from "../../../services/UserService";
+import ErrorIcon from '@mui/icons-material/Error';
 
 export default function Recovery() {
     const [enteredEmail, setEnteredEmail] = useState('');
@@ -44,6 +45,7 @@ export default function Recovery() {
 
     return (
         <>
+            {/* On success message */}
             <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
                 <div className="collapse show fixed bottom-0 sm:inset-x-64 inset-x-10 z-50 text-wrap" id="alert">
                     <div className="alert alert-secondary shadow-lg" role="alert">
@@ -53,11 +55,13 @@ export default function Recovery() {
             </Slide>
             <RecoveryCard title={t('recovery_title')} heading={t('recovery_greeting')}>
                 <form className="m-0 p-0" onSubmit={submitHandler} noValidate={true}>
+                    {/* Email input */}
                     <div className="pb-1 text-semibold w-full">
                         <div className="relative">
                             {enteredEmailError &&
-                                <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
-                                    className="fas fa-exclamation-circle"/></span>}
+                                <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500">
+                                    <ErrorIcon fontSize="small"/>
+                                </span>}
                             <label
                                 className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                                 {t('register_email')}
@@ -67,7 +71,6 @@ export default function Recovery() {
                                    pattern="[^@]+@[^@]+\.[^@]+" minLength={6} maxLength={100} defaultValue={enteredEmail}
                                    onChange={EmailChangeHandler}/>
                         </div>
-                        {/* Se agrega whitespace-pre-wrap como clase para que i18next pueda leer los \n */}
                         {enteredEmailError &&
                             <p className="text-red-500 text-xs italic my-1.5 whitespace-pre-wrap">
                                 {t('register_email_validation')}
@@ -78,6 +81,7 @@ export default function Recovery() {
                             </p>
                         }
                     </div>
+                    {/* Buttons */}
                     <div className="flex justify-between">
                         <Link to="/login">
                             <button type="button" className="btn btn-link text-slate-700 my-2 btn-rounded">

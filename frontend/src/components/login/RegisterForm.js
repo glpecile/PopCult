@@ -4,6 +4,9 @@ import {motion} from "framer-motion";
 import {IconButton} from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ErrorIcon from '@mui/icons-material/Error';
+import HelpIcon from '@mui/icons-material/Help';
+import CloseIcon from '@mui/icons-material/Close';
 import FadeIn from "../animation/FadeIn";
 
 const RegisterForm = (props) => {
@@ -95,8 +98,9 @@ const RegisterForm = (props) => {
                 <div className="pb-1 px-2.5 text-semibold w-full">
                     <div className="relative">
                         {enteredEmailError &&
-                            <span className="absolute inset-y-0 top-10 right-3 flex items-center text-rose-500"><i
-                                className="fas fa-exclamation-circle"/></span>}
+                            <span className="absolute inset-y-0 top-10 right-3 flex items-center text-rose-500">
+                                <ErrorIcon fontSize="small"/>
+                            </span>}
                         <label
                             className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_email')}
@@ -127,7 +131,7 @@ const RegisterForm = (props) => {
                         </IconButton>
                         <IconButton size="small" className="absolute top-1.5 right-2 text-purple-400"
                                     onClick={() => setAlertDisplay(!alertDisplay)}>
-                            <i className="fas fa-question-circle"/>
+                            <HelpIcon fontSize="small"/>
                         </IconButton>
                         <label
                             className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -149,10 +153,10 @@ const RegisterForm = (props) => {
                         <motion.div key="icon"
                                     className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
                                     role="alert">
-                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button type="button" onClick={() => setAlertDisplay(false)}>
-                                    <i className="fas fa-times hover:text-gray-800"/>
-                                </button>
+                            <span className="absolute -top-1 bottom-0 -right-2 px-4 py-3">
+                                <IconButton size="small" type="button" onClick={() => setAlertDisplay(false)}>
+                                    <CloseIcon fontSize="small" className="hover:text-gray-800"/>
+                                </IconButton>
                             </span>
                             <small key="text" id="passwordHelpBlock"
                                    className="form-text text-muted whitespace-pre-wrap">
@@ -194,8 +198,9 @@ const RegisterForm = (props) => {
                             {t('register_username')}
                         </label>
                         {enteredUsernameError &&
-                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
-                                className="fas fa-exclamation-circle"/></span>}
+                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500">
+                                <ErrorIcon fontSize="small"/>
+                            </span>}
                         <input type="text"
                                className={"w-full rounded active:none " + (enteredUsernameError || props.usernameExists ? "border-2 border-rose-500" : "")}
                                pattern="[a-zA-Z0-9]+" minLength={1}
@@ -221,8 +226,9 @@ const RegisterForm = (props) => {
                             {t('register_name')}
                         </label>
                         {enteredNameError &&
-                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
-                                className="fas fa-exclamation-circle"/></span>}
+                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500">
+                                <ErrorIcon fontSize="small"/>
+                            </span>}
                         <input type="text"
                                className={"w-full rounded active:none " + (enteredNameError ? "border-2 border-rose-500" : "")}
                                defaultValue={enteredName} onChange={NameChangeHandler}

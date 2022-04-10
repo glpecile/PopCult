@@ -3,6 +3,8 @@ import IconCard from "../../../components/IconCard";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 
 const UserPanel = () => {
     const {t} = useTranslation();
@@ -23,16 +25,16 @@ const UserPanel = () => {
         </h1>
         {(!requestsView && !commentsView) && <>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
-                {/*Requests*/}
-                <IconCard icon={<i className="fas fa-users text-purple-500 group-hover:text-purple-900 fa-2x mt-3"/>}
+                {/* Requests */}
+                <IconCard icon={<GroupOutlinedIcon fontSize="large" className="text-purple-500 group-hover:text-purple-900 mt-3"/>}
                           title={t('user_panel_requests')}
                           description={t('user_panel_requests_detail')}
                           onClick={() => {
                               setRequestsView(true);
                           }}/>
-                {/*Comments*/}
+                {/* Comments */}
                 <IconCard
-                    icon={<i className="fas fa-comment-dots text-purple-500 group-hover:text-purple-900 fa-2x mt-3"/>}
+                    icon={<ForumOutlinedIcon fontSize="large" className="text-purple-500 group-hover:text-purple-900 mt-3"/>}
                     title={t('user_panel_comments')}
                     description={t('user_panel_comments_detail')}
                     onClick={() => {

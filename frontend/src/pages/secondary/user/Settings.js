@@ -2,22 +2,12 @@ import SettingsUserProfile from "../../../components/profile/SettingsUserProfile
 import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
+import {useNavigate} from 'react-router-dom'
 import UserService from "../../../services/UserService";
 import AuthContext from "../../../store/AuthContext";
-import * as PropTypes from "prop-types";
 import Spinner from "../../../components/animation/Spinner";
-import {useNavigate} from 'react-router-dom'
 import NoButtonDialog from "../../../components/modal/NoButtonDialog";
-
-
-function Suspense(props) {
-    return null;
-}
-
-Suspense.propTypes = {
-    fallback: PropTypes.any,
-    children: PropTypes.node
-};
+import PersonRemoveOutlinedIcon from '@mui/icons-material/PersonRemoveOutlined';
 
 const Settings = () => {
     const {t} = useTranslation();
@@ -42,7 +32,7 @@ const Settings = () => {
                 console.log(user);
             } catch (error) {
                 console.log(error);
-               navigate(`/user/${username}`);
+                navigate(`/user/${username}`);
             }
         }
     }, [username, navigate]);
@@ -79,9 +69,7 @@ const Settings = () => {
                 try {
                     console.log(userData);
                     await UserService.changeUserPassword({
-                        url: userData.changePasswordUrl,
-                        currentPassword: toEditData.currentPassword,
-                        newPassword: toEditData.password
+                        url: userData.changePasswordUrl, currentPassword: toEditData.currentPassword, newPassword: toEditData.password
                     });
                 } catch (error) {
                     wrongPass = true;
@@ -135,34 +123,33 @@ const Settings = () => {
     const deleteAccount = () => {
         setDeleteUser(true);
     }
-    return (
-        <>
-            <Helmet>
-                <title>{t('settings_title')}</title>
-            </Helmet>
-            {userData === undefined && <Spinner/>}
-            {userData !== undefined && <>
-                <SettingsUserProfile name={userData.name} username={userData.username} image={userData.imageUrl}
-                                     email={userData.email} isIncorrectPassword={passwordError}
-                                     onSaveUserData={updateUserData}
-                                     onDeleteAccount={deleteAccount}/>
-                {successModal && <NoButtonDialog
+    return (<>
+        <Helmet>
+            <title>{t('settings_title')}</title>
+        </Helmet>
+        {userData === undefined && <Spinner/>}
+        {userData !== undefined && <>
+            <SettingsUserProfile name={userData.name} username={userData.username} image={userData.imageUrl}
+                                 email={userData.email} isIncorrectPassword={passwordError}
+                                 onSaveUserData={updateUserData}
+                                 onDeleteAccount={deleteAccount}/>
+            {// TODO: check style.
+                successModal && <NoButtonDialog
                     buttonClassName="btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"
-                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonIcon={<PersonRemoveOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                     buttonText={t('profile_settings_deleteUser')}
                     title={t('modal_success')}
                     body={t('modal_user_delete_success')}
                     isOpened={true}/>}
-                {errorModal && <NoButtonDialog
+            {// TODO: check style.
+                errorModal && <NoButtonDialog
                     buttonClassName="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
-                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonIcon={<PersonRemoveOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                     buttonText={t('profile_settings_deleteUser')}
                     title={t('modal_error')}
                     body={t('modal_delete_user_error')}
                     isOpened={true}/>}
-            </>
-            }
-        </>
-    );
+        </>}
+    </>);
 }
 export default Settings;

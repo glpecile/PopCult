@@ -1,7 +1,7 @@
+import {useState} from "react";
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
-import {useState} from "react";
 import LocalDialogTitle from "./LocalDialogTitle";
 import LocalDialog from "./LocalDialog";
 

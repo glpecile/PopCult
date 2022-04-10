@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import OneButtonDialog from "../modal/OneButtonDialog";
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const ModeratorsRequest = (user) => {
     const {t} = useTranslation();
@@ -26,9 +28,10 @@ const ModeratorsRequest = (user) => {
         </div>
         <div className="flex justify-between m-3.5  justify-center text-center">
             <div className="pr-2">
+                {/* TODO: check style */}
                 <OneButtonDialog
                     buttonClassName="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
-                    buttonIcon={<i className="fas fa-check group-hover:text-white mr-2"/>}
+                    buttonIcon={<CheckOutlinedIcon className="group-hover:text-white mr-2"/>}
                     buttonText={t("moderator_accept")}
                     title={t("moderator_accept")}
                     body={t('moderator_accept_body', {username: user.username})}
@@ -36,9 +39,10 @@ const ModeratorsRequest = (user) => {
                     onActionAccepted={acceptRequest}
                     isOpened={false}/>
             </div>
+            {/* TODO: check style */}
             <OneButtonDialog
                 buttonClassName="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
-                buttonIcon={<i className="fas fa-times group-hover:text-white mr-2"/>}
+                buttonIcon={<ClearIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                 buttonText={t("moderator_reject")}
                 title={t("moderator_reject")}
                 body={t('moderator_reject_body', {username: user.username})}
