@@ -1,13 +1,17 @@
 import LoginCard from "../../../components/login/LoginCard";
 import {Link, Navigate} from "react-router-dom";
 import {useEffect, useState, useContext, useRef, useCallback} from "react";
-import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
+import {IconButton} from "@mui/material";
+import UserService from "../../../services/UserService";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AuthContext from "../../../store/AuthContext";
 
 export default function Login() {
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
+    const [passwordShown, setPasswordShown] = useState(false);
     const [enteredRememberMe, setEnteredRememberMe] = useState(false);
     const [enteredUsernameError, setUsernameError] = useState(false);
     const [enteredPasswordError, setPasswordError] = useState(false);
@@ -70,6 +74,10 @@ export default function Login() {
         }, 5000);
     }
 
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
@@ -81,8 +89,9 @@ export default function Login() {
 
     return <LoginCard>
         {logInState && <Navigate to='/'/>}
-        <form className="my-1.5" onSubmit={submitHandler} noValidate={true}>
+        <form className="my-1.5 relative" onSubmit={submitHandler} noValidate={true}>
             <div className="flex flex-col">
+                {/* Username */}
                 <label className="py-2 text-semibold w-full">
                     {t('login_username')}
                 </label>
@@ -91,13 +100,18 @@ export default function Login() {
                        pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
                        onChange={UsernameChangeHandler}/>
 
+                {/* Password */}
+                <IconButton onClick={togglePassword} className="absolute top-28 my-3.5 right-0.5">
+                    {passwordShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
                 <label className="py-2 text-semibold w-full">
                     {t('login_password')}
                 </label>
-                <input className="w-full rounded active:none shadow-sm" type="password" value={enteredPassword}
+                <input className="w-full rounded active:none shadow-sm" type={passwordShown ? "text" : "password"} value={enteredPassword}
                        minLength={8} maxLength={100}
                        onChange={PasswordChangeHandler}/>
 
+                {/* Remember me */}
                 <div className="flex py-2.5 justify-start">
                     <input className="shadow-sm mt-1.5 checked:bg-purple-500" type="checkbox"
                            defaultChecked={enteredRememberMe}
@@ -106,14 +120,17 @@ export default function Login() {
                         {t('login_remember_me')}
                     </label>
                 </div>
+
                 {errorMessageDisplay && <div className="py-1 text-semibold text-danger w-full">
                     {t('login_error')}
                 </div>}
+
                 <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-purple-400" type="submit">
                     {t('login_button')}
                 </button>
+
                 <Link className="text-center text-slate-700 text-sm uppercase hover:text-purple-800" to="/recovery">
-                        {t('login_recovery')}
+                    {t('login_recovery')}
                 </Link>
             </div>
         </form>

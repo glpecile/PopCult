@@ -1,7 +1,10 @@
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import FadeIn from "../animation/FadeIn";
 import {motion} from "framer-motion";
+import {IconButton} from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import FadeIn from "../animation/FadeIn";
 
 const RegisterForm = (props) => {
     const [enteredName, setEnteredName] = useState('');
@@ -10,8 +13,10 @@ const RegisterForm = (props) => {
     const [enteredUsernameError, setUsernameError] = useState(false);
     const [enteredPassword, setEnteredPassword] = useState('');
     const [enteredPasswordError, setPasswordError] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
     const [enteredRepeatedPassword, setEnteredRepeatedPassword] = useState('');
     const [enteredRepeatedPasswordError, setRepeatedPasswordError] = useState(false);
+    const [repeatedPasswordShown, setRepeatedPasswordShown] = useState(false);
     const [enteredEmail, setEnteredEmail] = useState('');
     const [enteredEmailError, setEmailError] = useState(false);
     const [alertDisplay, setAlertDisplay] = useState(false);
@@ -52,6 +57,10 @@ const RegisterForm = (props) => {
         return hasErrors && isEmpty;
     }
 
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
         if (formIsValid()) {
@@ -81,12 +90,12 @@ const RegisterForm = (props) => {
 
     return (
         <form className="m-0 p-0" onSubmit={submitHandler} noValidate={true}>
-            {/*Email*/}
+            {/* Email */}
             <div className="flex flex-col justify-center items-center">
                 <div className="pb-1 px-2.5 text-semibold w-full">
                     <div className="relative">
                         {enteredEmailError &&
-                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
+                            <span className="absolute inset-y-0 top-10 right-3 flex items-center text-rose-500"><i
                                 className="fas fa-exclamation-circle"/></span>}
                         <label
                             className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -109,23 +118,22 @@ const RegisterForm = (props) => {
                     }
                 </div>
 
-                {/*Pass*/}
+                {/* Password */}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
-                        {enteredPasswordError ?
-                            (<span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"
-                                   onClick={() => setAlertDisplay(true)}>
-                                <i className="fas fa-exclamation-circle"/>
-                            </span>) :
-                            (<span className="absolute inset-y-0 -top-10 right-3 flex items-center pl-2"
-                                   onClick={() => setAlertDisplay(true)}>
-                                    <i className="fas fa-question-circle"/>
-                            </span>)}
+                        <IconButton size="small" className={"absolute top-8 my-3.5 right-2" + (enteredPasswordError ? " text-rose-500" : "")}
+                                    onClick={togglePassword}>
+                            {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                        </IconButton>
+                        <IconButton size="small" className="absolute top-1.5 right-2 text-purple-400"
+                                    onClick={() => setAlertDisplay(!alertDisplay)}>
+                            <i className="fas fa-question-circle"/>
+                        </IconButton>
                         <label
                             className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_password')}
                         </label>
-                        <input type="password"
+                        <input type={passwordShown ? "text" : "password"}
                                className={"w-full rounded active:none " + (enteredPasswordError ? "border-2 border-rose-500" : "")}
                                minLength={8} maxLength={100}
                                defaultValue={enteredPassword} onChange={PasswordChangeHandler}/>
@@ -154,17 +162,21 @@ const RegisterForm = (props) => {
                     </motion.div>
                 </FadeIn>
 
-                {/*repPass*/}
+                {/* Repeated Password */}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
+                        {/* Visibility */}
+                        <IconButton size="small" className={"absolute top-8 my-3.5 right-2" + (enteredRepeatedPasswordError ? " text-rose-500" : "")}
+                                    onClick={() => {
+                                        setRepeatedPasswordShown(!repeatedPasswordShown)
+                                    }}>
+                            {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                        </IconButton>
                         <label
                             className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                             {t('register_password_repeat')}
                         </label>
-                        {enteredRepeatedPasswordError &&
-                            <span className="absolute inset-y-0 top-10 right-3 flex items-center pl-2 text-rose-500"><i
-                                className="fas fa-exclamation-circle"/></span>}
-                        <input type="password"
+                        <input type={repeatedPasswordShown ? "text" : "password"}
                                className={"w-full rounded active:none " + (enteredRepeatedPasswordError ? "border-2 border-rose-500" : "")}
                                minLength={8} maxLength={100} onChange={RepeatedPasswordChangeHandler}/>
                     </div>
@@ -174,7 +186,7 @@ const RegisterForm = (props) => {
                         </p>}
                 </div>
 
-                {/*Username*/}
+                {/* Username */}
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
                         <label
