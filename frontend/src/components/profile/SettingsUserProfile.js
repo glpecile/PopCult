@@ -2,9 +2,15 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {Trans, useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
-import FadeIn from "../animation/FadeIn";
-import OneButtonDialog from "../modal/OneButtonDialog";
 import {IconButton} from "@mui/material";
+import FadeIn from "../animation/FadeIn";
+import Collapse from '@mui/material/Collapse';
+import OneButtonDialog from "../modal/OneButtonDialog";
+import CloseIcon from '@mui/icons-material/Close';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import PersonRemoveOutlinedIcon from '@mui/icons-material/PersonRemoveOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
@@ -119,14 +125,16 @@ const SettingsUserProfile = (user) => {
                 className="text-sm text-slate-500 pt-2 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                 type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
 
+            {/* Image Error Message */}
             <FadeIn isActive={imageError}>
                 <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
                     <motion.div key="icon"
                                 className="alert bg-red-200/95 text-gray-500 d-flex align-items-center shadow-md"
                                 role="alert">
-                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                                <button onClick={() => setImageError(false)}><i
-                                    className="fas fa-times hover:text-gray-800"/></button>
+                            <span className="absolute -top-1 bottom-0 -right-1 px-4 py-3">
+                                <IconButton size="small" type="button" onClick={() => setImageError(false)}>
+                                    <CloseIcon fontSize="small" className="hover:text-gray-800"/>
+                                </IconButton>
                             </span>
                         <small key="text" id="imageErrorTextBlock"
                                className="form-text text-muted whitespace-pre-wrap">
@@ -169,7 +177,7 @@ const SettingsUserProfile = (user) => {
             </div>
 
             {/* Change Password */}
-            {changePasswordActive && <>
+            <Collapse in={changePasswordActive} className="w-full">
                 <div className="flex flex-col justify-center items-center mt-4">
                     <h2 className="text-2xl mb-1">
                         {t('profile_settings_changePassword')}
@@ -179,7 +187,9 @@ const SettingsUserProfile = (user) => {
                 <div className="py-1 text-semibold w-full relative">
                     {/* Visibility */}
                     <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (prevPasswordError ? " text-rose-500 bottom-14" : "")}
-                                onClick={() => {setPrevPasswordShown(!prevPasswordShown)}}>
+                                onClick={() => {
+                                    setPrevPasswordShown(!prevPasswordShown)
+                                }}>
                         {prevPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
                     <label
@@ -202,8 +212,11 @@ const SettingsUserProfile = (user) => {
                 {/* New Password */}
                 <div className="py-1 text-semibold w-full relative">
                     {/* Visibility */}
-                    <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (enteredPasswordError ? " text-rose-500 bottom-14" : "")}
-                                onClick={() => {setPasswordShown(!passwordShown)}}>
+                    <IconButton size="small"
+                                className={"absolute top-1/2 my-1 right-2" + (enteredPasswordError ? " text-rose-500 bottom-14" : "")}
+                                onClick={() => {
+                                    setPasswordShown(!passwordShown)
+                                }}>
                         {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
                     <label
@@ -222,8 +235,11 @@ const SettingsUserProfile = (user) => {
                 {/* Repeat Password */}
                 <div className="py-1 text-semibold w-full relative">
                     {/* Visibility */}
-                    <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (enteredRepeatedPasswordError ? " text-rose-500 bottom-14" : "")}
-                                onClick={() => {setRepeatedPasswordShown(!repeatedPasswordShown)}}>
+                    <IconButton size="small"
+                                className={"absolute top-1/2 my-1 right-2" + (enteredRepeatedPasswordError ? " text-rose-500 bottom-14" : "")}
+                                onClick={() => {
+                                    setRepeatedPasswordShown(!repeatedPasswordShown)
+                                }}>
                         {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
                     <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
@@ -237,23 +253,23 @@ const SettingsUserProfile = (user) => {
                             {t('register_password_match_error')}
                         </p>}
                 </div>
-            </>}
+            </Collapse>
         </div>
 
         {/* Buttons */}
         <div className="pt-3 gap-2.5 flex flex-wrap justify-between">
             <div className="flex justify-start space-x-2">
-                {/*change password*/}
+                {/* Change Password */}
                 <button type="button"
                         className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-purple-400 hover:shadow-purple-500 font-semibold hover:text-white text-gray-700"
                         onClick={() => setChangePassword(!changePasswordActive)}>
-                    <i className="fas fa-unlock-alt group-hover:text-white mr-2"/>
+                    <LockOpenIcon fontSize="small" className="group-hover:text-white mr-2"/>
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}
                 </button>
-                {/*delete user*/}
+                {/* Delete User */}
                 <OneButtonDialog
                     buttonClassName="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
-                    buttonIcon={<i className="fas fa-user-alt-slash group-hover:text-white mr-2"/>}
+                    buttonIcon={<PersonRemoveOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                     buttonText={t('profile_settings_deleteUser')}
                     title={t('profile_settings_deleteUser')}
                     body={t('modal_user_delete_body')}
@@ -265,15 +281,15 @@ const SettingsUserProfile = (user) => {
                 {/* Discard changes */}
                 <Link to={'/user/' + user.username}>
                     <button type="button"
-                        className="btn bg-gray-300 shadow-md group hover:bg-yellow-400 hover:shadow-yellow-300 text-gray-700 font-semibold hover:text-white my-2">
-                        <i className="fa fa-trash group-hover:text-white mr-2"/>
+                            className="btn bg-gray-300 shadow-md group hover:bg-yellow-400 hover:shadow-yellow-300 text-gray-700 font-semibold hover:text-white my-2">
+                        <DeleteOutlineIcon fontSize="small" className="group-hover:text-white mr-2"/>
                         {t('discard_changes')}
                     </button>
                 </Link>
                 {/* Save changes */}
                 <button type="submit"
                         className={(inputHasErrors() ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
-                    <i className="fas fa-check group-hover:text-white mr-2"/>
+                    <DoneOutlineIcon fontSize="small" className="group-hover:text-white mr-2"/>
                     {t('save_changes')}
                 </button>
             </div>

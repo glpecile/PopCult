@@ -1,5 +1,8 @@
+import {IconButton} from "@mui/material";
 import MediaCard from "./MediaCard";
 import AliceCarousel from "react-alice-carousel";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 const handleDragStart = (e) => e.preventDefault();
 
@@ -33,15 +36,15 @@ const MediaSlider = (props) => {
     };
 
     const renderNext = () => {
-        return <button className={"-right-4" + buttonStyle}>
-            <i className="fas fa-angle-right"> </i>
-        </button>;
+        return <IconButton type="button" className={"-right-4" + buttonStyle}>
+            <NavigateNextIcon/>
+        </IconButton>;
     }
 
     const renderPrev = () => {
-        return <button className={"-left-2" + buttonStyle}>
-            <i className="fas fa-angle-left"> </i>
-        </button>;
+        return <IconButton type="button" className={"-left-2" + buttonStyle}>
+            <NavigateBeforeIcon/>
+        </IconButton>;
     }
 
     return (
