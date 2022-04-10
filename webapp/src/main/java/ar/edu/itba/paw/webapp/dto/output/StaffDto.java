@@ -15,22 +15,21 @@ public class StaffDto {
     private String description;
 
 
-
-
     //Entity url
     private String url;
 
     //Auxiliar urls
     private String imageUrl;
-
+    private String mediaUrl;
     public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
         StaffDto staffDto = new StaffDto();
         staffDto.id = staffMember.getStaffMemberId();
         staffDto.name = staffMember.getName();
         staffDto.description = staffMember.getDescription();
 
-        staffDto.url = url.getBaseUriBuilder().path("users").path(staffMember.getStaffMemberId().toString()).build().toString();
+        staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         staffDto.imageUrl = staffMember.getImage();
+        staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         return staffDto;
     }
 

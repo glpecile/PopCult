@@ -16,13 +16,15 @@ public class GenreDto {
     private String url;
 
     //Auxiliar urls
+    private String mediaUrl;
 
     public static GenreDto fromGenre(UriInfo url, Genre genre){
         GenreDto genreDto = new GenreDto();
         genreDto.id = genre.getOrdinal();
         genreDto.genre = genre;
 
-        genreDto.url  = url.getBaseUriBuilder().path("genre").path(String.valueOf(genreDto.id)).build().toString();
+        genreDto.url  = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).build().toString();
+        genreDto.mediaUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("media").build().toString();
         return genreDto;
     }
 

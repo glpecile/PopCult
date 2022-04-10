@@ -12,12 +12,17 @@ public class StudioDto {
     private String url;
 
     private String imageUrl;
+    private String mediaUrl;
+
     public static StudioDto fromStudio(UriInfo url, Studio studio){
         StudioDto studioDto = new StudioDto();
         studioDto.id = studio.getStudioId();
         studioDto.name = studio.getName();
+
         studioDto.url = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).build().toString();
+
         studioDto.imageUrl = studio.getImage();
+        studioDto.mediaUrl = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).path("media").build().toString();
         return studioDto;
     }
     public static List<StudioDto> fromStudioList(UriInfo uriInfo, List<Studio> studioList){
