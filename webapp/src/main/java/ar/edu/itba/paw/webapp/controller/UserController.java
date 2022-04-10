@@ -72,8 +72,10 @@ public class UserController {
     public Response listUsers(@QueryParam("page") @DefaultValue(defaultPage) int page,
                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                               @QueryParam("role") UserRole userRole,
-                              @QueryParam("banned") Boolean banned) {
-        final PageContainer<User> users = userService.getUsers(page, pageSize, userRole, banned);
+                              @QueryParam("banned") Boolean banned,
+                              @QueryParam("query") String term,
+                              @QueryParam("not-collab-in-list") Integer listId) {
+        final PageContainer<User> users = userService.getUsers(page, pageSize, userRole, banned, term, listId);
 
         if (users.getElements().isEmpty()) {
             LOGGER.info("GET /users: Returning empty list.");

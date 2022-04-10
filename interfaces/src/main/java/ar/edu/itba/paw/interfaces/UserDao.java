@@ -27,5 +27,5 @@ public interface UserDao {
 
     List<User> getBannedUsers();
 
-    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned);
+    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId);
 }

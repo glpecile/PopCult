@@ -265,8 +265,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
-        return userDao.getUsers(page, pageSize, userRole, banned);
+    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId) {
+        return userDao.getUsers(page, pageSize, userRole, banned, term, notInListId);
     }
 
 }

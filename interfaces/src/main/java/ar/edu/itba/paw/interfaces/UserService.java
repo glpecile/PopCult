@@ -55,5 +55,5 @@ public interface UserService {
 
     void unbanUsers(); // DO NOT DELETE
 
-    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned);
+    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId);
 }
