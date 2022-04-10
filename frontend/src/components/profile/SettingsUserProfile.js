@@ -4,6 +4,9 @@ import {Trans, useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import FadeIn from "../animation/FadeIn";
 import OneButtonDialog from "../modal/OneButtonDialog";
+import {IconButton} from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const SettingsUserProfile = (user) => {
     const {t} = useTranslation();
@@ -15,16 +18,20 @@ const SettingsUserProfile = (user) => {
     const [nameError, setNameError] = useState(false);
     const [prevPassword, setPrevPassword] = useState('');
     const [prevPasswordError, setPrevPasswordError] = useState(false);
+    const [prevPasswordShown, setPrevPasswordShown] = useState(false);
     const [changePasswordActive, setChangePassword] = useState(false);
     const [enteredPassword, setEnteredPassword] = useState('');
     const [enteredPasswordError, setPasswordError] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
     const [enteredRepeatedPassword, setEnteredRepeatedPassword] = useState('');
     const [enteredRepeatedPasswordError, setRepeatedPasswordError] = useState(false);
+    const [repeatedPasswordShown, setRepeatedPasswordShown] = useState(false);
 
     const nameChangeHandler = (event) => {
         event.target.validity.valid ? setNameError(false) : setNameError(true);
         setName(event.target.value);
     };
+
     const imageChangeHandler = (event) => {
         event.target.validity.valid ? setImageError(false) : setImageError(true);
         if (event.target.files[0].size > 1048576 * 2) {
@@ -47,6 +54,7 @@ const SettingsUserProfile = (user) => {
         }
 
     }
+
     const PasswordChangeHandler = (event) => {
         setEnteredPassword(event.target.value);
         event.target.validity.valid ? setPasswordError(false) : setPasswordError(true);
@@ -67,6 +75,7 @@ const SettingsUserProfile = (user) => {
         if (event.target.value.length !== 0 && prevPassword.length === 0) setPrevPasswordError(true);
         ValidatePrevPassword();
     };
+
     const inputHasErrors = () => {
         if (nameError) return true;
         if (changePasswordActive) {
@@ -100,7 +109,8 @@ const SettingsUserProfile = (user) => {
                     {{username: user.username}}
                 </Trans>
             </h2>
-            {/*Profile Pic Row*/}
+
+            {/* Profile Pic Row */}
             <div className="relative inline-block">
                 <img className="inline-block object-cover rounded-full h-40 w-40" alt="profile_image"
                      src={currentImage}/>
@@ -108,7 +118,6 @@ const SettingsUserProfile = (user) => {
             <input
                 className="text-sm text-slate-500 pt-2 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                 type='file' onChange={imageChangeHandler} accept="image/gif, image/jpeg, image/png, image/svg"/>
-
 
             <FadeIn isActive={imageError}>
                 <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
@@ -127,7 +136,7 @@ const SettingsUserProfile = (user) => {
                 </motion.div>
             </FadeIn>
 
-            {/*name input*/}
+            {/* Name Input */}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_name')}
@@ -142,14 +151,16 @@ const SettingsUserProfile = (user) => {
                     </p>
                 }
             </div>
-            {/* username input*/}
+
+            {/* Username Input */}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_username')}
                 </label>
                 <input className="rounded w-full bg-gray-100" type='text' value={user.username} disabled={true}/>
             </div>
-            {/* email input*/}
+
+            {/* Email Input */}
             <div className="py-1 text-semibold w-full">
                 <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                     {t('register_email')}
@@ -157,20 +168,25 @@ const SettingsUserProfile = (user) => {
                 <input className="rounded w-full bg-gray-100" type='text' value={user.email} disabled={true}/>
             </div>
 
-            {/*change password*/}
+            {/* Change Password */}
             {changePasswordActive && <>
-                <div className="flex flex-col justify-center items-center mt-5">
+                <div className="flex flex-col justify-center items-center mt-4">
                     <h2 className="text-2xl mb-1">
                         {t('profile_settings_changePassword')}
                     </h2>
                 </div>
-                {/*Current Password*/}
-                <div className="py-1 text-semibold w-full">
+                {/* Current Password */}
+                <div className="py-1 text-semibold w-full relative">
+                    {/* Visibility */}
+                    <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (prevPasswordError ? " text-rose-500 bottom-14" : "")}
+                                onClick={() => {setPrevPasswordShown(!prevPasswordShown)}}>
+                        {prevPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                    </IconButton>
                     <label
                         className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                         {t('profile_settings_oldPassword')}
                     </label>
-                    <input type="password"
+                    <input type={prevPasswordShown ? "text" : "password"}
                            className={"w-full rounded active:none " + (user.isIncorrectPassword || prevPasswordError ? "border-2 border-rose-500" : "")}
                            minLength={8} maxLength={100}
                            defaultValue={prevPassword} onChange={PrevPasswordHandler}/>
@@ -183,13 +199,18 @@ const SettingsUserProfile = (user) => {
                             {t('profile_settings_oldPassword_error')}
                         </p>}
                 </div>
-                {/*New Password*/}
-                <div className="py-1 text-semibold w-full">
+                {/* New Password */}
+                <div className="py-1 text-semibold w-full relative">
+                    {/* Visibility */}
+                    <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (enteredPasswordError ? " text-rose-500 bottom-14" : "")}
+                                onClick={() => {setPasswordShown(!passwordShown)}}>
+                        {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                    </IconButton>
                     <label
                         className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                         {t('register_password')}
                     </label>
-                    <input type="password"
+                    <input type={passwordShown ? "text" : "password"}
                            className={"w-full rounded active:none " + (enteredPasswordError ? "border-2 border-rose-500" : "")}
                            minLength={8} maxLength={100}
                            defaultValue={enteredPassword} onChange={PasswordChangeHandler}/>
@@ -198,12 +219,17 @@ const SettingsUserProfile = (user) => {
                             {t('register_password_hint')}
                         </p>}
                 </div>
-                {/*Repeat Password*/}
-                <div className="py-1 text-semibold w-full">
+                {/* Repeat Password */}
+                <div className="py-1 text-semibold w-full relative">
+                    {/* Visibility */}
+                    <IconButton size="small" className={"absolute top-1/2 my-1 right-2" + (enteredRepeatedPasswordError ? " text-rose-500 bottom-14" : "")}
+                                onClick={() => {setRepeatedPasswordShown(!repeatedPasswordShown)}}>
+                        {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                    </IconButton>
                     <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
                         {t('register_password_repeat')}
                     </label>
-                    <input type="password"
+                    <input type={repeatedPasswordShown ? "text" : "password"}
                            className={"w-full rounded active:none " + (enteredRepeatedPasswordError ? "border-2 border-rose-500" : "")}
                            minLength={8} maxLength={100} onChange={RepeatedPasswordChangeHandler}/>
                     {enteredRepeatedPasswordError &&
@@ -214,7 +240,7 @@ const SettingsUserProfile = (user) => {
             </>}
         </div>
 
-        {/*Buttons */}
+        {/* Buttons */}
         <div className="pt-3 gap-2.5 flex flex-wrap justify-between">
             <div className="flex justify-start space-x-2">
                 {/*change password*/}
@@ -236,15 +262,15 @@ const SettingsUserProfile = (user) => {
                     isOpened={false}/>
             </div>
             <div className="flex justify-end space-x-2">
-                {/*Discard changes*/}
+                {/* Discard changes */}
                 <Link to={'/user/' + user.username}>
-                    <button
+                    <button type="button"
                         className="btn bg-gray-300 shadow-md group hover:bg-yellow-400 hover:shadow-yellow-300 text-gray-700 font-semibold hover:text-white my-2">
                         <i className="fa fa-trash group-hover:text-white mr-2"/>
                         {t('discard_changes')}
                     </button>
                 </Link>
-                {/*Save changes*/}
+                {/* Save changes */}
                 <button type="submit"
                         className={(inputHasErrors() ? "disabled " : "") + "btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"}>
                     <i className="fas fa-check group-hover:text-white mr-2"/>
