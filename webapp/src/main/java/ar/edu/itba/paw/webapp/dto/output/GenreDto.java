@@ -17,6 +17,7 @@ public class GenreDto {
 
     //Auxiliar urls
     private String mediaUrl;
+    private String imageUrl;
 
     public static GenreDto fromGenre(UriInfo url, Genre genre){
         GenreDto genreDto = new GenreDto();
@@ -25,13 +26,13 @@ public class GenreDto {
 
         genreDto.url  = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).build().toString();
         genreDto.mediaUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("media").build().toString();
+        genreDto.imageUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("image").build().toString();
         return genreDto;
     }
 
     public static List<GenreDto> fromGenreList(UriInfo uriInfo, List<Genre> genreList){
         return genreList.stream().map(g -> GenreDto.fromGenre(uriInfo, g)).collect(Collectors.toList());
     }
-
 
 
     public int getId() {
@@ -56,5 +57,21 @@ public class GenreDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -8,7 +8,6 @@ public class StaffDto {
 
     //Fields
     private int id;
-    //private RoleType role; TODO check if this should be an attribute.
 
     private String name;
 
@@ -21,6 +20,7 @@ public class StaffDto {
     //Auxiliar urls
     private String imageUrl;
     private String mediaUrl;
+
     public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
         StaffDto staffDto = new StaffDto();
         staffDto.id = staffMember.getStaffMemberId();
@@ -28,7 +28,7 @@ public class StaffDto {
         staffDto.description = staffMember.getDescription();
 
         staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
-        staffDto.imageUrl = staffMember.getImage();
+        staffDto.imageUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("image").build().toString();
         staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         return staffDto;
     }
@@ -71,5 +71,13 @@ public class StaffDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 }

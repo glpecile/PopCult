@@ -21,7 +21,7 @@ public class StudioDto {
 
         studioDto.url = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).build().toString();
 
-        studioDto.imageUrl = studio.getImage();
+        studioDto.imageUrl = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).path("image").build().toString();
         studioDto.mediaUrl = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).path("media").build().toString();
         return studioDto;
     }
@@ -29,6 +29,8 @@ public class StudioDto {
         return studioList.stream().map(s -> StudioDto.fromStudio(uriInfo,s)).collect(Collectors.toList());
 
     }
+
+
 
     public int getId() {
         return id;
@@ -60,6 +62,14 @@ public class StudioDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 }
 
