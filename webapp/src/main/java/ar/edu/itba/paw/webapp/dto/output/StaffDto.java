@@ -20,6 +20,8 @@ public class StaffDto {
     //Auxiliar urls
     private String imageUrl;
     private String mediaUrl;
+    private String mediaDirectorUrl;
+    private String mediaActorUrl;
 
     public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
         StaffDto staffDto = new StaffDto();
@@ -30,6 +32,8 @@ public class StaffDto {
         staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         staffDto.imageUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("image").build().toString();
         staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
+        staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Director").build().toString();
+        staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Actor").build().toString();
         return staffDto;
     }
 
