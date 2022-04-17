@@ -10,14 +10,17 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.report.ListReport;
+import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,12 +60,37 @@ public class ListController {
 
     private static final String defaultPage = "1";
     private static final String defaultPageSize = "12";
+    private static final int minMediaWithGenre = 3; //TODO check this number
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getLists() {
-        //TODO
-        return null;
+    public Response getLists(@QueryParam("page") @DefaultValue(defaultPage) int page,
+                             @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                             @QueryParam("genres") List<String> genres,
+                             @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE") String sortType,
+                             @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
+                             @QueryParam("query") @Size(max=100) @Pattern(regexp = "[^/><%]+") String term
+                             ) {
+        final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
+        final SortType normalizedSortType =  NormalizerUtils.getNormalizedSortType(sortType);
+        LocalDateTime startYear = null;
+        LocalDateTime lastYear = null;
+        if(decade != null && decade.compareTo("ALL") > 0) {
+            startYear = LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
+            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
+        }
+        final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page,pageSize,normalizedSortType,genreList,minMediaWithGenre,startYear,lastYear,term);
+        //TODO fix bug, only works with sort-type
+        if(mediaListPageContainer.getElements().isEmpty()){
+            LOGGER.info("GET /list: Returning empty list");
+            return Response.noContent().build();
+        }
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo,mediaListPageContainer.getElements(),userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList){});
+        ResponseUtils.setPaginationLinks(response,mediaListPageContainer,uriInfo);
+
+        LOGGER.info("GET /list: Returning page {} with {} results ", mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
+        return response.build();
     }
 
     @POST
