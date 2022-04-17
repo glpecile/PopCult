@@ -220,9 +220,14 @@ public class ListsHibernateDao implements ListsDao {
                 sortCountString = "order by lower(" + sort.getNameMediaList() + ")";
             } else{
                 sortBaseString = ", " + sort.getNameMediaList();
-                sortCountString = "order by " + sort.getNameMediaList();
-                if(sort == SortType.POPULARITY)
+
+                if(sort == SortType.POPULARITY){
                     fromTables.append( "LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid " );
+                    sortCountString = "order by likes DESC ";
+                }else{
+                    sortCountString = "order by " + sort.getNameMediaList();
+                }
+
             }
         }
         final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialist.medialistid " + sortBaseString + " FROM  " + fromTables;
