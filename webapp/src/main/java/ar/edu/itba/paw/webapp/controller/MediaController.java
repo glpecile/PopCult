@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -12,7 +11,6 @@ import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.staff.Role;
 import ar.edu.itba.paw.models.staff.RoleType;
-import ar.edu.itba.paw.models.staff.StaffMember;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.webapp.dto.output.*;
@@ -150,8 +148,8 @@ public class MediaController {
             return Response.noContent().build();
         }
 
-        final List<MediaListDto> listsDto = MediaListDto.fromMediaListList(uriInfo,lists.getElements(),media);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaListDto>>(listsDto){});
+        final List<ListPeekDto> listsDto = ListPeekDto.fromMediaListList(uriInfo,lists.getElements(),media);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListPeekDto>>(listsDto){});
         ResponseUtils.setPaginationLinks(response,lists,uriInfo);
 
         LOGGER.info("GET /media: Returning page {} with {} results ", lists.getCurrentPage(), lists.getElements().size());
