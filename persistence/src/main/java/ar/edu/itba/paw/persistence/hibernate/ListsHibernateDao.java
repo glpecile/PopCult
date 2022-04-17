@@ -160,6 +160,9 @@ public class ListsHibernateDao implements ListsDao {
             having.add(" COUNT(mediaId) >= :minMatches ");
             parameters.put("minMatches", minMatches);
         }
+        if(sort == SortType.POPULARITY){
+            groupBy.add("medialist.medialistid");
+        }
         where.add(" visibility = :visibility ");
         parameters.put("visibility", visibility);
 
@@ -209,21 +212,25 @@ public class ListsHibernateDao implements ListsDao {
         //Pedimos el contenido paginado.
         String sortBaseString = "";
         String sortCountString = "";
+        StringBuilder fromTables = new StringBuilder();
+        fromTables.append( "mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ");
         if (sort != null) {
             if (sort == SortType.TITLE) {
                 sortBaseString = ", LOWER(" + sort.getNameMediaList() + ") ";
                 sortCountString = "order by lower(" + sort.getNameMediaList() + ")";
-            } else {
+            } else{
                 sortBaseString = ", " + sort.getNameMediaList();
                 sortCountString = "order by " + sort.getNameMediaList();
+                if(sort == SortType.POPULARITY)
+                    fromTables.append( "LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid " );
             }
         }
-        final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialistid " + sortBaseString + " FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final String baseQuery = "SELECT medialistid FROM (SELECT DISTINCT medialist.medialistid " + sortBaseString + " FROM  " + fromTables;
         final Query nativeQuery = buildAndWhereStatement(baseQuery, page, pageSize, term, true, sort, genre, minMatches, fromDate, toDate);
         @SuppressWarnings("unchecked")
         List<Long> mediaListIds = nativeQuery.getResultList();
         //Obtenemos la cantidad total de elementos.
-        final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialistid FROM mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ";
+        final String countBaseQuery = "SELECT COUNT(medialistid) FROM (SELECT DISTINCT medialist.medialistid FROM  " + fromTables;
         final Query countQuery = buildAndWhereStatement(countBaseQuery, null, null, term, true, null, genre, minMatches, fromDate, toDate);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 

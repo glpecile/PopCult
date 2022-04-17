@@ -3,11 +3,13 @@ package ar.edu.itba.paw.models.search;
 public enum SortType {
     //Pueden agregarse otro tipos de criterios de sort como cantidad de favoritos, forks en las listas, vistas
     DATE("Date", "releasedate", "creationdate"),
-    TITLE("Title", "title", "listname");
+    TITLE("Title", "title", "listname"),
+    POPULARITY("Popularity", "COUNT(favoritemedia.userid)", "COUNT(favoritelists.userid)") ;
 
     private final String name;
     private final String nameMedia;
     private final String nameMediaList;
+
 
     SortType(String name, String nameMedia, String nameMediaList) {
         this.name = name;

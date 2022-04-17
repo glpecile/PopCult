@@ -67,7 +67,7 @@ public class ListController {
     public Response getLists(@QueryParam("page") @DefaultValue(defaultPage) int page,
                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                              @QueryParam("genres") List<String> genres,
-                             @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE") String sortType,
+                             @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE|POPULARITY") @DefaultValue("TITLE") String sortType,
                              @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
                              @QueryParam("query") @Size(max=100) @Pattern(regexp = "[^/><%]+") String term
                              ) {
