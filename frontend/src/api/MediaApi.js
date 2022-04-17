@@ -32,7 +32,7 @@ const mediaApi = (() => {
             });
     }
 
-    const getStaffMedia = ({url, page, pageSize, staffRole}) => {
+    const getMediaFromStaff = ({url, page, pageSize, staffRole}) => {
         return api.get(url,
             {
                 params: {
@@ -57,7 +57,7 @@ const mediaApi = (() => {
         getMediaList,
         getMedia,
         getGenreMedia,
-        getStaffMedia,
+        getMediaFromStaff: getMediaFromStaff,
         getStudioMedia
     }
 })();
