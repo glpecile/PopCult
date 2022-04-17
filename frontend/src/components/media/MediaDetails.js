@@ -12,7 +12,7 @@ function MediaDetails(media) {
             </Helmet>
             <div className="col-12 col-lg-4">
                 <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
-                    <img className="img-fluid rounded-t-lg" src={media.image} alt="Media Details"/>
+                    <img className="w-full rounded-t-lg" src={media.image} alt="Media Details"/>
                     <MediaOptions/>
                     <ShareMenu isOpened={false}/>
                     {/* TODO: Add to list component */}
