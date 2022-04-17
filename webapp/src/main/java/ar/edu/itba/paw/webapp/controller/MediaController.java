@@ -82,10 +82,10 @@ public class MediaController {
                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                               @QueryParam("type") List<String> types,
                               @QueryParam("genres") List<String> genres,
-                              @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE") String sortType,
+                              @QueryParam("sort-type") @Pattern(regexp = "(?i)DATE|TITLE(?i)|POPULARITY(?i)") @DefaultValue("TITLE") String sortType,
                               @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
                               @QueryParam("query") @Size(max=100) @Pattern(regexp = "[^/><%]+") String term,
-                              @QueryParam("not-in-list") int listId
+                              @QueryParam("not-in-list") Integer listId
     ){
         final List<MediaType> mediaTypes = NormalizerUtils.getNormalizedMediaType(types);
         final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);

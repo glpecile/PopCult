@@ -21,6 +21,7 @@ public class MediaDto {
     private LocalDate releaseDate;
     private int seasons;
     private Country country;
+    private int likes;
 
     // Entity url
     private String url;
@@ -43,6 +44,7 @@ public class MediaDto {
         mediaDto.releaseDate = media.getReleaseDate().toLocalDate();
         mediaDto.seasons = media.getSeasons();
         mediaDto.country = media.getCountry();
+        mediaDto.likes = media.getLikes();
 
         mediaDto.url = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).build().toString();
         mediaDto.imageUrl = media.getImage();
@@ -64,7 +66,7 @@ public class MediaDto {
         mediaDto.setReleaseDate(media.getReleaseDate().toLocalDate());
         mediaDto.setSeasons(media.getSeasons());
         mediaDto.setCountry(media.getCountry());
-
+        mediaDto.setLikes(media.getLikes());
         mediaDto.setImageUrl(media.getImage());
     }
 
@@ -134,6 +136,14 @@ public class MediaDto {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public String getUrl() {
