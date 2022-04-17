@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.media;
 import ar.edu.itba.paw.models.staff.Actor;
 import ar.edu.itba.paw.models.staff.Director;
 import ar.edu.itba.paw.models.staff.Studio;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -73,6 +74,10 @@ public class Media {
             inverseJoinColumns = {@JoinColumn(name = "crewid")}
     )
     private List<Actor> actorList;
+
+    @Formula("(SELECT COUNT(*) FROM favoritemedia AS f WHERE f.mediaid = mediaid)")
+    private int likes;
+
 
     /*default */ Media(){
         //Just for hibernate
@@ -197,6 +202,14 @@ public class Media {
 
     public void setActorList(List<Actor> actorList) {
         this.actorList = actorList;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override
