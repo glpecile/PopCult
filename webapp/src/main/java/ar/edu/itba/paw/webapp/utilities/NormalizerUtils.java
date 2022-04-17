@@ -3,7 +3,9 @@ package ar.edu.itba.paw.webapp.utilities;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.staff.RoleType;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +28,23 @@ public class NormalizerUtils {
 
     }
 
+    public static RoleType getNormalizedRoleType(String roleType){
+        return RoleType.valueOf(roleType.toUpperCase());
+    }
+
+    public static LocalDateTime getStartYear(String decade){
+        //TODO
+        return null;
+    }
+
+    public static LocalDateTime getLastYear(String decade){
+        //TODO
+        return null;
+    }
+
+
     public static SortType getNormalizedSortType(String sortType) {
         return SortType.valueOf(sortType.toUpperCase());
-    }
+    } //TODO check why the uppercase is not working
 
 }

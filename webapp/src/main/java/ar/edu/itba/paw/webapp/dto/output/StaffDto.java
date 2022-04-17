@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
+import ar.edu.itba.paw.models.staff.Role;
 import ar.edu.itba.paw.models.staff.StaffMember;
 
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StaffDto {
 
@@ -23,8 +26,9 @@ public class StaffDto {
     private String mediaDirectorUrl;
     private String mediaActorUrl;
 
-    public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
+    public static StaffDto fromStaff(UriInfo url, Role staffMemberRole){
         StaffDto staffDto = new StaffDto();
+        StaffMember staffMember = staffMemberRole.getStaffMember();
         staffDto.id = staffMember.getStaffMemberId();
         staffDto.name = staffMember.getName();
         staffDto.description = staffMember.getDescription();
@@ -35,6 +39,10 @@ public class StaffDto {
         staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Director").build().toString();
         staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Actor").build().toString();
         return staffDto;
+    }
+
+    public static List<StaffDto> fromStaffList(UriInfo url, List<? extends Role> staffMembers){
+        return staffMembers.stream().map(m -> StaffDto.fromStaff(url, m)).collect(Collectors.toList());
     }
 
     public int getId() {
@@ -83,5 +91,21 @@ public class StaffDto {
 
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
+    }
+
+    public String getMediaDirectorUrl() {
+        return mediaDirectorUrl;
+    }
+
+    public void setMediaDirectorUrl(String mediaDirectorUrl) {
+        this.mediaDirectorUrl = mediaDirectorUrl;
+    }
+
+    public String getMediaActorUrl() {
+        return mediaActorUrl;
+    }
+
+    public void setMediaActorUrl(String mediaActorUrl) {
+        this.mediaActorUrl = mediaActorUrl;
     }
 }

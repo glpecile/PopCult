@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -10,35 +10,41 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.models.staff.Role;
+import ar.edu.itba.paw.models.staff.RoleType;
+import ar.edu.itba.paw.models.staff.StaffMember;
+import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.FilterForm;
 import ar.edu.itba.paw.webapp.utilities.FilterUtils;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
+import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.util.ArrayList;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
 
-@Controller
+@Path("media")
+@Component
 public class MediaController {
 
     @Autowired
@@ -55,6 +61,11 @@ public class MediaController {
     private CommentService commentService;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private StaffService staffService;
+
+    @Context
+    private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MediaController.class);
 
@@ -63,6 +74,160 @@ public class MediaController {
     private static final int listsPerPage = 4;
     private static final int lastAddedAmount = 6;
     private static final int defaultValue = 1;
+
+    private static final String defaultPage = "1";
+    private static final String defaultPageSize = "12";
+
+    @GET
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMedias(@QueryParam("page") @DefaultValue(defaultPage) int page,
+                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                              @QueryParam("type") List<String> types,
+                              @QueryParam("genres") List<String> genres,
+                              @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE") String sortType,
+                              @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
+                              @QueryParam("query") @Size(max=100) @Pattern(regexp = "[^/><%]+") String term,
+                              @QueryParam("not-in-list") int listId
+    ){
+        final List<MediaType> mediaTypes = NormalizerUtils.getNormalizedMediaType(types);
+        final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
+        final SortType normalizedSortType =  NormalizerUtils.getNormalizedSortType(sortType);
+        LocalDateTime startYear = null;
+        LocalDateTime lastYear = null;
+        if(decade != null && decade.compareTo("ALL") > 0) {
+            startYear = LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
+            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
+        }
+        final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes,page-1,pageSize,normalizedSortType,genreList,startYear,lastYear,term, listId);
+        if(listMedia.getElements().isEmpty()){
+            LOGGER.info("GET /media: Returning empty list");
+            return Response.noContent().build();
+        }
+
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo,listMedia.getElements(),userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList){});
+        ResponseUtils.setPaginationLinks(response,listMedia,uriInfo);
+
+        LOGGER.info("GET /media: Returning page {} with {} results ", listMedia.getCurrentPage(), listMedia.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMedia(@PathParam("id") int mediaId ){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final User user = userService.getCurrentUser().orElse(null);
+
+        LOGGER.info("GET /media/{}: Returning media {} {}", mediaId, mediaId, media.getTitle());
+        return Response.ok(MediaDto.fromMedia(uriInfo,media, user)).build();
+
+    }
+
+    @GET
+    @Path("/{id}/genres")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMediaGenres(@PathParam("id") int mediaId){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final List<Genre> genres = media.getGenres();
+
+        LOGGER.info("GET /media/{}/genres: Returning genres from media {} {}", mediaId, mediaId, media.getTitle());
+        final List<GenreDto> genresDtos = GenreDto.fromGenreList(uriInfo,genres);
+        return Response.ok(new GenericEntity<List<GenreDto>>(genresDtos){}).build();
+    }
+
+    @GET
+    @Path("/{id}/lists")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMediaLists(@PathParam("id") int mediaId,
+                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<MediaList> lists = listsService.getListsIncludingMedia(media,page,pageSize);
+
+        if(lists.getElements().isEmpty()){
+            LOGGER.info("GET /media: Returning empty list");
+            return Response.noContent().build();
+        }
+
+        final List<MediaListDto> listsDto = MediaListDto.fromMediaListList(uriInfo,lists.getElements(),media);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaListDto>>(listsDto){});
+        ResponseUtils.setPaginationLinks(response,lists,uriInfo);
+
+        LOGGER.info("GET /media: Returning page {} with {} results ", lists.getCurrentPage(), lists.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{id}/studios")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMediaStudios(@PathParam("id") int mediaId){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final PageContainer<Studio> studios = new PageContainer<>(media.getStudios(),Integer.parseInt(defaultPage), Integer.parseInt(defaultPageSize), media.getStudios().size());
+
+        if(studios.getElements().isEmpty()){
+            LOGGER.info("GET /media: Returning empty list");
+            return Response.noContent().build();
+        }
+
+        final List<MediaStudioDto> listsDto = MediaStudioDto.fromStudioList(uriInfo,studios.getElements(), media);
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStudioDto>>(listsDto){});
+        ResponseUtils.setPaginationLinks(responseBuilder,studios,uriInfo);
+        LOGGER.info("GET /media: Returning {} studios", studios.getElements().size());
+        return responseBuilder.build();
+    }
+
+    @GET
+    @Path("/{id}/staff")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMediaStaff(@PathParam("id") int mediaId,
+                                  @QueryParam("type") String roleType){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        final RoleType role = NormalizerUtils.getNormalizedRoleType(roleType);
+        final List<? extends Role> staffMembers;
+
+        if(role == RoleType.ACTOR)
+            staffMembers = media.getActorList();
+        else
+            staffMembers = media.getDirectorList();
+
+
+        if(staffMembers.isEmpty()){
+            LOGGER.info("GET /media: Returning empty list");
+            return Response.noContent().build();
+        }
+
+        final List<MediaStaffDto> listsDto = MediaStaffDto.fromStaffList(uriInfo,staffMembers, media);
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto){});
+
+        LOGGER.info("GET /media: Returning {} staff members", staffMembers.size());
+        return responseBuilder.build();
+    }
+
+    @GET
+    @Path("/{id}/comments")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getComments(@PathParam("id") int mediaId,
+                                @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        final PageContainer<MediaComment> mediaComments = commentService.getMediaComments(media, page, pageSize);
+
+        if (mediaComments.getElements().isEmpty()) {
+            LOGGER.info("GET /media/{}/comments: Returning empty list.", mediaId);
+            return Response.noContent().build();
+        }
+
+        final List<MediaCommentDto> mediaCommentDtoList = MediaCommentDto.fromMediaCommentList(uriInfo, mediaComments.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaCommentDto>>(mediaCommentDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, mediaComments, uriInfo);
+
+        LOGGER.info("GET /media/{}/comments: Returning page {} with {} results.", mediaId, mediaComments.getCurrentPage(), mediaComments.getElements().size());
+        return response.build();
+    }
+
 
     @RequestMapping("/")
     public ModelAndView home() {
@@ -257,7 +422,7 @@ public class MediaController {
         final SortType sortType = NormalizerUtils.getNormalizedSortType(filterForm.getSortType());
         final List<MediaType> mediaTypes = Collections.singletonList(MediaType.FILMS);
         final PageContainer<Media> mostLikedFilms = favoriteService.getMostLikedMedia(MediaType.FILMS, 0, itemsPerContainer);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null, 0 );
         mav.addObject("mostLikedFilms", mostLikedFilms.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));
@@ -283,7 +448,7 @@ public class MediaController {
         final List<Genre> genres = NormalizerUtils.getNormalizedGenres(filterForm.getGenres());
         final SortType sortType = NormalizerUtils.getNormalizedSortType(filterForm.getSortType());
         final List<MediaType> mediaTypes = Collections.singletonList(MediaType.SERIE);
-        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null);
+        final PageContainer<Media> mediaListContainer = mediaService.getMediaByFilters(mediaTypes,page-1,itemsPerPage, sortType,genres,filterForm.getStartYear(), filterForm.getLastYear(), null, 0);
         mav.addObject("mostLikedSeries", mostLikedSeries.getElements());
         mav.addObject("mediaListContainer", mediaListContainer);
         mav.addObject("sortTypes", FilterUtils.getSortTypes(messageSource));

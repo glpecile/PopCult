@@ -82,7 +82,7 @@ public class MediaHibernateDao implements MediaDao {
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
-    private Query buildAndWhereStatement(String baseQuery,Integer page, Integer pageSize, String term,List<MediaType> mediaType, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate){
+    private Query buildAndWhereStatement(String baseQuery,Integer page, Integer pageSize, String term,List<MediaType> mediaType, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, Integer notInList){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
         toReturn.append(baseQuery);
@@ -107,6 +107,10 @@ public class MediaHibernateDao implements MediaDao {
             parameters.put("fromDate", fromDate);
             parameters.put("toDate", toDate);
         }
+        if(notInList != null){
+            wheres.add(" mediaid NOT IN ( SELECT mediaid FROM listelement WHERE medialistid = :notInList )");
+            parameters.put("notInList", notInList);
+        }
 
         if(!wheres.isEmpty()){
             toReturn.append("WHERE ");
@@ -128,17 +132,17 @@ public class MediaHibernateDao implements MediaDao {
         return nativeQuery;
     }
     @Override
-    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term) {
+    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term, int notInList) {
         //Para paginacion
         //Pedimos el contenido paginado.
         final String baseQuery = "SELECT mediaid FROM ( SELECT DISTINCT mediaid, " + sort.getNameMedia() +" FROM  media NATURAL JOIN mediagenre ";
-        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,term,mediaType,sort, genre,fromDate,toDate);
+        final Query nativeQuery = buildAndWhereStatement(baseQuery,page,pageSize,term,mediaType,sort, genre,fromDate,toDate, notInList);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
 
         //Obtenemos la cantidad total de elementos.
         final String countBaseQuery = "SELECT COUNT(mediaid) FROM( SELECT DISTINCT mediaid FROM media NATURAL JOIN mediagenre ";
-        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,term,mediaType,null,genre,fromDate,toDate);
+        final Query countQuery = buildAndWhereStatement(countBaseQuery,null,null,term,mediaType,null,genre,fromDate,toDate, notInList);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         //Query que se pide con los ids ya paginados
