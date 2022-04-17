@@ -17,7 +17,7 @@ public class GenreDto {
 
     //Auxiliar urls
     private String mediaUrl;
-    private String imageUrl;
+    private String listsUrl;
 
     public static GenreDto fromGenre(UriInfo url, Genre genre){
         GenreDto genreDto = new GenreDto();
@@ -26,7 +26,7 @@ public class GenreDto {
 
         genreDto.url  = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).build().toString();
         genreDto.mediaUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("media").build().toString();
-        genreDto.imageUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("image").build().toString();
+        genreDto.listsUrl = url.getBaseUriBuilder().path("genres").path(genreDto.genre.getGenre()).path("lists").build().toString();
         return genreDto;
     }
 
@@ -67,11 +67,11 @@ public class GenreDto {
         this.mediaUrl = mediaUrl;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getListsUrl() {
+        return listsUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setListsUrl(String listsUrl) {
+        this.listsUrl = listsUrl;
     }
 }
