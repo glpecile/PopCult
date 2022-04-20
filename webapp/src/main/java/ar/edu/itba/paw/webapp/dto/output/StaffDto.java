@@ -26,9 +26,8 @@ public class StaffDto {
     private String mediaDirectorUrl;
     private String mediaActorUrl;
 
-    public static StaffDto fromStaff(UriInfo url, Role staffMemberRole){
+    public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
         StaffDto staffDto = new StaffDto();
-        StaffMember staffMember = staffMemberRole.getStaffMember();
         staffDto.id = staffMember.getStaffMemberId();
         staffDto.name = staffMember.getName();
         staffDto.description = staffMember.getDescription();
@@ -36,12 +35,12 @@ public class StaffDto {
         staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         staffDto.imageUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("image").build().toString();
         staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
-        staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Director").build().toString();
-        staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).queryParam("role","Actor").build().toString();
+        staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Director").build().toString();
+        staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Actor").build().toString();
         return staffDto;
     }
 
-    public static List<StaffDto> fromStaffList(UriInfo url, List<? extends Role> staffMembers){
+    public static List<StaffDto> fromStaffList(UriInfo url, List<StaffMember> staffMembers){
         return staffMembers.stream().map(m -> StaffDto.fromStaff(url, m)).collect(Collectors.toList());
     }
 

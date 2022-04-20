@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.StaffDao;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.StaffMember;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -102,6 +103,27 @@ public class StaffHibernateDao implements StaffDao {
         List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList, page, pageSize, count);
+    }
+
+    @Override
+    public PageContainer<StaffMember> getAllStaff(int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
+
+        final Query nativeQuery = em.createNativeQuery("SELECT staffmemberid FROM staffmember OFFSET :offset LIMIT :limit")
+                .setParameter("offset",page * pageSize)
+                .setParameter("limit", pageSize);
+        @SuppressWarnings("unchecked")
+        List<Long> staffIds = nativeQuery.getResultList();
+
+        final Query countQuery = em.createQuery("SELECT COUNT(*) FROM StaffMember");
+        final long count = (long) countQuery.getSingleResult();
+
+        final TypedQuery<StaffMember> query = em.createQuery("FROM StaffMember WHERE staffmemberid IN :staffMemberIds", StaffMember.class)
+                .setParameter("staffMemberIds", staffIds);
+        List<StaffMember> staffMembers = staffIds.isEmpty() ? Collections.emptyList() : query.getResultList();
+
+        return new PageContainer<>(staffMembers,page,pageSize,count);
+
     }
 
 }
