@@ -80,7 +80,6 @@ public class ListController {
             lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
         }
         final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page,pageSize,normalizedSortType,genreList,minMediaWithGenre,startYear,lastYear,term);
-        //TODO fix bug, only works with sort-type
         if(mediaListPageContainer.getElements().isEmpty()){
             LOGGER.info("GET /list: Returning empty list");
             return Response.noContent().build();

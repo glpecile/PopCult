@@ -35,6 +35,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -121,6 +123,15 @@ public class MediaController {
         return Response.ok(MediaDto.fromMedia(uriInfo,media, user)).build();
 
     }
+
+    @GET
+    @Path("/{id}/image")
+    @Produces(value={javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    public Response getMediaImage(@PathParam("id") int mediaId) throws URISyntaxException {
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+        return Response.status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();
+    }
+
 
     @GET
     @Path("/{id}/genres")
