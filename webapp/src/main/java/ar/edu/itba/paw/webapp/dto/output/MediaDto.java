@@ -29,10 +29,16 @@ public class MediaDto {
     // Auxiliar urls
     private String imageUrl;
     private String genreUrl;
+    private String staffUrl;
+    private String studiosUrl;
     private String listsContainUrl;
+    private String commentsUrl;
+
 
     // Related to current user
     private String favoriteUrl;
+    private String toWatchMediaUrl;
+    private String watchedMediaUrl;
 
     public static MediaDto fromMedia(UriInfo url, Media media, User currentUser) {
         MediaDto mediaDto = new MediaDto();
@@ -50,9 +56,14 @@ public class MediaDto {
         mediaDto.imageUrl = media.getImage();
         mediaDto.listsContainUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
         mediaDto.genreUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("genres").build().toString();
-
+        mediaDto.staffUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("staff").build().toString();
+        mediaDto.studiosUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("studios").build().toString();
+        mediaDto.commentsUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("comments").build().toString();
         if(currentUser != null) {
             mediaDto.favoriteUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("favorite-media").path(String.valueOf(media.getMediaId())).build().toString();
+            mediaDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("to-watch-media").path(String.valueOf(media.getMediaId())).build().toString();
+            mediaDto.watchedMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("watched-media").path(String.valueOf(media.getMediaId())).build().toString();
+
         }
 
         return mediaDto;
@@ -170,6 +181,22 @@ public class MediaDto {
         this.genreUrl = genreUrl;
     }
 
+    public String getStaffUrl() {
+        return staffUrl;
+    }
+
+    public void setStaffUrl(String staffUrl) {
+        this.staffUrl = staffUrl;
+    }
+
+    public String getStudiosUrl() {
+        return studiosUrl;
+    }
+
+    public void setStudiosUrl(String studiosUrl) {
+        this.studiosUrl = studiosUrl;
+    }
+
     public String getListsContainUrl() {
         return listsContainUrl;
     }
@@ -184,5 +211,21 @@ public class MediaDto {
 
     public void setFavoriteUrl(String favoriteUrl) {
         this.favoriteUrl = favoriteUrl;
+    }
+
+    public String getToWatchMediaUrl() {
+        return toWatchMediaUrl;
+    }
+
+    public void setToWatchMediaUrl(String toWatchMediaUrl) {
+        this.toWatchMediaUrl = toWatchMediaUrl;
+    }
+
+    public String getWatchedMediaUrl() {
+        return watchedMediaUrl;
+    }
+
+    public void setWatchedMediaUrl(String watchedMediaUrl) {
+        this.watchedMediaUrl = watchedMediaUrl;
     }
 }
