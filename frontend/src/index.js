@@ -10,11 +10,23 @@ import 'bootstrap/dist/js/bootstrap.js';
 import '@fortawesome/fontawesome-free/js/all.js'
 import "react-alice-carousel/lib/alice-carousel.css";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import '@js-joda/core'
+import {createTheme, ThemeProvider} from "@mui/material";
+
+const theme = createTheme({
+    palette: {
+        secondary: {
+            main: '#a855f7'
+        }
+    }
+});
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <App/>
+            <ThemeProvider theme={theme}>
+                <App/>
+            </ThemeProvider>
         </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')

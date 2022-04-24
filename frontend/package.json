@@ -6,6 +6,7 @@
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@js-joda/core": "^5.2.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.3",
     "@tailwindcss/forms": "^0.4.0",
