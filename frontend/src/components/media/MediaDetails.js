@@ -38,7 +38,7 @@ function MediaDetails(props) {
                     {
                         props.genres.map(
                             (g) => {
-                                return <Chips key={g.id} url='#' text={g.genre.toLowerCase()}/>
+                                return <Chips key={g.id} url='#' text={t('genre_'+g.genre.toLowerCase())}/>
                             }
                         )
                     }
