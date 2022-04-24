@@ -1,4 +1,4 @@
-import NewListStepper from "../../../components/lists/NewListStepper";
+import NewListStepper from "../../../components/lists/creation/NewListStepper";
 
 const ListsCreation = () => {
     return (<>

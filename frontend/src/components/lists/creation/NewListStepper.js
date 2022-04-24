@@ -6,9 +6,10 @@ import {styled} from "@mui/material/styles";
 import StepConnector, {stepConnectorClasses} from "@mui/material/StepConnector";
 import Check from "@mui/icons-material/Check";
 import {useTranslation} from "react-i18next";
-import Spinner from "../animation/Spinner";
+import Spinner from "../../animation/Spinner";
 import {useState} from "react";
-import {Switch} from "@mui/material";
+import FirstStep from "./FirstStep";
+import ThirdStep from "./ThirdStep";
 
 
 const PurpleConnector = styled(StepConnector)(({theme}) => ({
@@ -71,41 +72,27 @@ function PurpleStepIcon(props) {
 
 export default function NewListStepper(props) {
     const {t} = useTranslation();
+
     const steps = [t('lists_step1'), t('lists_step2'), t('lists_step3'), t('lists_step_finish')];
     const [activeStep, setActiveStep] = useState(0);
     const [isValidStep, setValidStep] = useState(false);
 
     const [listName, setListName] = useState('');
-    const [listNameError, setListNameError] = useState(false);
     const [listDescription, setListDescription] = useState('');
-    const [listDescriptionError, setListDescriptionError] = useState(false);
 
     const [isCollaborative, setIsCollaborative] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
 
-    const listNameHandler = (event) => {
-        event.target.validity.valid ? (event.target.value.length === 0 ? setListNameError(true) : setListNameError(false)) : setListNameError(true);
-        setListName(event.target.value);
-        if (event.target.validity.valid === false|| event.target.value.length === 0 || listDescriptionError === true) setValidStep(false)
-        else setValidStep(true);
 
-    }
-    const listDescriptionHandler = (event) => {
-        //TODO check this regex behaves weird
-        let valid = /[^/><]+/.test(event.target.value) || event.target.value.length === 0;
-        valid ? setListDescriptionError(false) : setListDescriptionError(true);
-        setListDescription(event.target.value);
-        if (valid === false || listNameError === true || listName.length === 0) setValidStep(false);
-        else setValidStep(true);
-    }
+    const [addedCollaborators, setAddedCollaborators] = useState([]);
 
     const setCollaborative = () => {
         setIsCollaborative(!isCollaborative);
     }
-
     const setPublic = () => {
         setIsPublic(!isPublic);
     }
+
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -136,51 +123,20 @@ export default function NewListStepper(props) {
             ) : (
                 <>
                     {/*STEP 0*/}
-                    {activeStep === 0 && <>
-                        <div className="px-5 pt-3 text-semibold w-full">
-                            {/*list name input*/}
-                            <label
-                                className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
-                                {t('lists_listName')}
-                            </label>
-                            <input
-                                className={"rounded w-full bg-gray-50" + (listNameError ? "border-2 border-rose-500" : "")}
-                                type='text' value={listName}
-                                onChange={listNameHandler} pattern="[^/><]+" minLength={1} maxLength={100}/>
-
-                            {/*description textarea*/}
-                            <label className="py-2 text-semibold w-full after:ml-0.5 after:text-violet-400">
-                                {t('lists_description')}
-                            </label>
-                            <textarea
-                                className={"rounded w-full bg-gray-50" + (listDescriptionError ? "border-2 border-rose-500" : "")}
-                                value={listDescription} onChange={listDescriptionHandler}/>
-                        </div>
-                    </>}
+                    {activeStep === 0 &&
+                        <FirstStep listName={listName} listDescription={listDescription} setListName={setListName}
+                                   setListDescription={setListDescription} setState={setValidStep}/>}
                     {/*STEP 1*/}
                     {activeStep === 1 && <div className="flex justify-center"><Spinner/></div>}
                     {/*STEP 2*/}
                     {activeStep === 2 &&
-                        <div className="px-5 pt-3 my-3 space-y-2 text-semibold w-full">
-                            <div className="flex justify-between">
-                                {t('lists_public')}
-                                <div className="justify-end">
-                                    <Switch onClick={setPublic} color="secondary"/>
-                                </div>
-                            </div>
-                            <div className="flex justify-between">
-                                {t('lists_collaborative')}
-                                <div className="justify-end">
-                                    <Switch onClick={setCollaborative} color="secondary"/>
-                                </div>
-                            </div>
-                            {isCollaborative &&
-                                <div>
-                                    Add collaborators.
-                                </div>}
-                        </div>}
+                        <ThirdStep isPublic={isPublic} setPublic={setPublic} isCollaborative={isCollaborative}
+                                   setCollaborative={setCollaborative} addedCollaborators={addedCollaborators}
+                                   setAddedCollaborators={setAddedCollaborators}/>}
                     {/*STEP 3*/}
                     {activeStep === 3 && <div className="flex justify-center"><Spinner/></div>}
+
+                    {/*BOTTOM BUTTONS*/}
                     <div className="flex justify-between">
                         <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded"
                                 disabled={activeStep === 0}
