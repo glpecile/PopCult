@@ -59,7 +59,7 @@ public class ListController {
 
     private static final String defaultPage = "1";
     private static final String defaultPageSize = "12";
-    private static final int minMediaWithGenre = 3; //TODO check this number
+    private static final int minMediaWithGenre = 1; //TODO check this number
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})

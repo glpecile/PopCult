@@ -150,7 +150,7 @@ public class ListsHibernateDao implements ListsDao {
 
             where.add(" genreid IN ( :genres) ");
             parameters.put("genres", genre.stream().map(Genre::ordinal).collect(Collectors.toList()));
-            groupBy.add(" medialistid ");
+            groupBy.add(" medialist.medialistid ");
             groupBy.add(" visibility ");
             if (sort != null)
                 groupBy.add(sort.getNameMediaList());
@@ -161,7 +161,7 @@ public class ListsHibernateDao implements ListsDao {
             parameters.put("minMatches", minMatches);
         }
         if(sort == SortType.POPULARITY){
-            groupBy.add("medialist.medialistid");
+            groupBy.add(" medialist.medialistid");
         }
         where.add(" visibility = :visibility ");
         parameters.put("visibility", visibility);
