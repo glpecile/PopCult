@@ -152,7 +152,7 @@ public class ListsHibernateDao implements ListsDao {
             parameters.put("genres", genre.stream().map(Genre::ordinal).collect(Collectors.toList()));
             groupBy.add(" medialist.medialistid ");
             groupBy.add(" visibility ");
-            if (sort != null)
+            if (sort != null && sort != SortType.POPULARITY)
                 groupBy.add(sort.getNameMediaList());
             if (fromDate != null && toDate != null && !groupBy.contains(SortType.DATE.getNameMediaList())) {
                 groupBy.add(SortType.DATE.getNameMediaList());
@@ -191,6 +191,8 @@ public class ListsHibernateDao implements ListsDao {
             toReturn.append(" ORDER BY ");
             if (sort == SortType.TITLE)
                 toReturn.append(" LOWER(").append(sort.getNameMediaList()).append(") ");
+            else if(sort == SortType.POPULARITY)
+                toReturn.append(sort.getNameMediaList()).append(" DESC");
             else
                 toReturn.append(sort.getNameMediaList());
         }
