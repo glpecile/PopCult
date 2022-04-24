@@ -268,7 +268,7 @@ public class UserController {
         userService.uploadUserProfileImage(user, imageBytes);
 
         LOGGER.info("PUT /users/{}/image: Returning user {} image", username, username);
-        return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).path("image").build()).build();
+        return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUsername())).path("image").build()).build();
     }
 
     @DELETE
