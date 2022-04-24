@@ -94,7 +94,7 @@ public class MediaController {
         final SortType normalizedSortType =  NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = null;
         LocalDateTime lastYear = null;
-        if(decade != null && decade.compareTo("ALL") > 0) {
+        if(decade != null && !decade.equals("ALL")) {
             startYear = LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
             lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
         }

@@ -68,17 +68,18 @@ public class ListController {
                              @QueryParam("genres") List<String> genres,
                              @QueryParam("sort-type") @Pattern(regexp = "(?i)DATE|TITLE(?i)|POPULARITY(?i)") @DefaultValue("TITLE") String sortType,
                              @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
-                             @QueryParam("query") @Size(max = 100) @Pattern(regexp = "[^/><%]+") String term
-    ) {
+                             @QueryParam("query") @Size(max = 100) @Pattern(regexp = "[^/><%]+") String term) {
         final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = null;
         LocalDateTime lastYear = null;
-        if (decade != null && decade.compareTo("ALL") > 0) {
+        if (decade != null && !decade.equals("ALL")) {
             startYear = LocalDateTime.of(Integer.parseInt(decade), 1, 1, 0, 0);
             lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
         }
+
         final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page, pageSize, normalizedSortType, genreList, minMediaWithGenre, startYear, lastYear, term);
+
         if (mediaListPageContainer.getElements().isEmpty()) {
             LOGGER.info("GET /lists: Returning empty list");
             return Response.noContent().build();
@@ -88,7 +89,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, mediaListPageContainer, uriInfo);
 
-        LOGGER.info("GET /list: Returning page {} with {} results ", mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
+        LOGGER.info("GET /lists: Returning page {} with {} results ", mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
         return response.build();
     }
 
