@@ -71,13 +71,12 @@ public class ListController {
                              @QueryParam("query") @Size(max = 100) @Pattern(regexp = "[^/><%]+") String term) {
         final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
-        LocalDateTime startYear = null;
-        LocalDateTime lastYear = null;
-        if (decade != null && !decade.equals("ALL")) {
-            startYear = LocalDateTime.of(Integer.parseInt(decade), 1, 1, 0, 0);
-            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
-        }
-
+        LocalDateTime startYear = NormalizerUtils.getStartYear(decade);
+        LocalDateTime lastYear = NormalizerUtils.getLastYear(decade);
+//        if (decade != null && decade.compareTo("ALL") > 0) {
+//            startYear = LocalDateTime.of(Integer.parseInt(decade), 1, 1, 0, 0);
+//            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
+//        }
         final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page, pageSize, normalizedSortType, genreList, minMediaWithGenre, startYear, lastYear, term);
 
         if (mediaListPageContainer.getElements().isEmpty()) {

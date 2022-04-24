@@ -191,10 +191,8 @@ public class ListsHibernateDao implements ListsDao {
             toReturn.append(" ORDER BY ");
             if (sort == SortType.TITLE)
                 toReturn.append(" LOWER(").append(sort.getNameMediaList()).append(") ");
-            else if(sort == SortType.POPULARITY)
-                toReturn.append(sort.getNameMediaList()).append(" DESC");
             else
-                toReturn.append(sort.getNameMediaList());
+                toReturn.append(sort.getNameMediaList()).append(" DESC");
         }
 
         if (page != null && pageSize != null) {

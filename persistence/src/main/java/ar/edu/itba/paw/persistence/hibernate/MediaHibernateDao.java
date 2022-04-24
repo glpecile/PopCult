@@ -129,10 +129,8 @@ public class MediaHibernateDao implements MediaDao {
             toReturn.append(" ORDER BY ");
             if (sort == SortType.TITLE)
                 toReturn.append(" LOWER(").append(sort.getNameMedia()).append(") ");
-            else if(sort == SortType.POPULARITY)
-                toReturn.append(sort.getNameMedia()).append(" DESC");
             else
-                toReturn.append(sort.getNameMedia());
+                toReturn.append(sort.getNameMedia()).append(" DESC");
         }
         if(page != null && pageSize != null){
             toReturn.append( " OFFSET :offset LIMIT :limit ");
