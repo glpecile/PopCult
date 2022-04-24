@@ -19,6 +19,8 @@ public interface UserService {
 
     Optional<User> getByUsername(String username);
 
+    List<User> getByUsernames(List<String> usernames);
+
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
     Token createVerificationToken(User user) throws EmailAlreadyVerifiedException;

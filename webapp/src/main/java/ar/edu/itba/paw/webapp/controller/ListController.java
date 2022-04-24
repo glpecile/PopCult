@@ -12,10 +12,7 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.webapp.dto.input.AddMediaDto;
-import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
-import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
-import ar.edu.itba.paw.webapp.dto.input.ReportDto;
+import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
 import ar.edu.itba.paw.webapp.dto.output.ListDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
@@ -30,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
@@ -72,24 +68,25 @@ public class ListController {
                              @QueryParam("genres") List<String> genres,
                              @QueryParam("sort-type") @Pattern(regexp = "TITLE|DATE|POPULARITY") @DefaultValue("TITLE") String sortType,
                              @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
-                             @QueryParam("query") @Size(max=100) @Pattern(regexp = "[^/><%]+") String term
-                             ) {
+                             @QueryParam("query") @Size(max = 100) @Pattern(regexp = "[^/><%]+") String term
+    ) {
         final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
-        final SortType normalizedSortType =  NormalizerUtils.getNormalizedSortType(sortType);
+        final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = null;
         LocalDateTime lastYear = null;
-        if(decade != null && decade.compareTo("ALL") > 0) {
-            startYear = LocalDateTime.of(Integer.parseInt(decade),1,1,0,0);
-            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9,12,31,0,0);
+        if (decade != null && decade.compareTo("ALL") > 0) {
+            startYear = LocalDateTime.of(Integer.parseInt(decade), 1, 1, 0, 0);
+            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
         }
-        final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page,pageSize,normalizedSortType,genreList,minMediaWithGenre,startYear,lastYear,term);
-        if(mediaListPageContainer.getElements().isEmpty()){
-            LOGGER.info("GET /list: Returning empty list");
+        final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page, pageSize, normalizedSortType, genreList, minMediaWithGenre, startYear, lastYear, term);
+        if (mediaListPageContainer.getElements().isEmpty()) {
+            LOGGER.info("GET /lists: Returning empty list");
             return Response.noContent().build();
         }
-        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo,mediaListPageContainer.getElements(),userService.getCurrentUser().orElse(null));
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList){});
-        ResponseUtils.setPaginationLinks(response,mediaListPageContainer,uriInfo);
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, mediaListPageContainer.getElements(), userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, mediaListPageContainer, uriInfo);
 
         LOGGER.info("GET /list: Returning page {} with {} results ", mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
         return response.build();
@@ -185,7 +182,7 @@ public class ListController {
 
         listsService.addToMediaList(mediaList, media);
 
-        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, addMediaDto.getMedia(), listId);;
+        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, addMediaDto.getMedia(), listId);
         return Response.noContent().build();
     }
 
@@ -305,6 +302,21 @@ public class ListController {
 
         LOGGER.info("GET /lists/{}/collaborators: Returning page {} with {} results.", listId, collaborators.getCurrentPage(), collaborators.getElements().size());
         return response.build();
+    }
+
+    @PATCH
+    @Path("/{listId}/collaborators")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response addCollaboratorsToList(@PathParam("listId") int listId,
+                                           @Valid @NotEmptyBody AddCollaboratorsDto addCollaboratorsDto) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        List<User> users = userService.getByUsernames(addCollaboratorsDto.getCollaborators());
+
+        collaborativeListService.addCollaborators(mediaList, users);
+
+        LOGGER.info("PATCH /lists/{}/collaborators: users {} added to list {} as collaborators.", listId, addCollaboratorsDto.getCollaborators(), listId);
+        return Response.noContent().build();
     }
 
     @GET

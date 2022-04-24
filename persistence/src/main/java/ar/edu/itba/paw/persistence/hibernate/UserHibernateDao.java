@@ -54,6 +54,13 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public List<User> getByUsernames(List<String> usernames) {
+        final TypedQuery<User> query = em.createQuery("from User where username in :usernames", User.class);
+        query.setParameter("usernames", usernames);
+        return usernames.isEmpty() ? Collections.emptyList() : query.getResultList();
+    }
+
+    @Override
     public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         if (getByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();

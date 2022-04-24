@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
         return userDao.getByUsername(username);
     }
 
+    @Override
+    public List<User> getByUsernames(List<String> usernames) {
+        return userDao.getByUsernames(usernames);
+    }
+
     @Transactional
     @Override
     public User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
