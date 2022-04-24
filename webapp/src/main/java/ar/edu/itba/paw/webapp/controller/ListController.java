@@ -3,22 +3,24 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
-import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.ListComment;
-import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.webapp.dto.input.AddMediaDto;
 import ar.edu.itba.paw.webapp.dto.input.CommentInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ListInputDto;
 import ar.edu.itba.paw.webapp.dto.input.ReportDto;
-import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
+import ar.edu.itba.paw.webapp.dto.output.ListDto;
+import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
+import ar.edu.itba.paw.webapp.dto.output.UserCollaboratorDto;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
@@ -28,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
@@ -169,6 +172,21 @@ public class ListController {
 
         LOGGER.info("GET /lists/{}/media: Returning page {} with {} results.", listId, mediaInList.getCurrentPage(), mediaInList.getElements().size());
         return response.build();
+    }
+
+    @PATCH
+    @Path("/{listId}/media")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response addMediaToList(@PathParam("listId") int listId,
+                                   @Valid @NotEmptyBody AddMediaDto addMediaDto) {
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+        final List<Media> media = mediaService.getById(addMediaDto.getMedia());
+
+        listsService.addToMediaList(mediaList, media);
+
+        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, addMediaDto.getMedia(), listId);;
+        return Response.noContent().build();
     }
 
     @GET

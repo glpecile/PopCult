@@ -146,7 +146,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(ALL);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Link"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -207,6 +207,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/lists/{id}", "/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
                 .antMatchers(HttpMethod.DELETE, "/lists/{id}/media/{media-id}")
+                    .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
+                .antMatchers(HttpMethod.PATCH, "/lists/{id}/media")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.PUT, "/lists/{id}/media/{media-id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
