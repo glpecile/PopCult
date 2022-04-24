@@ -1,4 +1,4 @@
-import {Chip, Divider, Switch} from "@mui/material";
+import {Avatar, Chip, Divider, Switch} from "@mui/material";
 import NewListSearchInput from "./NewListSearchInput";
 import {useEffect, useState} from "react";
 import UserService from "../../../services/UserService";
@@ -33,7 +33,7 @@ const ThirdStep = (props) => {
     }, [toSearch, page]);
 
     const getSearchTerm = (searchTerm) => {
-        if (searchTerm.localeCompare(toSearch) === 0) setOpenModal(true);
+        if (searchTerm.localeCompare(toSearch) === 0 && toSearch.length !== 0) setOpenModal(true);
         setToSearch(searchTerm);
     }
 
@@ -67,7 +67,7 @@ const ThirdStep = (props) => {
                                 return <Chip
                                     label={user.username}
                                     variant="outlined" color="secondary"
-                                    onClick={() => navigate('/user/'+user.username)}
+                                    avatar={<Avatar alt={user.username} src={user.imageUrl} />}
                                     onDelete={() => {
                                         const aux = new Map(props.addedCollaborators);
                                         aux.delete(user.username);
