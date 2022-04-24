@@ -181,6 +181,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
         </dependency>
+
+        <!-- Version added for compatibility with @PATCH -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
