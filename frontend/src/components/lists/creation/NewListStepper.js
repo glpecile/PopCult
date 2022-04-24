@@ -83,8 +83,7 @@ export default function NewListStepper(props) {
     const [isCollaborative, setIsCollaborative] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
 
-
-    const [addedCollaborators, setAddedCollaborators] = useState([]);
+    const [addedCollaborators, setAddedCollaborators] = useState(() => new Map());
 
     const setCollaborative = () => {
         setIsCollaborative(!isCollaborative);
@@ -92,7 +91,6 @@ export default function NewListStepper(props) {
     const setPublic = () => {
         setIsPublic(!isPublic);
     }
-
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
