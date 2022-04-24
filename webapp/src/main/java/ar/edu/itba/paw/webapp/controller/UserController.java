@@ -16,6 +16,7 @@ import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -104,11 +105,7 @@ public class UserController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createUser(@Valid UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
-        if (userDto == null) {
-            throw new EmptyBodyException();
-        }
-
+    public Response createUser(@Valid @NotEmptyBody UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
         LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
@@ -137,11 +134,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updatedUser(@PathParam("username") String username,
-                                @Valid UserEditDto userEditDto) {
-        if (userEditDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                @Valid @NotEmptyBody UserEditDto userEditDto) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         userService.updateUserData(user, userEditDto.getName());
@@ -155,11 +148,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updatePassword(@PathParam("username") String username,
-                                   @Valid UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
-        if (userPasswordDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                   @Valid @NotEmptyBody UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         userService.changePassword(user, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword());
@@ -175,11 +164,7 @@ public class UserController {
     @Path("/password-token")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createPasswordResetToken(@Valid UserEmailDto userEmailDto) {
-        if (userEmailDto == null) {
-            throw new EmptyBodyException();
-        }
-
+    public Response createPasswordResetToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
         final Token token = userService.forgotPassword(user);
@@ -193,11 +178,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response resetPassword(@PathParam("token") String tokenString,
-                                  @Valid UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
-        if (userResetPasswordDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                  @Valid @NotEmptyBody UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
         final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
         userService.resetPassword(token, userResetPasswordDto.getNewPassword());
@@ -213,11 +194,7 @@ public class UserController {
     @Path("/verification-token")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response sendVerificationToken(@Valid UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
-        if (userEmailDto == null) {
-            throw new EmptyBodyException();
-        }
-
+    public Response sendVerificationToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
         final Token token = userService.createVerificationToken(user);
@@ -461,11 +438,7 @@ public class UserController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
-                                      @Valid DateTimeDto dateTimeDto) {
-        if (dateTimeDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                      @Valid @NotEmptyBody DateTimeDto dateTimeDto) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 

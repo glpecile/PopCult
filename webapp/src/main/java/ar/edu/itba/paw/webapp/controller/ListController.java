@@ -95,11 +95,7 @@ public class ListController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createList(@Valid ListInputDto listDto) {
-        if (listDto == null) {
-            throw new EmptyBodyException();
-        }
-
+    public Response createList(@Valid @NotEmptyBody ListInputDto listDto) {
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user, listDto.getName(), listDto.getDescription(), listDto.isVisible(), listDto.isCollaborative());
 
@@ -263,11 +259,7 @@ public class ListController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response createListComments(@PathParam("id") int listId,
-                                       @Valid CommentInputDto commentInputDto) {
-        if (commentInputDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                       @Valid @NotEmptyBody CommentInputDto commentInputDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
 
@@ -425,11 +417,7 @@ public class ListController {
     @Path("/{id}/reports")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createListReport(@PathParam("id") int listId,
-                                     @Valid ReportDto reportDto) throws ListAlreadyReportedException {
-        if (reportDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                     @Valid @NotEmptyBody ReportDto reportDto) throws ListAlreadyReportedException {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
 
         Optional<ListReport> listReport = reportService.reportList(mediaList, reportDto.getReport());

@@ -3,17 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.ReportService;
 import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
-import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.report.ListCommentReport;
-import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
-import ar.edu.itba.paw.webapp.dto.output.ReportMediaCommentDto;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
-import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
-import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +16,10 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.List;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 
 @Path("lists-comments")
@@ -68,11 +65,7 @@ public class ListCommentController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response reportListComment(@PathParam("id") int listCommentId,
-                                      @Valid ReportDto reportDto) throws CommentAlreadyReportedException {
-        if (reportDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                      @Valid @NotEmptyBody ReportDto reportDto) throws CommentAlreadyReportedException {
         final ListComment listComment = commentService.getListCommentById(listCommentId).orElseThrow(CommentNotFoundException::new);
 
         final Optional<ListCommentReport> listCommentReport = reportService.reportListComment(listComment, reportDto.getReport());

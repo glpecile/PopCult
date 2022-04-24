@@ -3,19 +3,15 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.ReportService;
 import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
-import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
-import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaCommentDto;
-import ar.edu.itba.paw.webapp.dto.output.ReportMediaCommentDto;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.EmptyBodyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -66,11 +62,7 @@ public class MediaCommentController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response reportMediaComment(@PathParam("id") int mediaCommentId,
-                                      @Valid ReportDto reportDto) throws CommentAlreadyReportedException {
-        if (reportDto == null) {
-            throw new EmptyBodyException();
-        }
-
+                                       @Valid @NotEmptyBody ReportDto reportDto) throws CommentAlreadyReportedException {
         final MediaComment mediaComment = commentService.getMediaCommentById(mediaCommentId).orElseThrow(CommentNotFoundException::new);
 
         final Optional<MediaCommentReport> mediaCommentReport = reportService.reportMediaComment(mediaComment, reportDto.getReport());
