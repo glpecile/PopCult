@@ -41,25 +41,30 @@ export default function AddCollaboratorsDialog(props) {
         <div>
             <LocalDialog onClose={handleState} aria-labelledby="customized-dialog-title" open={props.isOpened}>
                 <LocalDialogTitle id="customized-dialog-title" onClose={handleState}>
-                    {t('lists_collabDialog_title')}
+                    {t('search_title', {term: props.searchTerm})}
                 </LocalDialogTitle>
                 <DialogContent dividers>
                     <div className="flex flex-col">
-                        <FormGroup>
-                            {props.searchUsers && props.searchUsers.data.map(user => {
-                                return <FormControlLabel
-                                    control={<Checkbox checked={isChecked(user) || false} onChange={() => {
-                                        handleCheckboxChange(user);
-                                    }} color="secondary"/>} label={user.username} key={user.username}/>
-                            })}
-                        </FormGroup>
-                        <div className="flex justify-center">
-                        {(props.searchUsers && props.searchUsers.links.last.page > 1) &&
-                            <Pagination count={parseInt(props.searchUsers.links.last.page)} variant="outlined"
-                                        color="secondary"
-                                        page={props.page}
-                                        onChange={handleChange}/>}
-                        </div>
+                        {props.searchUsers && <>
+                            <FormGroup>
+                                {(props.searchUsers.data.length > 0) ?
+                                    (props.searchUsers.data.map(user => {
+                                        return <FormControlLabel
+                                            control={<Checkbox checked={isChecked(user) || false} onChange={() => {
+                                                handleCheckboxChange(user);
+                                            }} color="secondary"/>} label={user.username} key={user.username}/>
+                                    })) : (<div className="text-gray-400">
+                                        {t('search_no_results')}
+                                    </div>)}
+                            </FormGroup>
+                            <div className="flex justify-center">
+                                {(props.searchUsers.data.length > 0 && props.searchUsers.links.last.page > 1) &&
+                                    <Pagination count={parseInt(props.searchUsers.links.last.page)} variant="outlined"
+                                                color="secondary"
+                                                page={props.page}
+                                                onChange={handleChange}/>}
+                            </div>
+                        </>}
                     </div>
                 </DialogContent>
                 <DialogActions>

@@ -4,11 +4,9 @@ import {useEffect, useState} from "react";
 import UserService from "../../../services/UserService";
 import {useTranslation} from "react-i18next";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
-import {useNavigate} from "react-router-dom";
 
 const ThirdStep = (props) => {
     const {t} = useTranslation();
-    const navigate = useNavigate();
 
     const [toSearch, setToSearch] = useState('');
     const [searchUsers, setSearchUsers] = useState(undefined);
@@ -26,6 +24,7 @@ const ThirdStep = (props) => {
                 console.log(e);
             }
         }
+
         if (toSearch !== '') {
             searchUsers(toSearch);
         }
@@ -67,7 +66,7 @@ const ThirdStep = (props) => {
                                 return <Chip
                                     label={user.username}
                                     variant="outlined" color="secondary"
-                                    avatar={<Avatar alt={user.username} src={user.imageUrl} />}
+                                    avatar={<Avatar alt={user.username} src={user.imageUrl}/>}
                                     onDelete={() => {
                                         const aux = new Map(props.addedCollaborators);
                                         aux.delete(user.username);
@@ -80,7 +79,8 @@ const ThirdStep = (props) => {
                     }
                     <AddCollaboratorsDialog isOpened={openModal} setOpenModal={setOpenModal} searchUsers={searchUsers}
                                             alreadyInList={props.addedCollaborators}
-                                            setAlreadyInList={props.setAddedCollaborators} setPage={setPage} page={page}/>
+                                            setAlreadyInList={props.setAddedCollaborators} setPage={setPage} page={page}
+                                            searchTerm={toSearch}/>
                 </div>}
         </div>
     );

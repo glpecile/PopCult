@@ -166,9 +166,10 @@
   "lists_listName": "List Name",
   "lists_description": "Description",
 
-  "lists_collabDialog_title":"Add new collaborators to your list!",
   "list_dialog_done": "Done",
   "list_already_collab": "Already collaborating in List:",
   "list_add_collab": "Add new collaborators",
-  "search_placeholder": "Search..."
+  "search_placeholder": "Search...",
+  "search_title": "Search results for: {{term}}",
+  "search_no_results": "It seems there are no matching results for your search."
 }

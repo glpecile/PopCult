@@ -165,9 +165,10 @@
   "lists_listName": "Nombre de la Lista",
   "lists_description": "Descripción",
 
-  "lists_collabDialog_title":"Añade nuevos colaboradores a tu Lista!",
   "list_dialog_done": "Listo",
   "list_already_collab": "Ya colaboran en la lista:",
   "list_add_collab": "Agrega nuevos colaboradores",
-  "search_placeholder": "Buscar..."
+  "search_placeholder": "Buscar...",
+  "search_title": "Resultados para: {{term}}",
+  "search_no_results": "Parece que no hay resultados disponibles para tu búsqueda."
 }
