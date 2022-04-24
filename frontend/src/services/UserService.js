@@ -9,8 +9,8 @@ const UserService = (function () {
         return res.headers.authorization.split(' ')[1];
     }
 
-    const getUsers = async ({page, pageSize, userRole, banned}) => {
-        const res = await userApi.getUsers({page, pageSize, userRole, banned});
+    const getUsers = async ({page, pageSize, userRole, banned, query, notCollabInList}) => {
+        const res = await userApi.getUsers({page, pageSize, userRole, banned, query, notCollabInList});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data}

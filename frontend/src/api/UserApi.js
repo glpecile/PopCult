@@ -12,14 +12,16 @@ const userApi = (() => {
             });
     }
 
-    const getUsers = ({page, pageSize, userRole, banned}) => {
+    const getUsers = ({page, pageSize, userRole, banned,query, notCollabInList}) => {
         return api.get(`/users`,
             {
                 params: {
                     'page': page,
                     'page-size': pageSize,
                     ...(userRole && {'role': userRole}),
-                    ...(banned && {'banned': banned})
+                    ...(banned && {'banned': banned}),
+                    ...(query && {'query': query}),
+                    ...(notCollabInList && {'not-collab-in-list': notCollabInList})
                 }
             });
     }
