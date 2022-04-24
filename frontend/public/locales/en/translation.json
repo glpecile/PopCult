@@ -169,5 +169,6 @@
   "lists_collabDialog_title":"Add new collaborators to your list!",
   "list_dialog_done": "Done",
   "list_already_collab": "Already collaborating in List:",
-  "search_placeholder": "Search"
+  "list_add_collab": "Add new collaborators",
+  "search_placeholder": "Search..."
 }

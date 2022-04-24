@@ -55,7 +55,7 @@ const ThirdStep = (props) => {
                 <div>
                     <Divider className="text-violet-500"/>
                     <div className="pt-3 text-semibold w-full flex flex-col">
-                        Add collaborators to your list!
+                        {t('list_add_collab')}
                         <NewListSearchInput getSearchTerm={getSearchTerm}/>
                     </div>
                     {props.addedCollaborators.size > 0 &&
