@@ -23,6 +23,8 @@ import BannedUsers from "./pages/secondary/admin/BannedUsers";
 import Moderators from "./pages/secondary/admin/Moderators";
 import Error404 from "./pages/secondary/errors/Error404";
 import Loader from "./pages/secondary/errors/Loader";
+import ListsCreation from "./pages/secondary/lists/ListsCreation";
+import SearchPage from "./pages/secondary/search/SearchPage";
 import Layout from "./components/Layout/Layout";
 
 export default function App() {
@@ -33,10 +35,11 @@ export default function App() {
                     <Route path='/' exact element={<Home/>}/>
                     <Route path='/media/films' exact element={<Films/>}/>
                     <Route path='/media/series' exact element={<Series/>}/>
-                    <Route path='/lists' exact element={<Lists/>}/>
                     <Route path='/media/films/:id' exact element={<MediaDescription/>}/>
                     <Route path='/media/series/:id' exact element={<MediaDescription/>}/>
+                    <Route path='/lists' exact element={<Lists/>}/>
                     <Route path='/lists/:id' exact element={<ListsDescription/>}/>
+                    <Route path='/lists/new' exact element={<ListsCreation/>}/>
                     <Route path='/login' exact element={<Login/>}/>
                     <Route path='/recovery' exact element={<Recovery/>}/>
                     <Route path='/resetPassword' exact element={<ResetPassword/>}/>
@@ -52,6 +55,7 @@ export default function App() {
                     <Route path='/admin/reports' exact element={<Reports/>}/>
                     <Route path='/admin/bans' exact element={<BannedUsers/>}/>
                     <Route path='/admin/mods' exact element={<Moderators/>}/>
+                    <Route path='/search' exact element={<SearchPage/>}/>
                     <Route path='*' element={<Error404/>}/>
                 </Routes>
             </Layout>
