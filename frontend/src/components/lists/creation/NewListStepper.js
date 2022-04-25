@@ -11,6 +11,7 @@ import {useState} from "react";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
+import LastStep from "./LastStep";
 
 
 const PurpleConnector = styled(StepConnector)(({theme}) => ({
@@ -127,7 +128,10 @@ export default function NewListStepper() {
                                    setCollaborative={setIsCollaborative} addedCollaborators={addedCollaborators}
                                    setAddedCollaborators={setAddedCollaborators}/>}
                     {/*STEP 3*/}
-                    {activeStep === 3 && <div className="flex justify-center"><Spinner/></div>}
+                    {activeStep === 3 && <LastStep name={listName} description={listDescription} isPublic={isPublic}
+                                                   isCollaborative={isCollaborative}
+                                                   collaborators={Array.from(addedCollaborators.values())}
+                                                   media={Array.from(addedMedia.values())}/>}
 
                     {/*BOTTOM BUTTONS*/}
                     <div className="flex justify-between">

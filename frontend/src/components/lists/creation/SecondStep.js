@@ -58,7 +58,7 @@ const SecondStep = (props) => {
                                                      aux.delete(media.id);
                                                      props.setAddedMedia(aux);
                                                  }}
-                                                 className="py-1"/>
+                                                 className="my-1"/>
                     })}
                 </div>
             }

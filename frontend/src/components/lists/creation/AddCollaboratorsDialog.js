@@ -5,6 +5,7 @@ import LocalDialog from "../../modal/LocalDialog";
 import {Checkbox, FormControlLabel, FormGroup, Pagination} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import Spinner from "../../animation/Spinner";
 
 export default function AddCollaboratorsDialog(props) {
     const {t} = useTranslation();
@@ -45,7 +46,7 @@ export default function AddCollaboratorsDialog(props) {
                 </LocalDialogTitle>
                 <DialogContent dividers>
                     <div className="flex flex-col">
-                        {props.searchUsers && <>
+                        {props.searchUsers ? <>
                             <FormGroup>
                                 {(props.searchUsers.data.length > 0) ?
                                     (props.searchUsers.data.map(user => {
@@ -64,7 +65,7 @@ export default function AddCollaboratorsDialog(props) {
                                                 page={props.page}
                                                 onChange={handleChange}/>}
                             </div>
-                        </>}
+                        </>: (<div className="flex justify-center"><Spinner/></div>)}
                     </div>
                 </DialogContent>
                 <DialogActions>

@@ -6,6 +6,7 @@ import {Checkbox, FormControlLabel, FormGroup, Pagination, Tab, Tabs} from "@mui
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CompactMediaCard from "../../media/CompactMediaCard";
+import Spinner from "../../animation/Spinner";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -71,7 +72,7 @@ export default function AddMediaDialog(props) {
     }, [props.alreadyInList]);
 
     const showCards = (searchMedia, page, isFilm) => {
-        return (<>{searchMedia && <>
+        return (<>{searchMedia? <>
             <FormGroup>
                 {(searchMedia.data.length > 0) ?
                     (searchMedia.data.map(media => {
@@ -89,7 +90,7 @@ export default function AddMediaDialog(props) {
                                                                     }} color="secondary"/>}
                                                  label={<CompactMediaCard canDelete={false} title={media.title}
                                                                           releaseDate={media.releaseDate.slice(0, 4)}
-                                                                          image={media.imageUrl}/>} key={media.id}
+                                                                          image={media.imageUrl} className="mb-1"/>} key={media.id}
                                                  className="py-1"/>
                     })) : (<div className="text-gray-400">
                         {t('search_no_results')}
@@ -107,7 +108,7 @@ export default function AddMediaDialog(props) {
                                         page={page}
                                         onChange={handleSeriesChange}/>)}</>}
             </div>
-        </>}
+        </>: (<div className="flex justify-center"><Spinner/></div>)}
         </>);
     }
     return (
