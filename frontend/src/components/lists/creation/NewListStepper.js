@@ -7,11 +7,14 @@ import StepConnector, {stepConnectorClasses} from "@mui/material/StepConnector";
 import Check from "@mui/icons-material/Check";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../animation/Spinner";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
 import LastStep from "./LastStep";
+import ListService from "../../../services/ListService";
+import collaborativeService from "../../../services/CollaborativeService";
+import {useNavigate} from "react-router-dom";
 
 
 const PurpleConnector = styled(StepConnector)(({theme}) => ({
@@ -88,9 +91,37 @@ export default function NewListStepper() {
     const [addedCollaborators, setAddedCollaborators] = useState(() => new Map());
     const [addedMedia, setAddedMedia] = useState(() => new Map());
 
+    const [toSubmit, setToSubmit] = useState(false);
+
+    const navigate = useNavigate();
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
+
+    const handleFinish = () => {
+        setToSubmit(true);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+
+    useEffect(() => {
+        if (toSubmit) {
+            async function createNewList() {
+                try {
+                    const listUrl = await ListService.createList(listName, listDescription, isPublic, isCollaborative);
+                    const id = listUrl.split('/').pop();
+                    const data = await ListService.getList(listUrl);
+                    await ListService.addMediaToList(data.mediaUrl, Array.from(addedMedia.keys()));
+                    await collaborativeService.addListCollaborator(data.collaboratorsUrl, Array.from(addedCollaborators.keys()));
+                    navigate('/lists/'+id);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            createNewList();
+        }
+    }, [toSubmit, listName, listDescription, isPublic, isCollaborative, addedCollaborators, addedMedia, navigate])
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -144,7 +175,7 @@ export default function NewListStepper() {
                         <button
                             className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded"
                             disabled={isValidStep === false}
-                            onClick={handleNext}>
+                            onClick={activeStep === steps.length - 1 ? handleFinish : handleNext}>
                             {activeStep === steps.length - 1 ? (t('lists_step_finish')) : (t('lists_step_next'))}
                         </button>
                     </div>

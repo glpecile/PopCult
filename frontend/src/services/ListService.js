@@ -19,12 +19,24 @@ const listService = (() => {
     }
 
     //TODO define listCreateDto
-    const createList = async () => {
-
+    const createList = async (title, description, isPublic, isCollaborative) => {
+        const response = await listApi.createList({
+            name: title,
+            description: description,
+            visible: isPublic,
+            collaborative: isCollaborative
+        });
+        console.log(response);
+        return response.headers.location;
     }
 
-    const getList = async (id) => {
-        const res = await listApi.getList(id);
+    const getList = async (url) => {
+        const res = await listApi.getList(url);
+        return res.data;
+    }
+
+    const getListById = async (id) => {
+        const res = await listApi.getListById(id);
         return res.data;
     }
 
@@ -49,8 +61,8 @@ const listService = (() => {
         return res.data;
     }
 
-    const addMediaToList = async (url) => {
-        await listApi.addMediaToList(url);
+    const addMediaToList = async (url, data) => {
+        await listApi.addMediaToList(url, data);
     }
 
     const removeMediaFromList = async (url) => {
@@ -73,6 +85,7 @@ const listService = (() => {
         getLists,
         createList,
         getList,
+        getListById,
         editList,
         deleteList,
         getMediaInList,

@@ -38,8 +38,10 @@ const collaborativeApi = (() => {
         return api.get(url);
     }
 
-    const addListCollaborator = (url) => {
-        return api.put(url);
+    const addListCollaborator = (url, data) => {
+        return api.patch(url, {
+            "collaborators": data
+        });
     }
 
     const deleteListCollaborator = (url) => {
