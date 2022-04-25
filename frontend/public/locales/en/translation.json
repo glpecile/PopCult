@@ -169,6 +169,8 @@
   "list_dialog_done": "Done",
   "list_already_collab": "Already collaborating in List:",
   "list_add_collab": "Add new collaborators",
+  "list_add_media": "Search new content to add to your list!",
+  "list_already_media": "Already in this List:",
   "search_placeholder": "Search...",
   "search_title": "Search results for: {{term}}",
   "search_no_results": "It seems there are no matching results for your search."

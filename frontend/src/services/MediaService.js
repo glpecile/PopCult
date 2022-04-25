@@ -17,7 +17,7 @@ const MediaService = (() => {
     }
 
     const getSeries = async ({page, pageSize, genres, sortType, decades, query}) => {
-        const mediaType = MediaType.SERIES;
+        // const mediaType = MediaType.SERIES;
         return await getMediaList({page, pageSize, mediaType: MediaType.SERIES, genres, sortType, decades, query})
     }
 

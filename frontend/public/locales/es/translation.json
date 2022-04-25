@@ -168,6 +168,8 @@
   "list_dialog_done": "Listo",
   "list_already_collab": "Ya colaboran en la lista:",
   "list_add_collab": "Agrega nuevos colaboradores",
+  "list_add_media": "Busca nuevo contenido para agregar a tu lista!",
+  "list_already_media": "Ya se encuentran en la lista:",
   "search_placeholder": "Buscar...",
   "search_title": "Resultados para: {{term}}",
   "search_no_results": "Parece que no hay resultados disponibles para tu búsqueda."

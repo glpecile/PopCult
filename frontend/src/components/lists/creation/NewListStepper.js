@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import Spinner from "../../animation/Spinner";
 import {useState} from "react";
 import FirstStep from "./FirstStep";
+import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
 
 
@@ -70,7 +71,7 @@ function PurpleStepIcon(props) {
     );
 }
 
-export default function NewListStepper(props) {
+export default function NewListStepper() {
     const {t} = useTranslation();
 
     const steps = [t('lists_step1'), t('lists_step2'), t('lists_step3'), t('lists_step_finish')];
@@ -84,13 +85,7 @@ export default function NewListStepper(props) {
     const [isPublic, setIsPublic] = useState(false);
 
     const [addedCollaborators, setAddedCollaborators] = useState(() => new Map());
-
-    const setCollaborative = () => {
-        setIsCollaborative(!isCollaborative);
-    }
-    const setPublic = () => {
-        setIsPublic(!isPublic);
-    }
+    const [addedMedia, setAddedMedia] = useState(() => new Map());
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -125,11 +120,11 @@ export default function NewListStepper(props) {
                         <FirstStep listName={listName} listDescription={listDescription} setListName={setListName}
                                    setListDescription={setListDescription} setState={setValidStep}/>}
                     {/*STEP 1*/}
-                    {activeStep === 1 && <div className="flex justify-center"><Spinner/></div>}
+                    {activeStep === 1 && <SecondStep addedMedia={addedMedia} setAddedMedia={setAddedMedia}/>}
                     {/*STEP 2*/}
                     {activeStep === 2 &&
-                        <ThirdStep isPublic={isPublic} setPublic={setPublic} isCollaborative={isCollaborative}
-                                   setCollaborative={setCollaborative} addedCollaborators={addedCollaborators}
+                        <ThirdStep isPublic={isPublic} setPublic={setIsPublic} isCollaborative={isCollaborative}
+                                   setCollaborative={setIsCollaborative} addedCollaborators={addedCollaborators}
                                    setAddedCollaborators={setAddedCollaborators}/>}
                     {/*STEP 3*/}
                     {activeStep === 3 && <div className="flex justify-center"><Spinner/></div>}

@@ -41,13 +41,15 @@ const ThirdStep = (props) => {
             <div className="flex justify-between">
                 {t('lists_public')}
                 <div className="justify-end">
-                    <Switch onClick={props.setPublic} color="secondary" checked={props.isPublic}/>
+                    <Switch onClick={() => props.setPublic(!props.isPublic)} color="secondary"
+                            checked={props.isPublic}/>
                 </div>
             </div>
             <div className="flex justify-between">
                 {t('lists_collaborative')}
                 <div className="justify-end">
-                    <Switch onClick={props.setCollaborative} color="secondary" checked={props.isCollaborative}/>
+                    <Switch onClick={() => props.setCollaborative(!props.isCollaborative)} color="secondary"
+                            checked={props.isCollaborative}/>
                 </div>
             </div>
             {props.isCollaborative &&
