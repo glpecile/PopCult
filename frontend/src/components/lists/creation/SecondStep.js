@@ -51,7 +51,7 @@ const SecondStep = (props) => {
                     {/*TODO esto se podria paginar con setPagination*/}
                     {Array.from(props.addedMedia.values()).map(media => {
                         return <CompactMediaCard title={media.title}
-                                                 releaseDate={media.releaseDate}
+                                                 releaseDate={media.releaseDate.slice(0,4)}
                                                  image={media.imageUrl} key={media.id}
                                                  deleteMedia={() => {
                                                      const aux = new Map(props.addedMedia);

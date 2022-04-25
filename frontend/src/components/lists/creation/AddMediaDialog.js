@@ -75,14 +75,22 @@ export default function AddMediaDialog(props) {
             <FormGroup>
                 {(searchMedia.data.length > 0) ?
                     (searchMedia.data.map(media => {
-                        return <FormControlLabel
-                            control={<Checkbox checked={isChecked(media) || false} onChange={() => {
-                                handleCheckboxChange(media);
-                            }} color="secondary"/>}
-                            label={<CompactMediaCard canDelete={false} title={media.title}
-                                                     releaseDate={media.releaseDate}
-                                                     image={media.imageUrl}/>} key={media.id}
-                            className="py-1"/>
+                        return <FormControlLabel sx={{
+                            "& .MuiFormControlLabel-root": {
+                                width: "100%",
+                            },
+                            "& .MuiFormControlLabel-label": {
+                                width: "100%",
+                            },
+                        }}
+                                                 control={<Checkbox checked={isChecked(media) || false}
+                                                                    onChange={() => {
+                                                                        handleCheckboxChange(media);
+                                                                    }} color="secondary"/>}
+                                                 label={<CompactMediaCard canDelete={false} title={media.title}
+                                                                          releaseDate={media.releaseDate.slice(0, 4)}
+                                                                          image={media.imageUrl}/>} key={media.id}
+                                                 className="py-1"/>
                     })) : (<div className="text-gray-400">
                         {t('search_no_results')}
                     </div>)}
