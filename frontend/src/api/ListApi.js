@@ -24,11 +24,21 @@ const listApi = (() => {
     }
 
     //TODO define listCreateDto
-    const createList = () => {
-        return api.post(`/lists`);
+    const createList = ({name, description, visible, collaborative}) => {
+        return api.post(`/lists`,
+            {
+                'name': name,
+                'description': description,
+                'visible': visible,
+                'collaborative': collaborative
+            });
     }
 
-    const getList = (id) => {
+    const getList = (url) => {
+     return api.get(url);
+    }
+
+    const getListById = (id) => {
         return api.get(`/lists/${id}`);
     }
 
@@ -55,8 +65,10 @@ const listApi = (() => {
         return api.get(url);
     }
 
-    const addMediaToList = (url) => {
-        return api.put(url);
+    const addMediaToList = (url, data) => {
+        return api.patch(url, {
+            "media": data
+        });
     }
 
     const removeMediaFromList = (url) => {
@@ -82,6 +94,7 @@ const listApi = (() => {
         getLists,
         createList,
         getList,
+        getListById,
         editList,
         deleteList,
         getMediaInList,

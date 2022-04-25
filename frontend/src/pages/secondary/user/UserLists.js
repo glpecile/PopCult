@@ -1,6 +1,6 @@
 import ListsCard from "../../../components/lists/ListsCard";
 import {Helmet} from "react-helmet-async";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 const DUMMY_DATA = [{
@@ -14,6 +14,11 @@ const DUMMY_DATA = [{
 const UserLists = () => {
     let {username} = useParams();
     const {t} = useTranslation();
+    const navigate = useNavigate();
+
+    const createNewList = () => {
+        navigate('/lists/new');
+    }
 
     const createListCover = (content) => {
         return (<div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
@@ -32,7 +37,7 @@ const UserLists = () => {
                     <h2 className="text-3xl fw-bolder py-2">
                         {t('user_lists_title')}
                     </h2>
-                    <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded">
+                    <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded" onClick={createNewList}>
                         {t('lists_newList')}
                     </button>
                     <div className="row py-2">

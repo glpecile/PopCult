@@ -152,5 +152,25 @@
   "report_accept_modal_body": "Esta seguro que desea aceptar este reporte?",
   "reports_lists_empty": "Parece que no hay listas reportadas en este momento",
   "reports_lists_comments_empty": "Parece que no hay comentarios de listas reportados por el momento",
-  "reports_media_comments_empty": "Parece que no hay comentario de contenido multimedia reportados en el momento"
+  "reports_media_comments_empty": "Parece que no hay comentario de contenido multimedia reportados en el momento",
+  "lists_step1": "Crea una nueva lista",
+  "lists_step2": "Agrega nuevo contenido",
+  "lists_step3": "Personaliza tu lista",
+  "lists_step_end": "Todos los pasos han sido completados - serás redirigido a tu nueva lista pronto!",
+  "lists_step_back": "Atrás",
+  "lists_step_finish": "Finalizar",
+  "lists_step_next": "Siguiente",
+  "lists_collaborative": "¿Deseas que tu lista sea colaborativa?",
+  "lists_public": "¿Deseas que tu lista sea pública?",
+  "lists_listName": "Nombre de la Lista",
+  "lists_description": "Descripción",
+
+  "list_dialog_done": "Listo",
+  "list_already_collab": "Ya colaboran en la lista:",
+  "list_add_collab": "Agrega nuevos colaboradores",
+  "list_add_media": "Busca nuevo contenido para agregar a tu lista!",
+  "list_already_media": "Ya se encuentran en la lista:",
+  "search_placeholder": "Buscar...",
+  "search_title": "Resultados para: {{term}}",
+  "search_no_results": "Parece que no hay resultados disponibles para tu búsqueda."
 }

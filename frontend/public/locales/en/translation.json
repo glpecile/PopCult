@@ -153,5 +153,25 @@
   "report_accept_modal_body": "Are you sure you want to approve this report?",
   "reports_lists_empty": "It seems there are no lists reported at the moment",
   "reports_lists_comments_empty": "It seems there are no list comments reported at the moment",
-  "reports_media_comments_empty": "It seems there are no media comments reported at the moment"
+  "reports_media_comments_empty": "It seems there are no media comments reported at the moment",
+  "lists_step1": "Create List",
+  "lists_step2": "Add New Media",
+  "lists_step3": "Personalise your List",
+  "lists_step_end": "All steps completed - you'll be redirected to your new list soon!",
+  "lists_step_back": "Back",
+  "lists_step_finish": "Finish",
+  "lists_step_next": "Next",
+  "lists_collaborative": "Do you want this list to be collaborative?",
+  "lists_public": "Do you want this list to be public?",
+  "lists_listName": "List Name",
+  "lists_description": "Description",
+
+  "list_dialog_done": "Done",
+  "list_already_collab": "Already collaborating in List:",
+  "list_add_collab": "Add new collaborators",
+  "list_add_media": "Search new content to add to your list!",
+  "list_already_media": "Already in this List:",
+  "search_placeholder": "Search...",
+  "search_title": "Search results for: {{term}}",
+  "search_no_results": "It seems there are no matching results for your search."
 }

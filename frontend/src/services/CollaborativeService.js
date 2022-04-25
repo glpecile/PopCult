@@ -35,8 +35,8 @@ const collaborativeService = (() => {
         return res.data;
     }
 
-    const addListCollaborator = async (url) => {
-        await collaborativeApi.addListCollaborator(url);
+    const addListCollaborator = async (url, data) => {
+        await collaborativeApi.addListCollaborator(url, data);
     }
 
     const deleteListCollaborator = async (url) => {
