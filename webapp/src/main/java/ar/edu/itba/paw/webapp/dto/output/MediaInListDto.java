@@ -47,6 +47,14 @@ public class MediaInListDto {
         this.id = id;
     }
 
+    public MediaType getType() {
+        return type;
+    }
+
+    public void setType(MediaType type) {
+        this.type = type;
+    }
+
     public String getTitle() {
         return title;
     }
