@@ -1,57 +1,39 @@
-import MediaSlider from "../../components/media/MediaSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-
-const DUMMY_DATA = [
-    {
-        id: 1,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdPsGJEBxBev7gKo_EMp0Pgk7Q7su_xTUxf3vo8dE9S_CiG2Z',
-        title: 'Spiderman: No Way Home',
-        releaseDate: '16/12/2021'
-    },
-    {
-        id: 2,
-        image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQr52xgKbOq-XJuwQEknttmudqatCNYwXUIg3O4k02E6eNZmPXd',
-        title: 'Clifford The Red Big Dog',
-        releaseDate: '09/12/2021'
-    },
-    {
-        id: 3,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdPsGJEBxBev7gKo_EMp0Pgk7Q7su_xTUxf3vo8dE9S_CiG2Z',
-        title: 'Spiderman: No Way Home',
-        releaseDate: '16/12/2021'
-    },
-    {
-        id: 4,
-        image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQr52xgKbOq-XJuwQEknttmudqatCNYwXUIg3O4k02E6eNZmPXd',
-        title: 'Clifford The Red Big Dog',
-        releaseDate: '09/12/2021'
-    },
-    {
-        id: 5,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdPsGJEBxBev7gKo_EMp0Pgk7Q7su_xTUxf3vo8dE9S_CiG2Z',
-        title: 'Spiderman: No Way Home',
-        releaseDate: '16/12/2021'
-    },
-    {
-        id: 6,
-        image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQr52xgKbOq-XJuwQEknttmudqatCNYwXUIg3O4k02E6eNZmPXd',
-        title: 'Clifford The Red Big Dog',
-        releaseDate: '09/12/2021'
-    },
-];
+import {useEffect, useState} from "react";
+import MediaService from "../../services/MediaService";
+import Loader from "../secondary/errors/Loader";
+import MediaSlider from "../../components/media/MediaSlider";
 
 export default function Films() {
     const {t} = useTranslation();
+
+    const [filmData, setFilmData] = useState(undefined);
+
+    useEffect(() => {
+        const getFilmData = async () => {
+            // TODO: Proper pagination
+            let data = await MediaService.getFilms({});
+            console.log(data);
+            setFilmData(data);
+        };
+        getFilmData();
+    }, []);
+
     return (
         <section>
             <Helmet>
                 <title>{t('films_title')}</title>
             </Helmet>
-            <h4 className="font-bold text-2xl pt-2">
-                {t('films_popular')}
-            </h4>
-            <MediaSlider media={DUMMY_DATA}/>
+            {
+                !filmData ? <Loader/> :
+                    <>
+                        <h4 className="font-bold text-2xl pt-2">
+                            {t('films_popular')}
+                        </h4>
+                        <MediaSlider media={filmData.data}/>
+                    </>
+            }
         </section>
     );
 }

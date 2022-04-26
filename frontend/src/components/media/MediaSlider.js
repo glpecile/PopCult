@@ -18,11 +18,14 @@ const MediaSlider = (props) => {
         return (
             <div className="px-2.5 py-3">
                 <MediaCard
-                    key={content.id} id={content.id}
-                    image={content.image} title={content.title}
-                    releaseDate={content.releaseDate}
+                    key={content.id}
+                    id={content.id}
+                    image={content.imageUrl}
+                    title={content.title}
+                    releaseDate={content.releaseDate.slice(0,4)}
                     onDragStart={handleDragStart}
                     role="presentation"
+                    type={content.type.toLowerCase()}
                 />
             </div>
         );
@@ -50,6 +53,8 @@ const MediaSlider = (props) => {
     return (
         <>
             <AliceCarousel mouseTracking
+                           animationDuration="150"
+                           infinite
                            touchTracking
                            touchMoveDefaultEvents
                            controlsStrategy="responsive"
