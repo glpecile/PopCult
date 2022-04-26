@@ -2,19 +2,16 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import LocalDialogTitle from "../../modal/LocalDialogTitle";
 import LocalDialog from "../../modal/LocalDialog";
-import {Checkbox, FormControlLabel, FormGroup, Pagination} from "@mui/material";
+import {Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../animation/Spinner";
+import PaginationComponent from "../../PaginationComponent";
 
 export default function AddCollaboratorsDialog(props) {
     const {t} = useTranslation();
 
     const [inList, setInList] = useState(props.alreadyInList);
-
-    const handleChange = (event, value) => {
-        props.setPage(value);
-    };
 
     const handleCheckboxChange = (user) => {
         if (inList.has(user.username)) {
@@ -60,12 +57,11 @@ export default function AddCollaboratorsDialog(props) {
                             </FormGroup>
                             <div className="flex justify-center">
                                 {(props.searchUsers.data.length > 0 && props.searchUsers.links.last.page > 1) &&
-                                    <Pagination count={parseInt(props.searchUsers.links.last.page)} variant="outlined"
-                                                color="secondary"
-                                                page={props.page}
-                                                onChange={handleChange}/>}
+                                    <PaginationComponent page={props.page} lastPage={props.searchUsers.links.last.page}
+                                                         setPage={props.setPage}/>
+                                }
                             </div>
-                        </>: (<div className="flex justify-center"><Spinner/></div>)}
+                        </> : (<div className="flex justify-center"><Spinner/></div>)}
                     </div>
                 </DialogContent>
                 <DialogActions>

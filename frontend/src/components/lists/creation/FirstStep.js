@@ -18,7 +18,7 @@ const FirstStep = (props) => {
         //TODO check this regex behaves weird
         let valid = /[^/><]+/.test(event.target.value) || event.target.value.length === 0;
         valid ? setListDescriptionError(false) : setListDescriptionError(true);
-        props.setListDescription(event.target.value);
+        if (valid) props.setListDescription(event.target.value);
         if (valid === false || listNameError === true || props.listName.length === 0) props.setState(false);
         else props.setState(true);
     }

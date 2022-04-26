@@ -1,0 +1,42 @@
+import {useEffect, useState} from "react";
+import CommentService from "../../services/CommentService";
+import CommentComponent from "./CommentComponent";
+
+const CommentList = (props) => {
+    const pageSize = 2;
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
+    const [comments, setComments] = useState([])
+    const [links, setLinks] = useState(undefined);
+
+
+    useEffect(() => {
+        async function getComments() {
+            const commentsList = await CommentService.getListComments({
+                url: props.commentsUrl,
+                page: page,
+                pageSize: pageSize
+            });
+            setComments(prevState => [...prevState, ...commentsList.data]);
+            setLinks(commentsList.links);
+            setMaxPage(parseInt(commentsList.links.last.page));
+        }
+
+        getComments();
+    }, [page, pageSize, props.commentsUrl]);
+
+    return (<div className="pt-1">
+        {(links) && comments.map((comment) => {
+            return <div className="pb-2" key={comment.id}><CommentComponent comment={comment} key={comment.id}/></div>;
+        })}
+        <div className="flex justify-center">
+            {page !== maxPage ? (<button
+                className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
+                onClick={() => setPage(page + 1)}>See more comments
+            </button>) : (<div className="text-base tracking-tight pl-1 text-gray-400">
+                It seems there are no more comments to load! :(
+            </div>)}
+        </div>
+    </div>);
+}
+export default CommentList;

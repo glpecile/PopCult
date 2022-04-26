@@ -24,10 +24,10 @@ const Profile = () => {
         setUserError(false);
     }, [username, loggedUsername]);
 
-    const getUser = useCallback(async () => {
+    const getUserByUrl = useCallback(async () => {
         if (username && mountedUser.current) {
             try {
-                const user = await UserService.getUser(username);
+                const user = await UserService.getUserByUrl(username);
                 setUserData(user);
             } catch (error) {
                 console.log(error);
@@ -38,11 +38,11 @@ const Profile = () => {
 
     useEffect(() => {
         mountedUser.current = true;
-        getUser();
+        getUserByUrl();
         return () => {
             mountedUser.current = false;
         }
-    }, [username, getUser])
+    }, [username, getUserByUrl])
 
     return (
         <>

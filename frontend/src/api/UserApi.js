@@ -26,7 +26,11 @@ const userApi = (() => {
             });
     }
 
-    const getUser = (username) => {
+    const getUser = ({url}) => {
+        return api.get(url);
+    }
+
+    const getUserByUrl = (username) => {
         return api.get(`/users/${username}`);
     }
 
@@ -103,6 +107,7 @@ const userApi = (() => {
     return {
         login,
         getUsers,
+        getUserByUrl,
         getUser,
         createUser,
         deleteUser,
