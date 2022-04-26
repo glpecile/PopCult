@@ -7,13 +7,13 @@ import javax.validation.constraints.Size;
 public class ListInputDto {
 
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min = 1, max = 100)
     @Pattern(regexp = "[^/><]+")
     private String name;
 
     @NotNull
-    @Size(min = 1, max = 1000)
-    @Pattern(regexp = "[^></]+")
+    @Size(max = 1000)
+    @Pattern(regexp = "[^></]*")
     private String description;
 
     @NotNull
