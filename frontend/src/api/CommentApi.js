@@ -28,8 +28,10 @@ const commentApi = (() => {
     }
 
     //TODO define commentDto
-    const createListComment = ({url}) => {
-        return api.post(url);
+    const createListComment = ({url, data}) => {
+        return api.post(url, {
+            'body': data
+        });
     }
 
     const getMediaComment = (id) => {

@@ -25,8 +25,8 @@ const commentService = (() => {
 
 
     //TODO define commentDto
-    const createListComment = async ({url}) => {
-        await commentApi.createListComment(url);
+    const createListComment = async ({url, data}) => {
+        await commentApi.createListComment({url, data});
     }
 
     const getMediaComment = async (id) => {

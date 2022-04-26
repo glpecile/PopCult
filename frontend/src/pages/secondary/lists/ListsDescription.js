@@ -6,6 +6,7 @@ import Spinner from "../../../components/animation/Spinner";
 import {Avatar, Chip} from "@mui/material";
 import CollaborativeService from "../../../services/CollaborativeService";
 import PaginationComponent from "../../../components/PaginationComponent";
+import CommentSection from "../../../components/comments/CommentSection";
 
 function ListsDescription() {
     const id = window.location.pathname.split('/')[2];
@@ -46,8 +47,6 @@ function ListsDescription() {
                     pageSize
                 });
                 setCollabInList(collabs);
-                console.log(collabs);
-
             }
 
             getListCollaborators();
@@ -89,7 +88,7 @@ function ListsDescription() {
                     </div>
                 </>) :
                 <div className="flex justify-center"><Spinner/></div>}
-            {/*    Comment section*/}
+            <CommentSection commentsUrl={list.commentsUrl}/>
         </>) : <Loader/>}
     </>);
 }
