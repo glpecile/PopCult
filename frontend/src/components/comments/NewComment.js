@@ -15,7 +15,6 @@ const NewComment = (props) => {
             await CommentService.createListComment({url: props.commentsUrl, data: comment});
             setComment("");
         }
-
         submitComment();
     }
     return (<form onSubmit={submitHandler}>

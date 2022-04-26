@@ -20,7 +20,6 @@ function ListsDescription() {
         async function getList(id) {
             const data = await ListService.getListById(id);
             setList(data);
-            console.log(data)
         }
 
 
