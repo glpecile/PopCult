@@ -2,11 +2,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import LocalDialogTitle from "../../modal/LocalDialogTitle";
 import LocalDialog from "../../modal/LocalDialog";
-import {Checkbox, FormControlLabel, FormGroup, Pagination, Tab, Tabs} from "@mui/material";
+import {Checkbox, FormControlLabel, FormGroup, Tab, Tabs} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CompactMediaCard from "../../media/CompactMediaCard";
 import Spinner from "../../animation/Spinner";
+import PaginationComponent from "../../PaginationComponent";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -41,12 +42,6 @@ export default function AddMediaDialog(props) {
     const [tabValue, setTabValue] = useState(0);
     let tabStyle = "capitalize";
 
-    const handleFilmsChange = (event, value) => {
-        props.setFilmsPage(value);
-    };
-    const handleSeriesChange = (event, value) => {
-        props.setSeriesPage(value);
-    };
     const handleState = () => {
         props.setOpenModal(false)
         props.setAlreadyInList(inList);
@@ -72,7 +67,7 @@ export default function AddMediaDialog(props) {
     }, [props.alreadyInList]);
 
     const showCards = (searchMedia, page, isFilm) => {
-        return (<>{searchMedia? <>
+        return (<>{searchMedia ? <>
             <FormGroup>
                 {(searchMedia.data.length > 0) ?
                     (searchMedia.data.map(media => {
@@ -90,7 +85,8 @@ export default function AddMediaDialog(props) {
                                                                     }} color="secondary"/>}
                                                  label={<CompactMediaCard canDelete={false} title={media.title}
                                                                           releaseDate={media.releaseDate.slice(0, 4)}
-                                                                          image={media.imageUrl} className="mb-1"/>} key={media.id}
+                                                                          image={media.imageUrl} className="mb-1"/>}
+                                                 key={media.id}
                                                  className="py-1"/>
                     })) : (<div className="text-gray-400">
                         {t('search_no_results')}
@@ -99,16 +95,12 @@ export default function AddMediaDialog(props) {
             <div className="flex justify-center pt-2">
                 {(searchMedia.data.length > 0 && searchMedia.links.last.page > 1) && <> {
                     isFilm === true ?
-                        (<Pagination count={parseInt(searchMedia.links.last.page)} variant="outlined"
-                                     color="secondary"
-                                     page={page}
-                                     onChange={handleFilmsChange}/>) : (
-                            <Pagination count={parseInt(searchMedia.links.last.page)} variant="outlined"
-                                        color="secondary"
-                                        page={page}
-                                        onChange={handleSeriesChange}/>)}</>}
+                        (<PaginationComponent page={page} lastPage={searchMedia.links.last.page}
+                                              setPage={props.setFilmsPage}/>) : (
+                            <PaginationComponent page={page} lastPage={searchMedia.links.last.page}
+                                                 setPage={props.setSeriesPage}/>)}</>}
             </div>
-        </>: (<div className="flex justify-center"><Spinner/></div>)}
+        </> : (<div className="flex justify-center"><Spinner/></div>)}
         </>);
     }
     return (

@@ -55,7 +55,8 @@ const LastStep = (list) => {
                     return <CompactMediaCard canDelete={false} title={media.title}
                                              releaseDate={media.releaseDate.slice(0, 4)}
                                              image={media.imageUrl}
-                                             className="mb-1"/>
+                                             className="mb-1"
+                                             key={media.id}/>
                 })}
             </div>}
             {list.media.length === 0 &&

@@ -3,8 +3,9 @@ import ListService from "../../../services/ListService";
 import Loader from "../errors/Loader";
 import MediaInList from "../../../components/lists/MediaInList";
 import Spinner from "../../../components/animation/Spinner";
-import {Avatar, Chip, Pagination} from "@mui/material";
+import {Avatar, Chip} from "@mui/material";
 import CollaborativeService from "../../../services/CollaborativeService";
+import PaginationComponent from "../../../components/PaginationComponent";
 
 function ListsDescription() {
     const id = window.location.pathname.split('/')[2];
@@ -39,7 +40,11 @@ function ListsDescription() {
     useEffect(() => {
         if (list) {
             async function getListCollaborators() {
-                const collabs = await CollaborativeService.getListCollaborators({url: list.collaboratorsUrl, page, pageSize});
+                const collabs = await CollaborativeService.getListCollaborators({
+                    url: list.collaboratorsUrl,
+                    page,
+                    pageSize
+                });
                 setCollabInList(collabs);
                 console.log(collabs);
 
@@ -48,10 +53,6 @@ function ListsDescription() {
             getListCollaborators();
         }
     }, [list, page, pageSize])
-
-    const handleChange = (event, value) => {
-        setPage(value);
-    };
 
     return (<>
         {list ? (<>
@@ -83,10 +84,8 @@ function ListsDescription() {
                     <MediaInList media={mediaInlist.data}/>
                     <div className="flex justify-center">
                         {(mediaInlist.data.length > 0 && mediaInlist.links.last.page > 1) &&
-                            <Pagination count={parseInt(mediaInlist.links.last.page)} variant="outlined"
-                                        color="secondary"
-                                        page={page}
-                                        onChange={handleChange}/>}
+                            <PaginationComponent page={page} lastPage={mediaInlist.links.last.page}
+                                                 setPage={setPage}/>}
                     </div>
                 </>) :
                 <div className="flex justify-center"><Spinner/></div>}
