@@ -8,7 +8,7 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import {IconButton, Tooltip} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
-const MediaOptions = () => {
+const MediaOptions = (props) => {
     const [isLiked, setLiked] = useState(false);
     const [isWatched, setWatched] = useState(false);
     const [isInWatchlist, setInWatchlist] = useState(false);

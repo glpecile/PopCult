@@ -102,7 +102,7 @@ export default function Login() {
 
                 {/* Password */}
                 <IconButton onClick={togglePassword} className="absolute top-28 my-3.5 right-0.5">
-                    {passwordShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                 </IconButton>
                 <label className="py-2 text-semibold w-full">
                     {t('login_password')}
@@ -113,11 +113,14 @@ export default function Login() {
 
                 {/* Remember me */}
                 <div className="flex py-2.5 justify-start">
-                    <input className="shadow-sm mt-1.5 checked:bg-purple-500" type="checkbox"
-                           defaultChecked={enteredRememberMe}
-                           onChange={RememberMeChangeHandler}/>
-                    <label className="text-semibold pl-1.5">
-                        {t('login_remember_me')}
+                    <label className="space-x-2 cursor-pointer">
+                        <input className="shadow-sm mb-0.5 checked:bg-purple-500"
+                               type="checkbox"
+                               defaultChecked={enteredRememberMe}
+                               onChange={RememberMeChangeHandler}/>
+                        <span className="text-semibold">
+                            {t('login_remember_me')}
+                        </span>
                     </label>
                 </div>
 

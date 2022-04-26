@@ -17,8 +17,8 @@ const MediaService = (() => {
     }
 
     const getSeries = async ({page, pageSize, genres, sortType, decades, query}) => {
-        // const mediaType = MediaType.SERIES;
-        return await getMediaList({page, pageSize, mediaType: MediaType.SERIES, genres, sortType, decades, query})
+        const mediaType = MediaType.SERIES;
+        return await getMediaList({page, pageSize, mediaType: mediaType, genres, sortType, decades, query})
     }
 
     const getMedia = async (id) => {
@@ -33,7 +33,8 @@ const MediaService = (() => {
         return {links, data};
     }
 
-    const getStaffMedia = async ({url, page, pageSize, staffRole}) => {
+    // Devuelve la media de un staff en particular.
+    const getMediaFromStaff = async ({url, page, pageSize, staffRole}) => {
         const res = await mediaApi.getGenreMedia({url, page, pageSize, staffRole});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
@@ -41,11 +42,11 @@ const MediaService = (() => {
     }
 
     const getDirectorMedia = async ({url, page, pageSize}) => {
-        return await getStaffMedia({url, page, pageSize, staffRole: StaffRole.DIRECTOR});
+        return await getMediaFromStaff({url, page, pageSize, staffRole: StaffRole.DIRECTOR});
     }
 
     const getActorMedia = async ({url, page, pageSize}) => {
-        return await getStaffMedia({url, page, pageSize, staffRole: StaffRole.ACTOR});
+        return await getMediaFromStaff({url, page, pageSize, staffRole: StaffRole.ACTOR});
     }
 
     const getStudioMedia = async ({url, page, pageSize}) => {
@@ -61,7 +62,7 @@ const MediaService = (() => {
         getSeries,
         getMedia,
         getGenreMedia,
-        getStaffMedia,
+        getMediaFromStaff: getMediaFromStaff,
         getDirectorMedia,
         getActorMedia,
         getStudioMedia
