@@ -85,10 +85,6 @@ public class AccessControl {
 
     @Transactional(readOnly = true)
     public boolean checkListOwnerCollaboratorOrPublic(HttpServletRequest request, int listId) {
-        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
-        if (mediaList == null || mediaList.getVisible()) {
-            return true; // Jersey will throw 404 Response if null, else returns the list correctly
-        }
         final UserDetails userDetails = getUserDetailsFromSecurityContext();
         if (userDetails == null) {
             return false;
@@ -96,6 +92,10 @@ public class AccessControl {
         final User user = userService.getByUsername(userDetails.getUsername()).orElse(null);
         if (user == null) {
             return false;
+        }
+        final MediaList mediaList = listsService.getMediaListById(listId).orElse(null);
+        if (mediaList == null || mediaList.getVisible()) {
+            return true; // Jersey will throw 404 Response if null, else returns the list correctly
         }
         return listsService.canEditList(user, mediaList);
     }
