@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import UserService from "../../services/UserService";
 import {Link} from "react-router-dom";
+import {ListItem} from "@mui/material";
 
 const CommentComponent = (props) => {
     const [user, setUser] = useState(undefined);
@@ -23,7 +24,7 @@ const CommentComponent = (props) => {
 
     return (
         <>{(comment && user) &&
-            <div className="p-1 ring-2 ring-gray-200 bg-white rounded-lg flex flex-wrap flex-col">
+            <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex flex-wrap flex-col">
                 <div className="grid grid-cols-12 gap-2">
                     <div><img className="inline-block object-cover rounded-full" alt="profile_image"
                               src={user.imageUrl}/>
@@ -45,7 +46,7 @@ const CommentComponent = (props) => {
                     </div>
 
                 </div>
-            </div>}</>
+            </ListItem>}</>
     );
 }
 export default CommentComponent;

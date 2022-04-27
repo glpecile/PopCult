@@ -1,6 +1,9 @@
 import {useEffect, useState} from "react";
 import CommentService from "../../services/CommentService";
 import CommentComponent from "./CommentComponent";
+import {TransitionGroup} from 'react-transition-group';
+import Collapse from "@mui/material/Collapse";
+import {List} from "@mui/material";
 
 const CommentList = (props) => {
     const pageSize = 2;
@@ -26,9 +29,13 @@ const CommentList = (props) => {
     }, [page, pageSize, props.commentsUrl]);
 
     return (<div className="pt-1">
-        {(links) && comments.map((comment) => {
-            return <div className="pb-2" key={comment.id}><CommentComponent comment={comment} key={comment.id}/></div>;
-        })}
+        {(links) &&
+            <List>
+                {comments.map((comment) => {
+                    return <CommentComponent comment={comment}
+                                             key={comment.id}/>;
+                })}
+            </List>}
         <div className="flex justify-center">
             {page !== maxPage ? (<button
                 className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
