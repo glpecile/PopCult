@@ -24,8 +24,8 @@ const UserService = (function () {
         return await getUsers({page, pageSize, userRole: null, banned: true});
     }
 
-    const getUserByUrl = async (username) => {
-        const res = await userApi.getUserByUrl(username);
+    const getUserByUsername = async (username) => {
+        const res = await userApi.getUserByUsername(username);
         return res.data;
     }
 
@@ -100,7 +100,7 @@ const UserService = (function () {
         getModerators,
         getBannedUsers,
         getUser,
-        getUserByUrl,
+        getUserByUsername,
         createUser,
         deleteUser,
         editUser,

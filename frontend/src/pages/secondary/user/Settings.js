@@ -24,10 +24,10 @@ const Settings = () => {
     const navigate = useNavigate();
 
 
-    const getUserByUrl = useCallback(async () => {
+    const getUserByUsername = useCallback(async () => {
         if (username) {
             try {
-                const user = await UserService.getUserByUrl(username);
+                const user = await UserService.getUserByUsername(username);
                 setUserData(user);
                 console.log(user);
             } catch (error) {
@@ -39,11 +39,11 @@ const Settings = () => {
 
     useEffect(() => {
         mountedUser.current = true;
-        getUserByUrl();
+        getUserByUsername();
         return () => {
             mountedUser.current = false;
         }
-    }, [username, getUserByUrl])
+    }, [username, getUserByUsername])
 
 
     const editUser = useCallback(async () => {

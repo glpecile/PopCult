@@ -13,12 +13,12 @@ const CommentComponent = (props) => {
 
     useEffect(() => {
         if (comment) {
-            async function getUserByUrl() {
+            async function getUserByUsername() {
                 const data = await UserService.getUser(comment.userUrl);
                 setUser(data);
             }
 
-            getUserByUrl();
+            getUserByUsername();
         }
     }, [comment]);
 
