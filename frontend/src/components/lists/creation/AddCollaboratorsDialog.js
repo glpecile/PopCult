@@ -35,9 +35,19 @@ export default function AddCollaboratorsDialog(props) {
         return inList.has(user.username);
 
     }
+    const isOwner = (user) => {
+        return user.username.localeCompare(props.ownerUsername) === 0;
+    }
+
+    const handleCollaboratorsChip = (user) => {
+        return <>{isOwner(user) ? <Checkbox checked={true} disabled color="secondary"/> : <Checkbox checked={isChecked(user) || false} onChange={() => {
+            handleCheckboxChange(user);
+        }} color="secondary"/>}</>;
+    }
+
     return (
         <div>
-            <LocalDialog onClose={handleState} aria-labelledby="customized-dialog-title" open={props.isOpened}>
+            <LocalDialog fullWidth onClose={handleState} aria-labelledby="customized-dialog-title" open={props.isOpened}>
                 <LocalDialogTitle id="customized-dialog-title" onClose={handleState}>
                     {t('search_title', {term: props.searchTerm})}
                 </LocalDialogTitle>
@@ -48,9 +58,8 @@ export default function AddCollaboratorsDialog(props) {
                                 {(props.searchUsers.data.length > 0) ?
                                     (props.searchUsers.data.map(user => {
                                         return <FormControlLabel
-                                            control={<Checkbox checked={isChecked(user) || false} onChange={() => {
-                                                handleCheckboxChange(user);
-                                            }} color="secondary"/>} label={user.username} key={user.username}/>
+                                            control={handleCollaboratorsChip(user)} label={user.username}
+                                            key={user.username}/>
                                     })) : (<div className="text-gray-400">
                                         {t('search_no_results')}
                                     </div>)}

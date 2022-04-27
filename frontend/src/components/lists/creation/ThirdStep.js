@@ -31,6 +31,7 @@ const ThirdStep = (props) => {
 
     }, [toSearch, page]);
 
+
     const getSearchTerm = (searchTerm) => {
         if (searchTerm.localeCompare(toSearch) === 0 && toSearch.length !== 0) setOpenModal(true);
         setToSearch(searchTerm);
@@ -52,18 +53,18 @@ const ThirdStep = (props) => {
                             checked={props.isCollaborative}/>
                 </div>
             </div>
-            {props.isCollaborative &&
+            {(props.isCollaborative) &&
                 <div>
                     <Divider className="text-violet-500"/>
                     <div className="pt-3 text-semibold w-full flex flex-col">
                         {t('list_add_collab')}
                         <NewListSearchInput getSearchTerm={getSearchTerm}/>
                     </div>
+                    <div className="flex flex-col">
+                        {t('list_already_collab')}
+                    </div>
                     {props.addedCollaborators.size > 0 &&
                         <div>
-                            <div className="flex flex-col">
-                                {t('list_already_collab')}
-                            </div>
                             {Array.from(props.addedCollaborators.values()).map(user => {
                                 return <Chip
                                     label={user.username}
@@ -80,7 +81,7 @@ const ThirdStep = (props) => {
                         </div>
                     }
                     <AddCollaboratorsDialog isOpened={openModal} setOpenModal={setOpenModal} searchUsers={searchUsers}
-                                            alreadyInList={props.addedCollaborators}
+                                            alreadyInList={props.addedCollaborators} ownerUsername={props.ownerUsername}
                                             setAlreadyInList={props.setAddedCollaborators} setPage={setPage} page={page}
                                             searchTerm={toSearch}/>
                 </div>}

@@ -105,7 +105,7 @@ export default function AddMediaDialog(props) {
     }
     return (
         <div>
-            <LocalDialog onClose={handleState} aria-labelledby="customized-dialog-title" open={props.isOpened}>
+            <LocalDialog fullWidth onClose={handleState} aria-labelledby="customized-dialog-title" open={props.isOpened}>
                 <LocalDialogTitle id="customized-dialog-title" onClose={handleState}>
                     {t('search_title', {term: props.searchTerm})}
                 </LocalDialogTitle>

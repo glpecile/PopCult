@@ -7,7 +7,7 @@ import StepConnector, {stepConnectorClasses} from "@mui/material/StepConnector";
 import Check from "@mui/icons-material/Check";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../animation/Spinner";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import ThirdStep from "./ThirdStep";
@@ -15,6 +15,7 @@ import LastStep from "./LastStep";
 import ListService from "../../../services/ListService";
 import collaborativeService from "../../../services/CollaborativeService";
 import {useNavigate} from "react-router-dom";
+import AuthContext from "../../../store/AuthContext";
 
 
 const PurpleConnector = styled(StepConnector)(({theme}) => ({
@@ -78,6 +79,8 @@ function PurpleStepIcon(props) {
 export default function NewListStepper() {
     const {t} = useTranslation();
 
+    const username = useContext(AuthContext).username;
+
     const steps = [t('lists_step1'), t('lists_step2'), t('lists_step3'), t('lists_step_finish')];
     const [activeStep, setActiveStep] = useState(0);
     const [isValidStep, setValidStep] = useState(false);
@@ -113,7 +116,7 @@ export default function NewListStepper() {
                     const data = await ListService.getList(listUrl);
                     await ListService.addMediaToList(data.mediaUrl, Array.from(addedMedia.keys()));
                     await collaborativeService.addListCollaborator(data.collaboratorsUrl, Array.from(addedCollaborators.keys()));
-                    navigate('/lists/'+id);
+                    navigate('/lists/' + id);
                 } catch (error) {
                     console.log(error);
                 }
@@ -157,7 +160,7 @@ export default function NewListStepper() {
                     {activeStep === 2 &&
                         <ThirdStep isPublic={isPublic} setPublic={setIsPublic} isCollaborative={isCollaborative}
                                    setCollaborative={setIsCollaborative} addedCollaborators={addedCollaborators}
-                                   setAddedCollaborators={setAddedCollaborators}/>}
+                                   setAddedCollaborators={setAddedCollaborators} ownerUsername={username}/>}
                     {/*STEP 3*/}
                     {activeStep === 3 && <LastStep name={listName} description={listDescription} isPublic={isPublic}
                                                    isCollaborative={isCollaborative}
