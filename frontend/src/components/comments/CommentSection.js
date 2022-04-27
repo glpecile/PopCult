@@ -1,6 +1,5 @@
 import CommentList from "./CommentList";
 import NewComment from "./NewComment";
-import {useState} from "react";
 
 const CommentSection = (props) => {
     return (

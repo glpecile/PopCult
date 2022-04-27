@@ -1,8 +1,6 @@
 import {useEffect, useState} from "react";
 import CommentService from "../../services/CommentService";
 import CommentComponent from "./CommentComponent";
-import {TransitionGroup} from 'react-transition-group';
-import Collapse from "@mui/material/Collapse";
 import {List} from "@mui/material";
 
 const CommentList = (props) => {
