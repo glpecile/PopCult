@@ -19,11 +19,7 @@ const LastStep = (list) => {
                 <h2 className="text-xl fw-bolder">
                     {list.name}
                 </h2>
-                {/*    report and favorite buttons */}
             </div>
-            {/*    list author and forking info*/}
-            {/*    forked from*/}
-            {/*amount of forks*/}
             <p className="font-thin text-base text-justify max-w-full break-words">
                 {list.description}
             </p>
@@ -56,7 +52,8 @@ const LastStep = (list) => {
                                              releaseDate={media.releaseDate.slice(0, 4)}
                                              image={media.imageUrl}
                                              className="mb-1"
-                                             key={media.id}/>
+                                             key={media.id}
+                                             />
                 })}
             </div>}
             {list.media.length === 0 &&

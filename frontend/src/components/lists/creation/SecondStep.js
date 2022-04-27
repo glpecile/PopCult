@@ -53,6 +53,7 @@ const SecondStep = (props) => {
                         return <CompactMediaCard title={media.title}
                                                  releaseDate={media.releaseDate.slice(0,4)}
                                                  image={media.imageUrl} key={media.id}
+                                                 canDelete={true}
                                                  deleteMedia={() => {
                                                      const aux = new Map(props.addedMedia);
                                                      aux.delete(media.id);

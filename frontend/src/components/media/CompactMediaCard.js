@@ -13,7 +13,7 @@ const CompactMediaCard = (props) => {
                     )
                 </h4>
             </div>
-            {(props.canDelete || true) && <button onClick={props.deleteMedia}>
+            {(props.canDelete) && <button onClick={props.deleteMedia}>
                 <CloseIcon className="flex justify-end hover:text-red-400"></CloseIcon>
             </button>}
         </div>
