@@ -74,8 +74,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String ACCESS_CONTROL_CHECK_LIST_OWNER = "@accessControl.checkListOwner(request, #id)";
     // list(id) does not belong to authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_NOT_OWNER = "@accessControl.checkListNotOwner(request, #id)";
-    //  list(id) is public or belongs to authenticated user:
+    //  list(id) is public or belongs to authenticated user or is collaborator:
     private static final String ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC = "@accessControl.checkListOwnerCollaboratorOrPublic(request, #id)";
+    // user must be authenticated and list(id) is public or belongs to authenticated user or is collaborator:
+    private static final String ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC = "@accessControl.checkAuthAndListOwnerCollaboratorOrPublic(request, #id)";
     // list(id) is editable by authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_COLLABORATOR = "@accessControl.checkListCollaborator(request, #id)";
     // collabRequest(id) is associated to a list that belong to authenticated user:
@@ -201,7 +203,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/lists")
                     .authenticated()
                 .antMatchers(HttpMethod.POST, "/lists/{id}/comments")
-                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
+                    .access(ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
                 .antMatchers(HttpMethod.PATCH, "/lists/{id}/collaborators")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
                 .antMatchers(HttpMethod.DELETE, "/lists/{id}", "/lists/{id}/collaborators/{username}")
