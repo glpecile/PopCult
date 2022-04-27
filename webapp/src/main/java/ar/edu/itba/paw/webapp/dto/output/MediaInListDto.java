@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
+import ar.edu.itba.paw.models.media.MediaType;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class MediaInListDto {
 
     private int id;
+    private MediaType type;
     private String title;
     private LocalDate releaseDate;
 
@@ -22,6 +24,7 @@ public class MediaInListDto {
     public static MediaInListDto fromMedia(UriInfo url, MediaList mediaList, Media media) {
         MediaInListDto mediaInListDto = new MediaInListDto();
         mediaInListDto.id = media.getMediaId();
+        mediaInListDto.type = media.getType();
         mediaInListDto.title = media.getTitle();
         mediaInListDto.releaseDate = media.getReleaseDate().toLocalDate();
 
@@ -42,6 +45,14 @@ public class MediaInListDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public MediaType getType() {
+        return type;
+    }
+
+    public void setType(MediaType type) {
+        this.type = type;
     }
 
     public String getTitle() {
