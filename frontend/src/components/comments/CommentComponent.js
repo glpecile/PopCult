@@ -25,8 +25,8 @@ const CommentComponent = (props) => {
     return (
         <>{(comment && user) &&
             <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex flex-wrap flex-col">
-                <div className="grid grid-cols-12 grid-rows-3 gap-2">
-                    <div className="row-span-2"><img className="inline-block object-cover rounded-full" alt="profile_image"
+                <div className="grid grid-cols-12 gap-2">
+                    <div><img className="inline-block object-cover rounded-full" alt="profile_image"
                               src={user.imageUrl}/>
                     </div>
                     <div className="col-span-10 flex flex-row items-center text-lg">
@@ -40,7 +40,8 @@ const CommentComponent = (props) => {
                         </div>
                     </div>
                     <div>x</div>
-                    <div className="col-span-11 row-span-2 flex items-center">
+                    <div/>
+                    <div className="col-span-11 flex items-center lg:pb-2">
                         <div className="m-0 max-w-full break-words"> {comment.commentBody} </div>
                     </div>
 
