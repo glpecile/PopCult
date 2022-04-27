@@ -127,7 +127,7 @@ const Reports = () => {
                   indicatorColor="secondary"
                   aria-label="tabs">
                 <Tab className={tabStyle} label={t('reports_list')} {...a11yProps(0)}/>
-                <Tab className={tabStyle} label={t('reports_list_comments')} {...a11yProps(1)}/>
+                <Tab className={tabStyle} label={t('reports_lists_comments')} {...a11yProps(1)}/>
                 <Tab className={tabStyle} label={t('reports_media_comments')} {...a11yProps(2)}/>
             </Tabs>
         </div>

@@ -133,7 +133,7 @@ export default function AddMediaDialog(props) {
                 <DialogActions>
                     <button autoFocus onClick={handleState}
                             className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded">
-                        {t('list_dialog_done')}
+                        {t('lists_dialog_done')}
                     </button>
                 </DialogActions>
             </LocalDialog>

@@ -41,12 +41,12 @@ const SecondStep = (props) => {
 
     return (<>
         <div className="px-5 pt-3 my-3 space-y-2 text-semibold w-full">
-            {t('list_add_media')}
+            {t('lists_add_media')}
             <NewListSearchInput getSearchTerm={getSearchTerm}/>
             {props.addedMedia.size > 0 &&
                 <div>
                     <div className="flex flex-col">
-                        {t('list_already_media')}
+                        {t('lists_already_media')}
                     </div>
                     {/*TODO esto se podria paginar con setPagination*/}
                     {Array.from(props.addedMedia.values()).map(media => {

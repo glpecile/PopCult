@@ -6,13 +6,14 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const LastStep = (list) => {
     const {t} = useTranslation();
+    const isPublic = t('lists_isPublic');
+    const isCollaborative = t('lists_isCollaborative');
 
     return (
         <div className="px-5 pt-3 my-3 space-y-2 text-semibold w-full">
             <div className="py-1">
                 <CheckCircleOutlineIcon className="text-violet-500 mb-1 mr-1"/>
-                Almost Ready!
-                Please, verify your new list data before proceeding!
+                {t('lists_verify')}
             </div>
             <Divider className="text-violet-500"/>
             <div className="flex flex-wrap pt-1">
@@ -24,13 +25,13 @@ const LastStep = (list) => {
                 {list.description}
             </p>
             <div className="flex justify-between pt-1 px-2">
-                <FormControlLabel control={<Checkbox checked={list.isPublic} color="secondary"/>} label={"Is Public"}/>
+                <FormControlLabel control={<Checkbox checked={list.isPublic} color="secondary"/>} label={isPublic}/>
                 <FormControlLabel control={<Checkbox checked={list.isCollaborative} color="secondary"/>}
-                                  label={"Is Collaborative"}/>
+                                  label={isCollaborative}/>
             </div>
             {list.collaborators.length > 0 ? <div>
                 <div className="flex flex-col py-1">
-                    {t('list_already_collab')}
+                    {t('lists_already_collab')}
                 </div>
                 {list.collaborators.map(user => {
                     return <Chip
@@ -42,10 +43,10 @@ const LastStep = (list) => {
                 })}
             </div> : <>{list.isCollaborative &&
                 <div className="font-thin text-base text-justify max-w-full break-words"><CloseIcon
-                    className="text-violet-500 mb-1"/>No collaborators in this list</div>}</>}
+                    className="text-violet-500 mb-1"/>{t('lists_noCollaborators')}</div>}</>}
             {list.media.length > 0 && <div>
                 <div className="flex flex-col py-1">
-                    {t('list_already_media')}
+                    {t('lists_already_media')}
                 </div>
                 {list.media.map(media => {
                     return <CompactMediaCard canDelete={false} title={media.title}
@@ -53,12 +54,12 @@ const LastStep = (list) => {
                                              image={media.imageUrl}
                                              className="mb-1"
                                              key={media.id}
-                                             />
+                    />
                 })}
             </div>}
             {list.media.length === 0 &&
                 <div className="font-thin text-base text-justify max-w-full break-words"><CloseIcon
-                    className="text-violet-500 mb-1"/>No media in this list</div>}
+                    className="text-violet-500 mb-1"/>{t('lists_noMedia')}</div>}
         </div>);
 }
 export default LastStep;
