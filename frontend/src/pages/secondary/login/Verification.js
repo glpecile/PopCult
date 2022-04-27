@@ -6,7 +6,6 @@ import jwtDecode from "jwt-decode";
 
 const Verification = () => {
     const [successfulVerification, setSuccessfulVerification] = useState(false);
-    const [expiredToken, setExpiredToken] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const token = query.get('token');
     const authContext = useContext(AuthContext);
@@ -14,7 +13,6 @@ const Verification = () => {
     const verifyAccount = useCallback(async (token) => {
         try {
             const key = await UserService.verifyUser({token})
-            setExpiredToken(false);
             setSuccessfulVerification(true);
             authContext.onLogin(key, jwtDecode(key).sub);
             sessionStorage.setItem("userAuthToken", JSON.stringify(key));
@@ -24,7 +22,7 @@ const Verification = () => {
     }, [authContext]);
 
     useEffect(() => {
-        console.log("token "+token);
+        console.log("token " + token);
         if (token !== null && token.length !== 0) {
             verifyAccount(token);
         }
