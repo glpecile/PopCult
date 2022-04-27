@@ -19,7 +19,7 @@ const CommentList = (props) => {
             });
             setComments(prevState => [...prevState, ...commentsList.data]);
             setLinks(commentsList.links);
-            setMaxPage(parseInt(commentsList.links.last.page));
+            setMaxPage(parseInt(commentsList.links.last.page) || 1);
         }
 
         getComments();
