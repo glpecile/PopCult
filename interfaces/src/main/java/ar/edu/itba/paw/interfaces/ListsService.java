@@ -33,13 +33,17 @@ public interface ListsService {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd);
 
+    void manageMedia(MediaList mediaList, List<Media> mediaToAdd, List<Media> mediaToRemove);
+
     void addToMediaList(MediaList mediaList, Media media);
 
     boolean mediaAlreadyInList(MediaList mediaList, Media media);
 
-    void addToMediaList(MediaList mediaList, List<Media> medias);
+    void addToMediaList(MediaList mediaList, List<Media> media);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
+
+    void deleteMediaFromList(MediaList mediaList, List<Media> media);
 
     void deleteList(MediaList mediaList);
 

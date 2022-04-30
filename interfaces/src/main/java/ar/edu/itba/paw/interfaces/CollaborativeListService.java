@@ -24,10 +24,13 @@ public interface CollaborativeListService {
 
     void rejectRequest(Request request);
 
+    void manageCollaborators(MediaList mediaList, List<User> usersToAdd, List<User> usersToRemove);
+
     void addCollaborator(MediaList mediaList, User user);
 
     void deleteCollaborator(Request request);
 
     void addCollaborators(MediaList mediaList, List<User> users);
 
+    void deleteCollaborators(MediaList mediaList, List<User> users);
 }

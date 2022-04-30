@@ -27,4 +27,5 @@ public interface CollaborativeListsDao {
 
     void addCollaborators(MediaList mediaList, List<User> users);
 
+    void deleteCollaborators(MediaList mediaList, List<User> users);
 }

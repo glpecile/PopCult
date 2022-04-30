@@ -291,10 +291,8 @@ public class ListsHibernateDao implements ListsDao {
     }
 
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias) {
-        for (Media media : medias) {
-            addToMediaList(mediaList, media);
-        }
+    public void addToMediaList(MediaList mediaList, List<Media> media) {
+        media.forEach(m -> addToMediaList(mediaList, m));
     }
 
     @Override
@@ -303,6 +301,11 @@ public class ListsHibernateDao implements ListsDao {
                 .setParameter("mediaId", media.getMediaId())
                 .setParameter("mediaListId", mediaList.getMediaListId())
                 .executeUpdate();
+    }
+
+    @Override
+    public void deleteMediaFromList(MediaList mediaList, List<Media> media) {
+        media.forEach(m -> deleteMediaFromList(mediaList, m));
     }
 
     @Override

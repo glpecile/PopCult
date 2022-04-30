@@ -34,6 +34,7 @@ import javax.ws.rs.core.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("lists")
 @Component
@@ -171,14 +172,16 @@ public class ListController {
     @Path("/{listId}/media")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response addMediaToList(@PathParam("listId") int listId,
-                                   @Valid @NotEmptyBody AddMediaDto addMediaDto) {
+    public Response manageMedia(@PathParam("listId") int listId,
+                                @Valid @NotEmptyBody PatchMediaInListDto patchMediaInListDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        final List<Media> media = mediaService.getById(addMediaDto.getMedia());
+        final List<Media> mediaToAdd = mediaService.getById(patchMediaInListDto.getAdd());
+        final List<Media> mediaToRemove = mediaService.getById(patchMediaInListDto.getRemove());
 
-        listsService.addToMediaList(mediaList, media);
+        listsService.manageMedia(mediaList, mediaToAdd, mediaToRemove);
 
-        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, addMediaDto.getMedia(), listId);
+        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, mediaToAdd.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /lists/{}/media: media {} removed from list {}.", listId, mediaToRemove.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
         return Response.noContent().build();
     }
 
@@ -300,14 +303,16 @@ public class ListController {
     @Path("/{listId}/collaborators")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response addCollaboratorsToList(@PathParam("listId") int listId,
-                                           @Valid @NotEmptyBody AddCollaboratorsDto addCollaboratorsDto) {
+    public Response manageCollaborators(@PathParam("listId") int listId,
+                                        @Valid @NotEmptyBody PatchCollaboratorsDto patchCollaboratorsDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
-        List<User> users = userService.getByUsernames(addCollaboratorsDto.getCollaborators());
+        List<User> usersToAdd = userService.getByUsernames(patchCollaboratorsDto.getAdd());
+        List<User> usersToRemove = userService.getByUsernames(patchCollaboratorsDto.getRemove());
 
-        collaborativeListService.addCollaborators(mediaList, users);
+        collaborativeListService.manageCollaborators(mediaList, usersToAdd, usersToRemove);
 
-        LOGGER.info("PATCH /lists/{}/collaborators: users {} added to list {} as collaborators.", listId, addCollaboratorsDto.getCollaborators(), listId);
+        LOGGER.info("PATCH /lists/{}/collaborators: users {} added to list {} as collaborators.", listId, usersToAdd.stream().map(User::getUsername).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /lists/{}/collaborators: users {} removed from list {} as collaborators.", listId, usersToRemove.stream().map(User::getUsername).collect(Collectors.toList()), listId);
         return Response.noContent().build();
     }
 

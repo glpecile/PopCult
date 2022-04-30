@@ -127,8 +127,11 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public void addCollaborators(MediaList mediaList, List<User> users) {
-        for (User user : users) {
-            addCollaborator(mediaList, user);
-        }
+        users.forEach(u -> addCollaborator(mediaList, u));
+    }
+
+    @Override
+    public void deleteCollaborators(MediaList mediaList, List<User> users) {
+        users.forEach(u -> getUserListCollabRequest(mediaList, u).ifPresent(this::rejectRequest));
     }
 }

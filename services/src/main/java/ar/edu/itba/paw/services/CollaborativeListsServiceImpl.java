@@ -73,6 +73,13 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
+    public void manageCollaborators(MediaList mediaList, List<User> usersToAdd, List<User> usersToRemove) {
+        addCollaborators(mediaList, usersToAdd);
+        deleteCollaborators(mediaList, usersToRemove);
+    }
+
+    @Transactional
+    @Override
     public void addCollaborator(MediaList mediaList, User user) {
         collaborativeListsDao.addCollaborator(mediaList, user);
     }
@@ -87,5 +94,10 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
     @Override
     public void addCollaborators(MediaList mediaList, List<User> users){
         collaborativeListsDao.addCollaborators(mediaList, users);
+    }
+
+    @Override
+    public void deleteCollaborators(MediaList mediaList, List<User> users) {
+        collaborativeListsDao.deleteCollaborators(mediaList, users);
     }
 }

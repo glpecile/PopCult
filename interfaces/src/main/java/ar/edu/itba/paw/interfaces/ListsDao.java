@@ -35,9 +35,11 @@ public interface ListsDao {
 
     boolean mediaAlreadyInList(MediaList mediaList, Media media);
 
-    void addToMediaList(MediaList mediaList, List<Media> medias);
+    void addToMediaList(MediaList mediaList, List<Media> media);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
+
+    void deleteMediaFromList(MediaList mediaList, List<Media> media);
 
     void deleteList(MediaList mediaList);
 

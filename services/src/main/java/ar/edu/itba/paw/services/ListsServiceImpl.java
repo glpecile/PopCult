@@ -91,6 +91,13 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
+    public void manageMedia(MediaList mediaList, List<Media> mediaToAdd, List<Media> mediaToRemove) {
+        addToMediaList(mediaList, mediaToAdd);
+        deleteMediaFromList(mediaList, mediaToRemove);
+    }
+
+    @Transactional
+    @Override
     public void addToMediaList(MediaList mediaList, Media media) {
         listsDao.addToMediaList(mediaList, media);
     }
@@ -103,13 +110,19 @@ public class ListsServiceImpl implements ListsService {
 
     @Transactional
     @Override
-    public void addToMediaList(MediaList mediaList, List<Media> medias) {
-        listsDao.addToMediaList(mediaList, medias);
+    public void addToMediaList(MediaList mediaList, List<Media> media) {
+        listsDao.addToMediaList(mediaList, media);
     }
 
     @Transactional
     @Override
     public void deleteMediaFromList(MediaList mediaList, Media media) {
+        listsDao.deleteMediaFromList(mediaList, media);
+    }
+
+    @Transactional
+    @Override
+    public void deleteMediaFromList(MediaList mediaList, List<Media> media) {
         listsDao.deleteMediaFromList(mediaList, media);
     }
 
