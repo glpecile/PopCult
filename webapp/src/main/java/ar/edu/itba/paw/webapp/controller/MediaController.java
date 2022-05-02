@@ -123,8 +123,14 @@ public class MediaController {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<Genre> genres = media.getGenres();
 
-        LOGGER.info("GET /media/{}/genres: Returning genres from media {} {}", mediaId, mediaId, media.getTitle());
+        if (genres.isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
         final List<GenreDto> genreDtoList = GenreDto.fromGenreList(uriInfo, genres);
+
+        LOGGER.info("GET /{}: Returning genres from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
         return Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
         }).build();
     }
@@ -157,19 +163,18 @@ public class MediaController {
     @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
     public Response getMediaStudios(@PathParam("id") int mediaId) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        final PageContainer<Studio> studios = new PageContainer<>(media.getStudios(), Integer.parseInt(defaultPage), Integer.parseInt(defaultPageSize), media.getStudios().size());
+        final List<Studio> studios = media.getStudios();
 
-        if (studios.getElements().isEmpty()) {
-            LOGGER.info("GET /media/{}/studios: Returning empty list", mediaId);
+        if (studios.isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<MediaStudioDto> listsDto = MediaStudioDto.fromStudioList(uriInfo, studios.getElements(), media);
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStudioDto>>(listsDto) {
-        });
-        ResponseUtils.setPaginationLinks(responseBuilder, studios, uriInfo);
-        LOGGER.info("GET /media/{}/studios: Returning studios from media {} {}", mediaId, mediaId, media.getTitle());
-        return responseBuilder.build();
+        final List<MediaStudioDto> studioDtoList = MediaStudioDto.fromStudioList(uriInfo, studios, media);
+
+        LOGGER.info("GET /{}: Returning studios from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
+        return Response.ok(new GenericEntity<List<MediaStudioDto>>(studioDtoList) {
+        }).build();
     }
 
     @GET
@@ -186,18 +191,16 @@ public class MediaController {
         else
             staffMembers = media.getDirectorList();
 
-
         if (staffMembers.isEmpty()) {
             LOGGER.info("GET /media/{}/staff?type={}: Returning empty list", mediaId, role.getRoleType());
             return Response.noContent().build();
         }
 
         final List<MediaStaffDto> listsDto = MediaStaffDto.fromStaffList(uriInfo, staffMembers, media);
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto) {
-        });
 
         LOGGER.info("GET /media/{}/staff?type={}: Returning staff members from media {} {}", mediaId, role.getRoleType(), mediaId, media.getTitle());
-        return responseBuilder.build();
+        return Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto) {
+        }).build();
     }
 
     @GET
