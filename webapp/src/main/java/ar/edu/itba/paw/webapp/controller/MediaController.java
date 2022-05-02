@@ -70,8 +70,7 @@ public class MediaController {
                               @QueryParam("sort-type") @Pattern(regexp = "(?i)DATE|TITLE(?i)|POPULARITY(?i)") @DefaultValue("TITLE") String sortType,
                               @QueryParam("decade") @Size(max = 4) @Pattern(regexp = "ALL|19[0-9]0|20[0-2]0") String decade,
                               @QueryParam("query") @Size(max = 100) @Pattern(regexp = "[^/><%]+") String term,
-                              @QueryParam("not-in-list") Integer listId
-    ) {
+                              @QueryParam("not-in-list") Integer listId) {
         final List<MediaType> mediaTypes = NormalizerUtils.getNormalizedMediaType(types);
         final List<Genre> genreList = NormalizerUtils.getNormalizedGenres(genres);
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
@@ -82,6 +81,7 @@ public class MediaController {
 //            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
 //        }
         final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page - 1, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
+
         if (listMedia.getElements().isEmpty()) {
             LOGGER.info("GET /media: Returning empty list");
             return Response.noContent().build();
@@ -105,7 +105,6 @@ public class MediaController {
 
         LOGGER.info("GET /media/{}: Returning media {} {}", mediaId, mediaId, media.getTitle());
         return Response.ok(MediaDto.fromMedia(uriInfo, media, user)).build();
-
     }
 
     @GET
@@ -125,8 +124,8 @@ public class MediaController {
         final List<Genre> genres = media.getGenres();
 
         LOGGER.info("GET /media/{}/genres: Returning genres from media {} {}", mediaId, mediaId, media.getTitle());
-        final List<GenreDto> genresDtos = GenreDto.fromGenreList(uriInfo, genres);
-        return Response.ok(new GenericEntity<List<GenreDto>>(genresDtos) {
+        final List<GenreDto> genreDtoList = GenreDto.fromGenreList(uriInfo, genres);
+        return Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
         }).build();
     }
 
@@ -140,7 +139,7 @@ public class MediaController {
         final PageContainer<MediaList> lists = listsService.getListsIncludingMedia(media, page, pageSize);
 
         if (lists.getElements().isEmpty()) {
-            LOGGER.info("GET /media: Returning empty list");
+            LOGGER.info("GET /media/{}/lists: Returning empty list", mediaId);
             return Response.noContent().build();
         }
 
@@ -149,7 +148,7 @@ public class MediaController {
         });
         ResponseUtils.setPaginationLinks(response, lists, uriInfo);
 
-        LOGGER.info("GET /media: Returning page {} with {} results ", lists.getCurrentPage(), lists.getElements().size());
+        LOGGER.info("GET /media/{}/lists: Returning page {} with {} results ", mediaId, lists.getCurrentPage(), lists.getElements().size());
         return response.build();
     }
 
@@ -161,7 +160,7 @@ public class MediaController {
         final PageContainer<Studio> studios = new PageContainer<>(media.getStudios(), Integer.parseInt(defaultPage), Integer.parseInt(defaultPageSize), media.getStudios().size());
 
         if (studios.getElements().isEmpty()) {
-            LOGGER.info("GET /media: Returning empty list");
+            LOGGER.info("GET /media/{}/studios: Returning empty list", mediaId);
             return Response.noContent().build();
         }
 
@@ -169,7 +168,7 @@ public class MediaController {
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStudioDto>>(listsDto) {
         });
         ResponseUtils.setPaginationLinks(responseBuilder, studios, uriInfo);
-        LOGGER.info("GET /media: Returning {} studios", studios.getElements().size());
+        LOGGER.info("GET /media/{}/studios: Returning studios from media {} {}", mediaId, mediaId, media.getTitle());
         return responseBuilder.build();
     }
 
@@ -189,7 +188,7 @@ public class MediaController {
 
 
         if (staffMembers.isEmpty()) {
-            LOGGER.info("GET /media: Returning empty list");
+            LOGGER.info("GET /media/{}/staff?type={}: Returning empty list", mediaId, role.getRoleType());
             return Response.noContent().build();
         }
 
@@ -197,7 +196,7 @@ public class MediaController {
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto) {
         });
 
-        LOGGER.info("GET /media: Returning {} staff members", staffMembers.size());
+        LOGGER.info("GET /media/{}/staff?type={}: Returning staff members from media {} {}", mediaId, role.getRoleType(), mediaId, media.getTitle());
         return responseBuilder.build();
     }
 
