@@ -261,8 +261,8 @@ public class ListController {
     @Path("/{id}/comments")
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createListComments(@PathParam("id") int listId,
-                                       @Valid @NotEmptyBody CommentInputDto commentInputDto) {
+    public Response createListComment(@PathParam("id") int listId,
+                                      @Valid @NotEmptyBody CommentInputDto commentInputDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
 
