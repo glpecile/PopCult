@@ -7,6 +7,7 @@ import {Avatar, Chip} from "@mui/material";
 import CollaborativeService from "../../../services/CollaborativeService";
 import PaginationComponent from "../../../components/PaginationComponent";
 import CommentSection from "../../../components/comments/CommentSection";
+import useErrorStatus from "../../../hooks/useErrorStatus";
 
 function ListsDescription() {
     const id = window.location.pathname.split('/')[2];
@@ -15,16 +16,21 @@ function ListsDescription() {
     const [collabInlist, setCollabInList] = useState(undefined);
     const [page, setPage] = useState(1);
     const pageSize = 4;
+    const { setErrorStatusCode } = useErrorStatus();
 
     useEffect(() => {
         async function getList(id) {
-            const data = await ListService.getListById(id);
-            setList(data);
+            try {
+                const data = await ListService.getListById(id);
+                setList(data);
+            }catch (error){
+                setErrorStatusCode(error.response.status);
+            }
         }
 
 
         getList(id);
-    }, [id]);
+    }, [id, setErrorStatusCode]);
 
     useEffect(() => {
         if (list) {
