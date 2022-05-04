@@ -28,7 +28,7 @@ public class GenreHibernateDao implements GenreDao {
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM mediagenre  WHERE genreid = :genreid OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("genreid",genre.ordinal());
-        nativeQuery.setParameter("offset",page*pageSize);
+        nativeQuery.setParameter("offset",(page-1)*pageSize);
         nativeQuery.setParameter("limit",pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -53,7 +53,7 @@ public class GenreHibernateDao implements GenreDao {
                 "listelement NATURAL JOIN mediaList WHERE genreId = :genreid AND visibility = :visibility GROUP BY medialist.medialistid " +
                 ",creationdate  HAVING COUNT(mediaId) >= :minMatches ORDER BY creationdate DESC) AS aux OFFSET :offset LIMIT :pageSize");
         nativeQuery.setParameter("genreid",genre.ordinal());
-        nativeQuery.setParameter("offset",page*pageSize);
+        nativeQuery.setParameter("offset",(page-1)*pageSize);
         nativeQuery.setParameter("pageSize",pageSize);
         nativeQuery.setParameter("minMatches", minMatches);
         nativeQuery.setParameter("visibility", visibility);

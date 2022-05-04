@@ -76,7 +76,7 @@ public class GenreController {
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
-        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page-1 , itemsPerPage);
+        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page , itemsPerPage);
         if(mediaPageContainer.getElements().isEmpty()){
             LOGGER.info("GET /genres/{}/media: Returning empty list", normalizedGenre.getGenre());
             return Response.noContent().build();

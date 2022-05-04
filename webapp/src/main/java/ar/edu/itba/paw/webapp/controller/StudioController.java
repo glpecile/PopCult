@@ -94,7 +94,7 @@ public class StudioController {
                                    @QueryParam("page") @DefaultValue(defaultPage) int page,
                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
-        final PageContainer<Media> mediaByStudio = studioService.getMediaByStudio(studio,page-1,pageSize);
+        final PageContainer<Media> mediaByStudio = studioService.getMediaByStudio(studio,page,pageSize);
 
         if(mediaByStudio.getElements().isEmpty()){
             LOGGER.info("GET /studio/{}/media: Returning empty list", studioId);
@@ -108,6 +108,8 @@ public class StudioController {
         LOGGER.info(" GET /studio/{}/media: Returning page {} with {} results", studioId, page, mediaByStudio.getElements().size());
         return responseBuilder.build();
     }
+
+
 
     @RequestMapping("/studio/{studioId}")
     public ModelAndView studio(@PathVariable(value = "studioId") final int studioId,

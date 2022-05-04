@@ -35,7 +35,7 @@ public class StaffHibernateDao implements StaffDao {
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN director WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page-1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -58,7 +58,7 @@ public class StaffHibernateDao implements StaffDao {
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN crew WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page-1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -85,7 +85,7 @@ public class StaffHibernateDao implements StaffDao {
                 "(SELECT mediaid FROM media NATURAL JOIN crew WHERE staffmemberid = :staffMemberId)) as u " +
                 "OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page-1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -110,7 +110,7 @@ public class StaffHibernateDao implements StaffDao {
         PaginationValidator.validate(page,pageSize);
 
         final Query nativeQuery = em.createNativeQuery("SELECT staffmemberid FROM staffmember OFFSET :offset LIMIT :limit")
-                .setParameter("offset",page * pageSize)
+                .setParameter("offset",(page-1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> staffIds = nativeQuery.getResultList();

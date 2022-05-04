@@ -76,11 +76,7 @@ public class MediaController {
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = NormalizerUtils.getStartYear(decade);
         LocalDateTime lastYear = NormalizerUtils.getLastYear(decade);
-//        if (decade != null && decade.compareTo("ALL") > 0) {
-//            startYear = LocalDateTime.of(Integer.parseInt(decade), 1, 1, 0, 0);
-//            lastYear = LocalDateTime.of(Integer.parseInt(decade) + 9, 12, 31, 0, 0);
-//        }
-        final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page - 1, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
+        final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page , pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
 
         if (listMedia.getElements().isEmpty()) {
             LOGGER.info("GET /media: Returning empty list");

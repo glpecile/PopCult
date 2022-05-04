@@ -42,7 +42,7 @@ public class MediaHibernateDao implements MediaDao {
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("type", mediaType.ordinal());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page-1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -65,7 +65,7 @@ public class MediaHibernateDao implements MediaDao {
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type ORDER BY releasedate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("type", mediaType.ordinal());
-        nativeQuery.setParameter("offset", page * pageSize);
+        nativeQuery.setParameter("offset", (page-1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -134,7 +134,7 @@ public class MediaHibernateDao implements MediaDao {
         }
         if(page != null && pageSize != null){
             toReturn.append( " OFFSET :offset LIMIT :limit ");
-            parameters.put("offset", page*pageSize);
+            parameters.put("offset", (page-1)*pageSize);
             parameters.put("limit", pageSize);
         }
         toReturn.append(" ) AS aux");

@@ -81,7 +81,7 @@ public class StaffMemberController {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizedRole = role != null ? RoleType.valueOf(role.toUpperCase()) : null;
         final PageContainer<Media> staffMedia = staffService.
-                getMediaByRoleType(staffMember, page - 1, pageSize, normalizedRole);
+                getMediaByRoleType(staffMember, page , pageSize, normalizedRole);
         if(staffMedia.getElements().isEmpty()){
             LOGGER.info("GET /staff/{}/media: Returning empty list",staffId);
             return Response.noContent().build();
@@ -103,6 +103,8 @@ public class StaffMemberController {
         LOGGER.info("GET /staff/{}/image: Redirecting to image location.", staffId);
         return Response.status(Response.Status.SEE_OTHER).location(new URI(staffMember.getImage())).build();
     }
+
+
     @RequestMapping("/staff/{staffMemberId}")
     public ModelAndView staffMemberProfile(@PathVariable("staffMemberId") final int staffMemberId,
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
