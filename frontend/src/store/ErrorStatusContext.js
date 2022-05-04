@@ -3,6 +3,7 @@ import {createContext, useEffect, useMemo, useState} from "react";
 import Error404 from "../pages/secondary/errors/Error404";
 
 const ErrorStatusContext = createContext({});
+
 export const ErrorHandler = ({children}) => {
     const location = useLocation()
     const [errorStatusCode, setErrorStatusCode] = useState();
