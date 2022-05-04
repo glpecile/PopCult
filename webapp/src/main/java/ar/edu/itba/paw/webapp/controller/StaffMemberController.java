@@ -83,7 +83,7 @@ public class StaffMemberController {
         final PageContainer<Media> staffMedia = staffService.
                 getMediaByRoleType(staffMember, page - 1, pageSize, normalizedRole);
         if(staffMedia.getElements().isEmpty()){
-            LOGGER.info("GET /staff/media: Returning empty list");
+            LOGGER.info("GET /staff/{}/media: Returning empty list",staffId);
             return Response.noContent().build();
         }
 
@@ -100,6 +100,7 @@ public class StaffMemberController {
     @Produces(value={MediaType.APPLICATION_JSON})
     public Response getImage(@PathParam("id") int staffId) throws URISyntaxException {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
+        LOGGER.info("GET /staff/{}/image: Redirecting to image location.", staffId);
         return Response.status(Response.Status.SEE_OTHER).location(new URI(staffMember.getImage())).build();
     }
     @RequestMapping("/staff/{staffMemberId}")

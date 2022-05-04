@@ -56,11 +56,13 @@ public class GenreController {
     private static final String defaultPage = "1";
     private static final String defaultPageSize = "12";
 
+
+
     @GET
     @Path("{type}")
     @Produces(value={MediaType.APPLICATION_JSON})
-    public Response getGenre(@PathParam("type") final String genre_type){
-        final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genre_type)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
+    public Response getGenre(@PathParam("type") final String genreType){
+        final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
 
         LOGGER.info("GET /genres/{}: Returning genre {} {}", normalizedGenre.getGenre(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
         return Response.ok(GenreDto.fromGenre(uriInfo,normalizedGenre)).build();
@@ -70,10 +72,10 @@ public class GenreController {
     @GET
     @Path("{type}/media")
     @Produces(value={MediaType.APPLICATION_JSON})
-    public Response getGenreInMedia(@PathParam("type") final String genre_type,
-                                    @QueryParam("page") @DefaultValue(defaultPage) int page,
-                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
-        final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genre_type)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
+    public Response getGenreMedia(@PathParam("type") final String genreType,
+                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+        final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page-1 , itemsPerPage);
         if(mediaPageContainer.getElements().isEmpty()){
             LOGGER.info("GET /genres/{}/media: Returning empty list", normalizedGenre.getGenre());
