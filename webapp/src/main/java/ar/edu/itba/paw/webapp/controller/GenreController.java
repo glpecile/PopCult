@@ -29,6 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +59,15 @@ public class GenreController {
     private static final String defaultPageSize = "12";
 
 
+    @GET
+    @Produces(value={MediaType.APPLICATION_JSON})
+    public Response getGenres(){
+        List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, Arrays.asList(Genre.values()));
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos){});
+        LOGGER.info("GET /genres: Returning all genre types");
+        return responseBuilder.build();
+
+    }
 
     @GET
     @Path("{type}")
