@@ -8,7 +8,7 @@ const PaginationComponent = (props) => {
 
     return (<Pagination count={parseInt(props.lastPage)} variant="outlined"
                         color="secondary"
-                        page={props.page}
+                        page={parseInt(props.page)}
                         onChange={handleChange}/>);
 }
 

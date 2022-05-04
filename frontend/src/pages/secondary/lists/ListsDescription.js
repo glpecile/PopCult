@@ -16,18 +16,17 @@ function ListsDescription() {
     const [collabInlist, setCollabInList] = useState(undefined);
     const [page, setPage] = useState(1);
     const pageSize = 4;
-    const { setErrorStatusCode } = useErrorStatus();
+    const {setErrorStatusCode} = useErrorStatus();
 
     useEffect(() => {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
                 setList(data);
-            }catch (error){
+            } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }
-
 
         getList(id);
     }, [id, setErrorStatusCode]);
@@ -35,28 +34,36 @@ function ListsDescription() {
     useEffect(() => {
         if (list) {
             async function getListMedia() {
-                const media = await ListService.getMediaInList({url: list.mediaUrl, page, pageSize});
-                setMediaInList(media);
+                try {
+                    const media = await ListService.getMediaInList({url: list.mediaUrl, page, pageSize});
+                    setMediaInList(media);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
             }
 
             getListMedia();
         }
-    }, [list, page, pageSize])
+    }, [list, page, pageSize, setErrorStatusCode])
 
     useEffect(() => {
         if (list) {
             async function getListCollaborators() {
-                const collabs = await CollaborativeService.getListCollaborators({
-                    url: list.collaboratorsUrl,
-                    page,
-                    pageSize
-                });
-                setCollabInList(collabs);
+                try {
+                    const collabs = await CollaborativeService.getListCollaborators({
+                        url: list.collaboratorsUrl,
+                        page,
+                        pageSize
+                    });
+                    setCollabInList(collabs);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
             }
 
             getListCollaborators();
         }
-    }, [list, page, pageSize])
+    }, [list, page, pageSize, setErrorStatusCode])
 
     return (<>
         {list ? (<>
