@@ -8,10 +8,7 @@ import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
-import ar.edu.itba.paw.webapp.dto.output.GenreDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaInGenreDto;
-import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
+import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.exceptions.GenreNotFoundException;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
@@ -100,6 +97,29 @@ public class GenreController {
         LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), mediaPageContainer.getCurrentPage(), mediaPageContainer.getElements().size());
         return response.build();
     }
+
+    @GET
+    @Path("{type}/lists")
+    @Produces(value={MediaType.APPLICATION_JSON})
+    public Response getGenreLists(@PathParam("type") final String genreType,
+                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+        final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
+        final PageContainer<MediaList> listPageContainer = genreService.getListsContainingGenre(normalizedGenre,page,pageSize,minimumMediaMatches,false);
+        if(listPageContainer.getElements().isEmpty()){
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+        final List<ListDto> listDtos = ListDto.fromListList(uriInfo,listPageContainer.getElements(),userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<ListDto>>(listDtos){});
+        ResponseUtils.setPaginationLinks(responseBuilder,listPageContainer,uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), listPageContainer.getCurrentPage(), listPageContainer.getElements().size());
+        return responseBuilder.build();
+
+    }
+
+
 
     @RequestMapping("/genre/{genre}")
     public ModelAndView genre(@PathVariable(value = "genre") final String genre,
