@@ -53,10 +53,11 @@ public class GenreController {
 
 
     @GET
-    @Produces(value={MediaType.APPLICATION_JSON})
-    public Response getGenres(){
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getGenres() {
         List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos){});
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos) {
+        });
         LOGGER.info("GET /{}: Returning all genre types", uriInfo.getPath());
         return responseBuilder.build();
 
@@ -64,31 +65,32 @@ public class GenreController {
 
     @GET
     @Path("{type}")
-    @Produces(value={MediaType.APPLICATION_JSON})
-    public Response getGenre(@PathParam("type") final String genreType){
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getGenre(@PathParam("type") final String genreType) {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
 
         LOGGER.info("GET /{}: Returning genre {} {}", uriInfo.getPath(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
-        return Response.ok(GenreDto.fromGenre(uriInfo,normalizedGenre)).build();
+        return Response.ok(GenreDto.fromGenre(uriInfo, normalizedGenre)).build();
 
     }
 
     @GET
     @Path("{type}/media")
-    @Produces(value={MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getGenreMedia(@PathParam("type") final String genreType,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
-                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
-        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page , itemsPerPage);
-        if(mediaPageContainer.getElements().isEmpty()){
+        final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page, pageSize);
+        if (mediaPageContainer.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<MediaInGenreDto> mediaDtos = MediaInGenreDto.fromMediaList(uriInfo,normalizedGenre,mediaPageContainer.getElements());
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaInGenreDto>>(mediaDtos){});
-        ResponseUtils.setPaginationLinks(response,mediaPageContainer,uriInfo);
+        final List<MediaInGenreDto> mediaDtos = MediaInGenreDto.fromMediaList(uriInfo, normalizedGenre, mediaPageContainer.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaInGenreDto>>(mediaDtos) {
+        });
+        ResponseUtils.setPaginationLinks(response, mediaPageContainer, uriInfo);
 
         LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), mediaPageContainer.getCurrentPage(), mediaPageContainer.getElements().size());
         return response.build();
@@ -96,25 +98,25 @@ public class GenreController {
 
     @GET
     @Path("{type}/lists")
-    @Produces(value={MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getGenreLists(@PathParam("type") final String genreType,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
-                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
+                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
-        final PageContainer<MediaList> listPageContainer = genreService.getListsContainingGenre(normalizedGenre,page,pageSize,minimumMediaMatches);
-        if(listPageContainer.getElements().isEmpty()){
+        final PageContainer<MediaList> listPageContainer = genreService.getListsContainingGenre(normalizedGenre, page, pageSize, minimumMediaMatches);
+        if (listPageContainer.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
-        final List<ListDto> listDtos = ListDto.fromListList(uriInfo,listPageContainer.getElements(),userService.getCurrentUser().orElse(null));
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<ListDto>>(listDtos){});
-        ResponseUtils.setPaginationLinks(responseBuilder,listPageContainer,uriInfo);
+        final List<ListDto> listDtos = ListDto.fromListList(uriInfo, listPageContainer.getElements(), userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<ListDto>>(listDtos) {
+        });
+        ResponseUtils.setPaginationLinks(responseBuilder, listPageContainer, uriInfo);
 
         LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), listPageContainer.getCurrentPage(), listPageContainer.getElements().size());
         return responseBuilder.build();
 
     }
-
 
 
     @RequestMapping("/genre/{genre}")
@@ -127,7 +129,7 @@ public class GenreController {
         final PageContainer<MediaList> genreLists = genreService.getListsContainingGenre(normalizedGenre, 0, listInPage, minimumMediaMatches);
         final List<ListCover> listCovers = getListCover(genreLists.getElements(), listsService);
 
-        mav.addObject("genre",normalizedGenre);
+        mav.addObject("genre", normalizedGenre);
         mav.addObject("mediaPageContainer", mediaPageContainer);
         mav.addObject("genreLists", listCovers);
         return mav;
