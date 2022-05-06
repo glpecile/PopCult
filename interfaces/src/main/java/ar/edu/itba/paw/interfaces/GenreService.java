@@ -11,7 +11,7 @@ public interface GenreService {
 
     PageContainer<Media> getMediaByGenre(Genre genre, int page, int pageSize);
 
-    PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility);
+    PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches);
 
     List<Genre> getAllGenre ();
 
