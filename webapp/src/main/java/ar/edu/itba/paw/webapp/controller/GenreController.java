@@ -62,7 +62,7 @@ public class GenreController {
     @GET
     @Produces(value={MediaType.APPLICATION_JSON})
     public Response getGenres(){
-        List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, Arrays.asList(Genre.values()));
+        List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos){});
         LOGGER.info("GET /genres: Returning all genre types");
         return responseBuilder.build();

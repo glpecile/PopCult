@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Primary
 @Repository
@@ -21,6 +22,8 @@ public class GenreHibernateDao implements GenreDao {
 
     @PersistenceContext
     private EntityManager em;
+
+
 
     @Override
     public PageContainer<Media> getMediaByGenre(Genre genre, int page, int pageSize) {
@@ -76,6 +79,14 @@ public class GenreHibernateDao implements GenreDao {
         List<MediaList> mediaList = mediaListIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(mediaList,page,pageSize,count);
+    }
+
+    @Override
+    public List<Genre> getAllGenre() {
+        final Query nativeQuery = em.createNativeQuery("SELECT name FROM genre");
+        @SuppressWarnings("unchecked")
+        List<String> genres = nativeQuery.getResultList();
+        return genres.stream().map(g -> g.replaceAll(" ","")).map(String::toUpperCase).map(Genre::valueOf).collect(Collectors.toList());
     }
 
 }

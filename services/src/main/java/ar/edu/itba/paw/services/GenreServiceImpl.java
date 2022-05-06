@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class GenreServiceImpl implements GenreService {
 
@@ -26,5 +28,11 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches, boolean visibility) {
         return genreDao.getListsContainingGenre(genre,page,pageSize,minMatches,visibility);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Genre> getAllGenre() {
+        return genreDao.getAllGenre();
     }
 }
