@@ -37,7 +37,6 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches) {
         return listsService.getMediaListByFilters(page,pageSize,null,Collections.singletonList(genre),minMatches,null,null,null);
-//        return genreDao.getListsContainingGenre(genre,page,pageSize,minMatches,visibility);
     }
 
     @Transactional(readOnly = true)
