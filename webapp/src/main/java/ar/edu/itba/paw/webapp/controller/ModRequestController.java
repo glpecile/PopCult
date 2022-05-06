@@ -35,7 +35,7 @@ public class ModRequestController {
         final PageContainer<ModRequest> modRequests = moderatorService.getModRequests(page, pageSize);
 
         if (modRequests.getElements().isEmpty()) {
-            LOGGER.info("GET /mods-requests: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -44,7 +44,7 @@ public class ModRequestController {
         });
         ResponseUtils.setPaginationLinks(response, modRequests, uriInfo);
 
-        LOGGER.info("GET /mods-requests: Returning page {} with {} results", modRequests.getCurrentPage(), modRequests.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), modRequests.getCurrentPage(), modRequests.getElements().size());
         return response.build();
     }
 
@@ -54,7 +54,7 @@ public class ModRequestController {
     public Response getModRequest(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
-        LOGGER.info("GET /mods-requests/{}: Returning notification {}", requestId, requestId);
+        LOGGER.info("GET /{}: Returning notification {}", uriInfo.getPath(), requestId);
         return Response.ok(ModRequestDto.fromModRequest(uriInfo, modRequest)).build();
     }
 
@@ -66,7 +66,7 @@ public class ModRequestController {
 
         moderatorService.promoteToMod(modRequest.getUser());
 
-        LOGGER.info("PUT /mods-requests/{}: Mod request {} approved. {} is mod", requestId, requestId, modRequest.getUser().getUsername());
+        LOGGER.info("PUT /{}: Mod request {} approved. {} is mod", uriInfo.getPath(), requestId, modRequest.getUser().getUsername());
         return Response.noContent().build();
     }
 
@@ -78,7 +78,7 @@ public class ModRequestController {
 
         moderatorService.removeModRequest(modRequest);
 
-        LOGGER.info("DELETE /mods-requests/{}: Mod request {} deleted", requestId, requestId);
+        LOGGER.info("DELETE /{}: Mod request {} deleted", uriInfo.getPath(), requestId);
         return Response.noContent().build();
     }
 }

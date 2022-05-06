@@ -32,7 +32,7 @@ public class CollabRequestController {
     public Response getCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 
-        LOGGER.info("GET /collab-requests/{}: Returning notification {}", requestId, requestId);
+        LOGGER.info("GET /{}: Returning notification {}", uriInfo.getPath(), requestId);
         return Response.ok(CollaboratorRequestDto.fromRequest(uriInfo, request)).build();
     }
 
@@ -44,7 +44,7 @@ public class CollabRequestController {
 
         collaborativeListService.acceptRequest(request);
 
-        LOGGER.info("PUT /collab-requests/{}: Collaboration request {} accepted.", requestId, requestId);
+        LOGGER.info("PUT /{}: Collaboration request {} accepted.", uriInfo.getPath(), requestId);
         return Response.noContent().build();
     }
 
@@ -56,7 +56,7 @@ public class CollabRequestController {
 
         collaborativeListService.rejectRequest(request);
 
-        LOGGER.info("DELETE /collab-requests/{}: Collaboration request {} rejected.", requestId, requestId);
+        LOGGER.info("DELETE /{}: Collaboration request {} rejected.", uriInfo.getPath(), requestId);
         return Response.noContent().build();
     }
 }

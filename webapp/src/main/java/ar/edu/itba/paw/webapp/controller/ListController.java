@@ -81,7 +81,7 @@ public class ListController {
         final PageContainer<MediaList> mediaListPageContainer = listsService.getMediaListByFilters(page, pageSize, normalizedSortType, genreList, minMediaWithGenre, startYear, lastYear, term);
 
         if (mediaListPageContainer.getElements().isEmpty()) {
-            LOGGER.info("GET /lists: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
         final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, mediaListPageContainer.getElements(), userService.getCurrentUser().orElse(null));
@@ -89,7 +89,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, mediaListPageContainer, uriInfo);
 
-        LOGGER.info("GET /lists: Returning page {} with {} results ", mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), mediaListPageContainer.getCurrentPage(), mediaListPageContainer.getElements().size());
         return response.build();
     }
 
@@ -100,7 +100,7 @@ public class ListController {
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user, listDto.getName(), listDto.getDescription(), listDto.isVisible(), listDto.isCollaborative());
 
-        LOGGER.info("POST /lists: List {} created with id {}", mediaList.getListName(), mediaList.getMediaListId());
+        LOGGER.info("POST /{}: List {} created with id {}", uriInfo.getPath(), mediaList.getListName(), mediaList.getMediaListId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(mediaList.getMediaListId())).build()).build();
     }
 
@@ -111,7 +111,7 @@ public class ListController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElse(null);
 
-        LOGGER.info("GET /lists/{}: Returning list {} {}", listId, listId, mediaList.getListName());
+        LOGGER.info("GET /{}: Returning list {} {}", uriInfo.getPath(), listId, mediaList.getListName());
         return Response.ok(ListDto.fromList(uriInfo, mediaList, user)).build();
     }
 
@@ -125,7 +125,7 @@ public class ListController {
 
         listsService.updateList(mediaList, listDto.getName(), listDto.getDescription(), listDto.isVisible(), listDto.isCollaborative());
 
-        LOGGER.info("PUT /lists/{}: list {} updated", listId, listId);
+        LOGGER.info("PUT /{}: list {} updated", uriInfo.getPath(), listId);
         return Response.noContent().build();
     }
 
@@ -137,7 +137,7 @@ public class ListController {
 
         listsService.deleteList(mediaList);
 
-        LOGGER.info("DELETE /lists/{}: list {} deleted", listId, listId);
+        LOGGER.info("DELETE /{}: list {} deleted", uriInfo.getPath(), listId);
         return Response.noContent().build();
     }
 
@@ -155,7 +155,7 @@ public class ListController {
         final PageContainer<Media> mediaInList = listsService.getMediaInList(mediaList, page, pageSize);
 
         if (mediaInList.getElements().isEmpty()) {
-            LOGGER.info("GET /lists/{}/media: Returning empty list.", listId);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -164,7 +164,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, mediaInList, uriInfo);
 
-        LOGGER.info("GET /lists/{}/media: Returning page {} with {} results.", listId, mediaInList.getCurrentPage(), mediaInList.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), mediaInList.getCurrentPage(), mediaInList.getElements().size());
         return response.build();
     }
 
@@ -180,8 +180,8 @@ public class ListController {
 
         listsService.manageMedia(mediaList, mediaToAdd, mediaToRemove);
 
-        LOGGER.info("PATCH /lists/{}/media: media {} added to list {}.", listId, mediaToAdd.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
-        LOGGER.info("PATCH /lists/{}/media: media {} removed from list {}.", listId, mediaToRemove.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /{}: media {} added to list {}.", uriInfo.getPath(), mediaToAdd.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /{}: media {} removed from list {}.", uriInfo.getPath(), mediaToRemove.stream().map(Media::getTitle).collect(Collectors.toList()), listId);
         return Response.noContent().build();
     }
 
@@ -194,11 +194,11 @@ public class ListController {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
         if (!listsService.mediaAlreadyInList(mediaList, media)) {
-            LOGGER.info("GET /lists/{}/media/{}: media {} is not in list {}.", listId, mediaId, mediaId, listId);
+            LOGGER.info("GET /{}: media {} is not in list {}.", uriInfo.getPath(), mediaId, listId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("GET /lists/{}/media/{}: media {} is in list {}.", listId, mediaId, mediaId, listId);
+        LOGGER.info("GET /{}: media {} is in list {}.", uriInfo.getPath(), mediaId, listId);
         return Response.ok(MediaInListDto.fromMedia(uriInfo, mediaList, media)).build();
     }
 
@@ -212,7 +212,7 @@ public class ListController {
 
         listsService.addToMediaList(mediaList, media);
 
-        LOGGER.info("PUT /lists/{}/media/{}: media {} added to list {}.", listId, mediaId, mediaId, listId);
+        LOGGER.info("PUT /{}: media {} added to list {}.", uriInfo.getPath(), mediaId, listId);
         return Response.noContent().build();
     }
 
@@ -226,7 +226,7 @@ public class ListController {
 
         listsService.deleteMediaFromList(mediaList, media);
 
-        LOGGER.info("DELETE /lists/{}/media/{}: media {} removed from list {}.", listId, mediaId, mediaId, listId);
+        LOGGER.info("DELETE /{}: media {} removed from list {}.", uriInfo.getPath(), mediaId, listId);
         return Response.noContent().build();
     }
 
@@ -244,7 +244,7 @@ public class ListController {
         final PageContainer<ListComment> listComments = commentService.getListComments(mediaList, page, pageSize);
 
         if (listComments.getElements().isEmpty()) {
-            LOGGER.info("GET /lists/{}/comments: Returning empty list.", listId);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -253,7 +253,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, listComments, uriInfo);
 
-        LOGGER.info("GET /lists/{}/comments: Returning page {} with {} results.", listId, listComments.getCurrentPage(), listComments.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), listComments.getCurrentPage(), listComments.getElements().size());
         return response.build();
     }
 
@@ -268,7 +268,7 @@ public class ListController {
 
         final ListComment listComment = commentService.addCommentToList(user, mediaList, commentInputDto.getBody());
 
-        LOGGER.info("POST /lists/{}/comments: Comment created with id {}", listId, listComment.getCommentId());
+        LOGGER.info("POST /{}: Comment created with id {}", uriInfo.getPath(), listComment.getCommentId());
         return Response.created(uriInfo.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).build()).build();
     }
 
@@ -286,7 +286,7 @@ public class ListController {
         final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, page, pageSize);
 
         if (collaborators.getElements().isEmpty()) {
-            LOGGER.info("GET /lists/{}/collaborators: Returning empty list.", listId);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -295,7 +295,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, collaborators, uriInfo);
 
-        LOGGER.info("GET /lists/{}/collaborators: Returning page {} with {} results.", listId, collaborators.getCurrentPage(), collaborators.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), collaborators.getCurrentPage(), collaborators.getElements().size());
         return response.build();
     }
 
@@ -311,8 +311,8 @@ public class ListController {
 
         collaborativeListService.manageCollaborators(mediaList, usersToAdd, usersToRemove);
 
-        LOGGER.info("PATCH /lists/{}/collaborators: users {} added to list {} as collaborators.", listId, usersToAdd.stream().map(User::getUsername).collect(Collectors.toList()), listId);
-        LOGGER.info("PATCH /lists/{}/collaborators: users {} removed from list {} as collaborators.", listId, usersToRemove.stream().map(User::getUsername).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /{}: users {} added to list {} as collaborators.", uriInfo.getPath(), usersToAdd.stream().map(User::getUsername).collect(Collectors.toList()), listId);
+        LOGGER.info("PATCH /{}: users {} removed from list {} as collaborators.", uriInfo.getPath(), usersToRemove.stream().map(User::getUsername).collect(Collectors.toList()), listId);
         return Response.noContent().build();
     }
 
@@ -326,7 +326,7 @@ public class ListController {
 
         final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
 
-        LOGGER.info("GET /lists/{}/collaborators/{}: Returning user {} collaboration in list {}", listId, username, username, listId);
+        LOGGER.info("GET /{}: Returning user {} collaboration in list {}", uriInfo.getPath(), username, listId);
         return Response.ok(UserCollaboratorDto.fromRequest(uriInfo, request)).build();
     }
 
@@ -340,7 +340,7 @@ public class ListController {
 
         collaborativeListService.addCollaborator(mediaList, user);
 
-        LOGGER.info("PUT /lists/{}/collaborators/{}: User {} added to list {} as collaborator", listId, username, username, listId);
+        LOGGER.info("PUT /{}: User {} added to list {} as collaborator", uriInfo.getPath(), username, listId);
         return Response.noContent().build();
     }
 
@@ -355,7 +355,7 @@ public class ListController {
 
         collaborativeListService.deleteCollaborator(request);
 
-        LOGGER.info("DELETE /lists/{}/collaborators/{}: User {} removed from list {} as collaborator", listId, username, username, listId);
+        LOGGER.info("DELETE /{}: User {} removed from list {} as collaborator", uriInfo.getPath(), username, listId);
         return Response.noContent().build();
     }
 
@@ -373,7 +373,7 @@ public class ListController {
         final PageContainer<MediaList> listForks = listsService.getListForks(mediaList, page, pageSize);
 
         if (listForks.getElements().isEmpty()) {
-            LOGGER.info("GET /lists/{}/collaborators: Returning empty list.", listId);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -382,7 +382,7 @@ public class ListController {
         });
         ResponseUtils.setPaginationLinks(response, listForks, uriInfo);
 
-        LOGGER.info("GET /lists/{}/forks: Returning page {} with {} results.", listId, listForks.getCurrentPage(), listForks.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), listForks.getCurrentPage(), listForks.getElements().size());
         return response.build();
     }
 
@@ -395,7 +395,7 @@ public class ListController {
 
         final MediaList forkedList = listsService.createMediaListCopy(user, mediaList);
 
-        LOGGER.info("POST /lists/{}/forks: List {} created with id {} forked from list {}", listId, forkedList.getListName(), forkedList.getMediaListId(), listId);
+        LOGGER.info("POST /{}: List {} created with id {} forked from list {}", uriInfo.getPath(), forkedList.getListName(), forkedList.getMediaListId(), listId);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(forkedList.getMediaListId())).build()).build();
     }
 
@@ -411,7 +411,7 @@ public class ListController {
 
         Request request = collaborativeListService.makeNewRequest(mediaList, user);
 
-        LOGGER.info("POST /lists/{}/requests: Collaboration request created with id {} for list {} and user {}", listId, request.getCollabId(), listId, user.getUsername());
+        LOGGER.info("POST /{}: Collaboration request created with id {} for list {} and user {}", uriInfo.getPath(), request.getCollabId(), listId, user.getUsername());
         return Response.created(uriInfo.getBaseUriBuilder().path("collab-requests").path(String.valueOf(request.getCollabId())).build()).build();
     }
 
@@ -428,10 +428,10 @@ public class ListController {
         Optional<ListReport> listReport = reportService.reportList(mediaList, reportDto.getReport());
 
         if (listReport.isPresent()) {
-            LOGGER.info("POST /lists/{}/reports: Report created with id {}", listId, listReport.get().getReportId());
+            LOGGER.info("POST /{}: Report created with id {}", uriInfo.getPath(), listReport.get().getReportId());
             return Response.created(uriInfo.getBaseUriBuilder().path("lists-reports").path(String.valueOf(listReport.get().getReportId())).build()).build();
         } else {
-            LOGGER.info("POST /lists/{}/reports: List {} deleted", listId, listId);
+            LOGGER.info("POST /{}: List {} deleted", uriInfo.getPath(), listId);
             return Response.noContent().build();
         }
     }

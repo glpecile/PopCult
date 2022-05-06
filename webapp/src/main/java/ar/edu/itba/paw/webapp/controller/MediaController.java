@@ -79,7 +79,7 @@ public class MediaController {
         final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page , pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
 
         if (listMedia.getElements().isEmpty()) {
-            LOGGER.info("GET /media: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -88,7 +88,7 @@ public class MediaController {
         });
         ResponseUtils.setPaginationLinks(response, listMedia, uriInfo);
 
-        LOGGER.info("GET /media: Returning page {} with {} results ", listMedia.getCurrentPage(), listMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), listMedia.getCurrentPage(), listMedia.getElements().size());
         return response.build();
     }
 
@@ -99,7 +99,7 @@ public class MediaController {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final User user = userService.getCurrentUser().orElse(null);
 
-        LOGGER.info("GET /media/{}: Returning media {} {}", mediaId, mediaId, media.getTitle());
+        LOGGER.info("GET /{}: Returning media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
         return Response.ok(MediaDto.fromMedia(uriInfo, media, user)).build();
     }
 
@@ -141,7 +141,7 @@ public class MediaController {
         final PageContainer<MediaList> lists = listsService.getListsIncludingMedia(media, page, pageSize);
 
         if (lists.getElements().isEmpty()) {
-            LOGGER.info("GET /media/{}/lists: Returning empty list", mediaId);
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -150,7 +150,7 @@ public class MediaController {
         });
         ResponseUtils.setPaginationLinks(response, lists, uriInfo);
 
-        LOGGER.info("GET /media/{}/lists: Returning page {} with {} results ", mediaId, lists.getCurrentPage(), lists.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), lists.getCurrentPage(), lists.getElements().size());
         return response.build();
     }
 
@@ -188,13 +188,13 @@ public class MediaController {
             staffMembers = media.getDirectorList();
 
         if (staffMembers.isEmpty()) {
-            LOGGER.info("GET /media/{}/staff?type={}: Returning empty list", mediaId, role.getRoleType());
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
         final List<MediaStaffDto> listsDto = MediaStaffDto.fromStaffList(uriInfo, staffMembers, media);
 
-        LOGGER.info("GET /media/{}/staff?type={}: Returning staff members from media {} {}", mediaId, role.getRoleType(), mediaId, media.getTitle());
+        LOGGER.info("GET /{}: Returning staff members from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
         return Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto) {
         }).build();
     }
@@ -210,7 +210,7 @@ public class MediaController {
         final PageContainer<MediaComment> mediaComments = commentService.getMediaComments(media, page, pageSize);
 
         if (mediaComments.getElements().isEmpty()) {
-            LOGGER.info("GET /media/{}/comments: Returning empty list.", mediaId);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -219,7 +219,7 @@ public class MediaController {
         });
         ResponseUtils.setPaginationLinks(response, mediaComments, uriInfo);
 
-        LOGGER.info("GET /media/{}/comments: Returning page {} with {} results.", mediaId, mediaComments.getCurrentPage(), mediaComments.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), mediaComments.getCurrentPage(), mediaComments.getElements().size());
         return response.build();
     }
 
@@ -234,7 +234,7 @@ public class MediaController {
 
         final MediaComment mediaComment = commentService.addCommentToMedia(user, media, commentInputDto.getBody());
 
-        LOGGER.info("POST /media/{}/comments: Comment created with id {}", mediaId, mediaComment.getCommentId());
+        LOGGER.info("POST /{}: Comment created with id {}", uriInfo.getPath(), mediaComment.getCommentId());
         return Response.created(uriInfo.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build()).build();
     }
 }

@@ -56,14 +56,14 @@ public class StudioController {
                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize){
         final PageContainer<Studio> studioPageContainer = studioService.getAllStudios(page,pageSize);
         if(studioPageContainer.getElements().isEmpty()){
-            LOGGER.info("GET /studio : Returning empty list");
+            LOGGER.info("GET /{} : Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
         final List<StudioDto> studioDtoList = StudioDto.fromStudioList(uriInfo,studioPageContainer.getElements());
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList){});
         ResponseUtils.setPaginationLinks(response,studioPageContainer,uriInfo);
 
-        LOGGER.info("GET /studio : Returning page {} with {} results", page, studioPageContainer.getElements().size());
+        LOGGER.info("GET /{} : Returning page {} with {} results", uriInfo.getPath(), page, studioPageContainer.getElements().size());
         return response.build();
     }
 
@@ -73,7 +73,7 @@ public class StudioController {
     public Response getStudio(@PathParam("id") int studioId){
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 
-        LOGGER.info("GET /studio/{} : Returning studio {} {}",studioId, studioId, studio.getName());
+        LOGGER.info("GET /{} : Returning studio {} {}", uriInfo.getPath(), studioId, studio.getName());
         return Response.ok(StudioDto.fromStudio(uriInfo,studio)).build();
     }
 
@@ -83,7 +83,7 @@ public class StudioController {
     public Response getStudioImage(@PathParam("id") int studioId) throws URISyntaxException{
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 
-        LOGGER.info("GET /studio/{}/image : Redirecting to image location",studioId);
+        LOGGER.info("GET /{}: Redirecting to image location", uriInfo.getPath());
         return Response.status(Response.Status.SEE_OTHER).location(new URI(studio.getImage())).build();
     }
 
@@ -97,7 +97,7 @@ public class StudioController {
         final PageContainer<Media> mediaByStudio = studioService.getMediaByStudio(studio,page,pageSize);
 
         if(mediaByStudio.getElements().isEmpty()){
-            LOGGER.info("GET /studio/{}/media: Returning empty list", studioId);
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -105,7 +105,7 @@ public class StudioController {
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList){});
         ResponseUtils.setPaginationLinks(responseBuilder,mediaByStudio,uriInfo);
 
-        LOGGER.info(" GET /studio/{}/media: Returning page {} with {} results", studioId, page, mediaByStudio.getElements().size());
+        LOGGER.info(" GET /{}: Returning page {} with {} results", uriInfo.getPath(), page, mediaByStudio.getElements().size());
         return responseBuilder.build();
     }
 

@@ -50,14 +50,14 @@ public class StaffMemberController {
                              ){
         final PageContainer<StaffMember> staffMembers = staffService.getAllStaff(page,pageSize);
         if(staffMembers.getElements().isEmpty()) {
-            LOGGER.info("GET /staff: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
         final List<StaffDto> staffDtoList = StaffDto.fromStaffList(uriInfo,staffMembers.getElements());
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StaffDto>>(staffDtoList){});
         ResponseUtils.setPaginationLinks(response,staffMembers,uriInfo);
 
-        LOGGER.info("GET /staff: Returning page {} with {} results", page, staffMembers.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), page, staffMembers.getElements().size());
         return response.build();
     }
 
@@ -67,7 +67,7 @@ public class StaffMemberController {
     public Response getStaff(@PathParam("id") int staffId){
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
 
-        LOGGER.info("GET /staff/{}: Returning staff {} {}", staffId, staffId, staffMember.getName());
+        LOGGER.info("GET /{}: Returning staff {} {}", uriInfo.getPath(), staffId, staffMember.getName());
         return Response.ok(StaffDto.fromStaff(uriInfo,staffMember)).build();
     }
 
@@ -83,7 +83,7 @@ public class StaffMemberController {
         final PageContainer<Media> staffMedia = staffService.
                 getMediaByRoleType(staffMember, page , pageSize, normalizedRole);
         if(staffMedia.getElements().isEmpty()){
-            LOGGER.info("GET /staff/{}/media: Returning empty list",staffId);
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -91,7 +91,7 @@ public class StaffMemberController {
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaInStaffDto>>(mediaDtoList){});
         ResponseUtils.setPaginationLinks(responseBuilder,staffMedia,uriInfo);
 
-        LOGGER.info(" GET /staff/{}/media: Returning page {} for role {} with {} results", staffId,page,role,staffMedia.getElements().size());
+        LOGGER.info(" GET /{}: Returning page {} for role {} with {} results", uriInfo.getPath(), page, role, staffMedia.getElements().size());
         return responseBuilder.build();
     }
 
@@ -100,7 +100,7 @@ public class StaffMemberController {
     @Produces(value={MediaType.APPLICATION_JSON})
     public Response getImage(@PathParam("id") int staffId) throws URISyntaxException {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
-        LOGGER.info("GET /staff/{}/image: Redirecting to image location.", staffId);
+        LOGGER.info("GET /{}: Redirecting to image location.", uriInfo.getPath());
         return Response.status(Response.Status.SEE_OTHER).location(new URI(staffMember.getImage())).build();
     }
 

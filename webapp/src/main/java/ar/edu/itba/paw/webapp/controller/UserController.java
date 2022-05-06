@@ -79,7 +79,7 @@ public class UserController {
         final PageContainer<User> users = userService.getUsers(page, pageSize, userRole, banned, term, listId);
 
         if (users.getElements().isEmpty()) {
-            LOGGER.info("GET /users: Returning empty list.");
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -88,7 +88,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, users, uriInfo);
 
-        LOGGER.info("GET /users: Returning page {} with {} results.", users.getCurrentPage(), users.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), users.getCurrentPage(), users.getElements().size());
         return response.build();
     }
 
@@ -98,7 +98,7 @@ public class UserController {
     public Response getUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        LOGGER.info("GET /users/{}: Returning user {}.", user.getUsername(), user.getUsername());
+        LOGGER.info("GET /{}: Returning user {}.", uriInfo.getPath(), user.getUsername());
         return Response.ok(UserDto.fromUser(uriInfo, user)).build();
     }
 
@@ -108,7 +108,7 @@ public class UserController {
     public Response createUser(@Valid @NotEmptyBody UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
-        LOGGER.info("POST /users: User {} created with id {}", user.getUsername(), user.getUserId());
+        LOGGER.info("POST /{}: User {} created with id {}", uriInfo.getPath(), user.getUsername(), user.getUserId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build()).build();
     }
 
@@ -120,7 +120,7 @@ public class UserController {
 
         userService.deleteUser(user);
 
-        LOGGER.info("DELETE /users/{username}: {} user deleted", username);
+        LOGGER.info("DELETE /{}: {} user deleted", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -139,7 +139,7 @@ public class UserController {
 
         userService.updateUserData(user, userEditDto.getName());
 
-        LOGGER.info("PUT /users/{username}: {} user updated", username);
+        LOGGER.info("PUT /{}: {} user updated", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -153,7 +153,7 @@ public class UserController {
 
         userService.changePassword(user, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword());
 
-        LOGGER.info("PUT /users/{username}/password: {} user password updated", username);
+        LOGGER.info("PUT /{}: {} user password updated", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -169,7 +169,7 @@ public class UserController {
 
         final Token token = userService.forgotPassword(user);
 
-        LOGGER.info("POST /users/reset-password: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
+        LOGGER.info("POST /{}: Token created for {} with expiry date on {}", uriInfo.getPath(), user.getUsername(), token.getExpiryDate());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
     }
 
@@ -183,7 +183,7 @@ public class UserController {
 
         userService.resetPassword(token, userResetPasswordDto.getNewPassword());
 
-        LOGGER.info("PUT /users/reset-password: Password reset for {}", token.getUser().getUsername());
+        LOGGER.info("PUT /{}: Password reset for {}", uriInfo.getPath(), token.getUser().getUsername());
         return Response.noContent().build();
     }
 
@@ -199,7 +199,7 @@ public class UserController {
 
         final Token token = userService.createVerificationToken(user);
 
-        LOGGER.info("POST /users/verification: Token created for {} with expiry date on {}", user.getUsername(), token.getExpiryDate());
+        LOGGER.info("POST /{}: Token created for {} with expiry date on {}", uriInfo.getPath(), user.getUsername(), token.getExpiryDate());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
     }
 
@@ -212,7 +212,7 @@ public class UserController {
 
         final User user = userService.confirmRegister(token);
 
-        LOGGER.info("PUT /users/verification: User {} enabled", token.getUser().getUsername());
+        LOGGER.info("PUT /{}: User {} enabled", uriInfo.getPath(), token.getUser().getUsername());
         return Response.noContent()
                 .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user))
                 .build();
@@ -229,7 +229,7 @@ public class UserController {
 
         byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
 
-        LOGGER.info("GET /users/{}/image: Returning user {} image", username, username);
+        LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
         return Response.ok(profileImage).build();
     }
 
@@ -244,7 +244,7 @@ public class UserController {
 
         userService.uploadUserProfileImage(user, imageBytes);
 
-        LOGGER.info("PUT /users/{}/image: Returning user {} image", username, username);
+        LOGGER.info("PUT /{}: Returning user {} image", uriInfo.getPath(), username);
         return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUsername())).path("image").build()).build();
     }
 
@@ -256,7 +256,7 @@ public class UserController {
 
         userService.deleteUserProfileImage(user);
 
-        LOGGER.info("DELETE /users/{}/image: User {} profile image deleted", username, username);
+        LOGGER.info("DELETE /{}: User {} profile image deleted", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -271,7 +271,7 @@ public class UserController {
 
         ModRequest modRequest = moderatorService.addModRequest(user);
 
-        LOGGER.info("POST /users/{}/mod-requests: Mod request added to user {}", username, username);
+        LOGGER.info("POST /{}: Mod request added to user {}", uriInfo.getPath(), username);
         return Response.created(uriInfo.getBaseUriBuilder().path("mods-requests").path(String.valueOf(modRequest.getRequestId())).build()).build();
     }
 
@@ -283,7 +283,7 @@ public class UserController {
 
         moderatorService.removeMod(user);
 
-        LOGGER.info("DELETE /users/{}/mod: Mod role removed to user {}", username, username);
+        LOGGER.info("DELETE /{}: Mod role removed to user {}", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -298,7 +298,7 @@ public class UserController {
 
         userService.banUser(user);
 
-        LOGGER.info("DELETE /users/{}/locked: User {} banned", username, username);
+        LOGGER.info("DELETE /{}: User {} banned", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -310,7 +310,7 @@ public class UserController {
 
         userService.unbanUser(user);
 
-        LOGGER.info("DELETE /users/{}/locked: User {} unbanned", username, username);
+        LOGGER.info("DELETE /{}: User {} unbanned", uriInfo.getPath(), username);
         return Response.noContent().build();
     }
 
@@ -328,7 +328,7 @@ public class UserController {
         final PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page, pageSize);
 
         if (favoriteMedia.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/favorite-media: Returning empty list.", username);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -337,7 +337,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, favoriteMedia, uriInfo);
 
-        LOGGER.info("GET /users/{}/favorite-media: Returning page {} with {} results.", username, favoriteMedia.getCurrentPage(), favoriteMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), favoriteMedia.getCurrentPage(), favoriteMedia.getElements().size());
         return response.build();
     }
 
@@ -350,11 +350,11 @@ public class UserController {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
         if (!favoriteService.isFavorite(media, user)) {
-            LOGGER.info("GET /users/{}/favorite-media/{}: media {} is not favorite of {}.", username, mediaId, mediaId, username);
+            LOGGER.info("GET /{}: media {} is not favorite of {}.", uriInfo.getPath(), mediaId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("GET /users/{}/favorite-media/{}: media {} is favorite of {}.", username, mediaId, mediaId, username);
+        LOGGER.info("GET /{}: media {} is favorite of {}.", uriInfo.getPath(), mediaId, username);
         return Response.ok(MediaFavoriteDto.fromMediaAndUser(uriInfo, media, user)).build();
     }
 
@@ -368,7 +368,7 @@ public class UserController {
 
         favoriteService.addMediaToFav(media, user);
 
-        LOGGER.info("PUT /users/{}/favorite-media/{}: media {} added to {}'s favorites.", username, mediaId, mediaId, username);
+        LOGGER.info("PUT /{}: media {} added to {}'s favorites.", uriInfo.getPath(), mediaId, username);
         return Response.noContent().build();
     }
 
@@ -382,7 +382,7 @@ public class UserController {
 
         favoriteService.deleteMediaFromFav(media, user);
 
-        LOGGER.info("DELETE /users/{}/favorite-media/{}: media {} removed from {}'s favorites.", username, mediaId, mediaId, username);
+        LOGGER.info("DELETE /{}: media {} removed from {}'s favorites.", uriInfo.getPath(), mediaId, username);
         return Response.noContent().build();
     }
 
@@ -400,7 +400,7 @@ public class UserController {
         final PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, page, pageSize);
 
         if (watchedMedia.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/watched-media: Returning empty list.", username);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -409,7 +409,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, watchedMedia, uriInfo);
 
-        LOGGER.info("GET /users/{}/watched-media: Returning page {} with {} results.", username, watchedMedia.getCurrentPage(), watchedMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), watchedMedia.getCurrentPage(), watchedMedia.getElements().size());
         return response.build();
     }
 
@@ -424,11 +424,11 @@ public class UserController {
         final Optional<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, media);
 
         if (!watchedMedia.isPresent()) {
-            LOGGER.info("GET /users/{}/watched-media/{}: media {} is not watched by {}.", username, mediaId, mediaId, username);
+            LOGGER.info("GET /{}: media {} is not watched by {}.", uriInfo.getPath(), mediaId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("GET /users/{}/watched-media/{}: media {} is watched by {} on {}.", username, mediaId, mediaId, username, watchedMedia.get().getWatchDate());
+        LOGGER.info("GET /{}: media {} is watched by {} on {}.", uriInfo.getPath(), mediaId, username, watchedMedia.get().getWatchDate());
         return Response.ok(MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, watchedMedia.get(), user)).build();
     }
 
@@ -444,7 +444,7 @@ public class UserController {
 
         watchService.addWatchedMedia(media, user, dateTimeDto.getDateTime());
 
-        LOGGER.info("PUT /users/{}/watched-media/{}: media {} added to {}'s watched on {}.", username, mediaId, mediaId, username, dateTimeDto.getDateTime().toLocalDate());
+        LOGGER.info("PUT /{}: media {} added to {}'s watched on {}.", uriInfo.getPath(), mediaId, username, dateTimeDto.getDateTime().toLocalDate());
         return Response.noContent().build();
     }
 
@@ -458,7 +458,7 @@ public class UserController {
 
         watchService.deleteWatchedMedia(media, user);
 
-        LOGGER.info("DELETE /users/{}/watched-media/{}: media {} removed from {}'s watched.", username, mediaId, mediaId, username);
+        LOGGER.info("DELETE /{}: media {} removed from {}'s watched.", uriInfo.getPath(), mediaId, username);
         return Response.noContent().build();
     }
 
@@ -476,7 +476,7 @@ public class UserController {
         final PageContainer<Media> toWatchMedia = watchService.getToWatchMedia(user, page, pageSize);
 
         if (toWatchMedia.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/to-watch-media: Returning empty list.", username);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -485,7 +485,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, toWatchMedia, uriInfo);
 
-        LOGGER.info("GET /users/{}/to-watch-media: Returning page {} with {} results.", username, toWatchMedia.getCurrentPage(), toWatchMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), toWatchMedia.getCurrentPage(), toWatchMedia.getElements().size());
         return response.build();
     }
 
@@ -498,11 +498,11 @@ public class UserController {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
         if (!watchService.isToWatch(media, user)) {
-            LOGGER.info("GET /users/{}/to-watch-media/{}: media {} is not to watch by {}.", username, mediaId, mediaId, username);
+            LOGGER.info("GET /{}: media {} is not to watch by {}.", uriInfo.getPath(), mediaId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("GET /users/{}/to-watch-media/{}: media {} is to watch by {}.", username, mediaId, mediaId, username);
+        LOGGER.info("GET /{}: media {} is to watch by {}.", uriInfo.getPath(), mediaId, username);
         return Response.ok(MediaToWatchDto.fromMediaAndUser(uriInfo, media, user)).build();
     }
 
@@ -518,7 +518,7 @@ public class UserController {
 
         watchService.addMediaToWatch(media, user);
 
-        LOGGER.info("PUT /users/{}/to-watch-media/{}: media {} added to {}'s to watch.", username, mediaId, mediaId, username);
+        LOGGER.info("PUT /{}: media {} added to {}'s to watch.", uriInfo.getPath(), mediaId, username);
         return Response.noContent().build();
     }
 
@@ -532,7 +532,7 @@ public class UserController {
 
         watchService.deleteToWatchMedia(media, user);
 
-        LOGGER.info("DELETE /users/{}/to-watch-media/{}: media {} removed from {}'s to watch.", username, mediaId, mediaId, username);
+        LOGGER.info("DELETE /{}: media {} removed from {}'s to watch.", uriInfo.getPath(), mediaId, username);
         return Response.noContent().build();
     }
 
@@ -549,18 +549,7 @@ public class UserController {
 
         final PageContainer<MediaList> favoriteLists = favoriteService.getUserFavoriteLists(user, page, pageSize);
 
-        if (favoriteLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/favorite-lists: Returning empty list.", username);
-            return Response.noContent().build();
-        }
-
-        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, favoriteLists.getElements(), user);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListFavoriteDto>>(listFavoriteDtoList) {
-        });
-        ResponseUtils.setPaginationLinks(response, favoriteLists, uriInfo);
-
-        LOGGER.info("GET /users/{}/favorite-lists: Returning page {} with {} results.", username, favoriteLists.getCurrentPage(), favoriteLists.getElements().size());
-        return response.build();
+        return getFavoriteListsResponse(user, favoriteLists);
     }
 
     @GET
@@ -573,17 +562,21 @@ public class UserController {
 
         final PageContainer<MediaList> publicFavoriteLists = favoriteService.getUserPublicFavoriteLists(user, page, pageSize);
 
-        if (publicFavoriteLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/public-favorite-lists: Returning empty list.", username);
+        return getFavoriteListsResponse(user, publicFavoriteLists);
+    }
+
+    private Response getFavoriteListsResponse(User user, PageContainer<MediaList> lists) {
+        if (lists.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, publicFavoriteLists.getElements(), user);
+        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, lists.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListFavoriteDto>>(listFavoriteDtoList) {
         });
-        ResponseUtils.setPaginationLinks(response, publicFavoriteLists, uriInfo);
+        ResponseUtils.setPaginationLinks(response, lists, uriInfo);
 
-        LOGGER.info("GET /users/{}/public-favorite-lists: Returning page {} with {} results.", username, publicFavoriteLists.getCurrentPage(), publicFavoriteLists.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), lists.getCurrentPage(), lists.getElements().size());
         return response.build();
     }
 
@@ -596,11 +589,11 @@ public class UserController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
 
         if (!favoriteService.isFavoriteList(mediaList, user)) {
-            LOGGER.info("GET /users/{}/favorite-lists/{}: list {} is not favorite of {}.", username, listId, listId, username);
+            LOGGER.info("GET /{}: list {} is not favorite of {}.", uriInfo.getPath(), listId, username);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("GET /users/{}/favorite-lists/{}: list {} is favorite of {}.", username, listId, listId, username);
+        LOGGER.info("GET /{}: list {} is favorite of {}.", uriInfo.getPath(), listId, username);
         return Response.ok(ListFavoriteDto.fromList(uriInfo, mediaList, user)).build();
     }
 
@@ -614,7 +607,7 @@ public class UserController {
 
         favoriteService.addListToFav(mediaList, user);
 
-        LOGGER.info("PUT /users/{}/favorite-lists/{}: list {} added to {}'s favorites.", username, listId, listId, username);
+        LOGGER.info("PUT /{}: list {} added to {}'s favorites.", uriInfo.getPath(), listId, username);
         return Response.noContent().build();
     }
 
@@ -628,7 +621,7 @@ public class UserController {
 
         favoriteService.deleteListFromFav(mediaList, user);
 
-        LOGGER.info("DELETE /users/{}/favorite-lists/{}: list {} removed from {}'s favorites.", username, listId, listId, username);
+        LOGGER.info("DELETE /{}: list {} removed from {}'s favorites.", uriInfo.getPath(), listId, username);
         return Response.noContent().build();
     }
 
@@ -645,18 +638,7 @@ public class UserController {
 
         final PageContainer<MediaList> userLists = listsService.getMediaListByUser(user, page, pageSize);
 
-        if (userLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/lists: Returning empty list.", username);
-            return Response.noContent().build();
-        }
-
-        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userLists.getElements(), user);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
-        });
-        ResponseUtils.setPaginationLinks(response, userLists, uriInfo);
-
-        LOGGER.info("GET /users/{}/lists: Returning page {} with {} results.", username, userLists.getCurrentPage(), userLists.getElements().size());
-        return response.build();
+        return getListsResponse(user, userLists);
     }
 
     @GET
@@ -669,18 +651,7 @@ public class UserController {
 
         final PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page, pageSize);
 
-        if (userPublicLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/public-lists: Returning empty list.", username);
-            return Response.noContent().build();
-        }
-
-        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userPublicLists.getElements(), user);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
-        });
-        ResponseUtils.setPaginationLinks(response, userPublicLists, uriInfo);
-
-        LOGGER.info("GET /users/{}/public-lists: Returning page {} with {} results.", username, userPublicLists.getCurrentPage(), userPublicLists.getElements().size());
-        return response.build();
+        return getListsResponse(user, userPublicLists);
     }
 
     @GET
@@ -693,17 +664,21 @@ public class UserController {
 
         final PageContainer<MediaList> userEditableLists = listsService.getUserEditableLists(user, page, pageSize);
 
-        if (userEditableLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/editable-lists: Returning empty list.", username);
+        return getListsResponse(user, userEditableLists);
+    }
+
+    private Response getListsResponse(User user, PageContainer<MediaList> lists) {
+        if (lists.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, userEditableLists.getElements(), user);
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, lists.getElements(), user);
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
         });
-        ResponseUtils.setPaginationLinks(response, userEditableLists, uriInfo);
+        ResponseUtils.setPaginationLinks(response, lists, uriInfo);
 
-        LOGGER.info("GET /users/{}/editable-lists: Returning page {} with {} results.", username, userEditableLists.getCurrentPage(), userEditableLists.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), lists.getCurrentPage(), lists.getElements().size());
         return response.build();
     }
 
@@ -721,7 +696,7 @@ public class UserController {
         final PageContainer<Notification> notifications = commentService.getUserListsCommentsNotifications(user, page, pageSize);
 
         if (notifications.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/notifications: Returning empty list.", username);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -730,7 +705,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, notifications, uriInfo);
 
-        LOGGER.info("GET /users/{}/notifications: Returning page {} with {} results.", username, notifications.getCurrentPage(), notifications.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), notifications.getCurrentPage(), notifications.getElements().size());
         return response.build();
     }
 
@@ -748,7 +723,7 @@ public class UserController {
         final PageContainer<Request> collaborationRequests = collaborativeListService.getRequestsByUser(user, page, pageSize);
 
         if (collaborationRequests.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/collab-requests: Returning empty list.", username);
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -757,7 +732,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, collaborationRequests, uriInfo);
 
-        LOGGER.info("GET /users/{}/collab-requests: Returning page {} with {} results.", username, collaborationRequests.getCurrentPage(), collaborationRequests.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), collaborationRequests.getCurrentPage(), collaborationRequests.getElements().size());
         return response.build();
     }
 
@@ -776,7 +751,7 @@ public class UserController {
         final PageContainer<Media> recommendedMedia = favoriteService.getRecommendationsBasedOnFavMedia(mediaType, user, page, pageSize);
 
         if (recommendedMedia.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/recommended-media: Returning empty list", username);
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -785,7 +760,7 @@ public class UserController {
         });
         ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);
 
-        LOGGER.info("GET /users/{}/recommended-media: Returning page {} with {} results.", username, recommendedMedia.getCurrentPage(), recommendedMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), recommendedMedia.getCurrentPage(), recommendedMedia.getElements().size());
         return response.build();
     }
 
@@ -799,17 +774,6 @@ public class UserController {
 
         final PageContainer<MediaList> recommendedLists = favoriteService.getRecommendationsBasedOnFavLists(user, page, pageSize);
 
-        if (recommendedLists.getElements().isEmpty()) {
-            LOGGER.info("GET /users/{}/recommended-lists: Returning empty list", username);
-            return Response.noContent().build();
-        }
-
-        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, recommendedLists.getElements(), user);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
-        });
-        ResponseUtils.setPaginationLinks(response, recommendedLists, uriInfo);
-
-        LOGGER.info("GET /users/{}/recommended-lists: Returning page {} with {} results.", username, recommendedLists.getCurrentPage(), recommendedLists.getElements().size());
-        return response.build();
+        return getListsResponse(user, recommendedLists);
     }
 }

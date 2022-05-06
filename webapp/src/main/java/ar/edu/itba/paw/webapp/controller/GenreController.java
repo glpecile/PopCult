@@ -64,7 +64,7 @@ public class GenreController {
     public Response getGenres(){
         List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos){});
-        LOGGER.info("GET /genres: Returning all genre types");
+        LOGGER.info("GET /{}: Returning all genre types", uriInfo.getPath());
         return responseBuilder.build();
 
     }
@@ -75,7 +75,7 @@ public class GenreController {
     public Response getGenre(@PathParam("type") final String genreType){
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
 
-        LOGGER.info("GET /genres/{}: Returning genre {} {}", normalizedGenre.getGenre(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
+        LOGGER.info("GET /{}: Returning genre {} {}", uriInfo.getPath(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
         return Response.ok(GenreDto.fromGenre(uriInfo,normalizedGenre)).build();
 
     }
@@ -89,7 +89,7 @@ public class GenreController {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
         final PageContainer<Media> mediaPageContainer = genreService.getMediaByGenre(normalizedGenre, page , itemsPerPage);
         if(mediaPageContainer.getElements().isEmpty()){
-            LOGGER.info("GET /genres/{}/media: Returning empty list", normalizedGenre.getGenre());
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -97,7 +97,7 @@ public class GenreController {
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaInGenreDto>>(mediaDtos){});
         ResponseUtils.setPaginationLinks(response,mediaPageContainer,uriInfo);
 
-        LOGGER.info("GET /genres/{}/media: Returning page {} with {} results", normalizedGenre.getGenre(), mediaPageContainer.getCurrentPage(), mediaPageContainer.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), mediaPageContainer.getCurrentPage(), mediaPageContainer.getElements().size());
         return response.build();
     }
 
