@@ -83,9 +83,7 @@ const SearchResults = (props) => {
                                 return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
                                             key={content.id}>
                                     <ListsCard id={content.id} key={content.id}
-                                               image1={content.image1}
-                                               image2={content.image1} image3={content.image1}
-                                               image4={content.image1}
+                                               mediaUrl={content.mediaUrl}
                                                listTitle={content.name}/></div>
                             })}
                         </div>

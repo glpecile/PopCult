@@ -13,12 +13,15 @@ const listApi = (() => {
             });
     }
 
-    const getLists = ({page, pageSize, query}) => {
+    const getLists = ({page, pageSize, query, genres, sortType, decades}) => {
         return api.get(`/lists`,
             {
                 params: {
                     'page': page,
                     'page-size': pageSize,
+                    ...(genres && {'genres': genres}),
+                    ...(sortType && {'sort-type': sortType}),
+                    ...(decades && {'decade': decades}),
                     ...(query && {'query': query})
                 }
             });

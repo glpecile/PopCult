@@ -11,8 +11,8 @@ const listService = (() => {
         return {links, data};
     }
 
-    const getLists = async ({page, pageSize, query}) => {
-        const res = await listApi.getLists({page, pageSize, query});
+    const getLists = async ({page, pageSize, query, genres, sortType, decades}) => {
+        const res = await listApi.getLists({page, pageSize, query, genres, sortType, decades});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};

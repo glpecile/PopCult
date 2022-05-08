@@ -204,12 +204,23 @@
   "lists_noCollaborators": "No hay colaboradores en la lista",
   "lists_noMedia": "No hay media en la lista",
   "search_placeholder": "Buscar...",
-  "search_title": "Resultados para: {{term}}",
+  "search_title": "Resultados para: '{{term}}'",
   "search_no_results": "Parece que no hay resultados disponibles para tu búsqueda.",
   "comments_no_more": "Parece que no hay mas comentarios para mostrar!",
   "comments_no_comments": "Aun no hay comentarios aquí",
   "comments_load_more": "Ver mas comentarios",
   "comments_title": "Comentarios",
   "comments_submit_comment": "Comentar",
-  "comments_placeholder": "Di algo..."
+  "comments_placeholder": "Di algo...",
+  "search_sort": "Ordenar",
+  "search_sort_date": "Fecha",
+  "search_sort_title": "Titulo",
+  "search_none": "Ninguno",
+  "search_types": "Contenido",
+  "search_decades": "Décadas",
+  "search_categories": "Categorías",
+  "search_filters_apply": "Aplicar filtros",
+  "search_filters_clear": "Limpiar filtros",
+  "search_all": "Todo"
+
 }

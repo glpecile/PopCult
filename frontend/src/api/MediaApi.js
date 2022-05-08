@@ -12,7 +12,7 @@ const mediaApi = (() => {
                     ...(mediaType && {'type': mediaType}),
                     ...(genres && {'genres': genres}),
                     ...(sortType && {'sort-type': sortType}),
-                    ...(decades && {'decades': decades}),
+                    ...(decades && {'decade': decades}),
                     ...(query && {'query': query})
                 }
             });
