@@ -36,9 +36,6 @@ public class ListCommentController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ListCommentController.class);
 
-    private static final String defaultPage = "1";
-    private static final String defaultPageSize = "12";
-
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})

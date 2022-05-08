@@ -658,8 +658,8 @@ public class UserController {
     @Path("/{username}/editable-lists")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getUserEditableLists(@PathParam("username") String username,
-                                       @QueryParam("page") @DefaultValue(defaultPage) int page,
-                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         final PageContainer<MediaList> userEditableLists = listsService.getUserEditableLists(user, page, pageSize);

@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.webapp.dto.output.CollaboratorRequestDto;
-import ar.edu.itba.paw.webapp.dto.output.NotificationDto;
 import ar.edu.itba.paw.webapp.exceptions.RequestNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

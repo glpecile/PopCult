@@ -34,7 +34,7 @@ public class ListCommentReportController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                           @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
-        final  PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
+        final PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
 
         if (listCommentReports.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
@@ -54,7 +54,7 @@ public class ListCommentReportController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListReport(@PathParam("id") int listCommentReportId) {
-        final  ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
+        final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         LOGGER.info("GET /{}: Returning list comment report {}", uriInfo.getPath(), listCommentReportId);
         return Response.ok(ReportListCommentDto.fromListCommentReport(uriInfo, listCommentReport)).build();

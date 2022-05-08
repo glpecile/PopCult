@@ -16,12 +16,6 @@
     <name>webapp Maven Webapp</name>
 
     <dependencies>
-        <!--    Springframework dependencies-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-
         <!--    javax.servlet dependencies-->
         <dependency>
             <groupId>javax.servlet</groupId>
