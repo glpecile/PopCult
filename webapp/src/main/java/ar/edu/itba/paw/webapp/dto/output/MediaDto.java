@@ -205,6 +205,14 @@ public class MediaDto {
         this.listsContainUrl = listsContainUrl;
     }
 
+    public String getCommentsUrl() {
+        return commentsUrl;
+    }
+
+    public void setCommentsUrl(String commentsUrl) {
+        this.commentsUrl = commentsUrl;
+    }
+
     public String getFavoriteUrl() {
         return favoriteUrl;
     }

@@ -63,7 +63,7 @@ public class StudioHibernateDao implements StudioDao {
         PaginationValidator.validate(page,pageSize);
 
         final Query nativeQuery = em.createNativeQuery("SELECT studioid FROM studio OFFSET :offset LIMIT :limit")
-                .setParameter("offset", page * pageSize)
+                .setParameter("offset", (page-1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> studioIds = nativeQuery.getResultList();

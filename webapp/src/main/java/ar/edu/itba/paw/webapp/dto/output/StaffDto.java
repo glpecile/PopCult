@@ -40,9 +40,19 @@ public class StaffDto {
         return staffDto;
     }
 
+    public static StaffDto fromRole(UriInfo url, Role staffMemberRole){
+        return fromStaff(url,staffMemberRole.getStaffMember());
+    }
+
     public static List<StaffDto> fromStaffList(UriInfo url, List<StaffMember> staffMembers){
         return staffMembers.stream().map(m -> StaffDto.fromStaff(url, m)).collect(Collectors.toList());
     }
+
+    public static List<StaffDto> fromRoleList(UriInfo url, List<? extends Role> staffMemberRoles){
+        return fromStaffList(url,staffMemberRoles.stream().map(Role::getStaffMember).collect(Collectors.toList()));
+    }
+
+
 
     public int getId() {
         return id;

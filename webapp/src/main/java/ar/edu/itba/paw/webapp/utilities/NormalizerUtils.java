@@ -29,6 +29,8 @@ public class NormalizerUtils {
     }
 
     public static RoleType getNormalizedRoleType(String roleType){
+        if(roleType == null)
+            return null;
         return RoleType.valueOf(roleType.toUpperCase());
     }
 

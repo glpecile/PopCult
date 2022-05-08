@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
@@ -38,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("media")
@@ -145,8 +147,8 @@ public class MediaController {
             return Response.noContent().build();
         }
 
-        final List<ListPeekDto> listsDto = ListPeekDto.fromMediaListList(uriInfo, lists.getElements(), media);
-        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListPeekDto>>(listsDto) {
+        final List<ListDto> listsDto = ListDto.fromListList(uriInfo, lists.getElements(),userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listsDto) {
         });
         ResponseUtils.setPaginationLinks(response, lists, uriInfo);
 
@@ -166,10 +168,10 @@ public class MediaController {
             return Response.noContent().build();
         }
 
-        final List<MediaStudioDto> studioDtoList = MediaStudioDto.fromStudioList(uriInfo, studios, media);
+        final List<StudioDto> studioDtoList = StudioDto.fromStudioList(uriInfo, studios);
 
         LOGGER.info("GET /{}: Returning studios from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<MediaStudioDto>>(studioDtoList) {
+        return Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList) {
         }).build();
     }
 
@@ -177,7 +179,7 @@ public class MediaController {
     @Path("/{id}/staff")
     @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
     public Response getMediaStaff(@PathParam("id") int mediaId,
-                                  @QueryParam("type") String roleType) {
+                                  @QueryParam("role") @NotNull String roleType) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final RoleType role = NormalizerUtils.getNormalizedRoleType(roleType);
         final List<? extends Role> staffMembers;
@@ -192,10 +194,10 @@ public class MediaController {
             return Response.noContent().build();
         }
 
-        final List<MediaStaffDto> listsDto = MediaStaffDto.fromStaffList(uriInfo, staffMembers, media);
+        final List<StaffDto> listsDto = StaffDto.fromRoleList(uriInfo, staffMembers);
 
         LOGGER.info("GET /{}: Returning staff members from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<MediaStaffDto>>(listsDto) {
+        return Response.ok(new GenericEntity<List<StaffDto>>(listsDto) {
         }).build();
     }
 
