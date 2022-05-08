@@ -31,6 +31,7 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByDirector(StaffMember staffMember, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN director WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
@@ -54,6 +55,7 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByActor(StaffMember staffMember, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN crew WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
@@ -77,6 +79,7 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMedia(StaffMember staffMember, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT DISTINCT(mediaid) FROM " +

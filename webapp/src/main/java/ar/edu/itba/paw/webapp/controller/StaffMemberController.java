@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.StaffService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.RoleType;
@@ -32,6 +33,9 @@ public class StaffMemberController {
 
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffMemberController.class);
 
@@ -87,8 +91,8 @@ public class StaffMemberController {
             return Response.noContent().build();
         }
 
-        final List<MediaInStaffDto> mediaDtoList = MediaInStaffDto.fromStaffList(uriInfo,staffMember,normalizedRole,staffMedia.getElements());
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaInStaffDto>>(mediaDtoList){});
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo,staffMedia.getElements(),userService.getCurrentUser().orElse(null));
+        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList){});
         ResponseUtils.setPaginationLinks(responseBuilder,staffMedia,uriInfo);
 
         LOGGER.info(" GET /{}: Returning page {} for role {} with {} results", uriInfo.getPath(), page, role, staffMedia.getElements().size());

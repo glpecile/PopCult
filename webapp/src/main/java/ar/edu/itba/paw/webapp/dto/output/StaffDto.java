@@ -34,7 +34,7 @@ public class StaffDto {
 
         staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         staffDto.imageUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("image").build().toString();
-        staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
+        staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").build().toString();
         staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Director").build().toString();
         staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Actor").build().toString();
         return staffDto;

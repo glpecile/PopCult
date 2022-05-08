@@ -36,11 +36,12 @@ public class StudioHibernateDao implements StudioDao {
 
     @Override
     public PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM mediastudio WHERE studioid = :studioid OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("studioid",studio.getStudioId());
-        nativeQuery.setParameter("offset",page*pageSize);
+        nativeQuery.setParameter("offset",(page-1)*pageSize);
         nativeQuery.setParameter("limit",pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
