@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -79,6 +80,7 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT watchedmediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NOT NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
@@ -97,6 +99,7 @@ public class WatchHibernateDao implements WatchDao {
 
     @Override
     public PageContainer<Media> getToWatchMedia(User user, int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM towatchmedia NATURAL JOIN media WHERE userId = :userId AND watchDate IS NULL ORDER BY watchDate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("offset", (page - 1) * pageSize);

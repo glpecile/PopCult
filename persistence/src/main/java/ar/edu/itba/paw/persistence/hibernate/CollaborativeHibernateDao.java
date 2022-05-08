@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -63,6 +64,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("listId", mediaList.getMediaListId());
         nativeQuery.setParameter("status", true);
@@ -82,6 +84,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setParameter("status", false);
