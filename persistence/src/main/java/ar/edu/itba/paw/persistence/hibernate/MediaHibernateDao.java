@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -40,6 +41,7 @@ public class MediaHibernateDao implements MediaDao {
     public PageContainer<Media> getMediaList(MediaType mediaType, int page, int pageSize) {
         //Para paginacion
         //Pedimos el contenido paginado.
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("type", mediaType.ordinal());
         nativeQuery.setParameter("offset", (page-1) * pageSize);
@@ -63,6 +65,7 @@ public class MediaHibernateDao implements MediaDao {
     public PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize) {
         //Para paginacion
         //Pedimos el contenido paginado.
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type ORDER BY releasedate DESC OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("type", mediaType.ordinal());
         nativeQuery.setParameter("offset", (page-1) * pageSize);
@@ -146,6 +149,7 @@ public class MediaHibernateDao implements MediaDao {
     @Override
     public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term, Integer notInList) {
 
+        PaginationValidator.validate(page,pageSize);
         String sortBaseString = "";
         String sortCountString = "";
         StringBuilder fromTables = new StringBuilder();

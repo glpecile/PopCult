@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.media.Genre;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -37,6 +38,8 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getAllLists(int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -53,6 +56,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -71,6 +75,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid AND visibility = :visibility OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -96,6 +101,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -118,6 +124,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE visibility = :visibility ORDER BY creationDate DESC OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("visibility", true);
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
@@ -210,6 +217,8 @@ public class ListsHibernateDao implements ListsDao {
     public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term) {
         //Para paginacion
         //Pedimos el contenido paginado.
+        PaginationValidator.validate(page,pageSize);
+
         String sortBaseString = "";
         String sortCountString = "";
         StringBuilder fromTables = new StringBuilder();
@@ -249,6 +258,8 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
+
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM listelement WHERE mediaid = :mediaid OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("mediaid", media.getMediaId());
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
@@ -348,6 +359,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = em.createNativeQuery("(SELECT medialistid FROM medialist WHERE userid = :userId) UNION " +
                         "(SELECT m.medialistid FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = :userId AND accepted = :accepted) " +
@@ -369,6 +381,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize) {
+        PaginationValidator.validate(page,pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = em.createNativeQuery("SELECT m.medialistid FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid " +
                         "WHERE f.originalistid = :mediaListId AND m.visibility = :visibility " +
