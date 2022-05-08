@@ -23,6 +23,9 @@ const CommonFilters = (props) => {
     };
 
     const handleGenres = (event) => {
+        console.log(event.target);
+        console.log(event.target.value);
+        console.log(props.genres);
         const {
             target: {value},
         } = event;
@@ -72,17 +75,17 @@ const CommonFilters = (props) => {
                             className="text-violet-500">{t('search_categories')}</InputLabel>
                 <Select
                     labelId="categories-select-label"
-                    id="categories-select"
                     label={t('search_categories')}
+                    id="categories-select"
                     multiple
                     value={props.categories}
                     onChange={handleGenres}
-                    input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
+                    input={<OutlinedInput id="select-multiple-chip" label={t('search_categories')}/>}
                     renderValue={(selected) => (
                         <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
                             {selected.map((value) => (
                                 <Chip color="secondary" key={value}
-                                      label={value} variant="outlined"/>
+                                      label={t('genre_' + value.toLowerCase())} variant="outlined"/>
                             ))}
                         </Box>
                     )}
