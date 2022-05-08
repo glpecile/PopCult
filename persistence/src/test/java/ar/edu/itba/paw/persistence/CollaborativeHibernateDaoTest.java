@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -55,13 +56,25 @@ public class CollaborativeHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testMakeNewRequest() {
+    public void testMakeNewRequest() throws CollaboratorRequestAlreadyExistsException {
         Request request = collaborativeHibernateDao.makeNewRequest(mediaList, user);
 
         em.flush();
 
         Assert.assertNotNull(request);
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, REQUEST_TABLE, String.format("collabid = %d", request.getCollabId())));
+    }
+
+    @Rollback
+    @Test(expected = CollaboratorRequestAlreadyExistsException.class)
+    public void testCollaboratorRequestAlreadyExists() throws CollaboratorRequestAlreadyExistsException {
+        User user = InstanceProvider.getUserCollaborator();
+
+        collaborativeHibernateDao.makeNewRequest(mediaList, user);
+
+        em.flush();
+
+        Assert.fail();
     }
 
     @Rollback
@@ -75,32 +88,11 @@ public class CollaborativeHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testAddCollaborator() throws UserAlreadyCollaboratesInListException {
+    public void testAddCollaborator() {
         collaborativeHibernateDao.addCollaborator(mediaList, user);
 
         em.flush();
 
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, REQUEST_TABLE, String.format("listid = %d AND collaboratorid = %d", mediaList.getMediaListId(), user.getUserId())));
-    }
-
-    @Rollback
-    @Test(expected = UserAlreadyCollaboratesInListException.class)
-    public void testAddAlreadyExistsCollaborator() throws UserAlreadyCollaboratesInListException {
-        MediaList canEditList = InstanceProvider.getCanEditMediaList();
-        User collaborator = InstanceProvider.getUserCollaborator();
-
-        collaborativeHibernateDao.addCollaborator(canEditList, collaborator);
-
-        Assert.fail();
-    }
-
-    @Rollback
-    @Test(expected = UserAlreadyCollaboratesInListException.class)
-    public void testAddOwnerAsCollaborator() throws UserAlreadyCollaboratesInListException {
-        User owner = InstanceProvider.getOwnerListUser();
-
-        collaborativeHibernateDao.addCollaborator(mediaList, owner);
-
-        Assert.fail();
     }
 }

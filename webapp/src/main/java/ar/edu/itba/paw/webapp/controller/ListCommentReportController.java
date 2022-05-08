@@ -37,7 +37,7 @@ public class ListCommentReportController {
         final  PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
 
         if (listCommentReports.getElements().isEmpty()) {
-            LOGGER.info("GET /lists-comments-reports: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -46,41 +46,41 @@ public class ListCommentReportController {
         });
         ResponseUtils.setPaginationLinks(response, listCommentReports, uriInfo);
 
-        LOGGER.info("GET /lists-comments-reports: Returning page {} with {} results", listCommentReports.getCurrentPage(), listCommentReports.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), listCommentReports.getCurrentPage(), listCommentReports.getElements().size());
         return response.build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListReport(@PathParam("id") int listCommentReportId) {
         final  ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
-        LOGGER.info("GET /lists-comments-reports({}: Returning list comment report {}", listCommentReportId, listCommentReportId);
+        LOGGER.info("GET /{}: Returning list comment report {}", uriInfo.getPath(), listCommentReportId);
         return Response.ok(ReportListCommentDto.fromListCommentReport(uriInfo, listCommentReport)).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int listCommentReportId) {
         final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.approveListCommentReport(listCommentReport);
 
-        LOGGER.info("PUT /lists-comments-requests/{}: List comment report {} approved. Comment {} deleted", listCommentReportId, listCommentReportId, listCommentReport.getComment().getCommentId());
+        LOGGER.info("PUT /{}: List comment report {} approved. Comment {} deleted", uriInfo.getPath(), listCommentReportId, listCommentReport.getComment().getCommentId());
         return Response.noContent().build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int listCommentReportId) {
         final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.deleteListCommentReport(listCommentReport);
 
-        LOGGER.info("DELETE /lists-comments-requests/{}: List comment report {} rejected", listCommentReportId, listCommentReportId);
+        LOGGER.info("DELETE /{}: List comment report {} rejected", uriInfo.getPath(), listCommentReportId);
         return Response.noContent().build();
     }
 }

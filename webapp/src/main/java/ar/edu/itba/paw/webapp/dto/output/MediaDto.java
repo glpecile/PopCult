@@ -21,6 +21,7 @@ public class MediaDto {
     private LocalDate releaseDate;
     private int seasons;
     private Country country;
+    private int likes;
 
     // Entity url
     private String url;
@@ -28,10 +29,16 @@ public class MediaDto {
     // Auxiliar urls
     private String imageUrl;
     private String genreUrl;
+    private String staffUrl;
+    private String studiosUrl;
     private String listsContainUrl;
+    private String commentsUrl;
+
 
     // Related to current user
     private String favoriteUrl;
+    private String toWatchMediaUrl;
+    private String watchedMediaUrl;
 
     public static MediaDto fromMedia(UriInfo url, Media media, User currentUser) {
         MediaDto mediaDto = new MediaDto();
@@ -43,14 +50,20 @@ public class MediaDto {
         mediaDto.releaseDate = media.getReleaseDate().toLocalDate();
         mediaDto.seasons = media.getSeasons();
         mediaDto.country = media.getCountry();
+        mediaDto.likes = media.getLikes();
 
         mediaDto.url = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).build().toString();
         mediaDto.imageUrl = media.getImage();
         mediaDto.listsContainUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
-        mediaDto.genreUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
-
+        mediaDto.genreUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("genres").build().toString();
+        mediaDto.staffUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("staff").build().toString();
+        mediaDto.studiosUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("studios").build().toString();
+        mediaDto.commentsUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("comments").build().toString();
         if(currentUser != null) {
             mediaDto.favoriteUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("favorite-media").path(String.valueOf(media.getMediaId())).build().toString();
+            mediaDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("to-watch-media").path(String.valueOf(media.getMediaId())).build().toString();
+            mediaDto.watchedMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("watched-media").path(String.valueOf(media.getMediaId())).build().toString();
+
         }
 
         return mediaDto;
@@ -64,7 +77,7 @@ public class MediaDto {
         mediaDto.setReleaseDate(media.getReleaseDate().toLocalDate());
         mediaDto.setSeasons(media.getSeasons());
         mediaDto.setCountry(media.getCountry());
-
+        mediaDto.setLikes(media.getLikes());
         mediaDto.setImageUrl(media.getImage());
     }
 
@@ -136,6 +149,14 @@ public class MediaDto {
         this.country = country;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -160,6 +181,22 @@ public class MediaDto {
         this.genreUrl = genreUrl;
     }
 
+    public String getStaffUrl() {
+        return staffUrl;
+    }
+
+    public void setStaffUrl(String staffUrl) {
+        this.staffUrl = staffUrl;
+    }
+
+    public String getStudiosUrl() {
+        return studiosUrl;
+    }
+
+    public void setStudiosUrl(String studiosUrl) {
+        this.studiosUrl = studiosUrl;
+    }
+
     public String getListsContainUrl() {
         return listsContainUrl;
     }
@@ -168,11 +205,35 @@ public class MediaDto {
         this.listsContainUrl = listsContainUrl;
     }
 
+    public String getCommentsUrl() {
+        return commentsUrl;
+    }
+
+    public void setCommentsUrl(String commentsUrl) {
+        this.commentsUrl = commentsUrl;
+    }
+
     public String getFavoriteUrl() {
         return favoriteUrl;
     }
 
     public void setFavoriteUrl(String favoriteUrl) {
         this.favoriteUrl = favoriteUrl;
+    }
+
+    public String getToWatchMediaUrl() {
+        return toWatchMediaUrl;
+    }
+
+    public void setToWatchMediaUrl(String toWatchMediaUrl) {
+        this.toWatchMediaUrl = toWatchMediaUrl;
+    }
+
+    public String getWatchedMediaUrl() {
+        return watchedMediaUrl;
+    }
+
+    public void setWatchedMediaUrl(String watchedMediaUrl) {
+        this.watchedMediaUrl = watchedMediaUrl;
     }
 }

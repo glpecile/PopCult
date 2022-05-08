@@ -33,7 +33,7 @@ public class NotificationController {
     public Response getNotification(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
-        LOGGER.info("GET /notifications/{}: Returning notification {}", notificationId, notificationId);
+        LOGGER.info("GET /{}: Returning notification {}", uriInfo.getPath(), notificationId);
         return Response.ok(NotificationDto.fromNotification(uriInfo, notification)).build();
     }
 
@@ -45,7 +45,7 @@ public class NotificationController {
 
         commentService.setListCommentNotificationAsOpened(notification);
 
-        LOGGER.info("PUT /notifications/{}: Notification {} marked as opened", notificationId, notificationId);
+        LOGGER.info("PUT /{}: Notification {} marked as opened", uriInfo.getPath(), notificationId);
         return Response.noContent().build();
     }
 
@@ -57,7 +57,7 @@ public class NotificationController {
 
         commentService.deleteListCommentNotification(notification);
 
-        LOGGER.info("DELETE /notifications/{}: Notification {} deleted", notificationId, notificationId);
+        LOGGER.info("DELETE /{}: Notification {} deleted", uriInfo.getPath(), notificationId);
         return Response.noContent().build();
     }
 }

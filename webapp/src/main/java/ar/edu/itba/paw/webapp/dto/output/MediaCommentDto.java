@@ -3,7 +3,11 @@ package ar.edu.itba.paw.webapp.dto.output;
 import ar.edu.itba.paw.models.comment.MediaComment;
 
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlType;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@XmlType(name="")
 public class MediaCommentDto extends CommentDto {
 
     private String mediaTitle;
@@ -24,6 +28,10 @@ public class MediaCommentDto extends CommentDto {
         mediaCommentDto.url = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build().toString();
         mediaCommentDto.commentMediaUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(mediaComment.getMedia().getMediaId())).build().toString();
         return mediaCommentDto;
+    }
+
+    public static List<MediaCommentDto> fromMediaCommentList(UriInfo url, List<MediaComment> mediaComments){
+        return mediaComments.stream().map(c -> MediaCommentDto.fromMediaComment(url, c)).collect(Collectors.toList());
     }
 
     public String getMediaTitle() {

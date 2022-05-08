@@ -3,7 +3,12 @@ package ar.edu.itba.paw.webapp.dto.output;
 import ar.edu.itba.paw.models.comment.ListComment;
 
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlType;
+import java.util.List;
+import java.util.stream.Collectors;
 
+// Remove type attribute added automatically by jersey when extending class
+@XmlType(name="")
 public class ListCommentDto extends CommentDto {
 
     private String listTitle;
@@ -24,6 +29,10 @@ public class ListCommentDto extends CommentDto {
         listCommentDto.url = url.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).build().toString();
         listCommentDto.commentListUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(listComment.getMediaList().getMediaListId())).build().toString();
         return listCommentDto;
+    }
+
+    public static List<ListCommentDto> fromListCommentList(UriInfo url, List<ListComment> listCommentList) {
+        return listCommentList.stream().map(c -> ListCommentDto.fromListComment(url, c)).collect(Collectors.toList());
     }
 
     public String getListTitle() {

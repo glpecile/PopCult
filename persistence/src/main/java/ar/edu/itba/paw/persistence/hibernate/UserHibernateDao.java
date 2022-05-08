@@ -54,6 +54,13 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public List<User> getByUsernames(List<String> usernames) {
+        final TypedQuery<User> query = em.createQuery("from User where username in :usernames", User.class);
+        query.setParameter("usernames", usernames);
+        return usernames.isEmpty() ? Collections.emptyList() : query.getResultList();
+    }
+
+    @Override
     public User register(String email, String username, String password, String name) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         if (getByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();
@@ -99,14 +106,14 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned) {
+    public PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId) {
         PaginationValidator.validate(page, pageSize);
 
-        final Query nativeQuery = buildGetUsersQuery(" SELECT userid FROM (SELECT DISTINCT userid, username FROM users ", page, pageSize, userRole, banned);
+        final Query nativeQuery = buildGetUsersQuery(" SELECT userid FROM (SELECT DISTINCT userid, username FROM users ", page, pageSize, userRole, banned, term, notInListId);
         @SuppressWarnings("unchecked")
         List<Long> userIds = nativeQuery.getResultList();
 
-        final Query countQuery = buildGetUsersQuery(" SELECT COUNT(userid) FROM (SELECT DISTINCT userid, username FROM users ", null, null, userRole, banned);
+        final Query countQuery = buildGetUsersQuery(" SELECT COUNT(userid) FROM (SELECT DISTINCT userid, username FROM users ", null, null, userRole, banned, term, notInListId);
         final long count = ((Number) countQuery.getSingleResult()).longValue();
 
         final TypedQuery<User> query = em.createQuery("FROM User WHERE userId IN :userIds ORDER BY username ASC", User.class)
@@ -116,28 +123,42 @@ public class UserHibernateDao implements UserDao {
         return new PageContainer<>(users, page, pageSize, count);
     }
 
-    private Query buildGetUsersQuery(String selectFrom, Integer page, Integer pageSize, UserRole userRole, Boolean banned) {
+    private Query buildGetUsersQuery(String selectFrom, Integer page, Integer pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId) {
         final StringBuilder queryBuilder = new StringBuilder(selectFrom);
         final LinkedList<String> wheres = new LinkedList<>();
         final Map<String, Object> parameters = new HashMap<>();
 
-        if(userRole != null) {
+        if (userRole != null) {
             wheres.add(" role = :role ");
             parameters.put("role", userRole.ordinal());
         }
-        if(banned != null) {
+        if (banned != null) {
             wheres.add(" nonlocked = :nonlocked ");
             parameters.put("nonlocked", !banned);
         }
 
-        if(!wheres.isEmpty()) {
+        if (term != null) {
+            wheres.add(" username ILIKE CONCAT('%', :username, '%') ");
+            parameters.put("username", term);
+        }
+
+        if (notInListId != null) {
+            wheres.add(" userid NOT IN ( " +
+                    "SELECT userid FROM medialist WHERE medialistid = :listid " +
+                    "UNION " +
+                    "SELECT collaboratorid FROM collaborative WHERE listid = :listid AND accepted = true " +
+                    ") ");
+            parameters.put("listid", notInListId);
+        }
+
+        if (!wheres.isEmpty()) {
             queryBuilder.append(" WHERE ");
             queryBuilder.append(wheres.removeFirst());
             wheres.forEach(where -> queryBuilder.append(" AND ").append(where));
         }
 
         queryBuilder.append(" ORDER BY username ASC ");
-        if(page != null && pageSize != null) {
+        if (page != null && pageSize != null) {
             queryBuilder.append(" OFFSET :offset LIMIT :limit ");
             parameters.put("offset", (page - 1) * pageSize);
             parameters.put("limit", pageSize);

@@ -17,6 +17,7 @@ public class ListDto {
     private boolean visibility;
     private boolean collaborative;
     private String owner;
+    private int likes;
 
     private String url;
 
@@ -43,6 +44,7 @@ public class ListDto {
         listDto.visibility = mediaList.getVisible();
         listDto.collaborative = mediaList.getCollaborative();
         listDto.owner = mediaList.getUser().getUsername();
+        listDto.likes = mediaList.getLikes();
 
         listDto.url = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getMediaListId())).build().toString();
         listDto.ownerUrl = url.getBaseUriBuilder().path("users").path(mediaList.getUser().getUsername()).build().toString();
@@ -124,6 +126,14 @@ public class ListDto {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public String getUrl() {

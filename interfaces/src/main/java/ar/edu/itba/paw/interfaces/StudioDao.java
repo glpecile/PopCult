@@ -12,4 +12,6 @@ public interface StudioDao {
 
     PageContainer<Media> getMediaByStudio(Studio studio, int page, int pageSize);
 
+    PageContainer<Studio> getAllStudios(int page, int pageSize);
+
 }

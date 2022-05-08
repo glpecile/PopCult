@@ -74,6 +74,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String ACCESS_CONTROL_CHECK_LIST_OWNER = "@accessControl.checkListOwner(request, #id)";
     // list(id) does not belong to authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_NOT_OWNER = "@accessControl.checkListNotOwner(request, #id)";
+    //  list(id) is public or belongs to authenticated user or is collaborator:
+    private static final String ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC = "@accessControl.checkListOwnerCollaboratorOrPublic(request, #id)";
+    // user must be authenticated and list(id) is public or belongs to authenticated user or is collaborator:
+    private static final String ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC = "@accessControl.checkAuthAndListOwnerCollaboratorOrPublic(request, #id)";
     // list(id) is editable by authenticated user:
     private static final String ACCESS_CONTROL_CHECK_LIST_COLLABORATOR = "@accessControl.checkListCollaborator(request, #id)";
     // collabRequest(id) is associated to a list that belong to authenticated user:
@@ -144,9 +148,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(ALL);
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Link"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -196,18 +200,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * List Controller
                  */
-                .antMatchers(HttpMethod.POST, "/lists", "lists/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/lists")
                     .authenticated()
+                .antMatchers(HttpMethod.POST, "/lists/{id}/comments")
+                    .access(ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
+                .antMatchers(HttpMethod.PATCH, "/lists/{id}/collaborators")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
                 .antMatchers(HttpMethod.DELETE, "/lists/{id}", "/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
                 .antMatchers(HttpMethod.PUT, "/lists/{id}", "/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
+                .antMatchers(HttpMethod.PATCH, "/lists/{id}/media")
+                    .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.DELETE, "/lists/{id}/media/{media-id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.PUT, "/lists/{id}/media/{media-id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
                 .antMatchers(HttpMethod.POST, "/lists/{id}/forks", "/lists/{id}/reports", "/lists/{id}/requests")
                     .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
+                .antMatchers(HttpMethod.GET, "/lists/{id}/**")
+                    .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
 
                 /**
                  * ListComments Controller
@@ -276,7 +288,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers(HttpMethod.GET, "/users/{username}/notifications", "/users/{username}/collab-requests")
+                .antMatchers(HttpMethod.GET, "/users/{username}/lists/**", "/users/{username}/editable-lists", "/users/{username}/favorite-lists/**", "/users/{username}/notifications", "/users/{username}/collab-requests")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
                 .antMatchers("/**")

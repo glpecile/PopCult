@@ -42,4 +42,10 @@ public class StaffServiceImpl implements StaffService {
         return staffDao.getMedia(staffMember,page,pageSize);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<StaffMember> getAllStaff(int page, int pageSize) {
+        return staffDao.getAllStaff(page,pageSize);
+    }
+
 }

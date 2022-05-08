@@ -19,6 +19,8 @@ public interface UserService {
 
     Optional<User> getByUsername(String username);
 
+    List<User> getByUsernames(List<String> usernames);
+
     User register(String email, String username, String password, String name) throws UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
     Token createVerificationToken(User user) throws EmailAlreadyVerifiedException;
@@ -53,7 +55,7 @@ public interface UserService {
 
     void unbanUser(User user);
 
-    void unbanUsers();
+    void unbanUsers(); // DO NOT DELETE
 
-    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned);
+    PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId);
 }

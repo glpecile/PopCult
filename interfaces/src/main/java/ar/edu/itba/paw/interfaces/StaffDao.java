@@ -15,4 +15,6 @@ public interface StaffDao {
     PageContainer<Media> getMediaByActor(StaffMember staffMember, int page, int pageSize);
 
     PageContainer<Media> getMedia(StaffMember staffMember, int page, int pageSize);
+
+    PageContainer<StaffMember> getAllStaff(int page, int pageSize);
 }

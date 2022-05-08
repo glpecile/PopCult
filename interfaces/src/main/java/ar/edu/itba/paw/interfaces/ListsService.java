@@ -21,7 +21,7 @@ public interface ListsService {
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
+    PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
@@ -33,11 +33,17 @@ public interface ListsService {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd);
 
-    void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
+    void manageMedia(MediaList mediaList, List<Media> mediaToAdd, List<Media> mediaToRemove);
 
-    void addToMediaList(MediaList mediaList, List<Media> medias);
+    void addToMediaList(MediaList mediaList, Media media);
+
+    boolean mediaAlreadyInList(MediaList mediaList, Media media);
+
+    void addToMediaList(MediaList mediaList, List<Media> media);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
+
+    void deleteMediaFromList(MediaList mediaList, List<Media> media);
 
     void deleteList(MediaList mediaList);
 

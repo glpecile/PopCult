@@ -16,10 +16,14 @@ public interface StaffService {
     PageContainer<Media> getMediaByActor(StaffMember staffMember, int page, int pageSize);
 
     default PageContainer<Media> getMediaByRoleType(StaffMember staffMember, int page, int pageSize, RoleType roleType) {
+        if( roleType == null)
+            return getMedia(staffMember,page,pageSize);
         if (roleType == RoleType.ACTOR)
             return getMediaByActor(staffMember, page, pageSize);
         return getMediaByDirector(staffMember, page, pageSize);
     }
 
     PageContainer<Media> getMedia(StaffMember staffMember, int page, int pageSize);
+
+    PageContainer<StaffMember> getAllStaff(int page, int pageSize);
 }

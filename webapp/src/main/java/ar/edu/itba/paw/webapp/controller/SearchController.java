@@ -58,7 +58,7 @@ public class SearchController {
         final List<Genre> genres = NormalizerUtils.getNormalizedGenres(searchForm.getGenres());
         final List<MediaType> mediaTypes = NormalizerUtils.getNormalizedMediaType(searchForm.getMediaTypes());
         final SortType sortType = NormalizerUtils.getNormalizedSortType(searchForm.getSortType());
-        final PageContainer<Media> searchMediaResults = mediaService.getMediaByFilters(mediaTypes, page - 1, itemsPerPage, sortType, genres, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm());
+        final PageContainer<Media> searchMediaResults = mediaService.getMediaByFilters(mediaTypes, page - 1, itemsPerPage, sortType, genres, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm(), 0 );
         final PageContainer<MediaList> searchMediaListResults = listsService.getMediaListByFilters(page - 1, listsPerPage, sortType, genres, minimumMediaMatches, searchForm.getStartYear(), searchForm.getLastYear(), searchForm.getTerm());
         final List<ListCover> listCovers = ListCoverImpl.getListCover(searchMediaListResults.getElements(), listsService);
         final PageContainer<ListCover> listCoversContainer = new PageContainer<>(listCovers, searchMediaListResults.getCurrentPage(), searchMediaListResults.getPageSize(), searchMediaListResults.getTotalCount());

@@ -21,7 +21,7 @@ public interface ListsDao {
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
-    PageContainer<Media> getMediaIdInList(MediaList mediaList, int page, int pageSize);
+    PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize);
 
     PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
@@ -31,11 +31,15 @@ public interface ListsDao {
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
 
-    void addToMediaList(MediaList mediaList, Media media) throws MediaAlreadyInListException;
+    void addToMediaList(MediaList mediaList, Media media);
 
-    void addToMediaList(MediaList mediaList, List<Media> medias);
+    boolean mediaAlreadyInList(MediaList mediaList, Media media);
+
+    void addToMediaList(MediaList mediaList, List<Media> media);
 
     void deleteMediaFromList(MediaList mediaList, Media media);
+
+    void deleteMediaFromList(MediaList mediaList, List<Media> media);
 
     void deleteList(MediaList mediaList);
 

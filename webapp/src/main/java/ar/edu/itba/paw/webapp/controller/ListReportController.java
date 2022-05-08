@@ -37,7 +37,7 @@ public class ListReportController {
         final PageContainer<ListReport> listReports = reportService.getListReports(page, pageSize);
 
         if (listReports.getElements().isEmpty()) {
-            LOGGER.info("GET /lists-reports: Returning empty list");
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
@@ -46,41 +46,41 @@ public class ListReportController {
         });
         ResponseUtils.setPaginationLinks(response, listReports, uriInfo);
 
-        LOGGER.info("GET /lists-reports: Returning page {} with {} results", listReports.getCurrentPage(), listReports.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), listReports.getCurrentPage(), listReports.getElements().size());
         return response.build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 
-        LOGGER.info("GET /lists-reports({}: Returning list report {}", listReportId, listReportId);
+        LOGGER.info("GET /{}: Returning list report {}", uriInfo.getPath(), listReportId);
         return Response.ok(ReportListDto.fromListReport(uriInfo, listReport)).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.approveListReport(listReport);
 
-        LOGGER.info("PUT /lists-requests/{}: List report {} approved. List {} deleted", listReportId, listReportId, listReport.getMediaList().getMediaListId());
+        LOGGER.info("PUT /{}: List report {} approved. List {} deleted", uriInfo.getPath(), listReportId, listReport.getMediaList().getMediaListId());
         return Response.noContent().build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.deleteListReport(listReport);
 
-        LOGGER.info("DELETE /lists-requests/{}: List report {} rejected", listReportId, listReportId);
+        LOGGER.info("DELETE /{}: List report {} rejected", uriInfo.getPath(), listReportId);
         return Response.noContent().build();
     }
 }
