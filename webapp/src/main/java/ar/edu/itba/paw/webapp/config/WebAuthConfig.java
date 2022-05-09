@@ -224,9 +224,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * ListComments Controller
                  */
-                .antMatchers(HttpMethod.DELETE, "lists-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/lists-comments/{id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "lists-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/lists-comments/{id}/reports")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
 
                 /**
@@ -246,9 +246,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * MediaCommentController
                  */
-                .antMatchers(HttpMethod.DELETE, "media-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/media-comments/{id}")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "media-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/media-comments/{id}/reports")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
 
 
