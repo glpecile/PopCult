@@ -41,7 +41,7 @@ public interface UserService {
 
     Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
 
-    void uploadUserProfileImage(User user, byte[] photoBlob);
+    void uploadUserProfileImage(User user, byte[] photoBlob, String format) throws ImageConversionException;
 
     void deleteUserProfileImage(User user);
 

@@ -239,12 +239,12 @@ public class UserController {
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     public Response updateProfileImage(@PathParam("username") String username,
                                        @Image @FormDataParam("image") final FormDataBodyPart image,
-                                       @Size(max = 1024 * 1024 * 2) @FormDataParam("image") byte[] imageBytes) {
+                                       @Size(max = 1024 * 1024 * 2) @FormDataParam("image") byte[] imageBytes) throws ImageConversionException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        userService.uploadUserProfileImage(user, imageBytes);
+        userService.uploadUserProfileImage(user, imageBytes, image.getMediaType().getSubtype());
 
-        LOGGER.info("PUT /{}: Returning user {} image", uriInfo.getPath(), username);
+        LOGGER.info("PUT /{}: User {} image updated", uriInfo.getPath(), username);
         return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUsername())).path("image").build()).build();
     }
 
