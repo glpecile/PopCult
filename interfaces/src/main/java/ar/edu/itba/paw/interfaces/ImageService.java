@@ -12,5 +12,7 @@ public interface ImageService {
 
     Image uploadImage(byte[] photoBlob);
 
+    Image uploadImage(byte[] photoBlob, int width, int height, String format) throws ImageConversionException;
+
     void deleteImage(Image image);
 }
