@@ -39,7 +39,7 @@ const listApi = (() => {
     }
 
     const getList = (url) => {
-     return api.get(url);
+        return api.get(url);
     }
 
     const getListById = (id) => {
@@ -93,6 +93,16 @@ const listApi = (() => {
         return api.post(url);
     }
 
+    const getUserEditableListsByUsername = ({username, page, pageSize}) => {
+        return api.get(`/users/${username}/editable-lists`,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
     return {
         getMediaLists,
         getLists,
@@ -106,7 +116,8 @@ const listApi = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList
+        forkList,
+        getUserEditableListsByUsername
     }
 })();
 

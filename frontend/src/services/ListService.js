@@ -80,6 +80,13 @@ const listService = (() => {
         await listApi.forkList(url);
     }
 
+    const getUserEditableListsByUsername = async ({username, page, pageSize}) => {
+        const res = await listApi.getUserEditableListsByUsername({username, page, pageSize});
+        const links = parseLinkHeader(res.headers.link);
+        const data = res.data;
+        return {links, data};
+    }
+
     return {
         getMediaLists,
         getLists,
@@ -93,7 +100,8 @@ const listService = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList
+        forkList,
+        getUserEditableListsByUsername
     }
 })();
 
