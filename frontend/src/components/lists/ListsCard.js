@@ -17,7 +17,7 @@ function ListsCard(content) {
             }
         }
         getMediaPictures();
-    }, [content, setErrorStatusCode]);
+    }, [content.mediaUrl, setErrorStatusCode]);
 
     return (<>{media && <div
             className="flex flex-col h-full bg-white rounded-lg shadow-md hover:shadow-indigo-500/50 group transition duration-300 ease-in-out hover:bg-violet-50/25 transform hover:-translate-1 hover:scale-105 active:scale-95">

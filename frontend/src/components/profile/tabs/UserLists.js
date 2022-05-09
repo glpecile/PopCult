@@ -5,7 +5,6 @@ import Spinner from "../../animation/Spinner";
 
 const UserLists = (props) => {
     const {t} = useTranslation();
-    const maxPages = 4;
 
 
     return <>{
@@ -21,7 +20,7 @@ const UserLists = (props) => {
                 <div className="flex justify-center">
                     {(props.lists.data.length > 0 && props.lists.links.last.page > 1) &&
                         <PaginationComponent page={props.page}
-                                             lastPage={props.lists.links.last.page > maxPages ? maxPages : props.lists.links.last.page}
+                                             lastPage={props.lists.links.last.page}
                                              setPage={props.setPage}/>
                     }
                 </div>
