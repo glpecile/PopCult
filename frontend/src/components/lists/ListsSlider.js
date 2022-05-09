@@ -1,17 +1,66 @@
 import ListsCard from "./ListsCard";
-function ListsSlider(props) {
-    const createMedia = (content) => {
-        return (<div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                     data-slider-target="image"
-                     key={content.id} ><ListsCard id={content.id} key={content.id} image1={content.image1} image2={content.image1} image3={content.image1} image4={content.image1} listTitle={content.listTitle}/></div>);
+import {IconButton} from "@mui/material";
+import AliceCarousel from "react-alice-carousel";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+const handleDragStart = (e) => e.preventDefault();
+
+const ListsSlider = (props) => {
+    const responsive = {
+        0: {items: 1},
+        568: {items: 2},
+        1024: {items: 4},
+    };
+    let buttonStyle = " absolute top-1/3 absolute top-1/3 h-8 w-8 rounded-full drop-shadow-md cursor-pointer bg-slate-50 hover:bg-slate-200 transition duration-300 ease-in-out transform active:scale-90";
+
+    const createItems = (content) => {
+        return (
+            <div className="px-2.5 py-3">
+                <ListsCard id={content.id} key={content.id}
+                           mediaUrl={content.mediaUrl}
+                           listTitle={content.name}/>
+            </div>
+        );
+    }
+
+    const renderDotsItem = ({isActive}) => {
+        return isActive ?
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900">
+            </div> : <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900">
+            </div>;
+    };
+
+    const renderNext = () => {
+        return <IconButton type="button" className={"-right-4" + buttonStyle}>
+            <NavigateNextIcon/>
+        </IconButton>;
+    }
+
+    const renderPrev = () => {
+        return <IconButton type="button" className={"-left-2" + buttonStyle}>
+            <NavigateBeforeIcon/>
+        </IconButton>;
     }
 
     return (
-        <div className="flex flex-col" data-controller="slider">
-            <div className="flex py-4 px-2 overflow-x-scroll no-scrollbar" data-slider-target="scrollContainer">
-                {props.media.map(content => createMedia(content))}
-            </div>
-        </div>
+        <>
+            <AliceCarousel mouseTracking
+                           animationDuration="150"
+                           infinite
+                           touchTracking
+                           touchMoveDefaultEvents
+                           controlsStrategy="responsive"
+                           renderNextButton={renderNext}
+                           renderPrevButton={renderPrev}
+                           renderDotsItem={renderDotsItem}
+                           responsive={responsive}
+                           paddingRight={50}
+                           keyboardNavigation
+                           items={props.lists.map(content => createItems(content))}
+            />
+
+        </>
     );
 }
 
