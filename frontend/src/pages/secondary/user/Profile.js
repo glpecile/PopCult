@@ -1,13 +1,13 @@
 import UserProfile from "../../../components/profile/UserProfile";
 import UserTabs from "../../../components/profile/UserTabs";
 import {useParams} from "react-router-dom";
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../../store/AuthContext";
-import Error404 from "../errors/Error404";
 import UserService from "../../../services/UserService";
 import Spinner from "../../../components/animation/Spinner";
+import useErrorStatus from "../../../hooks/useErrorStatus";
 
 
 const Profile = () => {
@@ -15,57 +15,54 @@ const Profile = () => {
     const loggedUsername = useContext(AuthContext).username;
     const [isCurrUser, setIsCurrUser] = useState(username.localeCompare(loggedUsername) === 0);
     const [userData, setUserData] = useState(undefined);
-    const [userError, setUserError] = useState(false);
     const mountedUser = useRef(true);
     const {t} = useTranslation();
+    const {setErrorStatusCode} = useErrorStatus();
+
 
     useEffect(() => {
         setIsCurrUser(username.localeCompare(loggedUsername) === 0);
-        setUserError(false);
     }, [username, loggedUsername]);
 
-    const getUserByUsername = useCallback(async () => {
-        if (username && mountedUser.current) {
-            try {
-                const user = await UserService.getUserByUsername(username);
-                setUserData(user);
-            } catch (error) {
-                console.log(error);
-                setUserError(true);
-            }
-        }
-    }, [username]);
 
     useEffect(() => {
         mountedUser.current = true;
+
+        async function getUserByUsername() {
+            if (username && mountedUser.current) {
+                try {
+                    const user = await UserService.getUserByUsername(username);
+                    setUserData(user);
+                    console.log(user);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
+            }
+        };
+
         getUserByUsername();
         return () => {
             mountedUser.current = false;
         }
-    }, [username, getUserByUsername])
+    }, [username, setErrorStatusCode])
 
     return (
         <>
-            {!userError &&
+            <Helmet>
+                <title>{t('profile_title')}</title>
+            </Helmet>
+            {userData === undefined && <Spinner/>}
+            {
+                userData !== undefined &&
                 <>
-                    <Helmet>
-                        <title>{t('profile_title')}</title>
-                    </Helmet>
-                    {userData === undefined && <Spinner/>}
-                    {
-                        userData !== undefined &&
-                        <>
-                            <UserProfile id={userData.username}
-                                         name={userData.name}
-                                         username={userData.username}
-                                         image={userData.imageUrl}
-                                         isCurrentUser={isCurrUser}/>
-                            <UserTabs username={userData.username} id={userData.username}/>
-                        </>
-                    }
+                    <UserProfile id={userData.username}
+                                 name={userData.name}
+                                 username={userData.username}
+                                 image={userData.imageUrl}
+                                 isCurrentUser={isCurrUser}/>
+                    <UserTabs username={userData.username} id={userData.username} currentUser={isCurrUser} userData={userData}/>
                 </>
             }
-            {userError && <Error404/>}
         </>
     );
 }

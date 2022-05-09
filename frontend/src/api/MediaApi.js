@@ -22,6 +22,16 @@ const mediaApi = (() => {
         return api.get(`/media/${id}`);
     }
 
+    const getMediaByUrl = ({url, page, pageSize}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            });
+    }
+
     const getGenreMedia = ({url, page, pageSize}) => {
         return api.get(url,
             {
@@ -56,6 +66,7 @@ const mediaApi = (() => {
     return {
         getMediaList,
         getMedia,
+        getMediaByUrl,
         getGenreMedia,
         getMediaFromStaff: getMediaFromStaff,
         getStudioMedia

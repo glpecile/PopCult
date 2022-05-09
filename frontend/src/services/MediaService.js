@@ -26,6 +26,13 @@ const MediaService = (() => {
         return res.data;
     }
 
+    const getMediaByUrl = async ({url, page, pageSize}) => {
+        const res = await mediaApi.getMediaByUrl({url, page, pageSize});
+        const links = parseLinkHeader(res.headers.link);
+        const data = res.data;
+        return {links, data};
+    }
+
     const getGenreMedia = async ({url, page, pageSize}) => {
         const res = await mediaApi.getGenreMedia({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
@@ -61,6 +68,7 @@ const MediaService = (() => {
         getFilms,
         getSeries,
         getMedia,
+        getMediaByUrl,
         getGenreMedia,
         getMediaFromStaff: getMediaFromStaff,
         getDirectorMedia,

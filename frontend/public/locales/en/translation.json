@@ -48,6 +48,7 @@
   "profile_tabs_favLists": "Favorite Lists",
   "profile_tabs_watchedMedia": "Watched Media",
   "profile_tabs_toWatchMedia": "To Watch Media",
+  "profile_tabs_noContent": "It seems there is no content to show here!",
   "profile_settings_title": "<0>{{username}}</0>'s Profile Editing",
   "profile_settings_changePassword": "Change Password",
   "profile_settings_cancelChangePassword": "Discard Changes",
