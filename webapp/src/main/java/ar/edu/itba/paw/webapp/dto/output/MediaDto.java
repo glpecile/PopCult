@@ -70,6 +70,7 @@ public class MediaDto {
     }
 
     protected static void fillFromMedia(MediaDto mediaDto, UriInfo url, Media media) {
+        mediaDto.setId(media.getMediaId());
         mediaDto.setType(media.getType());
         mediaDto.setTitle(media.getTitle());
         mediaDto.setDescription(media.getDescription());
