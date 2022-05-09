@@ -48,8 +48,6 @@ export default function SearchPage() {
     }, [setErrorStatusCode]);
 
     useEffect(() => {
-        // const params = Object.fromEntries(mediaFilters.entries());
-
         navigate({
             pathname: '/search',
             search: createSearchParams({
@@ -108,7 +106,9 @@ export default function SearchPage() {
             </h1>
             {<Filters showMediaFilters={activeTab === 0} setMediaFilters={setMediaFilters} mediaFilters={mediaFilters}
                       setListPage={setListPage} setMediaPage={setMediaPage}
-                      setListFilters={setListFilters} listFilters={listFilters} genres={genres}/>}
+                      setListFilters={setListFilters} listFilters={listFilters} genres={genres} mediaSort={mediaSort}
+                      mediaType={mediaType} mediaDecades={mediaDecades} mediaCategories={mediaCategories}
+                      listSort={listSort} listDecades={listDecades} listCategories={listCategories}/>}
             {(media && lists) ?
                 <SearchResults media={media} mediaPage={mediaPage} setMediaPage={setMediaPage} lists={lists}
                                listPage={listPage} setListPage={setListPage} activeTab={activeTab}

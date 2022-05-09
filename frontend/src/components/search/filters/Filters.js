@@ -9,20 +9,13 @@ import {useTranslation} from "react-i18next";
 const Filters = (props) => {
     const {t} = useTranslation();
 
-    const mediaSort = 'msort';
-    const mediaType = 'mtype';
-    const mediaDecades = 'mdecades';
-    const mediaCategories = 'mcategories';
-    const [type, setType] = useState(props.mediaFilters.has(mediaType) ? props.mediaFilters.get(mediaType) : '');
-    const [mSortBy, setMSortBy] = useState(props.mediaFilters.has(mediaSort) ? props.mediaFilters.get(mediaSort) : '');
-    const [mDecades, setMDecades] = useState(props.mediaFilters.has(mediaDecades) ? props.mediaFilters.get(mediaDecades) : '');
-    const [mCategories, setMCategories] = useState(props.mediaFilters.has(mediaCategories) ? props.mediaFilters.get(mediaCategories) : []);
-    const listSort = 'lsort';
-    const listDecades = 'ldecades';
-    const listCategories = 'lcategories';
-    const [lSortBy, setLSortBy] = useState(props.listFilters.has(listSort) ? props.listFilters.get(listSort) : '');
-    const [lDecades, setLDecades] = useState(props.listFilters.has(listDecades) ? props.listFilters.get(listDecades) : '');
-    const [lCategories, setLCategories] = useState(props.listFilters.has(listCategories) ? props.listFilters.get(listCategories) : []);
+    const [type, setType] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaType)) ? props.mediaFilters.get(props.mediaType) : '');
+    const [mSortBy, setMSortBy] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaSort)) ? props.mediaFilters.get(props.mediaSort) : '');
+    const [mDecades, setMDecades] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaDecades)) ? props.mediaFilters.get(props.mediaDecades) : '');
+    const [mCategories, setMCategories] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaCategories)) ? props.mediaFilters.get(props.mediaCategories) : []);
+    const [lSortBy, setLSortBy] = useState((props.listFilters && props.listFilters.has(props.listSort)) ? props.listFilters.get(props.listSort) : '');
+    const [lDecades, setLDecades] = useState((props.listFilters && props.listFilters.has(props.listDecades)) ? props.listFilters.get(props.listDecades) : '');
+    const [lCategories, setLCategories] = useState((props.listFilters && props.listFilters.has(props.listCategories)) ? props.listFilters.get(props.listCategories) : []);
 
 
     const handleMediaFilters = (key, value) => {
@@ -49,13 +42,16 @@ const Filters = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        handleMediaFilters(mediaSort, mSortBy);
-        handleMediaFilters(mediaType, type);
-        handleMediaFilters(mediaDecades, mDecades);
-        handleMediaFilters(mediaCategories, mCategories);
-        handleListsFilters(listSort, lSortBy);
-        handleListsFilters(listDecades, lDecades);
-        handleListsFilters(listCategories, lCategories);
+        if (props.showMediaFilters) {
+            handleMediaFilters(props.mediaSort, mSortBy);
+            handleMediaFilters(props.mediaType, type);
+            handleMediaFilters(props.mediaDecades, mDecades);
+            handleMediaFilters(props.mediaCategories, mCategories);
+        } else {
+            handleListsFilters(props.listSort, lSortBy);
+            handleListsFilters(props.listDecades, lDecades);
+            handleListsFilters(props.listCategories, lCategories);
+        }
     }
 
     const cleanFilters = () => {
@@ -77,7 +73,8 @@ const Filters = (props) => {
             {props.showMediaFilters ?
                 (<MediaFilters sortBy={mSortBy} setSortBy={setMSortBy} categories={mCategories}
                                setCategories={setMCategories}
-                               decades={mDecades} setDecades={setMDecades} type={type} setType={setType} genres={props.genres}/>)
+                               decades={mDecades} setDecades={setMDecades} type={type} setType={setType}
+                               genres={props.genres}/>)
                 :
                 (<ListFilters sortBy={lSortBy} setSortBy={setLSortBy} categories={lCategories}
                               setCategories={setLCategories}
