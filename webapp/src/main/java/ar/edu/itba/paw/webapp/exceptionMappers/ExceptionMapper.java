@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -19,13 +18,13 @@ public class ExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Exceptio
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionMapper.class);
 
     @Override
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response toResponse(Exception exception) {
         LOGGER.error("{}: {}", exception.getClass().getName(), exception.getMessage());
 
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(ErrorDto.fromErrorMsg(exception.getMessage()))
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 }

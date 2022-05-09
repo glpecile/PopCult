@@ -6,9 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.NotAllowedException;
-import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,13 +20,13 @@ public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplica
     private static final Logger LOGGER = LoggerFactory.getLogger(WebApplicationExceptionMapper.class);
 
     @Override
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response toResponse(WebApplicationException exception) {
         LOGGER.error("{}: {}", exception.getClass().getName(), exception.getMessage());
 
         return Response
                 .status(exception.getResponse().getStatus())
                 .entity(ErrorDto.fromErrorMsg(exception.getMessage()))
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 }

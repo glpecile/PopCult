@@ -7,7 +7,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -21,13 +20,13 @@ public class AuthenticationExceptionMapper implements ExceptionMapper<Authentica
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationExceptionMapper.class);
 
     @Override
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response toResponse(AuthenticationException exception) {
         LOGGER.error("{}: {}", exception.getClass().getName(), exception.getMessage());
 
         return Response
                 .status(Response.Status.UNAUTHORIZED)
                 .entity(ErrorDto.fromErrorMsg(exception.getMessage()))
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 }
