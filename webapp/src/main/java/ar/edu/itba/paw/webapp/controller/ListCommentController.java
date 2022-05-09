@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.ListCommentDto;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class ListCommentController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS})
     public Response getListComment(@PathParam("id") int listCommentId) {
         final ListComment listComment = commentService.getListCommentById(listCommentId).orElseThrow(CommentNotFoundException::new);
 
@@ -59,8 +60,8 @@ public class ListCommentController {
 
     @POST
     @Path("/{id}/reports")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS_REPORTS})
+    @Consumes(value = {VndType.APPLICATION_LISTS_COMMENTS_REPORTS})
     public Response reportListComment(@PathParam("id") int listCommentId,
                                       @Valid @NotEmptyBody ReportDto reportDto) throws CommentAlreadyReportedException {
         final ListComment listComment = commentService.getListCommentById(listCommentId).orElseThrow(CommentNotFoundException::new);

@@ -18,6 +18,10 @@ public class VndType {
 
     public static final String APPLICATION_LISTS_COMMENTS_REPORTS = "application/vnd.lists.comments.reports.v1+json";
 
+    public static final String APPLICATION_LISTS_PATCH_MEDIA = "application/vnd.lists.patch.media.v1+json";
+
+    public static final String APPLICATION_LISTS_PATCH_COLLABORATORS = "application/vnd.lists.patch.collaborators.v1+json";
+
     public static final String APPLICATION_MEDIA = "application/vnd.media.v1+json";
 
     public static final String APPLICATION_MEDIA_FAVORITES = "application/vnd.media.favorites.v1+json";

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListReport;
 import ar.edu.itba.paw.webapp.dto.output.ReportListDto;
 import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class ListReportController {
     private static final String defaultPageSize = "12";
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_REPORTS})
     public Response getListReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<ListReport> listReports = reportService.getListReports(page, pageSize);
@@ -52,7 +53,7 @@ public class ListReportController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_REPORTS})
     public Response getListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 

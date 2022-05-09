@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.ListCommentReport;
 import ar.edu.itba.paw.webapp.dto.output.ReportListCommentDto;
 import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class ListCommentReportController {
     private static final String defaultPageSize = "12";
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS_REPORTS})
     public Response getListCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                           @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<ListCommentReport> listCommentReports = reportService.getListCommentReports(page, pageSize);
@@ -52,7 +53,7 @@ public class ListCommentReportController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS_REPORTS})
     public Response getListReport(@PathParam("id") int listCommentReportId) {
         final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 

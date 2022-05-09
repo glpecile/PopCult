@@ -19,6 +19,7 @@ import ar.edu.itba.paw.webapp.dto.output.MediaInListDto;
 import ar.edu.itba.paw.webapp.dto.output.UserCollaboratorDto;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class ListController {
     private static final int minMediaWithGenre = 1; //TODO check this number
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getLists(@QueryParam("page") @DefaultValue(defaultPage) int page,
                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                              @QueryParam("genres") List<String> genres,
@@ -94,8 +95,8 @@ public class ListController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
+    @Consumes(value = {VndType.APPLICATION_LISTS})
     public Response createList(@Valid @NotEmptyBody ListInputDto listDto) {
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
         final MediaList mediaList = listsService.createMediaList(user, listDto.getName(), listDto.getDescription(), listDto.isVisible(), listDto.isCollaborative());
@@ -106,7 +107,7 @@ public class ListController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getList(@PathParam("id") int listId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElse(null);
@@ -118,7 +119,7 @@ public class ListController {
     @PUT
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_LISTS})
     public Response editList(@PathParam("id") int listId,
                              @Valid ListInputDto listDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -146,7 +147,7 @@ public class ListController {
      */
     @GET
     @Path("/{id}/media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getMediaInList(@PathParam("id") int listId,
                                    @QueryParam("page") @DefaultValue(defaultPage) int page,
                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -171,7 +172,7 @@ public class ListController {
     @PATCH
     @Path("/{listId}/media")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_LISTS_PATCH_MEDIA})
     public Response manageMedia(@PathParam("listId") int listId,
                                 @Valid @NotEmptyBody PatchMediaInListDto patchMediaInListDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -187,7 +188,7 @@ public class ListController {
 
     @GET
     @Path("/{listId}/media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response isMediaInList(@PathParam("listId") int listId,
                                   @PathParam("mediaId") int mediaId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -195,7 +196,7 @@ public class ListController {
 
         if (!listsService.mediaAlreadyInList(mediaList, media)) {
             LOGGER.info("GET /{}: media {} is not in list {}.", uriInfo.getPath(), mediaId, listId);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is in list {}.", uriInfo.getPath(), mediaId, listId);
@@ -235,7 +236,7 @@ public class ListController {
      */
     @GET
     @Path("/{id}/comments")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
     public Response getListComments(@PathParam("id") int listId,
                                     @QueryParam("page") @DefaultValue(defaultPage) int page,
                                     @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -259,8 +260,8 @@ public class ListController {
 
     @POST
     @Path("/{id}/comments")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
+    @Consumes(value = {VndType.APPLICATION_MEDIA_COMMENTS})
     public Response createListComment(@PathParam("id") int listId,
                                       @Valid @NotEmptyBody CommentInputDto commentInputDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -277,7 +278,7 @@ public class ListController {
      */
     @GET
     @Path("/{id}/collaborators")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS})
     public Response getListCollaborators(@PathParam("id") int listId,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -302,7 +303,7 @@ public class ListController {
     @PATCH
     @Path("/{listId}/collaborators")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_LISTS_PATCH_COLLABORATORS})
     public Response manageCollaborators(@PathParam("listId") int listId,
                                         @Valid @NotEmptyBody PatchCollaboratorsDto patchCollaboratorsDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -318,7 +319,7 @@ public class ListController {
 
     @GET
     @Path("/{id}/collaborators/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS})
     public Response isCollaborator(@PathParam("id") int listId,
                                    @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -364,7 +365,7 @@ public class ListController {
      */
     @GET
     @Path("/{id}/forks")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getListFork(@PathParam("id") int listId,
                                 @QueryParam("page") @DefaultValue(defaultPage) int page,
                                 @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -388,7 +389,7 @@ public class ListController {
 
     @POST
     @Path("/{id}/forks")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response createListFork(@PathParam("id") int listId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
@@ -404,7 +405,7 @@ public class ListController {
      */
     @POST
     @Path("/{id}/requests")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS_REQUESTS})
     public Response createListRequest(@PathParam("id") int listId) throws CollaboratorRequestAlreadyExistsException {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
@@ -420,7 +421,7 @@ public class ListController {
      */
     @POST
     @Path("/{id}/reports")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_REPORTS})
     public Response createListReport(@PathParam("id") int listId,
                                      @Valid @NotEmptyBody ReportDto reportDto) throws ListAlreadyReportedException {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
