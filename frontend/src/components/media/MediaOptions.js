@@ -43,7 +43,7 @@ const MediaOptions = (props) => {
         }
 
         getState();
-    }, []);
+    }, [props.mediaData]);
 
     const handleLike = () => {
         async function handle() {

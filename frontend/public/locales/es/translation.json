@@ -196,7 +196,6 @@
   "lists_public": "¿Deseas que tu lista sea pública?",
   "lists_listName": "Nombre de la Lista",
   "lists_description": "Descripción",
-
   "lists_dialog_done": "Listo",
   "lists_already_collab": "Ya colaboran en la lista:",
   "lists_add_collab": "Agrega nuevos colaboradores",
@@ -225,6 +224,15 @@
   "search_categories": "Categorías",
   "search_filters_apply": "Aplicar filtros",
   "search_filters_clear": "Limpiar filtros",
-  "search_all": "Todo"
-
+  "search_all": "Todo",
+  "home_greeting": "Bienvenido nuevamente...",
+  "home_slogan": "Un sitio para amantes de películas y series...",
+  "home_register": "Comienza ahora - ¡Registrate!",
+  "home_viewAll": "Ver Todo",
+  "home_title_lists": "Listas Recientemente Agregadas",
+  "home_title_films": "Películas Recientemente Agregadas",
+  "home_title_series": "Series Recientemente Agregadas",
+  "home_title_lists_discovery": "¡Listas recomendadas para tí!",
+  "home_title_films_discovery": "Películas que tal vez te gusten",
+  "home_title_series_discovery": "Series que tal vez te gusten"
 }

@@ -112,7 +112,6 @@ const UserTabs = (props) => {
                     page: userFavMediaPage,
                     pageSize
                 });
-                console.log(data);
                 setUserFavMedia(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);

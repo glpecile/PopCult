@@ -226,5 +226,15 @@
   "search_categories": "Categories",
   "search_filters_apply": "Apply filters",
   "search_filters_clear": "Clear filters",
-  "search_all": "All"
+  "search_all": "All",
+  "home_greeting": "Welcome back...",
+  "home_slogan": "A site for films and series lovers...",
+  "home_register": "Get started - sign up!",
+  "home_viewAll":"View All",
+  "home_title_lists":"Recently Added Lists",
+  "home_title_films":"Recently Added Films",
+  "home_title_series":"Recently Added Series",
+  "home_title_lists_discovery":"Recommended lists for you!",
+  "home_title_films_discovery":"Films you might like",
+  "home_title_series_discovery":"Series you might like"
 }

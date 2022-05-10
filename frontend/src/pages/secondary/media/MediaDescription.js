@@ -4,11 +4,13 @@ import MediaService from "../../../services/MediaService";
 import Spinner from "../../../components/animation/Spinner";
 import GenreService from "../../../services/GenreService";
 import StudioService from "../../../services/StudioService";
+import useErrorStatus from "../../../hooks/useErrorStatus";
 
 function MediaDescription(props) {
     const id = window.location.pathname.split('/')[3];
     const [mediaData, setMediaData] = useState(undefined);
     const [genreData, setGenreData] = useState(undefined);
+    const {setErrorStatusCode} = useErrorStatus();
 
     const getMedia = useCallback(async () => {
         try {
@@ -21,9 +23,9 @@ function MediaDescription(props) {
             setMediaData(mediaDataToAdd);
             setGenreData(genreDataToAdd);
         } catch (e) {
-            console.log(e);
+            setErrorStatusCode(e.response.status);
         }
-    }, [id]);
+    }, [id, setErrorStatusCode]);
 
     useEffect(
         () => {

@@ -33,7 +33,6 @@ const Profile = () => {
                 try {
                     const user = await UserService.getUserByUsername(username);
                     setUserData(user);
-                    console.log(user);
                 } catch (error) {
                     setErrorStatusCode(error.response.status);
                 }
