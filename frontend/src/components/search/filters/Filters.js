@@ -74,7 +74,7 @@ const Filters = (props) => {
                 (<MediaFilters sortBy={mSortBy} setSortBy={setMSortBy} categories={mCategories}
                                setCategories={setMCategories}
                                decades={mDecades} setDecades={setMDecades} type={type} setType={setType}
-                               genres={props.genres}/>)
+                               genres={props.genres} showMediaType={props.showMediaType}/>)
                 :
                 (<ListFilters sortBy={lSortBy} setSortBy={setLSortBy} categories={lCategories}
                               setCategories={setLCategories}

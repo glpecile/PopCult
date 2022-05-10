@@ -33,7 +33,7 @@ const UserLists = () => {
         }
 
         getUserLists();
-    }, [])
+    }, [username, page, pageSize, setErrorStatusCode])
 
     return (<>
             <Helmet>

@@ -2,21 +2,20 @@ import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
 import {createSearchParams, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
 import Loader from "../secondary/errors/Loader";
 import Filters from "../../components/search/filters/Filters";
-import GenreService from "../../services/GenreService";
 import ListsCard from "../../components/lists/ListsCard";
 import PaginationComponent from "../../components/PaginationComponent";
+import GenresContext from "../../store/GenresContext";
 
 function Lists() {
     const {t} = useTranslation();
     const navigate = useNavigate();
 
-    const [genres, setGenres] = useState(undefined);
-
+    const genres = useContext(GenresContext).genres;
 
     const [carrouselLists, setCarrouselLists] = useState(undefined);
     const [lists, setLists] = useState(undefined);
@@ -30,22 +29,9 @@ function Lists() {
     const listCategories = 'categories';
 
     useEffect(() => {
-        async function fillGenres() {
-            try {
-                const data = await GenreService.getGenres();
-                setGenres(data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        }
-
-        fillGenres();
-    }, [setErrorStatusCode]);
-
-    useEffect(() => {
         async function getCarrouselLists() {
             try {
-                const data = await listService.getLists({page: 1, pageSize: 12})
+                const data = await listService.getLists({pageSize: 12})
                 setCarrouselLists(data.data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
@@ -53,7 +39,7 @@ function Lists() {
         }
 
         getCarrouselLists();
-    }, []);
+    }, [setErrorStatusCode]);
 
     useEffect(() => {
         async function getLists() {

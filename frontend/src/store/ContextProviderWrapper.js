@@ -1,15 +1,18 @@
 import {AuthContextProvider} from "./AuthContext";
 import {HelmetProvider} from "react-helmet-async";
+import {GenresContextProvider} from "./GenresContext";
 
 const ContextProviderWrapper = (props) => {
     const helmetContext = {};
 
     return (
-            <AuthContextProvider>
+        <AuthContextProvider>
+            <GenresContextProvider>
                 <HelmetProvider context={helmetContext}>
                     {props.children}
                 </HelmetProvider>
-            </AuthContextProvider>);
+            </GenresContextProvider>
+        </AuthContextProvider>);
 
 }
 export default ContextProviderWrapper;

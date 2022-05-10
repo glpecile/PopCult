@@ -21,7 +21,7 @@ const MediaFilters = (props) => {
                        setCategories={props.setCategories}
                        decades={props.decades} setDecades={props.setDecades} genres={props.genres}>
             {/* Types */}
-            <FormControl sx={style} size="small">
+            {props.showMediaType && <FormControl sx={style} size="small">
                 <InputLabel id="types-select-label" className="text-violet-500">{t('search_types')}</InputLabel>
                 <Select
                     labelId="types-select-label"
@@ -34,7 +34,7 @@ const MediaFilters = (props) => {
                     <MenuItem value={MediaType.SERIES}>{t('nav_series')}</MenuItem>
                     <MenuItem value={''}>{t('search_all')}</MenuItem>
                 </Select>
-            </FormControl>
+            </FormControl>}
         </CommonFilters>
 
     </div>;

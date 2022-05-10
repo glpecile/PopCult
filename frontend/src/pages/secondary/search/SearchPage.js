@@ -1,13 +1,13 @@
 import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
 import Filters from "../../../components/search/filters/Filters";
 import SearchResults from "../../../components/search/SearchResults";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import mediaService from "../../../services/MediaService";
 import listService from "../../../services/ListService";
 import Spinner from "../../../components/animation/Spinner";
 import {useTranslation} from "react-i18next";
-import GenreService from "../../../services/GenreService";
+import GenresContext from "../../../store/GenresContext";
 
 export default function SearchPage() {
     const {t} = useTranslation();
@@ -15,7 +15,7 @@ export default function SearchPage() {
     const term = searchParams.get("term");
 
     const navigate = useNavigate();
-    const [genres, setGenres] = useState(undefined);
+    const genres = useContext(GenresContext).genres;
     const [media, setMedia] = useState(undefined);
     const [lists, setLists] = useState(undefined);
     const [mediaPage, setMediaPage] = useState(searchParams.get("mp") || 1);
@@ -33,19 +33,6 @@ export default function SearchPage() {
     const listSort = 'lsort';
     const listDecades = 'ldecades';
     const listCategories = 'lcategories';
-
-    useEffect(() => {
-        async function fillGenres() {
-            try {
-                const data = await GenreService.getGenres();
-                setGenres(data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        }
-
-        fillGenres();
-    }, [setErrorStatusCode]);
 
     useEffect(() => {
         navigate({
@@ -104,7 +91,7 @@ export default function SearchPage() {
             <h1 className="text-3xl font-black justify-start p-2 break-words max-w-full tracking-wide">
                 {t('search_title', {term: term})}
             </h1>
-            {<Filters showMediaFilters={activeTab === 0} setMediaFilters={setMediaFilters} mediaFilters={mediaFilters}
+            {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters} mediaFilters={mediaFilters}
                       setListPage={setListPage} setMediaPage={setMediaPage}
                       setListFilters={setListFilters} listFilters={listFilters} genres={genres} mediaSort={mediaSort}
                       mediaType={mediaType} mediaDecades={mediaDecades} mediaCategories={mediaCategories}
