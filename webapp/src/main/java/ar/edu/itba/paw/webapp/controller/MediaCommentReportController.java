@@ -53,7 +53,7 @@ public class MediaCommentReportController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS_REPORTS})
     public Response getMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
@@ -63,7 +63,6 @@ public class MediaCommentReportController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
@@ -75,7 +74,6 @@ public class MediaCommentReportController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 

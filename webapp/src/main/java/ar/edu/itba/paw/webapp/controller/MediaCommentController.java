@@ -49,7 +49,6 @@ public class MediaCommentController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteMediaComment(@PathParam("id") int mediaCommentId) {
         final MediaComment mediaComment = commentService.getMediaCommentById(mediaCommentId).orElseThrow(CommentNotFoundException::new);
         commentService.deleteCommentFromMedia(mediaComment);

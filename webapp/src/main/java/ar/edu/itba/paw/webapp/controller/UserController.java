@@ -115,7 +115,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -132,7 +131,6 @@ public class UserController {
      */
     @PUT
     @Path("/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response updatedUser(@PathParam("username") String username,
                                 @Valid @NotEmptyBody UserEditDto userEditDto) {
@@ -146,8 +144,7 @@ public class UserController {
 
     @PUT
     @Path("/{username}/password")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {VndType.APPLICATION_USER})
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
     public Response updatePassword(@PathParam("username") String username,
                                    @Valid @NotEmptyBody UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -163,8 +160,8 @@ public class UserController {
      */
     @POST
     @Path("/password-token")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_TOKEN_PASSWORD})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response createPasswordResetToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
@@ -176,8 +173,7 @@ public class UserController {
 
     @PUT
     @Path("/password-token/{token}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
     public Response resetPassword(@PathParam("token") String tokenString,
                                   @Valid @NotEmptyBody UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
         final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
@@ -193,8 +189,8 @@ public class UserController {
      */
     @POST
     @Path("/verification-token")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_TOKEN_VERIFICATION})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response sendVerificationToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
@@ -206,8 +202,6 @@ public class UserController {
 
     @PUT
     @Path("/verification-token/{token}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response verifyUser(@PathParam("token") String tokenString) throws InvalidTokenException {
         final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
@@ -236,7 +230,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     public Response updateProfileImage(@PathParam("username") String username,
                                        @Image @FormDataParam("image") final FormDataBodyPart image,
@@ -251,7 +244,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteProfileImage(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -278,7 +270,6 @@ public class UserController {
 
     @DELETE
     @Path("{username}/mod")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMod(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -293,7 +284,6 @@ public class UserController {
      */
     @PUT
     @Path("{username}/locked")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response banUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -305,7 +295,6 @@ public class UserController {
 
     @DELETE
     @Path("{username}/locked")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response unbanUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -352,7 +341,7 @@ public class UserController {
 
         if (!favoriteService.isFavorite(media, user)) {
             LOGGER.info("GET /{}: media {} is not favorite of {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is favorite of {}.", uriInfo.getPath(), mediaId, username);
@@ -361,7 +350,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/favorite-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToFavorites(@PathParam("username") String username,
                                         @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -375,7 +363,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/favorite-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromFavorites(@PathParam("username") String username,
                                              @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -426,7 +413,7 @@ public class UserController {
 
         if (!watchedMedia.isPresent()) {
             LOGGER.info("GET /{}: media {} is not watched by {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is watched by {} on {}.", uriInfo.getPath(), mediaId, username, watchedMedia.get().getWatchDate());
@@ -435,7 +422,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/watched-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {VndType.APPLICATION_DATETIME})
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
@@ -451,7 +437,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/watched-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromWatched(@PathParam("username") String username,
                                            @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -500,7 +485,7 @@ public class UserController {
 
         if (!watchService.isToWatch(media, user)) {
             LOGGER.info("GET /{}: media {} is not to watch by {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is to watch by {}.", uriInfo.getPath(), mediaId, username);
@@ -509,7 +494,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/to-watch-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToWatch(@PathParam("username") String username,
                                     @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -523,7 +507,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/to-watch-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromToWatch(@PathParam("username") String username,
                                            @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -589,7 +572,7 @@ public class UserController {
 
         if (!favoriteService.isFavoriteList(mediaList, user)) {
             LOGGER.info("GET /{}: list {} is not favorite of {}.", uriInfo.getPath(), listId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: list {} is favorite of {}.", uriInfo.getPath(), listId, username);
@@ -598,7 +581,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/favorite-lists/{listId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addListToFavorites(@PathParam("username") String username,
                                        @PathParam("listId") int listId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -612,7 +594,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/favorite-lists/{listId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeListFromFavorites(@PathParam("username") String username,
                                             @PathParam("listId") int listId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);

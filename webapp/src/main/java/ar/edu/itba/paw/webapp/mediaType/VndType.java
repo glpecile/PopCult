@@ -8,6 +8,8 @@ public class VndType {
 
     public static final String APPLICATION_USER = "application/vnd.users.v1+json";
 
+    public static final String APPLICATION_USER_PASSWORD = "application/vnd.users.password.v1+json";
+
     public static final String APPLICATION_LISTS = "application/vnd.lists.v1+json";
 
     public static final String APPLICATION_LISTS_FAVORITES = "application/vnd.lists.v1+json";
@@ -53,4 +55,8 @@ public class VndType {
     public static final String APPLICATION_ERROR = "application/vnd.error.v1+json";
 
     public static final String APPLICATION_ERROR_VALIDATION = "application/vnd.error.validation.v1+json";
+
+    public static final String APPLICATION_TOKEN_PASSWORD = "application/vnd.token.password.v1+json";
+
+    public static final String APPLICATION_TOKEN_VERIFICATION = "application/vnd.token.verification.v1+json";
 }

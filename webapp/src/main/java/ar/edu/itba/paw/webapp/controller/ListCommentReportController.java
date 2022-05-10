@@ -63,7 +63,6 @@ public class ListCommentReportController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int listCommentReportId) {
         final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 
@@ -75,7 +74,6 @@ public class ListCommentReportController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int listCommentReportId) {
         final ListCommentReport listCommentReport = reportService.getListCommentReportById(listCommentReportId).orElseThrow(ReportNotFoundException::new);
 

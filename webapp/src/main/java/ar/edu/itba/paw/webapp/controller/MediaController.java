@@ -40,7 +40,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("media")
@@ -108,7 +107,6 @@ public class MediaController {
 
     @GET
     @Path("/{id}/image")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
     public Response getMediaImage(@PathParam("id") int mediaId) throws URISyntaxException {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();

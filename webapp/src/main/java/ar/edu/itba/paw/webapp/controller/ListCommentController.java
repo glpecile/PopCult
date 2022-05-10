@@ -49,7 +49,6 @@ public class ListCommentController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListComment(@PathParam("id") int listCommentId) {
         final ListComment listComment = commentService.getListCommentById(listCommentId).orElseThrow(CommentNotFoundException::new);
         commentService.deleteCommentFromList(listComment);

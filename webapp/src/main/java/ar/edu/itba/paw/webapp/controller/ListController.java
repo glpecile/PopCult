@@ -118,7 +118,6 @@ public class ListController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {VndType.APPLICATION_LISTS})
     public Response editList(@PathParam("id") int listId,
                              @Valid ListInputDto listDto) {
@@ -132,7 +131,6 @@ public class ListController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteList(@PathParam("id") int listId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
 
@@ -171,7 +169,6 @@ public class ListController {
 
     @PATCH
     @Path("/{listId}/media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {VndType.APPLICATION_LISTS_PATCH_MEDIA})
     public Response manageMedia(@PathParam("listId") int listId,
                                 @Valid @NotEmptyBody PatchMediaInListDto patchMediaInListDto) {
@@ -205,7 +202,6 @@ public class ListController {
 
     @PUT
     @Path("/{listId}/media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToList(@PathParam("listId") int listId,
                                    @PathParam("mediaId") int mediaId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -219,7 +215,6 @@ public class ListController {
 
     @DELETE
     @Path("/{listId}/media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromList(@PathParam("listId") int listId,
                                         @PathParam("mediaId") int mediaId) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -302,7 +297,6 @@ public class ListController {
 
     @PATCH
     @Path("/{listId}/collaborators")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {VndType.APPLICATION_LISTS_PATCH_COLLABORATORS})
     public Response manageCollaborators(@PathParam("listId") int listId,
                                         @Valid @NotEmptyBody PatchCollaboratorsDto patchCollaboratorsDto) {
@@ -333,7 +327,6 @@ public class ListController {
 
     @PUT
     @Path("/{id}/collaborators/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addCollaborator(@PathParam("id") int listId,
                                     @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
@@ -347,7 +340,6 @@ public class ListController {
 
     @DELETE
     @Path("/{id}/collaborators/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeFromCollaborators(@PathParam("id") int listId,
                                             @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);

@@ -95,7 +95,6 @@ public class StaffMemberController {
 
     @GET
     @Path("/{id}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getImage(@PathParam("id") int staffId) throws URISyntaxException {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
         LOGGER.info("GET /{}: Redirecting to image location.", uriInfo.getPath());

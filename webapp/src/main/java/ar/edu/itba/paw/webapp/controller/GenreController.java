@@ -41,7 +41,6 @@ public class GenreController {
     private static final String defaultPage = "1";
     private static final String defaultPageSize = "12";
 
-
     @GET
     @Produces(value = {VndType.APPLICATION_GENRES})
     public Response getGenres() {

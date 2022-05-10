@@ -68,7 +68,6 @@ public class StudioController {
 
     @GET
     @Path("/{id}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getStudioImage(@PathParam("id") int studioId) throws URISyntaxException {
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 

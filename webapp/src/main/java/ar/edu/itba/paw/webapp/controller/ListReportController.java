@@ -63,7 +63,6 @@ public class ListReportController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response approveListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 
@@ -75,7 +74,6 @@ public class ListReportController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteListReport(@PathParam("id") int listReportId) {
         final ListReport listReport = reportService.getListReportById(listReportId).orElseThrow(ReportNotFoundException::new);
 

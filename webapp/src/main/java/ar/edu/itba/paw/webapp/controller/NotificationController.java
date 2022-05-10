@@ -40,7 +40,6 @@ public class NotificationController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response setNotificationAsOpened(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
@@ -52,7 +51,6 @@ public class NotificationController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteNotification(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 

@@ -38,7 +38,6 @@ public class CollabRequestController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response acceptCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 
@@ -50,7 +49,6 @@ public class CollabRequestController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 
