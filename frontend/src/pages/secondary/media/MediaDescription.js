@@ -38,7 +38,7 @@ function MediaDescription(props) {
             {mediaData && genreData && <>
                 <MediaDetails image={mediaData.imageUrl} title={mediaData.title}
                               releaseYear={mediaData.releaseDate.slice(0, 4)} countryName={mediaData.country}
-                              description={mediaData.description}
+                              description={mediaData.description} mediaData={mediaData}
                               genres={genreData}
                 />
                 {/* TODO: Listas que contengan a la media */}

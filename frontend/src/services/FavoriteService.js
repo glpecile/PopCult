@@ -5,7 +5,7 @@ import {MediaType} from '../enums/MediaType'
 const favoriteService = (() => {
 
     const getUserFavoriteMedia = async ({url, page, pageSize}) => {
-        const res = await favoriteApi.getUserFavoriteMedia({username, page, pageSize})
+        const res = await favoriteApi.getUserFavoriteMedia({url, page, pageSize})
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};

@@ -16,7 +16,7 @@ function MediaDetails(props) {
             <div className="col-12 col-lg-4">
                 <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
                     <img className="w-full rounded-t-lg" src={props.image} alt="Media Details"/>
-                    <MediaOptions/>
+                    <MediaOptions mediaData={props.mediaData}/>
                     <ShareMenu isOpened={false}/>
                     {/* TODO: Add to list component */}
                 </div>
