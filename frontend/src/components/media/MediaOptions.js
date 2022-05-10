@@ -66,7 +66,9 @@ const MediaOptions = (props) => {
         async function handle() {
             try {
                 if (!isWatched) {
-                    await watchService.addMediaToWatched({url: props.mediaData.watchedMediaUrl, dateTime: Date.now()});
+                    const date = new Date();
+                    const iso = date.toISOString();
+                    await watchService.addMediaToWatched({url: props.mediaData.watchedMediaUrl, dateTime: iso});
                 }else{
                     await watchService.removeMediaFromWatched(props.mediaData.watchedMediaUrl)
                 }
