@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.staff.StaffMember;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
 import ar.edu.itba.paw.webapp.dto.output.StaffDto;
 import ar.edu.itba.paw.webapp.exceptions.StaffNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,9 @@ public class StaffMemberController {
     private UriInfo uriInfo;
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STAFF})
     public Response getAllStaffMembers(@QueryParam("page") @DefaultValue(defaultPage) int page,
-                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize
-    ) {
+                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<StaffMember> staffMembers = staffService.getAllStaff(page, pageSize);
         if (staffMembers.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
@@ -60,7 +60,7 @@ public class StaffMemberController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STAFF})
     public Response getStaff(@PathParam("id") int staffId) {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
 
@@ -70,7 +70,7 @@ public class StaffMemberController {
 
     @GET
     @Path("/{id}/media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getStaffMedia(@PathParam("id") int staffId,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
@@ -99,6 +99,6 @@ public class StaffMemberController {
     public Response getImage(@PathParam("id") int staffId) throws URISyntaxException {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
         LOGGER.info("GET /{}: Redirecting to image location.", uriInfo.getPath());
-        return Response.status(Response.Status.SEE_OTHER).location(new URI(staffMember.getImage())).build();
+        return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(staffMember.getImage())).build();
     }
 }

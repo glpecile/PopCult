@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
 import ar.edu.itba.paw.webapp.dto.output.StudioDto;
 import ar.edu.itba.paw.webapp.exceptions.StudioNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class StudioController {
     private UriInfo uriInfo;
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STUDIOS})
     public Response getStudios(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<Studio> studioPageContainer = studioService.getAllStudios(page, pageSize);
@@ -57,7 +58,7 @@ public class StudioController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STUDIOS})
     public Response getStudio(@PathParam("id") int studioId) {
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 
@@ -72,12 +73,12 @@ public class StudioController {
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 
         LOGGER.info("GET /{}: Redirecting to image location", uriInfo.getPath());
-        return Response.status(Response.Status.SEE_OTHER).location(new URI(studio.getImage())).build();
+        return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(studio.getImage())).build();
     }
 
     @GET
     @Path("/{id}/media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getStudioMedia(@PathParam("id") int studioId,
                                    @QueryParam("page") @DefaultValue(defaultPage) int page,
                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
