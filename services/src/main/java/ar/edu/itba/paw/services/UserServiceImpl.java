@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
 
     /* default */ static final boolean ENABLED_USER = true;
     /* default */ static final String DEFAULT_PROFILE_IMAGE_PATH = "/images/profile.jpeg";
+    private static final int WIDTH = 160;
+    private static final int HEIGHT = 160;
 
     private static final int FIRST_BAN_STRIKES = 3;
     private static final int SECOND_BAN_STRIKES = 6;
@@ -193,8 +195,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void uploadUserProfileImage(User user, byte[] photoBlob) {
-        final Image image = imageService.uploadImage(photoBlob);
+    public void uploadUserProfileImage(User user, byte[] photoBlob, String format) throws ImageConversionException {
+        final Image image = imageService.uploadImage(photoBlob, WIDTH, HEIGHT, format);
         if(user.getImage() != null) {
             imageService.deleteImage(user.getImage());
         }
