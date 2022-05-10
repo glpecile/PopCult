@@ -34,7 +34,6 @@ export default function Films() {
                 setCarrouselData(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
-
             }
         };
         getCarrouselData();
