@@ -224,7 +224,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/image")
-    @Produces(value = {"image/*", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/webp"})
     public Response getProfileImage(@PathParam("username") String username) throws ImageConversionException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
