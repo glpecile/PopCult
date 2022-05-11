@@ -22,7 +22,7 @@ function Lists() {
 
     const [carrouselLists, setCarrouselLists] = useState(undefined);
     const [lists, setLists] = useState(undefined);
-    const [page, setPage] = useState(searchParams.get("page"));
+    const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
     const [listFilters, setListFilters] = useState(() => new Map());
     const pageSize = 4;

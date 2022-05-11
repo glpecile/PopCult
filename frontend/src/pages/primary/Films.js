@@ -18,7 +18,7 @@ export default function Films() {
 
 
     const [carrouselData, setCarrouselData] = useState(undefined);
-    const [page, setPage] = useState(searchParams.get("page"));
+    const [page, setPage] = useState(searchParams.get("page") || 1);
     const [films, setFilms] = useState(undefined);
     const {setErrorStatusCode} = useErrorStatus();
     const [filmFilters, setFilmFilters] = useState(() => new Map());

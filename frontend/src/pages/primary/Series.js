@@ -19,7 +19,7 @@ function Series() {
 
     const [carrouselData, setCarrouselData] = useState(undefined);
     const [series, setSeries] = useState(undefined);
-    const [page, setPage] = useState(searchParams.get("page"));
+    const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
     const [seriesFilters, setSeriesFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
