@@ -9,6 +9,8 @@ dist/
 /.pnp
 .pnp.js
 package-lock.json
+build/
+node/
 
 # Compiled Java class files
 *.class

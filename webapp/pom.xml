@@ -48,6 +48,12 @@
             <version>${parent.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>ar.edu.itba.paw</groupId>
+            <artifactId>frontend</artifactId>
+            <version>${parent.version}</version>
+            <type>pom</type>
+        </dependency>
 
         <!--    Validation & SpringSecurity dependencies-->
         <dependency>
@@ -184,16 +190,27 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.1</version>
-                    <configuration>
-                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    <webResources>
+                        <resource>
+                            <directory>../frontend/build</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
