@@ -15,6 +15,7 @@ public class MediaCommentDto extends CommentDto {
     private String url;
 
     private String commentMediaUrl;
+    private String reportsUrl;
 
     public static MediaCommentDto fromMediaComment(UriInfo url, MediaComment mediaComment) {
         MediaCommentDto mediaCommentDto = new MediaCommentDto();
@@ -27,6 +28,7 @@ public class MediaCommentDto extends CommentDto {
 
         mediaCommentDto.url = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build().toString();
         mediaCommentDto.commentMediaUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(mediaComment.getMedia().getMediaId())).build().toString();
+        mediaCommentDto.reportsUrl = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).path("reports").build().toString();
         return mediaCommentDto;
     }
 
@@ -42,6 +44,14 @@ public class MediaCommentDto extends CommentDto {
         this.mediaTitle = mediaTitle;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getCommentMediaUrl() {
         return commentMediaUrl;
     }
@@ -50,11 +60,11 @@ public class MediaCommentDto extends CommentDto {
         this.commentMediaUrl = commentMediaUrl;
     }
 
-    public String getUrl() {
-        return url;
+    public String getReportsUrl() {
+        return reportsUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setReportsUrl(String reportsUrl) {
+        this.reportsUrl = reportsUrl;
     }
 }

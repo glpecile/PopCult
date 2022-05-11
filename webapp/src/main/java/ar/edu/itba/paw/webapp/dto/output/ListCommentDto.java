@@ -16,6 +16,7 @@ public class ListCommentDto extends CommentDto {
     private String url;
 
     private String commentListUrl;
+    private String reportsUrl;
 
     public static ListCommentDto fromListComment(UriInfo url, ListComment listComment) {
         ListCommentDto listCommentDto = new ListCommentDto();
@@ -28,6 +29,7 @@ public class ListCommentDto extends CommentDto {
 
         listCommentDto.url = url.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).build().toString();
         listCommentDto.commentListUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(listComment.getMediaList().getMediaListId())).build().toString();
+        listCommentDto.reportsUrl = url.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).path("reports").build().toString();
         return listCommentDto;
     }
 
@@ -57,5 +59,13 @@ public class ListCommentDto extends CommentDto {
 
     public void setCommentListUrl(String commentListUrl) {
         this.commentListUrl = commentListUrl;
+    }
+
+    public String getReportsUrl() {
+        return reportsUrl;
+    }
+
+    public void setReportsUrl(String reportsUrl) {
+        this.reportsUrl = reportsUrl;
     }
 }
