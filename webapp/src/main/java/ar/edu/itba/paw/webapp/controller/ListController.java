@@ -231,7 +231,7 @@ public class ListController {
      */
     @GET
     @Path("/{id}/comments")
-    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS})
     public Response getListComments(@PathParam("id") int listId,
                                     @QueryParam("page") @DefaultValue(defaultPage) int page,
                                     @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -255,8 +255,8 @@ public class ListController {
 
     @POST
     @Path("/{id}/comments")
-    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
-    @Consumes(value = {VndType.APPLICATION_MEDIA_COMMENTS})
+    @Produces(value = {VndType.APPLICATION_LISTS_COMMENTS})
+    @Consumes(value = {VndType.APPLICATION_LISTS_COMMENTS})
     public Response createListComment(@PathParam("id") int listId,
                                       @Valid @NotEmptyBody CommentInputDto commentInputDto) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
