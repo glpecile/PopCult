@@ -2,7 +2,7 @@ import LoginCard from "../../../components/login/LoginCard";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState, useContext} from "react";
 import {useTranslation} from "react-i18next";
-import {IconButton} from "@mui/material";
+import {Checkbox, IconButton} from "@mui/material";
 import UserService from "../../../services/UserService";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -41,8 +41,8 @@ export default function Login() {
         event.target.validity.valid ? setPasswordError(false) : setPasswordError(true);
 
     };
-    const RememberMeChangeHandler = (event) => {
-        setEnteredRememberMe(event.target.value);
+    const RememberMeChangeHandler = () => {
+        setEnteredRememberMe(!enteredRememberMe);
     };
 
     useEffect(() => {
@@ -111,10 +111,8 @@ export default function Login() {
                 {/* Remember me */}
                 <div className="flex py-2.5 justify-start">
                     <label className="space-x-2 cursor-pointer">
-                        <input className="shadow-sm mb-0.5 checked:bg-purple-500"
-                               type="checkbox"
-                               defaultChecked={enteredRememberMe}
-                               onChange={RememberMeChangeHandler}/>
+                        <Checkbox checked={enteredRememberMe} label={t('login_remember_me')}
+                                  onChange={RememberMeChangeHandler} color="secondary"/>
                         <span className="text-semibold">
                             {t('login_remember_me')}
                         </span>
