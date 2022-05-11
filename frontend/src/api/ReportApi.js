@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from "../enums/VndType";
 
 const reportApi = (() => {
 
@@ -79,8 +80,16 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createListReport = ({url}) => {
-        return api.post(url)
+    const createListReport = ({url, data}) => {
+        return api.post(url,
+            {
+                'report': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_REPORTS
+                }
+            });
     }
 
     const getReportsFromListComment = ({url, page, pageSize}) => {
@@ -94,8 +103,16 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createListCommentReport = ({url}) => {
-        return api.post(url)
+    const createListCommentReport = ({url, data}) => {
+        return api.post(url,
+            {
+                'report': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_COMMENTS_REPORTS
+                }
+            });
     }
 
     const getReportsFromMediaComment = ({url, page, pageSize}) => {
@@ -109,8 +126,16 @@ const reportApi = (() => {
     }
 
     //TODO define dto
-    const createMediaCommentReport = ({url}) => {
-        return api.post(url)
+    const createMediaCommentReport = ({url, data}) => {
+        return api.post(url,
+            {
+                'report': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_MEDIA_COMMENTS_REPORTS
+                }
+            });
     }
 
     return {

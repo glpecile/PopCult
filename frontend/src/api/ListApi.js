@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from '../enums/VndType';
 
 const listApi = (() => {
 
@@ -35,6 +36,11 @@ const listApi = (() => {
                 'description': description,
                 'visible': visible,
                 'collaborative': collaborative
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS,
+                }
             });
     }
 
@@ -47,8 +53,19 @@ const listApi = (() => {
     }
 
     //TODO define listEditDto
-    const editList = ({url}) => {
-        return api.put(url);
+    const editList = ({url, name, description, visible, collaborative}) => {
+        return api.put(url,
+            {
+                'name': name,
+                'description': description,
+                'visible': visible,
+                'collaborative': collaborative
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS,
+                }
+            });
     }
 
     const deleteList = (url) => {
@@ -69,10 +86,27 @@ const listApi = (() => {
         return api.get(url);
     }
 
+    const manageMediaInList = ({url, add, remove}) => {
+        return api.patch(url, {
+                'add': add,
+                'remove': remove
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_PATCH_MEDIA
+                }
+            });
+    }
+
     const addMediaToList = (url, data) => {
         return api.patch(url, {
-            "media": data
-        });
+                'media': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_PATCH_MEDIA
+                }
+            });
     }
 
     const removeMediaFromList = (url) => {
@@ -113,6 +147,7 @@ const listApi = (() => {
         deleteList,
         getMediaInList,
         isMediaInList,
+        manageMediaInList,
         addMediaToList,
         removeMediaFromList,
         getListForks,

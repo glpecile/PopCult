@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from '../enums/VndType';
 
 const userApi = (() => {
 
@@ -12,7 +13,7 @@ const userApi = (() => {
             });
     }
 
-    const getUsers = ({page, pageSize, userRole, banned,query, notCollabInList}) => {
+    const getUsers = ({page, pageSize, userRole, banned, query, notCollabInList}) => {
         return api.get(`/users`,
             {
                 params: {
@@ -41,6 +42,11 @@ const userApi = (() => {
                 'username': username,
                 'password': password,
                 'name': name
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER
+                }
             });
     }
 
@@ -49,7 +55,15 @@ const userApi = (() => {
     }
 
     const editUser = ({url, name}) => {
-        return api.put(url, {'name': name});
+        return api.put(url,
+            {
+                'name': name
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER
+                }
+            });
     }
 
     const changePassword = ({url, currentPassword, newPassword}) => {
@@ -58,6 +72,11 @@ const userApi = (() => {
             {
                 'currentPassword': currentPassword,
                 'newPassword': newPassword
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER_PASSWORD
+                }
             });
     }
 
@@ -69,11 +88,24 @@ const userApi = (() => {
         return api.put(`/users/password-token/${token}`,
             {
                 'newPassword': newPassword
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER_PASSWORD
+                }
             });
     }
 
     const sendVerificationToken = (email) => {
-        return api.post(`/users/verification-token`, {'email': email});
+        return api.post(`/users/verification-token`,
+            {
+                'email': email
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER
+                }
+            });
     }
 
     const verifyUser = (token) => {

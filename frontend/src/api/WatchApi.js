@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from '../enums/VndType';
 
 const watchApi = (() => {
 
@@ -20,6 +21,11 @@ const watchApi = (() => {
         return api.put(url,
             {
                 'dateTime': dateTime //"dateTime": "2019-12-03T10:15:30"
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_DATETIME
+                }
             });
     }
 

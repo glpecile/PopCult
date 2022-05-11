@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from '../enums/VndType';
 
 const commentApi = (() => {
 
@@ -13,8 +14,16 @@ const commentApi = (() => {
     }
 
     //TODO define commentDto
-    const createMediaComment = ({url}) => {
-        return api.post(url);
+    const createMediaComment = ({url, data}) => {
+        return api.post(url,
+            {
+                'body': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_MEDIA_COMMENTS
+                }
+            });
     }
 
     const getListComments = ({url, page, pageSize}) => {
@@ -29,9 +38,15 @@ const commentApi = (() => {
 
     //TODO define commentDto
     const createListComment = ({url, data}) => {
-        return api.post(url, {
-            'body': data
-        });
+        return api.post(url,
+            {
+                'body': data
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_COMMENTS
+                }
+            });
     }
 
     const getMediaComment = (id) => {
