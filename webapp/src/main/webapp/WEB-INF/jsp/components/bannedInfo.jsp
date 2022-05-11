@@ -16,7 +16,7 @@
         <h4 class="pl-3 text-xl font-normal tracking-tight mt-3.5">
             <a href="${userProfilePath}" class="text-purple-500 hover:text-purple-900"><strong><c:out value="${param.name}"/></strong></a>.
             <spring:message code="profile.otherDescription" arguments="${param.username}"/>
-            &#8226; <spring:message code="profile.strikes" arguments="${param.strikes}"/>
+            &#8226;<spring:message code="profile.strikes" arguments="${param.strikes}"/>
             <p class="text-sm text-red-400">
                 <spring:message code="profile.unbanDate" arguments="${formattedDate}"/>
             </p>
