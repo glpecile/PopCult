@@ -237,5 +237,14 @@
   "home_title_series": "Series Recientemente Agregadas",
   "home_title_lists_discovery": "¡Listas recomendadas para tí!",
   "home_title_films_discovery": "Películas que tal vez te gusten",
-  "home_title_series_discovery": "Series que tal vez te gusten"
+  "home_title_series_discovery": "Series que tal vez te gusten",
+  "delete_comment_title": "Eliminar comentario",
+  "delete_comment_body": "¿Estás seguro que deseas eliminar este comentario?",
+  "delete_comment_confirmation": "Sí, eliminar comentario",
+  "report_comment_title": "Reportar comentario",
+  "report_comment_body": "¿Por que deseas reportar este comentario?",
+  "report_submit": "Enviar reporte"
+
+
+
 }

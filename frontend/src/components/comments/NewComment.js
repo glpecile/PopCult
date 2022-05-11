@@ -3,6 +3,7 @@ import CommentService from "../../services/CommentService";
 import {useTranslation} from "react-i18next";
 import AuthContext from "../../store/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
+import useErrorStatus from "../../hooks/useErrorStatus";
 
 const NewComment = (props) => {
     const {t} = useTranslation();
@@ -11,6 +12,7 @@ const NewComment = (props) => {
     const navigate = useNavigate();
 
     const [comment, setComment] = useState("");
+    const {setErrorStatusCode} = useErrorStatus();
 
     const insertComment = (event) => {
         const aux = event.target.value;
@@ -20,9 +22,13 @@ const NewComment = (props) => {
         event.preventDefault();
 
         async function submitComment() {
-            await CommentService.createListComment({url: props.commentsUrl, data: comment});
-            setComment("");
-            props.setNewComment(prev => prev + 1);
+            try {
+                await CommentService.createListComment({url: props.commentsUrl, data: comment});
+                setComment("");
+                props.setCommentsUpdate(prev => prev + 1);
+            }catch (error){
+                setErrorStatusCode(error.response.status);
+            }
         }
 
         if (!userIsLogged) {

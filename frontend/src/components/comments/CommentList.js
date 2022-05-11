@@ -3,6 +3,7 @@ import CommentService from "../../services/CommentService";
 import CommentComponent from "./CommentComponent";
 import {List} from "@mui/material";
 import {useTranslation} from "react-i18next";
+import useErrorStatus from "../../hooks/useErrorStatus";
 
 const CommentList = (props) => {
     const {t} = useTranslation();
@@ -13,41 +14,47 @@ const CommentList = (props) => {
     const [comments, setComments] = useState([])
     const [links, setLinks] = useState(undefined);
     const [update, setUpdate] = useState(0);
+    const {setErrorStatusCode} = useErrorStatus();
 
     useEffect(() => {
         setPage(1);
         setUpdate(prev => prev + 1);
-    }, [props.newComment]);
+    }, [props.commentsUpdate]);
 
     useEffect(() => {
         async function getComments() {
-            const commentsList = await CommentService.getListComments({
-                url: props.commentsUrl,
-                page: page,
-                pageSize: pageSize
-            });
-            if (page !== 1) {
-                setComments(prevState => [...prevState, ...commentsList.data]);
-            }else{
-                setComments(commentsList.data);
-            }
-            setLinks(commentsList.links);
-            if (commentsList.links) {
-                setMaxPage(parseInt(commentsList.links.last.page));
-            } else {
-                setMaxPage(0);
+            try {
+                const commentsList = await CommentService.getListComments({
+                    url: props.commentsUrl,
+                    page: page,
+                    pageSize: pageSize
+                });
+                if (page !== 1) {
+                    setComments(prevState => [...prevState, ...commentsList.data]);
+                } else {
+                    setComments(commentsList.data);
+                }
+                setLinks(commentsList.links);
+                if (commentsList.links) {
+                    setMaxPage(parseInt(commentsList.links.last.page));
+                } else {
+                    setMaxPage(0);
+                }
+            } catch (error) {
+                setErrorStatusCode(error.response.status);
             }
         }
 
         getComments();
-    }, [page, pageSize, props.commentsUrl, update]);
+    }, [page, pageSize, props.commentsUrl, update,setErrorStatusCode]);
 
     return (<div className="pt-1">
-        {(links) &&
+        {(links && comments) &&
             <List>
                 {comments.map((comment) => {
                     return <CommentComponent comment={comment}
-                                             key={comment.id}/>;
+                                             key={comment.id}
+                                             setCommentsUpdate={props.setCommentsUpdate}/>;
                 })}
             </List>}
         <div className="flex justify-center">
