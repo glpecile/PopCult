@@ -194,39 +194,39 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * CollabRequest Controller
                  */
-                .antMatchers("/collab-requests/{id}")
+                .antMatchers("/api/collab-requests/{id}")
                     .access(ACCESS_CONTROL_CHECK_COLLAB_REQUEST_LIST_OWNER)
 
                 /**
                  * List Controller
                  */
-                .antMatchers(HttpMethod.POST, "/lists")
+                .antMatchers(HttpMethod.POST, "/api/lists")
                     .authenticated()
-                .antMatchers(HttpMethod.POST, "/lists/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/api/lists/{id}/comments")
                     .access(ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
-                .antMatchers(HttpMethod.PATCH, "/lists/{id}/collaborators")
+                .antMatchers(HttpMethod.PATCH, "/api/lists/{id}/collaborators")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.DELETE, "/lists/{id}", "/lists/{id}/collaborators/{username}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists/{id}", "/api/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.PUT, "/lists/{id}", "/lists/{id}/collaborators/{username}")
+                .antMatchers(HttpMethod.PUT, "/api/lists/{id}", "/api/lists/{id}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.PATCH, "/lists/{id}/media")
+                .antMatchers(HttpMethod.PATCH, "/api/lists/{id}/media")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.DELETE, "/lists/{id}/media/{media-id}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists/{id}/media/{media-id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.PUT, "/lists/{id}/media/{media-id}")
+                .antMatchers(HttpMethod.PUT, "/api/lists/{id}/media/{media-id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.POST, "/lists/{id}/forks", "/lists/{id}/reports", "/lists/{id}/requests")
+                .antMatchers(HttpMethod.POST, "/api/lists/{id}/forks", "/api/lists/{id}/reports", "/api/lists/{id}/requests")
                     .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
-                .antMatchers(HttpMethod.GET, "/lists/{id}/**")
+                .antMatchers(HttpMethod.GET, "/api/lists/{id}/**")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
 
                 /**
                  * ListComments Controller
                  */
-                .antMatchers(HttpMethod.DELETE, "/lists-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists-comments/{id}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "/lists-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/api/lists-comments/{id}/reports")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
 
                 /**
@@ -234,64 +234,64 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * ListReport Controller
                  * MediaCommentReport Controller
                  */
-                .antMatchers("/lists-reports/**", "/lists-comments-reports/**", "/media-comments-reports/**")
+                .antMatchers("/api/lists-reports/**", "/api/lists-comments-reports/**", "/api/media-comments-reports/**")
                     .hasRole(MOD)
 
                 /**
                  * Media Controller
                  */
-                .antMatchers(HttpMethod.POST, "/media/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/api/media/{id}/comments")
                     .authenticated()
 
                 /**
                  * MediaCommentController
                  */
-                .antMatchers(HttpMethod.DELETE, "/media-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/api/media-comments/{id}")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "/media-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/api/media-comments/{id}/reports")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
 
 
                 /**
                  * ModRequest Controller
                  */
-                .antMatchers("/mods-requests/**")
+                .antMatchers("/api/mods-requests/**")
                     .hasRole(ADMIN)
 
                 /**
                  * Notification Controller
                  */
-                .antMatchers("/notifications/{id}")
+                .antMatchers("/api/notifications/{id}")
                     .access(ACCESS_CONTROL_CHECK_NOTIFICATION_OWNER)
 
                 /**
                  * User Controller
                  */
-                .antMatchers(HttpMethod.POST,"/users")
+                .antMatchers(HttpMethod.POST,"/api/users")
                     .anonymous()
 
-                .antMatchers("/users/password-token/**", "/users/verification-token/**")
+                .antMatchers("/api/users/password-token/**", "/api/users/verification-token/**")
                     .anonymous()
 
-                .antMatchers("/users/{username}/mod")
+                .antMatchers("/api/users/{username}/mod")
                     .hasRole(ADMIN)
 
-                .antMatchers("/users/{username}/locked")
+                .antMatchers("/api/users/{username}/locked")
                     .hasRole(MOD)
 
-                .antMatchers(HttpMethod.POST, "/users/{username}/**")
+                .antMatchers(HttpMethod.POST, "/api/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers(HttpMethod.DELETE, "/users/{username}/**")
+                .antMatchers(HttpMethod.DELETE, "/api/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers(HttpMethod.PUT, "/users/{username}/**")
+                .antMatchers(HttpMethod.PUT, "/api/users/{username}/**")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers(HttpMethod.GET, "/users/{username}/lists/**", "/users/{username}/editable-lists", "/users/{username}/favorite-lists/**", "/users/{username}/notifications", "/users/{username}/collab-requests")
+                .antMatchers(HttpMethod.GET, "/api/users/{username}/lists/**", "/api/users/{username}/editable-lists", "/users/{username}/favorite-lists/**", "/users/{username}/notifications", "/users/{username}/collab-requests")
                     .access(ACCESS_CONTROL_CHECK_USER)
 
-                .antMatchers("/**")
+                .antMatchers("/api/**")
                     .permitAll()
 
                 // Enable CORS

@@ -42,7 +42,7 @@
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -51,7 +51,7 @@
     </filter>
     <filter-mapping>
         <filter-name>openEntityManagerInViewFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <filter>
@@ -68,13 +68,13 @@
     </filter>
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
-    <!-- Make sure we are last -->
-    <filter>
-        <filter-name>jersey-filter</filter-name>
-        <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+    <servlet>
+        <servlet-name>jersey-servlet</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
@@ -83,22 +83,26 @@
                 ar.edu.itba.paw.webapp.exceptionMappers
             </param-value>
         </init-param>
+
         <!--https://stackoverflow.com/questions/30653012/multipart-form-data-no-injection-source-found-for-a-parameter-of-type-public-ja-->
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
         </init-param>
+
         <!--  Don't send HTML on error https://stackoverflow.com/questions/25420697/jersey-2-exception-handing -->
         <init-param>
             <param-name>jersey.config.server.response.setStatusOverSendError</param-name>
             <param-value>true</param-value>
         </init-param>
-    </filter>
 
-    <filter-mapping>
-        <filter-name>jersey-filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey-servlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 
     <!-- https://wiki.metawerx.net/wiki/Web.xml.MimeMapping -->
     <mime-mapping>
