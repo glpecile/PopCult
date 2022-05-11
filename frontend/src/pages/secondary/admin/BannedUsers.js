@@ -5,6 +5,8 @@ import BannedUserCard from "../../../components/admin/BannedUserCard";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
+import RolesGate from "../../../components/permissions/RolesGate";
+import {Roles} from "../../../enums/Roles";
 
 const BannedUsers = () => {
     const query = new URLSearchParams(useLocation().search);
@@ -42,7 +44,7 @@ const BannedUsers = () => {
         }
     }, [getBannedUsers, refresh]);
 
-    return (<>
+    return (<RolesGate level={Roles.MOD}>
         <h1 className="text-3xl fw-bolder fw-bolder text-center py-4">
             {t('banned_users')}
         </h1>
@@ -56,7 +58,7 @@ const BannedUsers = () => {
                                    unbanUser={unbanUser}
             />;
         }))}
-    </>);
+    </RolesGate>);
 
 }
 export default BannedUsers;

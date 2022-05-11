@@ -9,6 +9,8 @@ import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
 import ModeratorCard from "../../../components/admin/ModeratorCard";
 import ModeratorsRequest from "../../../components/admin/ModeratorsRequest";
+import RolesGate from "../../../components/permissions/RolesGate";
+import {Roles} from "../../../enums/Roles";
 
 
 function TabPanel(props) {
@@ -137,7 +139,7 @@ const Moderators = () => {
     };
 
     return (
-        <>
+        <RolesGate level={Roles.ADMIN}>
             <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
                 {t('moderators')}
             </h1>
@@ -178,6 +180,6 @@ const Moderators = () => {
                     />;
                 }))}
             </TabPanel>
-        </>);
+        </RolesGate>);
 }
 export default Moderators;
