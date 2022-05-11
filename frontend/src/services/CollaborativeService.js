@@ -40,7 +40,7 @@ const collaborativeService = (() => {
     }
 
     const addListCollaborator = async (url) => {
-        await collaborativeApi.addListCollaborator(url, data);
+        await collaborativeApi.addListCollaborator(url);
     }
 
     const deleteListCollaborator = async (url) => {
