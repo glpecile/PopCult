@@ -1,5 +1,5 @@
 import LoginCard from "../../../components/login/LoginCard";
-import {Link, Navigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState, useContext, useRef, useCallback} from "react";
 import {useTranslation} from "react-i18next";
 import {IconButton} from "@mui/material";
@@ -8,7 +8,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AuthContext from "../../../store/AuthContext";
 
-export default function Login() {
+export default function Login({url}) {
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
     const [passwordShown, setPasswordShown] = useState(false);
@@ -19,8 +19,9 @@ export default function Login() {
     const mountedUser = useRef(true);
 
     const [t] = useTranslation();
+    const navigate = useNavigate();
 
-    const [logInState, setLogInState] = useState(localStorage.hasOwnProperty("userAuthToken") || sessionStorage.hasOwnProperty("userAuthToken"));
+
     const [loginCredentials, setCredentials] = useState({username: '', password: '', rememberMe: false});
     const authContext = useContext(AuthContext);
 
@@ -29,16 +30,20 @@ export default function Login() {
                 if (mountedUser.current) {
                     const key = await UserService.login({username, password})
                     setErrorMessageDisplay(false);
-                    setLogInState(true);
                     authContext.onLogin(key, username);
                     rememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
+                    if (url){
+                        navigate(url);
+                    }else{
+                        navigate('/');
+                    }
                 }
             } catch (error) {
                 console.log(error.response);
                 setErrorMessage();
             }
         },
-        [authContext]);
+        [authContext, navigate, url]);
 
     useEffect(() => {
         mountedUser.current = true;
@@ -88,7 +93,6 @@ export default function Login() {
     };
 
     return <LoginCard>
-        {logInState && <Navigate to='/'/>}
         <form className="my-1.5 relative" onSubmit={submitHandler} noValidate={true}>
             <div className="flex flex-col">
                 {/* Username */}
