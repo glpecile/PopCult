@@ -1,4 +1,5 @@
 import api from './api'
+import {VndType} from '../enums/VndType';
 
 const collaborativeApi = (() => {
 
@@ -38,10 +39,20 @@ const collaborativeApi = (() => {
         return api.get(url);
     }
 
-    const addListCollaborator = (url, data) => {
+    const manageListCollaborators = ({url, add, remove}) => {
         return api.patch(url, {
-            "collaborators": data
-        });
+                'add': add,
+                'remove': remove
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_LISTS_PATCH_COLLABORATORS
+                }
+            });
+    }
+
+    const addListCollaborator = (url) => {
+        return api.patch(url);
     }
 
     const deleteListCollaborator = (url) => {
@@ -70,6 +81,7 @@ const collaborativeApi = (() => {
         deleteCollaborationRequest,
         getListCollaborators,
         isListCollaborator,
+        manageListCollaborators,
         addListCollaborator,
         deleteListCollaborator,
         getListCollaborationRequests,

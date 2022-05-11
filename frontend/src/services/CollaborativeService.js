@@ -35,7 +35,11 @@ const collaborativeService = (() => {
         return res.data;
     }
 
-    const addListCollaborator = async (url, data) => {
+    const manageListCollaborators = async ({url, add, remove}) => {
+        await collaborativeApi.manageListCollaborators({url, add, remove});
+    }
+
+    const addListCollaborator = async (url) => {
         await collaborativeApi.addListCollaborator(url, data);
     }
 
@@ -62,6 +66,7 @@ const collaborativeService = (() => {
         deleteCollaborationRequest,
         getListCollaborators,
         isListCollaborator,
+        manageListCollaborators,
         addListCollaborator,
         deleteListCollaborator,
         getListCollaborationRequests,

@@ -61,8 +61,12 @@ const listService = (() => {
         return res.data;
     }
 
-    const addMediaToList = async (url, data) => {
-        await listApi.addMediaToList(url, data);
+    const manageMediaInList = async ({url, add, remove}) => {
+        await listApi.manageMediaInList({url, add, remove})
+    }
+
+    const addMediaToList = async (url) => {
+        await listApi.addMediaToList(url);
     }
 
     const removeMediaFromList = async (url) => {
@@ -97,6 +101,7 @@ const listService = (() => {
         deleteList,
         getMediaInList,
         isMediaInList,
+        manageMediaInList,
         addMediaToList,
         removeMediaFromList,
         getListForks,
