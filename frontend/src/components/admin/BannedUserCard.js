@@ -11,7 +11,7 @@ const BannedUserCard = (props) => {
                 <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="user_profile"
                      src={props.image}/>
                 <h4 className=" pl-3 text-xl font-normal tracking-tight mt-3.5">
-                    <Link className="pr-1 text-purple-500 hover:text-purple-900" to={`user/${props.username}`}>
+                    <Link className="pr-1 text-violet-500 hover:text-violet-900" to={`user/${props.username}`}>
                         <strong>{props.username}</strong>
                     </Link>
                     {t('profile_secondary_description', {username: props.username})}

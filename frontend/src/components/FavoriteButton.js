@@ -7,7 +7,7 @@ const FavoriteButton = (props) => {
     const [t] = useTranslation();
 
     let buttonStyle = "group h-min w-min"
-    let iconStyle = "text-purple-500 group-hover:text-purple-900 transition duration-300 ease-in-out transform group-active:scale-90"
+    let iconStyle = "text-violet-500 group-hover:text-violet-900 transition duration-300 ease-in-out transform group-active:scale-90"
 
     return <Tooltip title={props.isLiked ? t('media_details_remove_liked') : t('media_details_add_liked')} arrow>
         <IconButton onClick={props.handleLike} className={buttonStyle}>

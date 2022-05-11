@@ -250,6 +250,7 @@
   "report_submit": "Submit report",
   "report_success": "Thank you! Your report has been successfully submitted.",
   "report_admin_success": "Thank you! This comment has been removed.",
-  "collaborators_in_list": "Some collaborators of this list:"
+  "collaborators_in_list": "Some collaborators of this list:",
+  "list_by": "by: "
 
 }

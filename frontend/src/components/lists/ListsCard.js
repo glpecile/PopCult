@@ -31,7 +31,7 @@ function ListsCard(content) {
                     })}
                 </div>
                 <div
-                    className="stretched-link overflow-ellipsis text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-purple-900 font-medium text-lg p-1.5 m-2.5">
+                    className="stretched-link overflow-ellipsis text-left tracking-tight align-text-top whitespace-normal text-gray-800 group-hover:text-violet-900 font-medium text-lg p-1.5 m-2.5">
                     <b>{content.listTitle}</b>
                 </div>
             </Link>

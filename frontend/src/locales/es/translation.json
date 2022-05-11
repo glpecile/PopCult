@@ -248,7 +248,8 @@
   "report_submit": "Enviar reporte",
   "report_success": "¡Muchas gracias! Tu reporte se ha enviado correctamente",
   "report_admin_success": "¡Muchas gracias! Se ha eliminado el comentario.",
-  "collaborators_in_list": "Algunos colaboradores de esta lista:"
+  "collaborators_in_list": "Algunos colaboradores de esta lista:",
+  "list_by": "por: "
 
 
 

@@ -1,7 +1,7 @@
 import Loader from "../secondary/errors/Loader";
 import {useContext, useEffect, useRef, useState} from "react";
 import AuthContext from "../../store/AuthContext";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
@@ -99,11 +99,9 @@ export default function Home() {
                         <h1 className="text-center text-3xl">
                             {t('home_slogan')}
                         </h1>
-                        <button
+                        <Link
                             className="btn btn-link text-center text-white bg-violet-500 hover:bg-violet-900 rounded-full shadow-md hover:shadow-lg my-4 w-1/4"
-                            onClick={() => {
-                                navigate('/register')
-                            }}>{t('home_register')}</button>
+                            to={'/register'} >{t('home_register')}</Link>
                     </> : <>
                         <h1 className="text-center text-3xl">
                             {t('home_greeting')}

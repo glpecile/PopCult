@@ -18,7 +18,7 @@ const MediaOptions = (props) => {
     const [isInWatchlist, setInWatchlist] = useState(false);
     const [t] = useTranslation();
     let buttonStyle = "group"
-    let iconStyle = "text-purple-500 group-hover:text-purple-900 transition duration-300 ease-in-out transform group-active:scale-90"
+    let iconStyle = "text-violet-500 group-hover:text-violet-900 transition duration-300 ease-in-out transform group-active:scale-90"
     const {setErrorStatusCode} = useErrorStatus();
     const userIsLogged = useContext(AuthContext).isLoggedIn;
     const location = useLocation()

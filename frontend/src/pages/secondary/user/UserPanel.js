@@ -26,7 +26,7 @@ const UserPanel = () => {
         {(!requestsView && !commentsView) && <>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
                 {/* Requests */}
-                <IconCard icon={<GroupOutlinedIcon fontSize="large" className="text-purple-500 group-hover:text-purple-900 mt-3"/>}
+                <IconCard icon={<GroupOutlinedIcon fontSize="large" className="text-violet-500 group-hover:text-violet-900 mt-3"/>}
                           title={t('user_panel_requests')}
                           description={t('user_panel_requests_detail')}
                           onClick={() => {
@@ -34,7 +34,7 @@ const UserPanel = () => {
                           }}/>
                 {/* Comments */}
                 <IconCard
-                    icon={<ForumOutlinedIcon fontSize="large" className="text-purple-500 group-hover:text-purple-900 mt-3"/>}
+                    icon={<ForumOutlinedIcon fontSize="large" className="text-violet-500 group-hover:text-violet-900 mt-3"/>}
                     title={t('user_panel_comments')}
                     description={t('user_panel_comments_detail')}
                     onClick={() => {

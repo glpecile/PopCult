@@ -7,7 +7,10 @@ import ListCollaborators from "../../../components/lists/description/ListCollabo
 import ListMedia from "../../../components/lists/description/ListMedia";
 import {useTranslation} from "react-i18next";
 import ListUpperIcons from "../../../components/lists/description/ListUpperIcons";
-import {Alert, Snackbar} from "@mui/material";
+import {Alert,Snackbar} from "@mui/material";
+import {Link} from "react-router-dom";
+import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
+import ListForks from "../../../components/lists/description/ListForks";
 
 function ListsDescription() {
     const id = window.location.pathname.split('/')[2];
@@ -49,17 +52,23 @@ function ListsDescription() {
                 <h2 className="display-5 fw-bolder">
                     {list.name}
                 </h2>
-                <ListUpperIcons owner={list.owner} favoriteUrl={list.favoriteUrl} reportsUrl={list.reportsUrl} openAlert={showSnackbar}/>
+                <ListUpperIcons owner={list.owner} favoriteUrl={list.favoriteUrl} reportsUrl={list.reportsUrl}
+                                openAlert={showSnackbar}/>
             </div>
             {/*    list author and forking info*/}
+            <div className="flex justify-right">
+                {t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={'/user/'+list.owner}>{list.owner}</Link>
+            </div>
             {/*    forked from*/}
             {/*amount of forks*/}
+            <ListForks forksUrl={list.forksUrl}/>
             <p className="lead text-justify max-w-full break-words pb-2">
                 {list.description}
             </p>
-            {/*    collaborators */}
+            {/* collaborators */}
             <ListCollaborators collaboratorsUrl={list.collaboratorsUrl}/>
-            {/*    share and edit */}
+            {/* share edit and fork */}
+            <ListLowerIcons/>
             <ListMedia mediaUrl={list.mediaUrl}/>
             <CommentSection commentsUrl={list.commentsUrl}/>
         </>) : <Loader/>}
