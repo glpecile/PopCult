@@ -83,8 +83,8 @@ const reportService = (() => {
     }
 
     //TODO define dto
-    const createListCommentReport = async (url) => {
-
+    const createListCommentReport = async ({url, data}) => {
+        return await reportApi.createListCommentReport({url, data});
     }
 
     const getReportsFromMediaComment = async ({url, page, pageSize}) => {

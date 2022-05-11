@@ -69,7 +69,7 @@ const CommentComponent = (props) => {
             })
         }
         try {
-            const data = await reportService.createListCommentReport(comment.url);
+            const data = await reportService.createListCommentReport({url: comment.reportsUrl, data: reportBody});//data.status
         } catch (error) {
             setErrorStatusCode(error.response.status);
         }
