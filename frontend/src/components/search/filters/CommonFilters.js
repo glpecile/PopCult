@@ -23,9 +23,6 @@ const CommonFilters = (props) => {
     };
 
     const handleGenres = (event) => {
-        console.log(event.target);
-        console.log(event.target.value);
-        console.log(props.genres);
         const {
             target: {value},
         } = event;

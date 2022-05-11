@@ -239,5 +239,11 @@
   "home_title_series":"Recently Added Series",
   "home_title_lists_discovery":"Recommended lists for you!",
   "home_title_films_discovery":"Films you might like",
-  "home_title_series_discovery":"Series you might like"
+  "home_title_series_discovery":"Series you might like",
+  "delete_comment_title": "Delete comment",
+  "delete_comment_body": "Are you sure you wish to delete this comment?",
+  "delete_comment_confirmation": "Yes, delete this comment",
+  "report_comment_title": "Report comment",
+  "report_comment_body": "Why do you want to report this comment?",
+  "report_submit": "Submit report"
 }
