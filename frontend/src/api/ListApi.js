@@ -98,15 +98,8 @@ const listApi = (() => {
             });
     }
 
-    const addMediaToList = (url, data) => {
-        return api.patch(url, {
-                'media': data
-            },
-            {
-                headers: {
-                    'Content-Type': VndType.APPLICATION_LISTS_PATCH_MEDIA
-                }
-            });
+    const addMediaToList = (url) => {
+        return api.patch(url);
     }
 
     const removeMediaFromList = (url) => {

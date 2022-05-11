@@ -51,15 +51,8 @@ const collaborativeApi = (() => {
             });
     }
 
-    const addListCollaborator = (url, data) => {
-        return api.patch(url, {
-                'collaborators': data
-            },
-            {
-                headers: {
-                    'Content-Type': VndType.APPLICATION_LISTS_PATCH_COLLABORATORS
-                }
-            });
+    const addListCollaborator = (url) => {
+        return api.patch(url);
     }
 
     const deleteListCollaborator = (url) => {

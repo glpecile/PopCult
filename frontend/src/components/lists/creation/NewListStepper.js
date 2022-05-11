@@ -112,11 +112,10 @@ export default function NewListStepper() {
             async function createNewList() {
                 try {
                     const listUrl = await ListService.createList(listName, listDescription, isPublic, isCollaborative);
-                    const id = listUrl.split('/').pop();
                     const data = await ListService.getList(listUrl);
-                    await ListService.addMediaToList(data.mediaUrl, Array.from(addedMedia.keys()));
-                    await collaborativeService.addListCollaborator(data.collaboratorsUrl, Array.from(addedCollaborators.keys()));
-                    navigate('/lists/' + id);
+                    await ListService.manageMediaInList({url: data.mediaUrl, add: Array.from(addedMedia.keys()), remove: []});
+                    await collaborativeService.manageListCollaborators({url: data.collaboratorsUrl, add: Array.from(addedCollaborators.keys()), remove: []});
+                    navigate('/lists/' + data.id);
                 } catch (error) {
                     console.log(error);
                 }
