@@ -1,6 +1,6 @@
 import LoginCard from "../../../components/login/LoginCard";
-import {Link, useNavigate} from "react-router-dom";
-import {useEffect, useState, useContext, useRef, useCallback} from "react";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useEffect, useState, useContext} from "react";
 import {useTranslation} from "react-i18next";
 import {IconButton} from "@mui/material";
 import UserService from "../../../services/UserService";
@@ -8,7 +8,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AuthContext from "../../../store/AuthContext";
 
-export default function Login({url}) {
+export default function Login() {
+    const location = useLocation()
+    console.log(location.state.url);
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
     const [passwordShown, setPasswordShown] = useState(false);
@@ -16,48 +18,10 @@ export default function Login({url}) {
     const [enteredUsernameError, setUsernameError] = useState(false);
     const [enteredPasswordError, setPasswordError] = useState(false);
     const [errorMessageDisplay, setErrorMessageDisplay] = useState(false);
-    const mountedUser = useRef(true);
 
     const [t] = useTranslation();
     const navigate = useNavigate();
-
-
-    const [loginCredentials, setCredentials] = useState({username: '', password: '', rememberMe: false});
     const authContext = useContext(AuthContext);
-
-    const login = useCallback(async (username, password, rememberMe) => {
-            try {
-                if (mountedUser.current) {
-                    const key = await UserService.login({username, password})
-                    setErrorMessageDisplay(false);
-                    authContext.onLogin(key, username);
-                    rememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
-                    if (url){
-                        navigate(url);
-                    }else{
-                        navigate('/');
-                    }
-                }
-            } catch (error) {
-                console.log(error.response);
-                setErrorMessage();
-            }
-        },
-        [authContext, navigate, url]);
-
-    useEffect(() => {
-        mountedUser.current = true;
-        if (loginCredentials.username.localeCompare("") !== 0 && loginCredentials.password.localeCompare("") !== 0) {
-            const username = loginCredentials.username;
-            const password = loginCredentials.password;
-            const rememberMe = loginCredentials.rememberMe;
-            login(username, password, rememberMe);
-        }
-        return () => {
-            mountedUser.current = false;
-        }
-    }, [loginCredentials, login]);
-
 
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);
@@ -72,11 +36,16 @@ export default function Login({url}) {
         setEnteredRememberMe(event.target.value);
     };
 
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                setErrorMessageDisplay(false);
+            }, 5000);
+            return () => clearTimeout(timeOut);
+        }
+        , [errorMessageDisplay]);
+
     const setErrorMessage = () => {
         setErrorMessageDisplay(true);
-        setTimeout(() => {
-            setErrorMessageDisplay(false);
-        }, 5000);
     }
 
     const togglePassword = () => {
@@ -84,9 +53,26 @@ export default function Login({url}) {
     };
 
     const submitHandler = (event) => {
+        async function login() {
+            try {
+                const key = await UserService.login({username: enteredUsername, password: enteredPassword})
+                setErrorMessageDisplay(false);
+                authContext.onLogin(key, enteredUsername);
+                enteredRememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
+                if (location.state.url) {
+                    navigate(location.state.url);
+                } else {
+                    navigate('/');
+                }
+            } catch (error) {
+                console.log(error.response);
+                setErrorMessage();
+            }
+        }
+
         event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
-            setCredentials({username: enteredUsername, password: enteredPassword, rememberMe: enteredRememberMe});
+            login();
         } else {
             setErrorMessage();
         }
@@ -111,7 +97,8 @@ export default function Login({url}) {
                 <label className="py-2 text-semibold w-full">
                     {t('login_password')}
                 </label>
-                <input className="w-full rounded active:none shadow-sm" type={passwordShown ? "text" : "password"} value={enteredPassword}
+                <input className="w-full rounded active:none shadow-sm" type={passwordShown ? "text" : "password"}
+                       value={enteredPassword}
                        minLength={8} maxLength={100}
                        onChange={PasswordChangeHandler}/>
 

@@ -1,6 +1,5 @@
 import {useContext, useEffect} from "react";
 import AuthContext from "../../store/AuthContext";
-import Login from "../../pages/secondary/login/Login";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const LoggedGate = ({children}) => {
@@ -10,9 +9,14 @@ const LoggedGate = ({children}) => {
 
     useEffect(() => {
         if (!isLogged) {
-            navigate( '/login', {url: location.pathname})
+            navigate('/login', {
+                state: {
+                    url: location.pathname
+                }
+            })
         }
-    }, []);
+    }, [isLogged, navigate, location.pathname]);
+
     return <>{children}</>
 }
 export default LoggedGate;
