@@ -389,7 +389,7 @@ public class ListController {
         final MediaList forkedList = listsService.createMediaListCopy(user, mediaList);
 
         LOGGER.info("POST /{}: List {} created with id {} forked from list {}", uriInfo.getPath(), forkedList.getListName(), forkedList.getMediaListId(), listId);
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(forkedList.getMediaListId())).build()).build();
+        return Response.created(uriInfo.getBaseUriBuilder().path("lists").path(String.valueOf(forkedList.getMediaListId())).build()).build();
     }
 
     /**
