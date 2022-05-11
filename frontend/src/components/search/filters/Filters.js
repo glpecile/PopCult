@@ -19,7 +19,6 @@ const Filters = (props) => {
 
 
     const handleMediaFilters = (key, value) => {
-        props.setMediaPage(1);
         if (value !== '') {
             props.setMediaFilters(prev => new Map([...prev, [key, value]]));
         } else if (props.mediaFilters.has(key)) {
@@ -30,7 +29,6 @@ const Filters = (props) => {
     }
 
     const handleListsFilters = (key, value) => {
-        props.setListPage(1);
         if (value !== '') {
             props.setListFilters(prev => new Map([...prev, [key, value]]));
         } else if (props.listFilters.has(key)) {
@@ -43,11 +41,13 @@ const Filters = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
         if (props.showMediaFilters) {
+            props.setMediaPage(1);
             handleMediaFilters(props.mediaSort, mSortBy);
             handleMediaFilters(props.mediaType, type);
             handleMediaFilters(props.mediaDecades, mDecades);
             handleMediaFilters(props.mediaCategories, mCategories);
         } else {
+            props.setListPage(1);
             handleListsFilters(props.listSort, lSortBy);
             handleListsFilters(props.listDecades, lDecades);
             handleListsFilters(props.listCategories, lCategories);

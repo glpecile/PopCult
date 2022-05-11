@@ -5,7 +5,7 @@ import {useContext, useEffect, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import useErrorStatus from "../../hooks/useErrorStatus";
-import {createSearchParams, useNavigate} from "react-router-dom";
+import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
 import GenresContext from "../../store/GenresContext";
 import Filters from "../../components/search/filters/Filters";
 import MediaCard from "../../components/media/MediaCard";
@@ -15,10 +15,11 @@ import PaginationComponent from "../../components/PaginationComponent";
 function Series() {
     const [t] = useTranslation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const [carrouselData, setCarrouselData] = useState(undefined);
     const [series, setSeries] = useState(undefined);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(searchParams.get("page"));
     const {setErrorStatusCode} = useErrorStatus();
     const [seriesFilters, setSeriesFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;

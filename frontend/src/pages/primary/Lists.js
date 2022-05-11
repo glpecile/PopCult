@@ -1,7 +1,7 @@
 import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {createSearchParams, useLocation, useNavigate} from "react-router-dom";
+import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
@@ -17,10 +17,12 @@ function Lists() {
     const navigate = useNavigate();
 
     const genres = useContext(GenresContext).genres;
+    const [searchParams] = useSearchParams();
+
 
     const [carrouselLists, setCarrouselLists] = useState(undefined);
     const [lists, setLists] = useState(undefined);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(searchParams.get("page"));
     const {setErrorStatusCode} = useErrorStatus();
     const [listFilters, setListFilters] = useState(() => new Map());
     const pageSize = 4;

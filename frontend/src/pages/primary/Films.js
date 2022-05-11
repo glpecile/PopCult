@@ -9,15 +9,17 @@ import Filters from "../../components/search/filters/Filters";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import MediaCard from "../../components/media/MediaCard";
-import {createSearchParams, useNavigate} from "react-router-dom";
+import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
 
 export default function Films() {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
 
     const [carrouselData, setCarrouselData] = useState(undefined);
+    const [page, setPage] = useState(searchParams.get("page"));
     const [films, setFilms] = useState(undefined);
-    const [page, setPage] = useState(1);
     const {setErrorStatusCode} = useErrorStatus();
     const [filmFilters, setFilmFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
