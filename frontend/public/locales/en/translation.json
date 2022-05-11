@@ -245,5 +245,8 @@
   "delete_comment_confirmation": "Yes, delete this comment",
   "report_comment_title": "Report comment",
   "report_comment_body": "Why do you want to report this comment?",
-  "report_submit": "Submit report"
+  "report_submit": "Submit report",
+  "report_success": "Thank you! Your report has been successfully submitted.",
+  "report_admin_success": "Thank you! This comment has been removed."
+
 }

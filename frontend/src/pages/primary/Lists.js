@@ -1,7 +1,7 @@
 import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {createSearchParams, useNavigate} from "react-router-dom";
+import {createSearchParams, useLocation, useNavigate} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
@@ -10,6 +10,7 @@ import Filters from "../../components/search/filters/Filters";
 import ListsCard from "../../components/lists/ListsCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
+import {Alert, Snackbar} from "@mui/material";
 
 function Lists() {
     const {t} = useTranslation();
@@ -27,6 +28,16 @@ function Lists() {
     const listSort = 'sort';
     const listDecades = 'decades';
     const listCategories = 'categories';
+    const location = useLocation()
+    const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
+    /* Cuando queramos activar el snackbar de que se borro una lista porque un moderador la elimino -> desde donde se borre redirigir asi
+    navigate('/lists', {
+                    state: {
+                        data: data.status
+                    }
+                })
+    */
+
 
     useEffect(() => {
         async function getCarrouselLists() {
@@ -72,6 +83,14 @@ function Lists() {
         });
     }, [page, navigate, listFilters]);
 
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                setShowAlert(false);
+            }, 3000);
+            return () => clearTimeout(timeOut);
+        }
+        , [showAlert]);
+
     return (
         <section>
             <Helmet>
@@ -112,6 +131,12 @@ function Lists() {
                         }
                     </div>
                 </> : <div className="flex justify-center text-gray-400">{t('search_no_results')}</div>}
+                <Snackbar open={showAlert} autoHideDuration={6000}
+                          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+                    <Alert severity="success">
+                        {t('report_admin_success')}
+                    </Alert>
+                </Snackbar>
             </> : <Loader/>}
         </section>
     );

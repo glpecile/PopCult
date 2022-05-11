@@ -70,6 +70,12 @@ const CommentComponent = (props) => {
         }
         try {
             const data = await reportService.createListCommentReport({url: comment.reportsUrl, data: reportBody});//data.status
+            if (data.status === 204) {
+                props.setCommentsUpdate(prev => prev - 1);
+                props.showAlert(data.status);
+            } else if (data.status === 201) {
+                props.showAlert(data.status);
+            }
         } catch (error) {
             setErrorStatusCode(error.response.status);
         }
@@ -94,7 +100,7 @@ const CommentComponent = (props) => {
                     </div>
                     <div>
                         {/*delete and report*/}
-                        {(user && currentUser && (currentUser.localeCompare(user.username)=== 0)) ?
+                        {(user && currentUser && (currentUser.localeCompare(user.username) === 0)) ?
                             <OneButtonDialog
                                 buttonClassName="text-red-500 hover:text-red-900 m-1 h-min w-min"
                                 buttonIcon={<Close className="mb-1 align-top"/>}
@@ -121,7 +127,6 @@ const CommentComponent = (props) => {
                     <div className=" col-span-11 flex items-center lg:pb-2">
                         <div className=" m-0 max-w-full break-words"> {comment.commentBody} </div>
                     </div>
-
                 </div>
             </ListItem>}</>
     );
