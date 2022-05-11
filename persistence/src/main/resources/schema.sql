@@ -242,6 +242,7 @@ CREATE TABLE IF NOT EXISTS token
 -- WatchDao
 CREATE TABLE IF NOT EXISTS towatchmedia
 (
+    watchedMediaId SERIAL PRIMARY KEY,
     userId    INT NOT NULL,
     mediaId   INT NOT NULL,
     watchDate TIMESTAMP,

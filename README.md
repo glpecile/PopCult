@@ -1,11 +1,19 @@
 # Proyectos de Aplicaciones Web
 
+![logo](webapp/src/main/webapp/resources/images/PopCultCompleteLogo.png)
+
+Repositorio del TPE **72.38 - Proyecto de Aplicaciones Web** realizado a lo largo de 2021 segundo cuatrimestre.
+
 ## Autores
 
 - [Julián Arce](https://github.com/juarce), 60509
 - [Roberto Catalán](https://github.com/rcatalan98), 59174
 - [Paula Domingues](https://github.com/pdomins), 60148
 - [Gian Luca Pecile](https://github.com/glpecile), 59235
+
+## Prerequisitos
+* La versión de **Java** utilizada es `1.8.0_77`.
+* La versión usada de **Tomcat** es `7.0.76`.
 
 ## Compilación
 
@@ -15,11 +23,9 @@ La compilación se realiza con el siguiente comando:
 mvn clean package
 ```
 
-La versión de **Java** utilizada es `1.8.0_77`.
-La versión usada de **Tomcat** es `7.0.76`.
-
 Las tablas de la base de datos serán creadas automáticamente al inicar la aplicación.
 Además, se deben ejecutar los siguientes scripts de sql, en el orden especificado, para popular la base de datos por única vez:
+
 ```bash
 genre.sql
 media.sql
@@ -27,10 +33,11 @@ users.sql
 lists.sql
 sequence.sql
 ```
-Los scripts se encuentran en `/persistence/src/main/resources`.
+
+Los scripts se encuentran disponibles en [`/persistence/src/main/resources`](persistence/src/main/resources).
 
 ## Credenciales de acceso
-Emails:
+### Emails
 - Admin:
     - popcult.paw@gmail.com
     - 18bf48221da84df80dbe0580a68cf064
@@ -41,7 +48,7 @@ Emails:
     - popcult.user@gmail.com
     - b1ca0f521dcdfdefc4581207b5581565
 
-Usuarios registrados:
+### Usuarios registrados
 - Admin:
     - PopCult
     - 123456789

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -10,19 +10,27 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CollaborativeListService {
-    Request makeNewRequest(MediaList mediaList, User user);
+    Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException;
 
-    PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize);
+    Optional<Request> getById(int collabId);
+
+    Optional<Request> getUserListCollabRequest(MediaList mediaList, User user);
+
+    PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
+
+    PageContainer<Request> getRequestsByUser(User user, int page, int pageSize);
 
     void acceptRequest(Request collaborationRequest);
 
     void rejectRequest(Request request);
 
+    void manageCollaborators(MediaList mediaList, List<User> usersToAdd, List<User> usersToRemove);
+
+    void addCollaborator(MediaList mediaList, User user);
+
     void deleteCollaborator(Request request);
 
-    PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize);
-
-    Optional<Request> getById(int collabId);
-
     void addCollaborators(MediaList mediaList, List<User> users);
+
+    void deleteCollaborators(MediaList mediaList, List<User> users);
 }

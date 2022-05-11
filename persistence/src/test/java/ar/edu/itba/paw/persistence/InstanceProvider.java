@@ -51,13 +51,17 @@ public class InstanceProvider {
     /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_ID = 2;
 
-    /* default */ static final int ALREADY_EXISTS_COLLAB_ID = 2;
+    /* default */ static final int ALREADY_EXISTS_COLLAB_ID = 3;
 
     /* default */ static final int ALREADY_EXISTS_IMAGE_ID = 2;
 
     /* default */ static final int ALREADY_EXISTS_LIST_REPORT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_LIST_COMMENT_REPORT_ID = 2;
     /* default */ static final int ALREADY_EXISTS_MEDIA_COMMENT_REPORT_ID = 2;
+
+    private static final int ALREADY_REPORTED_LIST_ID = 3;
+    private static final int ALREADY_REPORTED_LIST_COMMENT_ID = 3;
+    private static final int ALREADY_REPORTED_MEDIA_COMMENT_ID = 3;
 
     private InstanceProvider() {
         throw new AssertionError();
@@ -131,4 +135,15 @@ public class InstanceProvider {
         return new Media(ALREADY_EXISTS_WATCHED_MEDIA_ID, MediaType.SERIE, "Revolution", "...", "", 1764, null, 2, Country.US);
     }
 
+    public static MediaList getAlreadyReportedList() {
+        return new MediaList(ALREADY_REPORTED_LIST_ID, getOwnerListUser(), "...", "...", null, true, false);
+    }
+
+    public static ListComment getAlreadyReportedListComment() {
+        return new ListComment(ALREADY_REPORTED_LIST_COMMENT_ID, getUser(), COMMENT, LocalDateTime.now(), getMediaList());
+    }
+
+    public static MediaComment getAlreadyReportedMediaComment() {
+        return new MediaComment(ALREADY_REPORTED_MEDIA_COMMENT_ID, getUser(), COMMENT, LocalDateTime.now(), getMedia());
+    }
 }

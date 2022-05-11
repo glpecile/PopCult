@@ -1,39 +1,46 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.EmailNotExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.ImageConversionException;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidCurrentPasswordException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.comment.Notification;
-import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.User;
+import ar.edu.itba.paw.models.user.UserRole;
+import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
+import ar.edu.itba.paw.webapp.dto.input.*;
+import ar.edu.itba.paw.webapp.dto.output.*;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
+import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.*;
-import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
+import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Optional;
 
-import static ar.edu.itba.paw.webapp.utilities.ListCoverImpl.getListCover;
-
-@Controller
+@Path("users")
+@Component
 public class UserController {
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserService userService;
     @Autowired
@@ -50,337 +57,703 @@ public class UserController {
     private TokenService tokenService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private ModeratorService moderatorService;
+
+    @Context
+    private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    private static final int listsPerPage = 4;
-    private static final int itemsPerPage = 4;
-    private static final int notificationsPerPage = 16;
-    private static final int editablePerPage = 12;
+    private static final String defaultPage = "1";
+    private static final String defaultPageSize = "12";
 
 
-    @RequestMapping("/user/{username}")
-    public ModelAndView userProfile(@ModelAttribute("imageForm") final ImageForm imageForm,
-                                    @PathVariable("username") final String username,
-                                    @RequestParam(value = "page", defaultValue = "1") final int page) {
-        ModelAndView mav = new ModelAndView("user/userProfile");
-        LOGGER.debug("Trying to access {} profile", username);
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<MediaList> userLists = listsService.getMediaListByUser(user, page - 1, listsPerPage);
-        final List<ListCover> userListsCover = getListCover(userLists.getElements(), listsService);
-        mav.addObject("user", user);
-        mav.addObject("lists", userListsCover);
-        mav.addObject("userListsContainer", userLists);
+    @GET
+    @Produces(value = {VndType.APPLICATION_USER})
+    public Response listUsers(@QueryParam("page") @DefaultValue(defaultPage) int page,
+                              @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                              @QueryParam("role") UserRole userRole,
+                              @QueryParam("banned") Boolean banned,
+                              @QueryParam("query") String term,
+                              @QueryParam("not-collab-in-list") Integer listId) {
+        final PageContainer<User> users = userService.getUsers(page, pageSize, userRole, banned, term, listId);
 
-        PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page - 1, listsPerPage);
-        final List<ListCover> userPublicListCover = getListCover(userPublicLists.getElements(), listsService);
-        mav.addObject("userPublicListCover", userPublicListCover);
-        mav.addObject("userPublicLists", userPublicLists);
-        LOGGER.info("{} profile accessed.", username);
-        return mav;
-    }
-
-    @RequestMapping("/user/{username}/favoriteMedia")
-    public ModelAndView userFavoriteMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
-                                          @PathVariable("username") final String username,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("Trying to access {} favorite media.", username);
-        ModelAndView mav = new ModelAndView("user/userFavoriteMedia");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page - 1, itemsPerPage);
-        PageContainer<Media> suggestedMedia = favoriteService.getMostLikedMedia(page - 1, itemsPerPage);
-        mav.addObject("user", user);
-        mav.addObject("favoriteMediaContainer", favoriteMedia);
-        mav.addObject("suggestedMediaContainer", suggestedMedia);
-
-        LOGGER.info("{} favorite media accessed.", username);
-        return mav;
-    }
-
-    @RequestMapping("/user/{username}/toWatchMedia")
-    public ModelAndView userToWatchMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
-                                         @PathVariable("username") final String username,
-                                         @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("Trying to access {} to watch media.", username);
-        ModelAndView mav = new ModelAndView("user/userToWatchMedia");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Media> toWatchMediaIds = watchService.getToWatchMediaId(user, page - 1, itemsPerPage);
-        PageContainer<Media> suggestedMedia = favoriteService.getMostLikedMedia(page - 1, itemsPerPage);
-
-        mav.addObject("user", user);
-        mav.addObject("toWatchMediaIdsContainer", toWatchMediaIds);
-        mav.addObject("suggestedMediaContainer", suggestedMedia);
-
-        LOGGER.info("{} to watch media accessed.", username);
-        return mav;
-    }
-
-
-    @RequestMapping("/user/{username}/watchedMedia")
-    public ModelAndView userWatchedMedia(@ModelAttribute("imageForm") final ImageForm imageForm,
-                                         @PathVariable("username") final String username,
-                                         @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("Trying to access {} watched media.", username);
-        ModelAndView mav = new ModelAndView("user/userWatchedMedia");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<WatchedMedia> watchedMediaIds = watchService.getWatchedMediaId(user, page - 1, itemsPerPage);
-
-        mav.addObject("user", user);
-        mav.addObject("watchedMediaIdsContainer", watchedMediaIds);
-        mav.addObject("currentDate", LocalDate.now());
-        LOGGER.info("{} watched media accessed.", username);
-        return mav;
-    }
-
-
-    @RequestMapping("/user/{username}/favoriteLists")
-    public ModelAndView userFavoriteLists(@ModelAttribute("imageForm") final ImageForm imageForm,
-                                          @PathVariable("username") final String username,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("Trying to access {} favorite lists.", username);
-        ModelAndView mav = new ModelAndView("user/userFavoriteLists");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        mav.addObject(user);
-
-        PageContainer<MediaList> userFavLists = favoriteService.getUserFavoriteLists(user, page - 1, itemsPerPage);
-        List<ListCover> favoriteCovers = getListCover(userFavLists.getElements(), listsService);
-        mav.addObject("favoriteLists", favoriteCovers);
-        mav.addObject("userFavListsContainer", userFavLists);
-
-        PageContainer<MediaList> userPublicFavLists = favoriteService.getUserPublicFavoriteLists(user, page - 1, listsPerPage);
-        final List<ListCover> userPublicFavListCover = getListCover(userPublicFavLists.getElements(), listsService);
-        mav.addObject("userPublicListCover", userPublicFavListCover);
-        mav.addObject("userPublicLists", userPublicFavLists);
-
-        LOGGER.info("{} favorite lists accessed.", username);
-        return mav;
-    }
-
-    @RequestMapping(value = "/settings", method = {RequestMethod.GET})
-    public ModelAndView editUserDetails(@ModelAttribute("userSettings") final UserDataForm form) {
-        ModelAndView mav = new ModelAndView("user/userSettings");
-        LOGGER.debug("Trying to access {} details.", form.getUsername());
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        LOGGER.info("{} getting details.", user.getUsername());
-        mav.addObject("user", user);
-        return mav;
-    }
-
-    @RequestMapping(value = "/settings", method = {RequestMethod.POST}, params = "editUser")
-    public ModelAndView postUserSettings(@Valid @ModelAttribute("userSettings") final UserDataForm form,
-                                         final BindingResult errors) {
-        LOGGER.debug("{} trying to update settings", form.getUsername());
-        if (errors.hasErrors()) {
-            LOGGER.error("Form used for user details has errors.");
-            return editUserDetails(form);
+        if (users.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
         }
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        userService.updateUserData(user, form.getName());
-        LOGGER.info("User {}'s details updated.", user.getUsername());
-        return new ModelAndView("redirect:/user/" + user.getUsername());
+
+        final List<UserDto> usersDto = UserDto.fromUserList(uriInfo, users.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
+        });
+        ResponseUtils.setPaginationLinks(response, users, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), users.getCurrentPage(), users.getElements().size());
+        return response.build();
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.GET})
-    public ModelAndView changeUserPassword(@ModelAttribute("changePassword") final PasswordForm form) {
-        ModelAndView mav = new ModelAndView("login/changePassword");
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        mav.addObject("user", user);
-        return mav;
+    @GET
+    @Path("/{username}")
+    @Produces(value = {VndType.APPLICATION_USER})
+    public Response getUser(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        LOGGER.info("GET /{}: Returning user {}.", uriInfo.getPath(), user.getUsername());
+        return Response.ok(UserDto.fromUser(uriInfo, user)).build();
     }
 
-    @RequestMapping(value = "/changePassword", method = {RequestMethod.POST}, params = "changePass")
-    public ModelAndView postUserPassword(@Valid @ModelAttribute("changePassword") final PasswordForm form,
-                                         final BindingResult errors) {
-        LOGGER.debug("Trying to change password");
-        if (errors.hasErrors()) {
-            LOGGER.error("Change password form has errors.");
-            return changeUserPassword(form);
-        }
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
-        try {
-            userService.changePassword(user, form.getCurrentPassword(), form.getNewPassword());
-        } catch (InvalidCurrentPasswordException e) {
-            LOGGER.error("Changing password failed.");
-            errors.rejectValue("currentPassword", "validation.email.wrongCurrentPassword");
-            return changeUserPassword(form);
-        }
-        LOGGER.info("{} changed password.", user.getUsername());
-        return new ModelAndView("redirect:/user/" + user.getUsername());
+    @POST
+    @Produces(value = {VndType.APPLICATION_USER})
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response createUser(@Valid @NotEmptyBody UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+        final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
+
+        LOGGER.info("POST /{}: User {} created with id {}", uriInfo.getPath(), user.getUsername(), user.getUserId());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build()).build();
     }
 
-    @RequestMapping(value = "/forgotPassword", method = {RequestMethod.GET})
-    public ModelAndView forgotPasswordForm(@ModelAttribute("emailForm") final EmailForm emailForm) {
-        return new ModelAndView("login/forgotPassword");
-    }
+    @DELETE
+    @Path("/{username}")
+    public Response deleteUser(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-    @RequestMapping(value = "/forgotPassword", method = {RequestMethod.POST})
-    public ModelAndView forgotPassword(@Valid @ModelAttribute("emailForm") final EmailForm emailForm,
-                                       final BindingResult errors) {
-        LOGGER.debug("{} initializing process to recover password.", emailForm.getEmail());
-        if (errors.hasErrors()) {
-            LOGGER.error("Email form has errors.");
-            return forgotPasswordForm(emailForm);
-        }
-        try {
-            userService.forgotPassword(emailForm.getEmail());
-        } catch (EmailNotExistsException e) {
-            LOGGER.info("{} does not exist. Recovery failed.", emailForm.getEmail());
-            errors.rejectValue("email", "forgotPassword.emailNotExists");
-            return forgotPasswordForm(emailForm);
-        }
-        LOGGER.info("Forgot password email sent to {}.", emailForm.getEmail());
-        return new ModelAndView("login/sentEmail");
-    }
-
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
-    public ModelAndView resetPasswordForm(@ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
-                                          @RequestParam(value = "token", defaultValue = "") final String token) {
-        return new ModelAndView("login/resetPassword");
-    }
-
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
-    public ModelAndView resetPassword(@Valid @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
-                                      final BindingResult errors,
-                                      @RequestParam(value = "token", defaultValue = "") final String token) {
-        LOGGER.debug("Trying to rest password.");
-        if (errors.hasErrors()) {
-            LOGGER.error("Reset password form has errors.");
-            return resetPasswordForm(resetPasswordForm, token);
-        }
-        Token resetPasswordToken = tokenService.getToken(token).orElseThrow(TokenNotFoundException::new);
-        if (userService.resetPassword(resetPasswordToken, resetPasswordForm.getNewPassword())) {
-            LOGGER.info("Password reset was successful.");
-            return new ModelAndView("login/login");
-        }
-        LOGGER.info("Token timed out.");
-        return new ModelAndView("redirect:/tokenTimedOut?token=" + token);
-    }
-
-    @RequestMapping("/deleteUser")
-    public ModelAndView deleteUser() {
-        User user = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
         userService.deleteUser(user);
-        LOGGER.info("{} user deleted successfully", user.getUsername());
-        return new ModelAndView("redirect:/logout");
+
+        LOGGER.info("DELETE /{}: {} user deleted", uriInfo.getPath(), username);
+        return Response.noContent().build();
     }
 
+    /**
+     * Modify User
+     * Change name
+     * Change password
+     */
+    @PUT
+    @Path("/{username}")
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response updatedUser(@PathParam("username") String username,
+                                @Valid @NotEmptyBody UserEditDto userEditDto) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-    @RequestMapping(value = "/user/{username}", method = {RequestMethod.POST}, params = "uploadImage")
-    public ModelAndView uploadProfilePicture(@PathVariable("username") final String username,
-                                             @Valid @ModelAttribute("imageForm") final ImageForm imageForm,
-                                             final BindingResult error) throws IOException {
-        LOGGER.debug("{} trying to upload profile picture", username);
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        if (error.hasErrors()) {
-            LOGGER.error("Uploading profile picture failed.");
-            return userProfile(imageForm, username, 1).addObject("errorUploadingImage", true);
+        userService.updateUserData(user, userEditDto.getName());
+
+        LOGGER.info("PUT /{}: {} user updated", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("/{username}/password")
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
+    public Response updatePassword(@PathParam("username") String username,
+                                   @Valid @NotEmptyBody UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.changePassword(user, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword());
+
+        LOGGER.info("PUT /{}: {} user password updated", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Reset password - Recover
+     */
+    @POST
+    @Path("/password-token")
+    @Produces(value = {VndType.APPLICATION_TOKEN_PASSWORD})
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response createPasswordResetToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) {
+        final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
+
+        final Token token = userService.forgotPassword(user);
+
+        LOGGER.info("POST /{}: Token created for {} with expiry date on {}", uriInfo.getPath(), user.getUsername(), token.getExpiryDate());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
+    }
+
+    @PUT
+    @Path("/password-token/{token}")
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
+    public Response resetPassword(@PathParam("token") String tokenString,
+                                  @Valid @NotEmptyBody UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
+        final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
+
+        userService.resetPassword(token, userResetPasswordDto.getNewPassword());
+
+        LOGGER.info("PUT /{}: Password reset for {}", uriInfo.getPath(), token.getUser().getUsername());
+        return Response.noContent().build();
+    }
+
+    /**
+     * User verification
+     */
+    @POST
+    @Path("/verification-token")
+    @Produces(value = {VndType.APPLICATION_TOKEN_VERIFICATION})
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response sendVerificationToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
+        final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
+
+        final Token token = userService.createVerificationToken(user);
+
+        LOGGER.info("POST /{}: Token created for {} with expiry date on {}", uriInfo.getPath(), user.getUsername(), token.getExpiryDate());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(token.getToken()).build()).build();
+    }
+
+    @PUT
+    @Path("/verification-token/{token}")
+    public Response verifyUser(@PathParam("token") String tokenString) throws InvalidTokenException {
+        final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
+
+        final User user = userService.confirmRegister(token);
+
+        LOGGER.info("PUT /{}: User {} enabled", uriInfo.getPath(), token.getUser().getUsername());
+        return Response.noContent()
+                .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user))
+                .build();
+    }
+
+    /**
+     * Profile image
+     */
+    @GET
+    @Path("/{username}/image")
+    @Produces(value = {"image/webp"})
+    public Response getProfileImage(@PathParam("username") String username) throws ImageConversionException {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
+
+        LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
+        return Response.ok(profileImage).build();
+    }
+
+    @PUT
+    @Path("/{username}/image")
+    @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
+    public Response updateProfileImage(@PathParam("username") String username,
+                                       @Image @FormDataParam("image") final FormDataBodyPart image,
+                                       @Size(max = 1024 * 1024 * 2) @FormDataParam("image") byte[] imageBytes) throws ImageConversionException {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.uploadUserProfileImage(user, imageBytes, image.getMediaType().getSubtype());
+
+        LOGGER.info("PUT /{}: User {} image updated", uriInfo.getPath(), username);
+        return Response.noContent().contentLocation(uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUsername())).path("image").build()).build();
+    }
+
+    @DELETE
+    @Path("/{username}/image")
+    public Response deleteProfileImage(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.deleteUserProfileImage(user);
+
+        LOGGER.info("DELETE /{}: User {} profile image deleted", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Mod Request and Delete Mod Role
+     */
+    @POST
+    @Path("/{username}/mod-requests")
+    @Produces(value = {VndType.APPLICATION_MODERATORS_REQUESTS})
+    public Response createModRequest(@PathParam("username") String username) throws ModRequestAlreadyExistsException, UserAlreadyIsModException {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        ModRequest modRequest = moderatorService.addModRequest(user);
+
+        LOGGER.info("POST /{}: Mod request added to user {}", uriInfo.getPath(), username);
+        return Response.created(uriInfo.getBaseUriBuilder().path("mods-requests").path(String.valueOf(modRequest.getRequestId())).build()).build();
+    }
+
+    @DELETE
+    @Path("{username}/mod")
+    public Response removeMod(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        moderatorService.removeMod(user);
+
+        LOGGER.info("DELETE /{}: Mod role removed to user {}", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Locked - ban user
+     */
+    @PUT
+    @Path("{username}/locked")
+    public Response banUser(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.banUser(user);
+
+        LOGGER.info("DELETE /{}: User {} banned", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("{username}/locked")
+    public Response unbanUser(@PathParam("username") String username) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        userService.unbanUser(user);
+
+        LOGGER.info("DELETE /{}: User {} unbanned", uriInfo.getPath(), username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Favorite Media
+     */
+    @GET
+    @Path("/{username}/favorite-media")
+    @Produces(value = {VndType.APPLICATION_MEDIA_FAVORITES})
+    public Response getUserFavoriteMedia(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Media> favoriteMedia = favoriteService.getUserFavoriteMedia(user, page, pageSize);
+
+        if (favoriteMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
         }
-        userService.uploadUserProfileImage(user, imageForm.getImage().getBytes());
-        LOGGER.info("{} profile picture uploaded successfully", username);
-        return new ModelAndView("redirect:/user/" + username);
+
+        final List<MediaFavoriteDto> mediaFavoriteDtoList = MediaFavoriteDto.fromMediaFavoriteList(uriInfo, favoriteMedia.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaFavoriteDto>>(mediaFavoriteDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, favoriteMedia, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), favoriteMedia.getCurrentPage(), favoriteMedia.getElements().size());
+        return response.build();
     }
 
-    @RequestMapping(value = "/user/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
-    public @ResponseBody
-    byte[] getProfileImage(@PathVariable("imageId") final Integer imageId) {
-        LOGGER.debug("Trying to access profile image");
-        byte[] profileImage = new byte[0];
-        try {
-            profileImage = userService.getUserProfileImage(imageId).orElseThrow(ImageNotFoundException::new).getImageBlob();
-        } catch (ImageConversionException e) {
-            LOGGER.error("Error loading image {}", imageId);
+    @GET
+    @Path("/{username}/favorite-media/{mediaId}")
+    @Produces(value = {VndType.APPLICATION_MEDIA_FAVORITES})
+    public Response isFavoriteMedia(@PathParam("username") String username,
+                                    @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        if (!favoriteService.isFavorite(media, user)) {
+            LOGGER.info("GET /{}: media {} is not favorite of {}.", uriInfo.getPath(), mediaId, username);
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
-        LOGGER.info("Profile image accessed.");
-        return profileImage;
+
+        LOGGER.info("GET /{}: media {} is favorite of {}.", uriInfo.getPath(), mediaId, username);
+        return Response.ok(MediaFavoriteDto.fromMediaAndUser(uriInfo, media, user)).build();
     }
 
-    @RequestMapping(value = "/user/{username}/watchedMedia", method = {RequestMethod.POST}, params = "watchedDate")
-    public ModelAndView editWatchedDate(@PathVariable("username") final String username,
-                                        @RequestParam("watchedDate") String watchedDate,
-                                        @RequestParam("userId") int userId,
-                                        @RequestParam("mediaId") int mediaId) {
-        LOGGER.debug("{} is trying to edit watch date", username);
-        Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        User user = userService.getById(userId).orElseThrow(UserNotFoundException::new);
-        watchService.updateWatchedMediaDate(media, user, LocalDate.parse(watchedDate, DateTimeFormatter.ISO_DATE).atStartOfDay());
-        LOGGER.info("{} updated successfully watched date", username);
-        return new ModelAndView("redirect:/user/" + username + "/watchedMedia");
+    @PUT
+    @Path("/{username}/favorite-media/{mediaId}")
+    public Response addMediaToFavorites(@PathParam("username") String username,
+                                        @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        favoriteService.addMediaToFav(media, user);
+
+        LOGGER.info("PUT /{}: media {} added to {}'s favorites.", uriInfo.getPath(), mediaId, username);
+        return Response.noContent().build();
     }
 
-    @RequestMapping("/user/{username}/requests")
-    public ModelAndView userCollabRequests(@PathVariable("username") final String username,
-                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("{} trying to access collaborations requests", username);
-        ModelAndView mav = new ModelAndView("user/userRequests");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Request> requestContainer = collaborativeListService.getRequestsByUserId(user, page - 1, itemsPerPage * 4);
-        mav.addObject("username", username);
-        mav.addObject("requestContainer", requestContainer);
-        LOGGER.info("{} accessed succesfully to collaborations requests", username);
-        return mav;
+    @DELETE
+    @Path("/{username}/favorite-media/{mediaId}")
+    public Response removeMediaFromFavorites(@PathParam("username") String username,
+                                             @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        favoriteService.deleteMediaFromFav(media, user);
+
+        LOGGER.info("DELETE /{}: media {} removed from {}'s favorites.", uriInfo.getPath(), mediaId, username);
+        return Response.noContent().build();
     }
 
-    @RequestMapping("/user/{username}/requests/accept")
-    public ModelAndView acceptCollabRequests(@PathVariable("username") final String username,
-                                             @RequestParam("collabId") final int collabId) {
-        LOGGER.debug("{} trying to accept collab request", username);
-        Request collab = collaborativeListService.getById(collabId).orElseThrow(RequestNotFoundException::new);
-        collaborativeListService.acceptRequest(collab);
-        LOGGER.info("{} collab request accepted", username);
-        return new ModelAndView("redirect:/user/" + username + "/requests");
+    /**
+     * Watched Media
+     */
+    @GET
+    @Path("/{username}/watched-media")
+    @Produces(value = {VndType.APPLICATION_MEDIA_WATCHED})
+    public Response getUserWatchedMedia(@PathParam("username") String username,
+                                        @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                        @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, page, pageSize);
+
+        if (watchedMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<MediaWatchedDto> mediaWatchedDtoList = MediaWatchedDto.fromWatchedMediaList(uriInfo, watchedMedia.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaWatchedDto>>(mediaWatchedDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, watchedMedia, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), watchedMedia.getCurrentPage(), watchedMedia.getElements().size());
+        return response.build();
     }
 
-    @RequestMapping("/user/{username}/requests/reject")
-    public ModelAndView rejectCollabRequests(@PathVariable("username") final String username,
-                                             @RequestParam("collabId") final int collabId) {
-        LOGGER.debug("{} trying to reject collab request", username);
-        Request collab = collaborativeListService.getById(collabId).orElseThrow(RequestNotFoundException::new);
-        collaborativeListService.rejectRequest(collab);
-        LOGGER.info("{} collab request rejected", username);
-        return new ModelAndView("redirect:/user/" + username + "/requests");
+    @GET
+    @Path("/{username}/watched-media/{mediaId}")
+    @Produces(value = {VndType.APPLICATION_MEDIA_WATCHED})
+    public Response isWatchedMedia(@PathParam("username") String username,
+                                   @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        final Optional<WatchedMedia> watchedMedia = watchService.getWatchedMedia(user, media);
+
+        if (!watchedMedia.isPresent()) {
+            LOGGER.info("GET /{}: media {} is not watched by {}.", uriInfo.getPath(), mediaId, username);
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /{}: media {} is watched by {} on {}.", uriInfo.getPath(), mediaId, username, watchedMedia.get().getWatchDate());
+        return Response.ok(MediaWatchedDto.fromWatchedMediaAndUser(uriInfo, watchedMedia.get(), user)).build();
     }
 
-    @RequestMapping("user/{username}/lists")
-    public ModelAndView userEditableLists(@PathVariable("username") final String username,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("{} trying to access editable lists", username);
-        ModelAndView mav = new ModelAndView("user/userEditableLists");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<MediaList> editableLists = listsService.getUserEditableLists(user, page - 1, editablePerPage);
-        final List<ListCover> editableCovers = getListCover(editableLists.getElements(), listsService);
-        mav.addObject("user", user);
-        mav.addObject("listContainer", editableLists);
-        mav.addObject("covers", editableCovers);
-        LOGGER.info("{} accessed editable lists", username);
-        return mav;
+    @PUT
+    @Path("/{username}/watched-media/{mediaId}")
+    @Consumes(value = {VndType.APPLICATION_DATETIME})
+    public Response addMediaToWatched(@PathParam("username") String username,
+                                      @PathParam("mediaId") int mediaId,
+                                      @Valid @NotEmptyBody DateTimeDto dateTimeDto) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.addWatchedMedia(media, user, dateTimeDto.getDateTime());
+
+        LOGGER.info("PUT /{}: media {} added to {}'s watched on {}.", uriInfo.getPath(), mediaId, username, dateTimeDto.getDateTime().toLocalDate());
+        return Response.noContent().build();
     }
 
-    @RequestMapping("user/{username}/notifications")
-    public ModelAndView userNotifications(@PathVariable("username") final String username,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
-        LOGGER.debug("{} trying to access notifications", username);
-        ModelAndView mav = new ModelAndView("user/userNotifications");
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        PageContainer<Notification> notificationContainer = commentService.getUserListsCommentsNotifications(user, page - 1, notificationsPerPage);
-        mav.addObject("username", username);
-        mav.addObject("notifications", notificationContainer);
-        LOGGER.info("{} accessed notifications", username);
-        return mav;
+    @DELETE
+    @Path("/{username}/watched-media/{mediaId}")
+    public Response removeMediaFromWatched(@PathParam("username") String username,
+                                           @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.deleteWatchedMedia(media, user);
+
+        LOGGER.info("DELETE /{}: media {} removed from {}'s watched.", uriInfo.getPath(), mediaId, username);
+        return Response.noContent().build();
     }
 
-    @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "setOpen")
-    public ModelAndView setNotificationsAsOpen(@PathVariable("username") final String username) {
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.setUserListsCommentsNotificationsAsOpened(user);
-        return new ModelAndView("redirect:/user/" + username + "/notifications");
+    /**
+     * To Watch Media
+     */
+    @GET
+    @Path("/{username}/to-watch-media")
+    @Produces(value = {VndType.APPLICATION_MEDIA_TO_WATCH})
+    public Response getUserToWatchMedia(@PathParam("username") String username,
+                                        @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                        @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Media> toWatchMedia = watchService.getToWatchMedia(user, page, pageSize);
+
+        if (toWatchMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<MediaToWatchDto> mediaToWatchDtoList = MediaToWatchDto.fromMediaToWatchList(uriInfo, toWatchMedia.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaToWatchDto>>(mediaToWatchDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, toWatchMedia, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), toWatchMedia.getCurrentPage(), toWatchMedia.getElements().size());
+        return response.build();
     }
 
-    @RequestMapping(value = "user/{username}/notifications", method = {RequestMethod.POST}, params = "deleteNotifications")
-    public ModelAndView deleteAllNotifications(@PathVariable("username") final String username) {
-        LOGGER.debug("{} trying to delete all notifications", username);
-        User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        commentService.deleteUserListsCommentsNotifications(user);
-        LOGGER.info("{} deleted all notifications successfully ", username);
-        return new ModelAndView("redirect:/user/" + username + "/notifications");
+    @GET
+    @Path("/{username}/to-watch-media/{mediaId}")
+    @Produces(value = {VndType.APPLICATION_MEDIA_TO_WATCH})
+    public Response isToWatchMedia(@PathParam("username") String username,
+                                   @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        if (!watchService.isToWatch(media, user)) {
+            LOGGER.info("GET /{}: media {} is not to watch by {}.", uriInfo.getPath(), mediaId, username);
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /{}: media {} is to watch by {}.", uriInfo.getPath(), mediaId, username);
+        return Response.ok(MediaToWatchDto.fromMediaAndUser(uriInfo, media, user)).build();
+    }
+
+    @PUT
+    @Path("/{username}/to-watch-media/{mediaId}")
+    public Response addMediaToWatch(@PathParam("username") String username,
+                                    @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.addMediaToWatch(media, user);
+
+        LOGGER.info("PUT /{}: media {} added to {}'s to watch.", uriInfo.getPath(), mediaId, username);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{username}/to-watch-media/{mediaId}")
+    public Response removeMediaFromToWatch(@PathParam("username") String username,
+                                           @PathParam("mediaId") int mediaId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
+
+        watchService.deleteToWatchMedia(media, user);
+
+        LOGGER.info("DELETE /{}: media {} removed from {}'s to watch.", uriInfo.getPath(), mediaId, username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * Favorite Lists
+     */
+    @GET
+    @Path("/{username}/favorite-lists")
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
+    public Response getUserFavoriteLists(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> favoriteLists = favoriteService.getUserFavoriteLists(user, page, pageSize);
+
+        return getFavoriteListsResponse(user, favoriteLists);
+    }
+
+    @GET
+    @Path("/{username}/public-favorite-lists")
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
+    public Response getUserPublicFavoriteLists(@PathParam("username") String username,
+                                               @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> publicFavoriteLists = favoriteService.getUserPublicFavoriteLists(user, page, pageSize);
+
+        return getFavoriteListsResponse(user, publicFavoriteLists);
+    }
+
+    private Response getFavoriteListsResponse(User user, PageContainer<MediaList> lists) {
+        if (lists.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<ListFavoriteDto> listFavoriteDtoList = ListFavoriteDto.fromListList(uriInfo, lists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListFavoriteDto>>(listFavoriteDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, lists, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), lists.getCurrentPage(), lists.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/favorite-lists/{listId}")
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
+    public Response isFavoriteList(@PathParam("username") String username,
+                                   @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        if (!favoriteService.isFavoriteList(mediaList, user)) {
+            LOGGER.info("GET /{}: list {} is not favorite of {}.", uriInfo.getPath(), listId, username);
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+
+        LOGGER.info("GET /{}: list {} is favorite of {}.", uriInfo.getPath(), listId, username);
+        return Response.ok(ListFavoriteDto.fromList(uriInfo, mediaList, user)).build();
+    }
+
+    @PUT
+    @Path("/{username}/favorite-lists/{listId}")
+    public Response addListToFavorites(@PathParam("username") String username,
+                                       @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        favoriteService.addListToFav(mediaList, user);
+
+        LOGGER.info("PUT /{}: list {} added to {}'s favorites.", uriInfo.getPath(), listId, username);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{username}/favorite-lists/{listId}")
+    public Response removeListFromFavorites(@PathParam("username") String username,
+                                            @PathParam("listId") int listId) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+        final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
+
+        favoriteService.deleteListFromFav(mediaList, user);
+
+        LOGGER.info("DELETE /{}: list {} removed from {}'s favorites.", uriInfo.getPath(), listId, username);
+        return Response.noContent().build();
+    }
+
+    /**
+     * User Lists
+     */
+    @GET
+    @Path("/{username}/lists")
+    @Produces(value = {VndType.APPLICATION_LISTS})
+    public Response getUserLists(@PathParam("username") String username,
+                                 @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                 @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userLists = listsService.getMediaListByUser(user, page, pageSize);
+
+        return getListsResponse(user, userLists);
+    }
+
+    @GET
+    @Path("/{username}/public-lists")
+    @Produces(value = {VndType.APPLICATION_LISTS})
+    public Response getUserPublicLists(@PathParam("username") String username,
+                                       @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                       @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userPublicLists = listsService.getPublicMediaListByUser(user, page, pageSize);
+
+        return getListsResponse(user, userPublicLists);
+    }
+
+    @GET
+    @Path("/{username}/editable-lists")
+    @Produces(value = {VndType.APPLICATION_LISTS})
+    public Response getUserEditableLists(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> userEditableLists = listsService.getUserEditableLists(user, page, pageSize);
+
+        return getListsResponse(user, userEditableLists);
+    }
+
+    private Response getListsResponse(User user, PageContainer<MediaList> lists) {
+        if (lists.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<ListDto> listDtoList = ListDto.fromListList(uriInfo, lists.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ListDto>>(listDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, lists, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), lists.getCurrentPage(), lists.getElements().size());
+        return response.build();
+    }
+
+    /**
+     * Notifications
+     */
+    @GET
+    @Path("/{username}/notifications")
+    @Produces(value = {VndType.APPLICATION_NOTIFICATIONS})
+    public Response getUserNotifications(@PathParam("username") String username,
+                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Notification> notifications = commentService.getUserListsCommentsNotifications(user, page, pageSize);
+
+        if (notifications.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<NotificationDto> notificationDtoList = NotificationDto.fromNotificationList(uriInfo, notifications.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<NotificationDto>>(notificationDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, notifications, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), notifications.getCurrentPage(), notifications.getElements().size());
+        return response.build();
+    }
+
+    /**
+     * Collab Requests
+     */
+    @GET
+    @Path("/{username}/collab-requests")
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS_REQUESTS})
+    public Response getUserCollaborationRequests(@PathParam("username") String username,
+                                                 @QueryParam("page") @DefaultValue(defaultPage) int page,
+                                                 @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Request> collaborationRequests = collaborativeListService.getRequestsByUser(user, page, pageSize);
+
+        if (collaborationRequests.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<CollaboratorRequestDto> collaboratorRequestDtoList = CollaboratorRequestDto.fromRequestList(uriInfo, collaborationRequests.getElements());
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<CollaboratorRequestDto>>(collaboratorRequestDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, collaborationRequests, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), collaborationRequests.getCurrentPage(), collaborationRequests.getElements().size());
+        return response.build();
+    }
+
+    /**
+     * Recommended Content
+     */
+    @GET
+    @Path("/{username}/recommended-media")
+    @Produces(value = {VndType.APPLICATION_MEDIA})
+    public Response getUserRecommendedMedia(@PathParam("username") String username,
+                                            @QueryParam("page") @DefaultValue(defaultPageSize) int page,
+                                            @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
+                                            @QueryParam("type") @NotNull ar.edu.itba.paw.models.media.MediaType mediaType) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<Media> recommendedMedia = favoriteService.getRecommendationsBasedOnFavMedia(mediaType, user, page, pageSize);
+
+        if (recommendedMedia.getElements().isEmpty()) {
+            LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
+            return Response.noContent().build();
+        }
+
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, recommendedMedia.getElements(), user);
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
+        });
+        ResponseUtils.setPaginationLinks(response, recommendedMedia, uriInfo);
+
+        LOGGER.info("GET /{}: Returning page {} with {} results.", uriInfo.getPath(), recommendedMedia.getCurrentPage(), recommendedMedia.getElements().size());
+        return response.build();
+    }
+
+    @GET
+    @Path("/{username}/recommended-lists")
+    @Produces(value = {VndType.APPLICATION_LISTS})
+    public Response getUserRecommendedLists(@PathParam("username") String username,
+                                            @QueryParam("page") @DefaultValue(defaultPageSize) int page,
+                                            @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+        final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        final PageContainer<MediaList> recommendedLists = favoriteService.getRecommendationsBasedOnFavLists(user, page, pageSize);
+
+        return getListsResponse(user, recommendedLists);
     }
 }

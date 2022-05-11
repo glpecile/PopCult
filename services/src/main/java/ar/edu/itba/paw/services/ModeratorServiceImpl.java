@@ -6,15 +6,19 @@ import ar.edu.itba.paw.interfaces.ModeratorService;
 import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyIsModException;
 import ar.edu.itba.paw.models.PageContainer;
+import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class ModeratorServiceImpl implements ModeratorService {
@@ -51,17 +55,29 @@ public class ModeratorServiceImpl implements ModeratorService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<User> getModRequesters(int page, int pageSize) {
-        return moderatorDao.getModRequesters(page, pageSize);
+    public Optional<ModRequest> getModRequest(int modRequestId) {
+        return moderatorDao.getModRequest(modRequestId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<ModRequest> getModRequests(int page, int pageSize) {
+        return moderatorDao.getModRequests(page, pageSize);
     }
 
     @Transactional
     @Override
-    public void addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
+    public ModRequest addModRequest(User user) throws UserAlreadyIsModException, ModRequestAlreadyExistsException {
         if (principalIsMod()) {
             throw new UserAlreadyIsModException();
         }
-        moderatorDao.addModRequest(user);
+        return moderatorDao.addModRequest(user);
+    }
+
+    @Transactional
+    @Override
+    public void removeModRequest(ModRequest modRequest) {
+        moderatorDao.removeModRequest(modRequest);
     }
 
     @Transactional
@@ -73,7 +89,9 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Transactional(readOnly = true)
     @Override
     public boolean principalIsMod() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return roleHierarchy.getReachableGrantedAuthorities(principal.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null)
+            return false;
+        return roleHierarchy.getReachableGrantedAuthorities(auth.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
     }
 }

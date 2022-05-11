@@ -1,4 +1,10 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class UserAlreadyIsModException extends Exception {
+import ar.edu.itba.paw.interfaces.utils.HttpStatusCodes;
+
+public class UserAlreadyIsModException extends CustomException {
+
+    public UserAlreadyIsModException() {
+        super(HttpStatusCodes.BAD_REQUEST, "exception.userAlreadyIsMod");
+    }
 }

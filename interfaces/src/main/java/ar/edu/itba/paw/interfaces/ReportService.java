@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
+import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
@@ -12,11 +14,11 @@ import java.util.Optional;
 
 public interface ReportService {
 
-    void reportList(MediaList mediaList, String report);
+    Optional<ListReport> reportList(MediaList mediaList, String report) throws ListAlreadyReportedException;
 
-    void reportListComment(ListComment comment, String report);
+    Optional<ListCommentReport> reportListComment(ListComment comment, String report) throws CommentAlreadyReportedException;
 
-    void reportMediaComment(MediaComment comment, String report);
+    Optional<MediaCommentReport> reportMediaComment(MediaComment comment, String report) throws CommentAlreadyReportedException;
 
     Optional<ListReport> getListReportById(int reportId);
 
