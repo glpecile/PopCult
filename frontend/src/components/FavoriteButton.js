@@ -4,7 +4,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import {useTranslation} from "react-i18next";
 
 const FavoriteButton = (props) => {
-    const [t] = useTranslation();
+    const {t} = useTranslation();
 
     let buttonStyle = "group h-min w-min"
     let iconStyle = "text-violet-500 group-hover:text-violet-900 transition duration-300 ease-in-out transform group-active:scale-90"

@@ -96,6 +96,7 @@ const ListUpperIcons = (list) => {
     return <div className="flex flex-grow justify-between align-center">
         <FavoriteButton isLiked={isLiked} handleLike={handleLike}/>
         {(context.isLoggedIn && context.username.localeCompare(list.owner) !== 0) && <FormDialog
+            tooltip={t('report_content')}
             buttonClassName="text-amber-500 hover:text-amber-700 pt-2"
             buttonIcon={<ErrorOutlineIcon fontSize="large"/>}
             title={t('report_list_title')}

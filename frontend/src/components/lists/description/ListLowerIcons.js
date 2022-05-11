@@ -7,12 +7,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import {useTranslation} from "react-i18next";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import listService from "../../../services/ListService";
+import ListService from "../../../services/ListService";
+import {useNavigate} from "react-router-dom";
 
 const ListLowerIcons = (props) => {
     const {setErrorStatusCode} = useErrorStatus();
     const username = useContext(AuthContext).username;
     const [isCollaborator, setIsCollaborator] = useState();
     const {t} = useTranslation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getIsCollaboratorInList() {
@@ -26,6 +30,18 @@ const ListLowerIcons = (props) => {
 
         getIsCollaboratorInList();
     }, [setErrorStatusCode, props.id, username]);
+
+    async function forkList() {
+        try {
+            const listUrl = await listService.forkList(props.url);
+            const data = await ListService.getList(listUrl);
+            navigate('/lists/'+data.id);
+
+            console.log(data);
+        } catch (error) {
+            setIsCollaborator(false);
+        }
+    }
 
     return (
         <div className="flex flex-wrap justify-start">
@@ -41,11 +57,13 @@ const ListLowerIcons = (props) => {
                         <GroupAddIcon/><span className="pl-2">{t('lists_collaborate')}</span>
                     </button>
                 </div>}
-            {props.owner.localeCompare(username) &&
+            {props.owner.localeCompare(username) !== 0 &&
                 <div className="flex justify-end py-2">
-                        <button type="submit" className="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded">
-                           <ContentCopyIcon/><span className="pl-2">{t('lists_fork')}</span>
-                        </button>
+                    <button type="submit"
+                            className="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded"
+                            onClick={forkList}>
+                        <ContentCopyIcon/><span className="pl-2">{t('lists_fork')}</span>
+                    </button>
                 </div>}
         </div>);
 }

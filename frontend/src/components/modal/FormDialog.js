@@ -4,12 +4,15 @@ import LocalDialogTitle from "./LocalDialogTitle";
 import LocalDialog from "./LocalDialog";
 import {useLocation, useNavigate} from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
+import {Tooltip} from "@mui/material";
+import {useTranslation} from "react-i18next";
 
 export default function FormDialog(props) {
     const [open, setOpen] = useState(props.isOpened);
     const navigate = useNavigate();
     const context = useContext(AuthContext);
-    const location = useLocation()
+    const location = useLocation();
+
 
     const handleState = () => {
         if (!context.isLoggedIn) {
@@ -24,10 +27,12 @@ export default function FormDialog(props) {
 
     return (
         <div>
-            <button type='button' onClick={handleState} className={props.buttonClassName}>
-                {props.buttonIcon}
-                {props.buttonText}
-            </button>
+            <Tooltip title={props.tooltip} arrow>
+                <button type='button' onClick={handleState} className={props.buttonClassName}>
+                    {props.buttonIcon}
+                    {props.buttonText}
+                </button>
+            </Tooltip>
             <LocalDialog
                 onClose={handleState}
                 aria-labelledby="customized-dialog-title"

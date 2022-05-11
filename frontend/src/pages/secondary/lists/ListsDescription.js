@@ -8,12 +8,13 @@ import ListMedia from "../../../components/lists/description/ListMedia";
 import {useTranslation} from "react-i18next";
 import ListUpperIcons from "../../../components/lists/description/ListUpperIcons";
 import {Alert,Snackbar} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
 import ListForks from "../../../components/lists/description/ListForks";
 
 function ListsDescription() {
-    const id = window.location.pathname.split('/')[2];
+    const location = useLocation();
+    const id = location.pathname.split('/')[2];
     const [list, setList] = useState(undefined);
     const [snackbar, setSnackbar] = useState(false);
     const {t} = useTranslation();
@@ -58,16 +59,16 @@ function ListsDescription() {
             {/*    list author and forking info*/}
             <div className="flex justify-right">
                 {t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={list.ownerUrl}>{list.owner}</Link>
-                {list.forkedFrom && <>{t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={list.forkedFrom}>{list.forkedFromUrl}</Link></>}
+                {list.forkedFrom && <>{t('forked_from')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={list.forkedFromUrl}>{list.forkedFrom}</Link></>}
+                <ListForks forksUrl={list.forksUrl}/>
             </div>
-            <ListForks forksUrl={list.forksUrl}/>
             <p className="lead text-justify max-w-full break-words pb-2">
                 {list.description}
             </p>
             {/* collaborators */}
             <ListCollaborators collaboratorsUrl={list.collaboratorsUrl}/>
             {/* share edit and fork */}
-            <ListLowerIcons id={list.id} collaborative={list.collaborative} owner={list.owner}/>
+            <ListLowerIcons id={list.id} collaborative={list.collaborative} owner={list.owner} url={list.forksUrl}/>
             <ListMedia mediaUrl={list.mediaUrl}/>
             <CommentSection commentsUrl={list.commentsUrl}/>
         </>) : <Loader/>}

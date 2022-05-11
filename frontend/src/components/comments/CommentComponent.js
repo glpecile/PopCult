@@ -102,6 +102,7 @@ const CommentComponent = (props) => {
                                 submitButtonClassName="text-red-500 hover:text-red-900"
                                 isOpened={false}/> :
                             <FormDialog
+                                tooltip={t('report_content')}
                                 buttonClassName="text-amber-500 hover:text-amber-700 m-1 h-min w-min"
                                 buttonIcon={<ErrorOutlineIcon className="mb-1 align-top"/>}
                                 title={t('report_comment_title')}
