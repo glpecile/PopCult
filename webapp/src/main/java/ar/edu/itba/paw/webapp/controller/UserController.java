@@ -18,6 +18,7 @@ import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.Image;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -69,7 +70,7 @@ public class UserController {
 
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_USER})
     public Response listUsers(@QueryParam("page") @DefaultValue(defaultPage) int page,
                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                               @QueryParam("role") UserRole userRole,
@@ -94,7 +95,7 @@ public class UserController {
 
     @GET
     @Path("/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_USER})
     public Response getUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -103,8 +104,8 @@ public class UserController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_USER})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response createUser(@Valid @NotEmptyBody UserCreateDto userDto) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
         final User user = userService.register(userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), userDto.getName());
 
@@ -114,7 +115,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -131,8 +131,7 @@ public class UserController {
      */
     @PUT
     @Path("/{username}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response updatedUser(@PathParam("username") String username,
                                 @Valid @NotEmptyBody UserEditDto userEditDto) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -145,8 +144,7 @@ public class UserController {
 
     @PUT
     @Path("/{username}/password")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
     public Response updatePassword(@PathParam("username") String username,
                                    @Valid @NotEmptyBody UserPasswordDto userPasswordDto) throws InvalidCurrentPasswordException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -162,8 +160,8 @@ public class UserController {
      */
     @POST
     @Path("/password-token")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_TOKEN_PASSWORD})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response createPasswordResetToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
@@ -175,8 +173,7 @@ public class UserController {
 
     @PUT
     @Path("/password-token/{token}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
     public Response resetPassword(@PathParam("token") String tokenString,
                                   @Valid @NotEmptyBody UserResetPasswordDto userResetPasswordDto) throws InvalidTokenException {
         final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
@@ -192,8 +189,8 @@ public class UserController {
      */
     @POST
     @Path("/verification-token")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_TOKEN_VERIFICATION})
+    @Consumes(value = {VndType.APPLICATION_USER})
     public Response sendVerificationToken(@Valid @NotEmptyBody UserEmailDto userEmailDto) throws EmailAlreadyVerifiedException {
         final User user = userService.getByEmail(userEmailDto.getEmail()).orElseThrow(EmailNotFoundException::new);
 
@@ -205,8 +202,6 @@ public class UserController {
 
     @PUT
     @Path("/verification-token/{token}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response verifyUser(@PathParam("token") String tokenString) throws InvalidTokenException {
         final Token token = tokenService.getToken(tokenString).orElseThrow(TokenNotFoundException::new);
 
@@ -223,7 +218,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/image")
-    @Produces(value = {"image/*", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/webp"})
     public Response getProfileImage(@PathParam("username") String username) throws ImageConversionException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -235,7 +230,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     public Response updateProfileImage(@PathParam("username") String username,
                                        @Image @FormDataParam("image") final FormDataBodyPart image,
@@ -250,7 +244,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/image")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteProfileImage(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -265,7 +258,7 @@ public class UserController {
      */
     @POST
     @Path("/{username}/mod-requests")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MODERATORS_REQUESTS})
     public Response createModRequest(@PathParam("username") String username) throws ModRequestAlreadyExistsException, UserAlreadyIsModException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -277,7 +270,6 @@ public class UserController {
 
     @DELETE
     @Path("{username}/mod")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMod(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -292,7 +284,6 @@ public class UserController {
      */
     @PUT
     @Path("{username}/locked")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response banUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -304,7 +295,6 @@ public class UserController {
 
     @DELETE
     @Path("{username}/locked")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response unbanUser(@PathParam("username") String username) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -319,7 +309,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/favorite-media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_FAVORITES})
     public Response getUserFavoriteMedia(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -343,7 +333,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/favorite-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_FAVORITES})
     public Response isFavoriteMedia(@PathParam("username") String username,
                                     @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -351,7 +341,7 @@ public class UserController {
 
         if (!favoriteService.isFavorite(media, user)) {
             LOGGER.info("GET /{}: media {} is not favorite of {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is favorite of {}.", uriInfo.getPath(), mediaId, username);
@@ -360,7 +350,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/favorite-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToFavorites(@PathParam("username") String username,
                                         @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -374,7 +363,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/favorite-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromFavorites(@PathParam("username") String username,
                                              @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -391,7 +379,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/watched-media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_WATCHED})
     public Response getUserWatchedMedia(@PathParam("username") String username,
                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -415,7 +403,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/watched-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_WATCHED})
     public Response isWatchedMedia(@PathParam("username") String username,
                                    @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -425,7 +413,7 @@ public class UserController {
 
         if (!watchedMedia.isPresent()) {
             LOGGER.info("GET /{}: media {} is not watched by {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is watched by {} on {}.", uriInfo.getPath(), mediaId, username, watchedMedia.get().getWatchDate());
@@ -434,8 +422,7 @@ public class UserController {
 
     @PUT
     @Path("/{username}/watched-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {VndType.APPLICATION_DATETIME})
     public Response addMediaToWatched(@PathParam("username") String username,
                                       @PathParam("mediaId") int mediaId,
                                       @Valid @NotEmptyBody DateTimeDto dateTimeDto) {
@@ -450,7 +437,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/watched-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromWatched(@PathParam("username") String username,
                                            @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -467,7 +453,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/to-watch-media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_TO_WATCH})
     public Response getUserToWatchMedia(@PathParam("username") String username,
                                         @QueryParam("page") @DefaultValue(defaultPage) int page,
                                         @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -491,7 +477,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/to-watch-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_TO_WATCH})
     public Response isToWatchMedia(@PathParam("username") String username,
                                    @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -499,7 +485,7 @@ public class UserController {
 
         if (!watchService.isToWatch(media, user)) {
             LOGGER.info("GET /{}: media {} is not to watch by {}.", uriInfo.getPath(), mediaId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: media {} is to watch by {}.", uriInfo.getPath(), mediaId, username);
@@ -508,11 +494,8 @@ public class UserController {
 
     @PUT
     @Path("/{username}/to-watch-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response addMediaToWatch(@PathParam("username") String username,
-                                    @PathParam("mediaId") int mediaId,
-                                    DateTimeDto dateTimeDto) {
+                                    @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
 
@@ -524,7 +507,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/to-watch-media/{mediaId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeMediaFromToWatch(@PathParam("username") String username,
                                            @PathParam("mediaId") int mediaId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -541,7 +523,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/favorite-lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
     public Response getUserFavoriteLists(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -554,7 +536,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/public-favorite-lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
     public Response getUserPublicFavoriteLists(@PathParam("username") String username,
                                                @QueryParam("page") @DefaultValue(defaultPage) int page,
                                                @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -582,7 +564,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/favorite-lists/{listId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS_FAVORITES})
     public Response isFavoriteList(@PathParam("username") String username,
                                    @PathParam("listId") int listId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -590,7 +572,7 @@ public class UserController {
 
         if (!favoriteService.isFavoriteList(mediaList, user)) {
             LOGGER.info("GET /{}: list {} is not favorite of {}.", uriInfo.getPath(), listId, username);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
         }
 
         LOGGER.info("GET /{}: list {} is favorite of {}.", uriInfo.getPath(), listId, username);
@@ -599,7 +581,6 @@ public class UserController {
 
     @PUT
     @Path("/{username}/favorite-lists/{listId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response addListToFavorites(@PathParam("username") String username,
                                        @PathParam("listId") int listId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -613,7 +594,6 @@ public class UserController {
 
     @DELETE
     @Path("/{username}/favorite-lists/{listId}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response removeListFromFavorites(@PathParam("username") String username,
                                             @PathParam("listId") int listId) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -630,7 +610,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getUserLists(@PathParam("username") String username,
                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -643,7 +623,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/public-lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getUserPublicLists(@PathParam("username") String username,
                                        @QueryParam("page") @DefaultValue(defaultPage) int page,
                                        @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -656,7 +636,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/editable-lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getUserEditableLists(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -687,7 +667,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/notifications")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_NOTIFICATIONS})
     public Response getUserNotifications(@PathParam("username") String username,
                                          @QueryParam("page") @DefaultValue(defaultPage) int page,
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -714,7 +694,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/collab-requests")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS_REQUESTS})
     public Response getUserCollaborationRequests(@PathParam("username") String username,
                                                  @QueryParam("page") @DefaultValue(defaultPage) int page,
                                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -741,7 +721,7 @@ public class UserController {
      */
     @GET
     @Path("/{username}/recommended-media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getUserRecommendedMedia(@PathParam("username") String username,
                                             @QueryParam("page") @DefaultValue(defaultPageSize) int page,
                                             @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
@@ -766,7 +746,7 @@ public class UserController {
 
     @GET
     @Path("/{username}/recommended-lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getUserRecommendedLists(@PathParam("username") String username,
                                             @QueryParam("page") @DefaultValue(defaultPageSize) int page,
                                             @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {

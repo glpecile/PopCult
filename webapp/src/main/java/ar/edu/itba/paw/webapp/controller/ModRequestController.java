@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.webapp.dto.output.ModRequestDto;
 import ar.edu.itba.paw.webapp.exceptions.RequestNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class ModRequestController {
     private static final String defaultPageSize = "12";
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MODERATORS_REQUESTS})
     public Response getModRequests(@QueryParam("page") @DefaultValue(defaultPage) int page,
                                    @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<ModRequest> modRequests = moderatorService.getModRequests(page, pageSize);
@@ -50,7 +51,7 @@ public class ModRequestController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MODERATORS_REQUESTS})
     public Response getModRequest(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
@@ -60,7 +61,6 @@ public class ModRequestController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response promoteToMod(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 
@@ -72,7 +72,6 @@ public class ModRequestController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response rejectModRequest(@PathParam("id") int requestId) {
         final ModRequest modRequest = moderatorService.getModRequest(requestId).orElseThrow(RequestNotFoundException::new);
 

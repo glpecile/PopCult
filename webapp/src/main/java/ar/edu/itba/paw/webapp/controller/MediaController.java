@@ -20,6 +20,7 @@ import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.MediaNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.NoUserLoggedException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
@@ -39,7 +40,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("media")
@@ -64,7 +64,7 @@ public class MediaController {
     private static final String defaultPageSize = "12";
 
     @GET
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getMedias(@QueryParam("page") @DefaultValue(defaultPage) int page,
                               @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize,
                               @QueryParam("type") List<String> types,
@@ -96,7 +96,7 @@ public class MediaController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getMedia(@PathParam("id") int mediaId) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final User user = userService.getCurrentUser().orElse(null);
@@ -107,16 +107,15 @@ public class MediaController {
 
     @GET
     @Path("/{id}/image")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
     public Response getMediaImage(@PathParam("id") int mediaId) throws URISyntaxException {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        return Response.status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();
+        return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();
     }
 
 
     @GET
     @Path("/{id}/genres")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_GENRES})
     public Response getMediaGenres(@PathParam("id") int mediaId) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<Genre> genres = media.getGenres();
@@ -135,7 +134,7 @@ public class MediaController {
 
     @GET
     @Path("/{id}/lists")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getMediaLists(@PathParam("id") int mediaId,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -158,7 +157,7 @@ public class MediaController {
 
     @GET
     @Path("/{id}/studios")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STUDIOS})
     public Response getMediaStudios(@PathParam("id") int mediaId) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         final List<Studio> studios = media.getStudios();
@@ -177,7 +176,7 @@ public class MediaController {
 
     @GET
     @Path("/{id}/staff")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_STAFF})
     public Response getMediaStaff(@PathParam("id") int mediaId,
                                   @QueryParam("role") @NotNull String roleType) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
@@ -203,7 +202,7 @@ public class MediaController {
 
     @GET
     @Path("/{id}/comments")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
     public Response getMediaComments(@PathParam("id") int mediaId,
                                      @QueryParam("page") @DefaultValue(defaultPage) int page,
                                      @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -227,8 +226,8 @@ public class MediaController {
 
     @POST
     @Path("/{id}/comments")
-    @Produces(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
-    @Consumes(value = {javax.ws.rs.core.MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
+    @Consumes(value = {VndType.APPLICATION_MEDIA_COMMENTS})
     public Response createMediaComment(@PathParam("id") int mediaId,
                                        @Valid @NotEmptyBody CommentInputDto commentInputDto) {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.webapp.dto.output.CollaboratorRequestDto;
 import ar.edu.itba.paw.webapp.exceptions.RequestNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class CollabRequestController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_COLLABORATORS_REQUESTS})
     public Response getCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 
@@ -37,7 +38,6 @@ public class CollabRequestController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response acceptCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 
@@ -49,7 +49,6 @@ public class CollabRequestController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteCollaborationRequest(@PathParam("id") int requestId) {
         final Request request = collaborativeListService.getById(requestId).orElseThrow(RequestNotFoundException::new);
 

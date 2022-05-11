@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.GenreService;
-import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -11,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.output.GenreDto;
 import ar.edu.itba.paw.webapp.dto.output.ListDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
 import ar.edu.itba.paw.webapp.exceptions.GenreNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.NormalizerUtils;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
@@ -30,8 +30,6 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
     @Autowired
-    private ListsService listsService;
-    @Autowired
     private UserService userService;
 
     @Context
@@ -39,38 +37,33 @@ public class GenreController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenreController.class);
 
-    private static final int itemsPerPage = 12;
-    private static final int listInPage = 4;
     private static final int minimumMediaMatches = 2; //minimum amount of media on a list that must match for it to be showed
     private static final String defaultPage = "1";
     private static final String defaultPageSize = "12";
 
-
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_GENRES})
     public Response getGenres() {
         List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos) {
         });
         LOGGER.info("GET /{}: Returning all genre types", uriInfo.getPath());
         return responseBuilder.build();
-
     }
 
     @GET
     @Path("{type}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_GENRES})
     public Response getGenre(@PathParam("type") final String genreType) {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
 
         LOGGER.info("GET /{}: Returning genre {} {}", uriInfo.getPath(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
         return Response.ok(GenreDto.fromGenre(uriInfo, normalizedGenre)).build();
-
     }
 
     @GET
     @Path("{type}/media")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA})
     public Response getGenreMedia(@PathParam("type") final String genreType,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -92,7 +85,7 @@ public class GenreController {
 
     @GET
     @Path("{type}/lists")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_LISTS})
     public Response getGenreLists(@PathParam("type") final String genreType,
                                   @QueryParam("page") @DefaultValue(defaultPage) int page,
                                   @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
@@ -109,6 +102,5 @@ public class GenreController {
 
         LOGGER.info("GET /{}: Returning page {} with {} results", uriInfo.getPath(), listPageContainer.getCurrentPage(), listPageContainer.getElements().size());
         return responseBuilder.build();
-
     }
 }

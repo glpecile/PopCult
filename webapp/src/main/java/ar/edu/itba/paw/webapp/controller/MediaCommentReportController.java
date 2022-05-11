@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.report.MediaCommentReport;
 import ar.edu.itba.paw.webapp.dto.output.ReportMediaCommentDto;
 import ar.edu.itba.paw.webapp.exceptions.ReportNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import ar.edu.itba.paw.webapp.utilities.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,9 @@ public class MediaCommentReportController {
     private static final String defaultPageSize = "12";
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getListCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
-                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS_REPORTS})
+    public Response getMediaCommentReports(@QueryParam("page") @DefaultValue(defaultPage) int page,
+                                           @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final PageContainer<MediaCommentReport> mediaCommentReports = reportService.getMediaCommentReports(page, pageSize);
 
         if (mediaCommentReports.getElements().isEmpty()) {
@@ -52,8 +53,8 @@ public class MediaCommentReportController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getListReport(@PathParam("id") int mediaCommentReportId) {
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS_REPORTS})
+    public Response getMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         LOGGER.info("GET /{}: Returning list comment report {}", uriInfo.getPath(), mediaCommentReportId);
@@ -62,8 +63,7 @@ public class MediaCommentReportController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response approveListReport(@PathParam("id") int mediaCommentReportId) {
+    public Response approveMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.approveMediaCommentReport(mediaCommentReport);
@@ -74,8 +74,7 @@ public class MediaCommentReportController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteListReport(@PathParam("id") int mediaCommentReportId) {
+    public Response deleteMediaCommentReport(@PathParam("id") int mediaCommentReportId) {
         final MediaCommentReport mediaCommentReport = reportService.getMediaCommentReportById(mediaCommentReportId).orElseThrow(ReportNotFoundException::new);
 
         reportService.deleteMediaCommentReport(mediaCommentReport);

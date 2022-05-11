@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -42,6 +43,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new GenericEntity<Collection<ErrorValidationDto>>(errors) {
                 })
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 

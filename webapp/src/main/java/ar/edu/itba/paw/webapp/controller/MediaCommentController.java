@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.input.ReportDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaCommentDto;
 import ar.edu.itba.paw.webapp.dto.validation.annotations.NotEmptyBody;
 import ar.edu.itba.paw.webapp.exceptions.CommentNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class MediaCommentController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS})
     public Response getMediaComment(@PathParam("id") int mediaCommentId) {
         final MediaComment mediaCommentReport = commentService.getMediaCommentById(mediaCommentId).orElseThrow(CommentNotFoundException::new);
 
@@ -48,7 +49,6 @@ public class MediaCommentController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteMediaComment(@PathParam("id") int mediaCommentId) {
         final MediaComment mediaComment = commentService.getMediaCommentById(mediaCommentId).orElseThrow(CommentNotFoundException::new);
         commentService.deleteCommentFromMedia(mediaComment);
@@ -59,8 +59,8 @@ public class MediaCommentController {
 
     @POST
     @Path("/{id}/reports")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_MEDIA_COMMENTS_REPORTS})
+    @Consumes(value = {VndType.APPLICATION_MEDIA_COMMENTS_REPORTS})
     public Response reportMediaComment(@PathParam("id") int mediaCommentId,
                                        @Valid @NotEmptyBody ReportDto reportDto) throws CommentAlreadyReportedException {
         final MediaComment mediaComment = commentService.getMediaCommentById(mediaCommentId).orElseThrow(CommentNotFoundException::new);

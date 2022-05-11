@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.webapp.dto.output.NotificationDto;
 import ar.edu.itba.paw.webapp.exceptions.NotificationNotFoundException;
+import ar.edu.itba.paw.webapp.mediaType.VndType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class NotificationController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {VndType.APPLICATION_NOTIFICATIONS})
     public Response getNotification(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
@@ -39,7 +40,6 @@ public class NotificationController {
 
     @PUT
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response setNotificationAsOpened(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
@@ -51,7 +51,6 @@ public class NotificationController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteNotification(@PathParam("id") int notificationId) {
         final Notification notification = commentService.getListCommentNotification(notificationId).orElseThrow(NotificationNotFoundException::new);
 
