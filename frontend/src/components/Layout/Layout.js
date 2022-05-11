@@ -18,32 +18,29 @@ function Layout(props) {
 
     return (
         <ContextProviderWrapper>
-                <Helmet>
-                    <title>{t('default_title')}</title>
-                </Helmet>
-                {layoutVisibility &&
-                    (
-                        <div className="bg-gray-50">
-                            <div className="flex flex-col justify-between min-h-screen">
-                                <Navbar/>
-                                <main className="col-8 offset-2 flex-grow mb-auto">
-                                    {props.children}
-                                </main>
-                                <Footer styleName="text-slate-900"/>
-                            </div>
+            <Helmet>
+                <title>{t('default_title')}</title>
+            </Helmet>
+            {layoutVisibility ?
+                (
+                    <div className="bg-gray-50">
+                        <div className="flex flex-col justify-between min-h-screen">
+                            <Navbar/>
+                            <main className="col-8 offset-2 flex-grow mb-auto">{props.children}</main>
+                            <Footer styleName="text-slate-900"/>
                         </div>
-                    )
-                }
-                {!layoutVisibility &&
-                    (
-                        <div className="bg-gradient-to-r from-amber-500 to-violet-900">
-                            <div className="flex flex-col justify-between min-h-screen">
-                                <main>{props.children}</main>
-                                <Footer styleName="text-slate-50"/>
-                            </div>
+                    </div>
+                )
+                :
+                (
+                    <div className="bg-gradient-to-r from-amber-500 to-violet-900">
+                        <div className="flex flex-col justify-between min-h-screen">
+                            <main>{props.children}</main>
+                            <Footer styleName="text-slate-50"/>
                         </div>
-                    )
-                }
+                    </div>
+                )
+            }
         </ContextProviderWrapper>
     );
 }

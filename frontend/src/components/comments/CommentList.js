@@ -12,7 +12,12 @@ const CommentList = (props) => {
     const [maxPage, setMaxPage] = useState(1);
     const [comments, setComments] = useState([])
     const [links, setLinks] = useState(undefined);
+    const [update, setUpdate] = useState(0);
 
+    useEffect(() => {
+        setPage(1);
+        setUpdate(prev => prev + 1);
+    }, [props.newComment]);
 
     useEffect(() => {
         async function getComments() {
@@ -21,17 +26,21 @@ const CommentList = (props) => {
                 page: page,
                 pageSize: pageSize
             });
-            setComments(prevState => [...prevState, ...commentsList.data]);
+            if (page !== 1) {
+                setComments(prevState => [...prevState, ...commentsList.data]);
+            }else{
+                setComments(commentsList.data);
+            }
             setLinks(commentsList.links);
             if (commentsList.links) {
                 setMaxPage(parseInt(commentsList.links.last.page));
-            }else{
+            } else {
                 setMaxPage(0);
             }
         }
 
         getComments();
-    }, [page, pageSize, props.commentsUrl]);
+    }, [page, pageSize, props.commentsUrl, update]);
 
     return (<div className="pt-1">
         {(links) &&
@@ -42,10 +51,12 @@ const CommentList = (props) => {
                 })}
             </List>}
         <div className="flex justify-center">
-            {maxPage === 0? <div className="text-base tracking-tight pl-1 text-gray-400">{t('comments_no_comments')}</div>: <>{page !== maxPage ? (<button
-                className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
-                onClick={() => setPage(page + 1)}>{t('comments_load_more')}
-            </button>) : (<div className="text-base tracking-tight pl-1 text-gray-400">
+            {maxPage === 0 ? <div
+                className="text-base tracking-tight pl-1 text-gray-400">{t('comments_no_comments')}</div> : <>{page !== maxPage ? (
+                <button
+                    className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
+                    onClick={() => setPage(page + 1)}>{t('comments_load_more')}
+                </button>) : (<div className="text-base tracking-tight pl-1 text-gray-400">
                 {t('comments_no_more')}
             </div>)}</>}
         </div>
