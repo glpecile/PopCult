@@ -10,7 +10,6 @@ import AuthContext from "../../../store/AuthContext";
 
 export default function Login() {
     const location = useLocation()
-    console.log(location.state.url);
     const [enteredUsername, setEnteredUsername] = useState('');
     const [enteredPassword, setEnteredPassword] = useState('');
     const [passwordShown, setPasswordShown] = useState(false);
@@ -22,6 +21,12 @@ export default function Login() {
     const [t] = useTranslation();
     const navigate = useNavigate();
     const authContext = useContext(AuthContext);
+
+    useEffect(() => {
+        if (authContext.isLoggedIn) {
+            navigate('/');
+        }
+    }, [navigate, authContext.isLoggedIn]);
 
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);
@@ -53,24 +58,26 @@ export default function Login() {
     };
 
     const submitHandler = (event) => {
+        event.preventDefault();
+
         async function login() {
             try {
                 const key = await UserService.login({username: enteredUsername, password: enteredPassword})
                 setErrorMessageDisplay(false);
                 authContext.onLogin(key, enteredUsername);
                 enteredRememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
-                if (location.state.url) {
+                if (location.state && location.state.url) {
                     navigate(location.state.url);
                 } else {
                     navigate('/');
                 }
             } catch (error) {
-                console.log(error.response);
+                console.log(error);
                 setErrorMessage();
             }
+
         }
 
-        event.preventDefault();
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
             login();
         } else {
