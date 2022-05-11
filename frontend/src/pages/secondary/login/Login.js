@@ -24,9 +24,13 @@ export default function Login() {
 
     useEffect(() => {
         if (authContext.isLoggedIn) {
-            navigate('/');
+            if (location.state && location.state.url) {
+                navigate(location.state.url);
+            } else {
+                navigate('/');
+            }
         }
-    }, [navigate, authContext.isLoggedIn]);
+    }, [navigate, authContext.isLoggedIn, location.state]);
 
     const UsernameChangeHandler = (event) => {
         setEnteredUsername(event.target.value);
@@ -66,11 +70,6 @@ export default function Login() {
                 setErrorMessageDisplay(false);
                 authContext.onLogin(key, enteredUsername);
                 enteredRememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
-                if (location.state && location.state.url) {
-                    navigate(location.state.url);
-                } else {
-                    navigate('/');
-                }
             } catch (error) {
                 console.log(error);
                 setErrorMessage();
