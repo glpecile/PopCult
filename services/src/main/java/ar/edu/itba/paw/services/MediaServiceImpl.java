@@ -46,8 +46,8 @@ public class MediaServiceImpl implements MediaService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term){
-        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fromDate,toDate, term);
+    public PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term, Integer notInList){
+        return mediaDao.getMediaByFilters(mediaType,page,pageSize,sort,genre,fromDate,toDate, term, notInList );
     }
 
 }

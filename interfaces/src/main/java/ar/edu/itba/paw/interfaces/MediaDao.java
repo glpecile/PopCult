@@ -20,7 +20,7 @@ public interface MediaDao {
 
     PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize);
 
-    PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term);
+    PageContainer<Media> getMediaByFilters(List<MediaType> mediaType, int page, int pageSize, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, String term, Integer notInList);
 
 
 }

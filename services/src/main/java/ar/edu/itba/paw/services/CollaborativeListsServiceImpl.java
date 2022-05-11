@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.collaborative.Request;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -26,19 +28,34 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
-    public Request makeNewRequest(MediaList mediaList, User user) {
-        Optional<Request> request = collaborativeListsDao.getUserListCollabRequest(mediaList, user);
-        if (request.isPresent()) {
-            return request.get();
-        }
+    public Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
+        Request request = collaborativeListsDao.makeNewRequest(mediaList, user);
         emailService.sendNewRequestEmail(mediaList, user, mediaList.getUser(), LocaleContextHolder.getLocale());
-        return collaborativeListsDao.makeNewRequest(mediaList, user);
+        return request;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<Request> getRequestsByUserId(User user, int page, int pageSize) {
-        return collaborativeListsDao.getRequestsByUserId(user, page, pageSize);
+    public Optional<Request> getById(int collabId) {
+        return collaborativeListsDao.getById(collabId);
+    }
+
+    @Override
+    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
+        return collaborativeListsDao.getUserListCollabRequest(mediaList, user);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+        return collaborativeListsDao.getListCollaborators(mediaList, page, pageSize);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
+        return collaborativeListsDao.getRequestsByUser(user, page, pageSize);
     }
 
     @Transactional
@@ -56,25 +73,31 @@ public class CollaborativeListsServiceImpl implements CollaborativeListService {
 
     @Transactional
     @Override
+    public void manageCollaborators(MediaList mediaList, List<User> usersToAdd, List<User> usersToRemove) {
+        addCollaborators(mediaList, usersToAdd);
+        deleteCollaborators(mediaList, usersToRemove);
+    }
+
+    @Transactional
+    @Override
+    public void addCollaborator(MediaList mediaList, User user) {
+        collaborativeListsDao.addCollaborator(mediaList, user);
+    }
+
+    @Transactional
+    @Override
     public void deleteCollaborator(Request request) {
         collaborativeListsDao.rejectRequest(request);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
-        return collaborativeListsDao.getListCollaborators(mediaList, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Request> getById(int collabId) {
-        return collaborativeListsDao.getById(collabId);
     }
 
     @Transactional
     @Override
     public void addCollaborators(MediaList mediaList, List<User> users){
         collaborativeListsDao.addCollaborators(mediaList, users);
+    }
+
+    @Override
+    public void deleteCollaborators(MediaList mediaList, List<User> users) {
+        collaborativeListsDao.deleteCollaborators(mediaList, users);
     }
 }

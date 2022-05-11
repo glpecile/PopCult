@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface WatchDao {
     void addWatchMedia(Media media, User user, LocalDateTime date);
@@ -19,6 +20,8 @@ public interface WatchDao {
     boolean isWatched(Media media, User user);
 
     boolean isToWatch(Media media, User user);
+
+    Optional<WatchedMedia> getWatchedMedia(User user, Media media);
 
     PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize);
 

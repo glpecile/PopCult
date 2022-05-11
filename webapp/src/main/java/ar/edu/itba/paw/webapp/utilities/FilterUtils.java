@@ -20,7 +20,7 @@ public class FilterUtils {
         Map<String, String> genreMap = new HashMap<>();
 
         for (Genre genre : Genre.values()) {
-            if(genre.ordinal() != Genre.NOT.ordinal())
+            if (genre.ordinal() != Genre.NOT.ordinal())
                 genreMap.put(genre.getGenre().toUpperCase(), messageSource.getMessage(genre.getGenre(), null, LocaleContextHolder.getLocale()).toUpperCase());
         }
         return genreMap;
@@ -51,7 +51,7 @@ public class FilterUtils {
     public static Map<String, String> getMediaTypes(MessageSource messageSource) {
         Map<String, String> mediaTypeMap = new HashMap<>();
 
-        for(MediaType mediaType : MediaType.values()) {
+        for (MediaType mediaType : MediaType.values()) {
             mediaTypeMap.put(mediaType.getType().toUpperCase(), messageSource.getMessage(mediaType.getType(), null, LocaleContextHolder.getLocale()));
         }
 

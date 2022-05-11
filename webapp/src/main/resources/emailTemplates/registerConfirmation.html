@@ -12,7 +12,7 @@
         <h2 th:text="#{email.greeting}"></h2>
         <p th:text="#{email.welcome (${username})}"></p>
         <p th:text="#{email.confirm}"></p>
-        <a th:href="@{{basePath}/register/confirm(token=${token}, basePath=${basePath})}">
+        <a th:href="@{{basePath}/verification(token=${token}, basePath=${basePath})}">
             <button style="background-color: #b23cfd;border: none;color: white;padding: 10px;text-align: center;border-radius: 20px;" th:text="#{email.verify}"></button>
         </a>
 

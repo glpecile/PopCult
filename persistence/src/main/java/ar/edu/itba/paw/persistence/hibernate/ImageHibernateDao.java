@@ -31,4 +31,9 @@ public class ImageHibernateDao implements ImageDao {
         em.persist(image);
         return image;
     }
+
+    @Override
+    public void deleteImage(Image image) {
+        em.remove(image);
+    }
 }

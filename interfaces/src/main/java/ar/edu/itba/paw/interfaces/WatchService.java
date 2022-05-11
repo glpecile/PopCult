@@ -6,9 +6,10 @@ import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface WatchService {
-    void addWatchedMedia(Media media, User user);
+    void addWatchedMedia(Media media, User user, LocalDateTime dateTime);
 
     void addMediaToWatch(Media media, User user);
 
@@ -16,14 +17,16 @@ public interface WatchService {
 
     void deleteToWatchMedia(Media media, User user);
 
-    void updateWatchedMediaDate(Media media, User user, LocalDateTime date);
+//    void updateWatchedMediaDate(Media media, User user, LocalDateTime date);
 
     boolean isWatched(Media media, User user);
 
     boolean isToWatch(Media media, User user);
 
-    PageContainer<WatchedMedia> getWatchedMediaId(User user, int page, int pageSize);
+    Optional<WatchedMedia> getWatchedMedia(User user, Media media);
 
-    PageContainer<Media> getToWatchMediaId(User user, int page, int pageSize);
+    PageContainer<WatchedMedia> getWatchedMedia(User user, int page, int pageSize);
+
+    PageContainer<Media> getToWatchMedia(User user, int page, int pageSize);
 
 }

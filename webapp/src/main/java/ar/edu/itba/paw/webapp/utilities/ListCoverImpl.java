@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.utilities;
 
 import ar.edu.itba.paw.interfaces.ListsService;
-import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.ListCover;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -23,7 +22,7 @@ public class ListCoverImpl {
         ListCover cover;
         int size;
         for (MediaList list : discoveryLists) {
-            mediaList = listsService.getMediaIdInList(list, 0, coverMoviesAmount).getElements();
+            mediaList = listsService.getMediaInList(list, 0, coverMoviesAmount).getElements();
             size = mediaList.size();
             cover = new ListCover(list.getMediaListId(), list.getListName(), list.getDescription());
             if (size > 0) cover.setImage1(mediaList.get(0).getImage());

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.lists;
 
 import ar.edu.itba.paw.models.user.User;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -39,6 +40,9 @@ public class MediaList {
             inverseJoinColumns = {@JoinColumn(name = "originalistid")}
     )
     private MediaList forkedFrom;
+
+    @Formula("(SELECT COUNT(*) FROM favoritelists AS f WHERE f.medialistid = medialistid)")
+    private int likes;
 
     /* default */ MediaList() {
         //Just for Hibernate, we <3 u!
@@ -126,6 +130,14 @@ public class MediaList {
 
     public void setForkedFrom(MediaList forkedFrom) {
         this.forkedFrom = forkedFrom;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override

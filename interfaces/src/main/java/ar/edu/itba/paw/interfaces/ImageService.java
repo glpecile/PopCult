@@ -11,4 +11,8 @@ public interface ImageService {
     Optional<Image> getImage(String imagePath) throws ImageConversionException;
 
     Image uploadImage(byte[] photoBlob);
+
+    Image uploadImage(byte[] photoBlob, int width, int height, String format) throws ImageConversionException;
+
+    void deleteImage(Image image);
 }

@@ -29,4 +29,10 @@ public class StudioServiceImpl implements StudioService {
         return studioDao.getMediaByStudio(studio, page, pageSize);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public PageContainer<Studio> getAllStudios(int page, int pageSize) {
+        return studioDao.getAllStudios(page,pageSize);
+    }
+
 }

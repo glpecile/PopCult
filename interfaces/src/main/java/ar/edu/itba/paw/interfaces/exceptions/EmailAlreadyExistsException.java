@@ -1,4 +1,10 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class EmailAlreadyExistsException extends Exception {
+import ar.edu.itba.paw.interfaces.utils.HttpStatusCodes;
+
+public class EmailAlreadyExistsException extends CustomException {
+
+    public EmailAlreadyExistsException() {
+        super(HttpStatusCodes.BAD_REQUEST, "exception.emailAlreadyExists");
+    }
 }

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.CommentAlreadyReportedException;
+import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.MediaList;
@@ -61,7 +63,7 @@ public class ReportHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testReportList() {
+    public void testReportList() throws ListAlreadyReportedException {
         MediaList mediaList = InstanceProvider.getMediaList();
 
         ListReport listReport = reportHibernateDao.reportList(mediaList, user, REPORT);
@@ -74,7 +76,7 @@ public class ReportHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testReportListComment() {
+    public void testReportListComment() throws CommentAlreadyReportedException {
         ListComment listComment = InstanceProvider.getListComment();
 
         ListCommentReport listCommentReport = reportHibernateDao.reportListComment(listComment, user, REPORT);
@@ -87,7 +89,7 @@ public class ReportHibernateDaoTest {
 
     @Rollback
     @Test
-    public void testReportMediaComment() {
+    public void testReportMediaComment() throws CommentAlreadyReportedException {
         MediaComment mediaComment = InstanceProvider.getMediaComment();
 
         MediaCommentReport mediaCommentReport = reportHibernateDao.reportMediaComment(mediaComment, user, REPORT);
@@ -123,5 +125,38 @@ public class ReportHibernateDaoTest {
 
         Assert.assertTrue(mediaCommentReport.isPresent());
         Assert.assertEquals(ALREADY_EXISTS_MEDIA_COMMENT_REPORT_ID, mediaCommentReport.get().getReportId().intValue());
+    }
+
+    @Rollback
+    @Test(expected = ListAlreadyReportedException.class)
+    public void testReportAlreadyReportedList() throws ListAlreadyReportedException {
+        MediaList reportedList = InstanceProvider.getAlreadyReportedList();
+        User user = InstanceProvider.getUser();
+
+        reportHibernateDao.reportList(reportedList, user, REPORT);
+
+        Assert.fail();
+    }
+
+    @Rollback
+    @Test(expected = CommentAlreadyReportedException.class)
+    public void testReportAlreadyReportedListComment() throws CommentAlreadyReportedException {
+        ListComment reportedComment = InstanceProvider.getAlreadyReportedListComment();
+        User user = InstanceProvider.getUser();
+
+        reportHibernateDao.reportListComment(reportedComment, user, REPORT);
+
+        Assert.fail();
+    }
+
+    @Rollback
+    @Test(expected = CommentAlreadyReportedException.class)
+    public void testReportAlreadyReportedMediaComment() throws CommentAlreadyReportedException {
+        MediaComment reportedComment = InstanceProvider.getAlreadyReportedMediaComment();
+        User user = InstanceProvider.getUser();
+
+        reportHibernateDao.reportMediaComment(reportedComment, user, REPORT);
+
+        Assert.fail();
     }
 }

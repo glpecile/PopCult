@@ -147,6 +147,10 @@ public class User {
         this.banDate = banDate;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
     public int getImageId() {
         return image == null ? DEFAULT_IMAGE : image.getImageId();
     }
