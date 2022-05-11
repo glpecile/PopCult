@@ -18,7 +18,7 @@ import {useNavigate} from "react-router-dom";
 import AuthContext from "../../../store/AuthContext";
 
 
-const violetConnector = styled(StepConnector)(({theme}) => ({
+const VioletConnector = styled(StepConnector)(({theme}) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
         top: 10,
         left: 'calc(-50% + 16px)',
@@ -41,7 +41,7 @@ const violetConnector = styled(StepConnector)(({theme}) => ({
     },
 }));
 
-const violetStepIconRoot = styled('div')(({theme, ownerState}) => ({
+const VioletStepIconRoot = styled('div')(({theme, ownerState}) => ({
     color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
     display: 'flex',
     height: 22,
@@ -62,17 +62,17 @@ const violetStepIconRoot = styled('div')(({theme, ownerState}) => ({
     },
 }));
 
-function violetStepIcon(props) {
+function VioletStepIcon(props) {
     const {active, completed, className} = props;
 
     return (
-        <violetStepIconRoot ownerState={{active}} className={className}>
+        <VioletStepIconRoot ownerState={{active}} className={className}>
             {completed ? (
                 <Check className="QontoStepIcon-completedIcon"/>
             ) : (
                 <div className="QontoStepIcon-circle"/>
             )}
-        </violetStepIconRoot>
+        </VioletStepIconRoot>
     );
 }
 
@@ -131,13 +131,13 @@ export default function NewListStepper() {
 
     return (
         <Box sx={{width: '100%'}}>
-            <Stepper activeStep={activeStep} alternativeLabel connector={<violetConnector/>}>
+            <Stepper activeStep={activeStep} alternativeLabel connector={<VioletConnector/>}>
                 {steps.map((label, index) => {
                     const stepProps = {};
                     const labelProps = {};
                     return (
                         <Step key={label} {...stepProps}>
-                            <StepLabel StepIconComponent={violetStepIcon} {...labelProps}>{label}</StepLabel>
+                            <StepLabel StepIconComponent={VioletStepIcon} {...labelProps}>{label}</StepLabel>
                         </Step>
                     );
                 })}

@@ -57,10 +57,9 @@ function ListsDescription() {
             </div>
             {/*    list author and forking info*/}
             <div className="flex justify-right">
-                {t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={'/user/'+list.owner}>{list.owner}</Link>
+                {t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={list.ownerUrl}>{list.owner}</Link>
+                {list.forkedFrom && <>{t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold" to={list.forkedFrom}>{list.forkedFromUrl}</Link></>}
             </div>
-            {/*    forked from*/}
-            {/*amount of forks*/}
             <ListForks forksUrl={list.forksUrl}/>
             <p className="lead text-justify max-w-full break-words pb-2">
                 {list.description}
@@ -68,7 +67,7 @@ function ListsDescription() {
             {/* collaborators */}
             <ListCollaborators collaboratorsUrl={list.collaboratorsUrl}/>
             {/* share edit and fork */}
-            <ListLowerIcons/>
+            <ListLowerIcons id={list.id} collaborative={list.collaborative} owner={list.owner}/>
             <ListMedia mediaUrl={list.mediaUrl}/>
             <CommentSection commentsUrl={list.commentsUrl}/>
         </>) : <Loader/>}
