@@ -1,5 +1,5 @@
 import Loader from "../secondary/errors/Loader";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import AuthContext from "../../store/AuthContext";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
@@ -24,8 +24,12 @@ export default function Home() {
     const [series, setSeries] = useState(undefined);
 
     const {setErrorStatusCode} = useErrorStatus();
+    const mountedUser = useRef(true);
+    const mountedData = useRef(true);
+
 
     useEffect(() => {
+        mountedUser.current = true;
         async function getUser() {
             if (authContext.isLoggedIn) {
                 try {
@@ -37,10 +41,16 @@ export default function Home() {
             }
         }
 
-        getUser();
+        if (mountedUser.current)
+            getUser();
+
+        return () => {
+            mountedUser.current = false;
+        }
     }, [setErrorStatusCode, authContext]);
 
     useEffect(() => {
+        mountedData.current = true;
         async function getInitialData() {
             try {
                 if (authContext.isLoggedIn) {
@@ -74,7 +84,11 @@ export default function Home() {
             }
         }
 
+        if (mountedData.current)
         getInitialData();
+        return () => {
+            mountedData.current = false;
+        }
     }, [setErrorStatusCode, authContext, pageSize, user]);
 
     return (<div>

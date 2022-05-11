@@ -1,9 +1,14 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import CommentService from "../../services/CommentService";
 import {useTranslation} from "react-i18next";
+import AuthContext from "../../store/AuthContext";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const NewComment = (props) => {
     const {t} = useTranslation();
+    const userIsLogged = useContext(AuthContext).isLoggedIn;
+    const location = useLocation()
+    const navigate = useNavigate();
 
     const [comment, setComment] = useState("");
 
@@ -17,9 +22,20 @@ const NewComment = (props) => {
         async function submitComment() {
             await CommentService.createListComment({url: props.commentsUrl, data: comment});
             setComment("");
+            props.setNewComment(prev => prev + 1);
         }
-        submitComment();
+
+        if (!userIsLogged) {
+            navigate('/login', {
+                state: {
+                    url: location.pathname
+                }
+            })
+        } else {
+            submitComment();
+        }
     }
+
     return (<form onSubmit={submitHandler}>
         <textarea
             placeholder={t('comments_placeholder')}
@@ -27,8 +43,8 @@ const NewComment = (props) => {
             value={comment} onChange={insertComment}/>
         <div className="flex justify-end">
             <button type="submit" disabled={comment.length === 0}
-                className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
-                > {t('comments_submit_comment')}
+                    className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
+            > {t('comments_submit_comment')}
             </button>
         </div>
     </form>);

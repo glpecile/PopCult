@@ -23,7 +23,6 @@ export const AuthContextProvider = (props) => {
 
     const [username, setUsername] = useState(() => {
         try {
-            console.log(jwtDecode(token));
             return jwtDecode(token).sub;
         } catch (error) {
             if (isLoggedIn) {

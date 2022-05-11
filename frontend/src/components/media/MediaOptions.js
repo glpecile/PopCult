@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -10,6 +10,8 @@ import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import favoriteService from "../../services/FavoriteService";
 import watchService from "../../services/WatchService";
+import AuthContext from "../../store/AuthContext";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const MediaOptions = (props) => {
     const [isLiked, setLiked] = useState(false);
@@ -19,9 +21,13 @@ const MediaOptions = (props) => {
     let buttonStyle = "group"
     let iconStyle = "text-purple-500 group-hover:text-purple-900 transition duration-300 ease-in-out transform group-active:scale-90"
     const {setErrorStatusCode} = useErrorStatus();
+    const userIsLogged = useContext(AuthContext).isLoggedIn;
+    const location = useLocation()
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getState() {
+
             try {
                 await favoriteService.isFavoriteMedia(props.mediaData.favoriteUrl);
                 setLiked(true);
@@ -40,6 +46,7 @@ const MediaOptions = (props) => {
             } catch (error) {
                 setWatched(false);
             }
+
         }
 
         getState();
@@ -47,15 +54,23 @@ const MediaOptions = (props) => {
 
     const handleLike = () => {
         async function handle() {
-            try {
-                if (!isLiked) {
-                    await favoriteService.addMediaToFavorites(props.mediaData.favoriteUrl);
-                }else {
-                    await favoriteService.removeMediaFromFavorites(props.mediaData.favoriteUrl)
+            if (!userIsLogged) {
+                navigate('/login', {
+                    state: {
+                        url: location.pathname
+                    }
+                })
+            } else {
+                try {
+                    if (!isLiked) {
+                        await favoriteService.addMediaToFavorites(props.mediaData.favoriteUrl);
+                    } else {
+                        await favoriteService.removeMediaFromFavorites(props.mediaData.favoriteUrl)
+                    }
+                    setLiked(!isLiked);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
                 }
-                setLiked(!isLiked);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
             }
         }
 
@@ -64,17 +79,25 @@ const MediaOptions = (props) => {
 
     const handleWatched = () => {
         async function handle() {
-            try {
-                if (!isWatched) {
-                    const date = new Date();
-                    const iso = date.toISOString();
-                    await watchService.addMediaToWatched({url: props.mediaData.watchedMediaUrl, dateTime: iso});
-                }else{
-                    await watchService.removeMediaFromWatched(props.mediaData.watchedMediaUrl)
+            if (!userIsLogged) {
+                navigate('/login', {
+                    state: {
+                        url: location.pathname
+                    }
+                })
+            } else {
+                try {
+                    if (!isWatched) {
+                        const date = new Date();
+                        const iso = date.toISOString();
+                        await watchService.addMediaToWatched({url: props.mediaData.watchedMediaUrl, dateTime: iso});
+                    } else {
+                        await watchService.removeMediaFromWatched(props.mediaData.watchedMediaUrl)
+                    }
+                    setWatched(!isWatched);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
                 }
-                setWatched(!isWatched);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
             }
         }
 
@@ -83,15 +106,23 @@ const MediaOptions = (props) => {
 
     const handleInWatchlist = () => {
         async function handle() {
-            try {
-                if (!isInWatchlist){
-                    await watchService.addMediaToWatch(props.mediaData.toWatchMediaUrl);
-                }else{
-                    await watchService.removeMediaFromToWatch(props.mediaData.toWatchMediaUrl)
+            if (!userIsLogged) {
+                navigate('/login', {
+                    state: {
+                        url: location.pathname
+                    }
+                })
+            } else {
+                try {
+                    if (!isInWatchlist) {
+                        await watchService.addMediaToWatch(props.mediaData.toWatchMediaUrl);
+                    } else {
+                        await watchService.removeMediaFromToWatch(props.mediaData.toWatchMediaUrl)
+                    }
+                    setInWatchlist(!isInWatchlist);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
                 }
-                setInWatchlist(!isInWatchlist);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
             }
         }
 

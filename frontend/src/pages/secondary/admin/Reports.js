@@ -6,6 +6,8 @@ import {useLocation} from "react-router-dom";
 import ReportService from "../../../services/ReportService";
 import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
+import RolesGate from "../../../components/permissions/RolesGate";
+import {Roles} from "../../../enums/Roles";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -116,7 +118,7 @@ const Reports = () => {
         setValue(newValue);
     };
 
-    return (<>
+    return (<RolesGate level={Roles.MOD}>
         <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
             {t('reports')}
         </h1>
@@ -149,7 +151,7 @@ const Reports = () => {
             {reportedMediaComments !== undefined && reportedMediaComments.data.length === 0 &&
                 <NothingToShow text={t('reports_media_comments_empty')}/>}
         </TabPanel>
-    </>);
+    </RolesGate>);
 
 }
 export default Reports;
