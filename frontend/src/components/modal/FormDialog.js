@@ -1,12 +1,24 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import LocalDialogTitle from "./LocalDialogTitle";
 import LocalDialog from "./LocalDialog";
+import {useLocation, useNavigate} from "react-router-dom";
+import AuthContext from "../../store/AuthContext";
 
 export default function FormDialog(props) {
     const [open, setOpen] = useState(props.isOpened);
+    const navigate = useNavigate();
+    const context = useContext(AuthContext);
+    const location = useLocation()
+
     const handleState = () => {
+        if (!context.isLoggedIn) {
+            navigate('/login', {
+                state: {
+                    url: location.pathname
+                }
+            })
+        }
         setOpen(!open);
     };
 

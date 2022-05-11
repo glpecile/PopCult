@@ -1,6 +1,4 @@
 import {useContext, useEffect, useState} from "react";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
@@ -12,6 +10,7 @@ import favoriteService from "../../services/FavoriteService";
 import watchService from "../../services/WatchService";
 import AuthContext from "../../store/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
+import FavoriteButton from "../FavoriteButton";
 
 const MediaOptions = (props) => {
     const [isLiked, setLiked] = useState(false);
@@ -131,14 +130,7 @@ const MediaOptions = (props) => {
 
     return (
         <div className="flex justify-around py-2">
-            <Tooltip title={isLiked ? t('media_details_remove_liked') : t('media_details_add_liked')} arrow>
-                <IconButton onClick={handleLike} className={buttonStyle}>
-                    {
-                        isLiked ? <FavoriteIcon fontSize="large" className={iconStyle}/> :
-                            <FavoriteBorderOutlinedIcon fontSize="large" className={iconStyle}/>
-                    }
-                </IconButton>
-            </Tooltip>
+            <FavoriteButton isLiked={isLiked} handleLike={handleLike}/>
             <Tooltip title={isWatched ? t('media_details_add_watched') : t('media_details_remove_watched')} arrow>
                 <IconButton onClick={handleWatched} className={buttonStyle}>
                     {

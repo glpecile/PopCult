@@ -1,21 +1,20 @@
 import {useEffect, useState} from "react";
 import ListService from "../../../services/ListService";
 import Loader from "../errors/Loader";
-import MediaInList from "../../../components/lists/MediaInList";
-import Spinner from "../../../components/animation/Spinner";
-import {Avatar, Chip} from "@mui/material";
-import CollaborativeService from "../../../services/CollaborativeService";
-import PaginationComponent from "../../../components/PaginationComponent";
 import CommentSection from "../../../components/comments/CommentSection";
 import useErrorStatus from "../../../hooks/useErrorStatus";
+import ListCollaborators from "../../../components/lists/description/ListCollaborators";
+import ListMedia from "../../../components/lists/description/ListMedia";
+import {useTranslation} from "react-i18next";
+import ListUpperIcons from "../../../components/lists/description/ListUpperIcons";
+import {Alert, Snackbar} from "@mui/material";
 
 function ListsDescription() {
     const id = window.location.pathname.split('/')[2];
     const [list, setList] = useState(undefined);
-    const [mediaInlist, setMediaInList] = useState(undefined);
-    const [collabInlist, setCollabInList] = useState(undefined);
-    const [page, setPage] = useState(1);
-    const pageSize = 4;
+    const [snackbar, setSnackbar] = useState(false);
+    const {t} = useTranslation();
+
     const {setErrorStatusCode} = useErrorStatus();
 
     useEffect(() => {
@@ -23,6 +22,7 @@ function ListsDescription() {
             try {
                 const data = await ListService.getListById(id);
                 setList(data);
+                console.log(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
@@ -31,39 +31,17 @@ function ListsDescription() {
         getList(id);
     }, [id, setErrorStatusCode]);
 
-    useEffect(() => {
-        if (list) {
-            async function getListMedia() {
-                try {
-                    const media = await ListService.getMediaInList({url: list.mediaUrl, page, pageSize});
-                    setMediaInList(media);
-                } catch (error) {
-                    setErrorStatusCode(error.response.status);
-                }
-            }
-
-            getListMedia();
-        }
-    }, [list, page, pageSize, setErrorStatusCode])
+    function showSnackbar() {
+        setSnackbar(true);
+    }
 
     useEffect(() => {
-        if (list) {
-            async function getListCollaborators() {
-                try {
-                    const collabs = await CollaborativeService.getListCollaborators({
-                        url: list.collaboratorsUrl,
-                        page,
-                        pageSize
-                    });
-                    setCollabInList(collabs);
-                } catch (error) {
-                    setErrorStatusCode(error.response.status);
-                }
-            }
-
-            getListCollaborators();
+            const timeOut = setTimeout(() => {
+                setSnackbar(false);
+            }, 3000);
+            return () => clearTimeout(timeOut);
         }
-    }, [list, page, pageSize, setErrorStatusCode])
+        , [snackbar]);
 
     return (<>
         {list ? (<>
@@ -71,7 +49,7 @@ function ListsDescription() {
                 <h2 className="display-5 fw-bolder">
                     {list.name}
                 </h2>
-                {/*    report and favorite buttons */}
+                <ListUpperIcons owner={list.owner} favoriteUrl={list.favoriteUrl} reportsUrl={list.reportsUrl} openAlert={showSnackbar}/>
             </div>
             {/*    list author and forking info*/}
             {/*    forked from*/}
@@ -80,28 +58,17 @@ function ListsDescription() {
                 {list.description}
             </p>
             {/*    collaborators */}
-            {(collabInlist && collabInlist.data.length > 0) && (<>
-                {collabInlist.data.map((user) => {
-                    return <Chip
-                        label={user.username}
-                        variant="outlined" color="secondary"
-                        avatar={<Avatar alt={user.username} src={user.imageUrl}/>}
-                        key={user.username}
-                    />
-                })}
-            </>)}
+            <ListCollaborators collaboratorsUrl={list.collaboratorsUrl}/>
             {/*    share and edit */}
-            {(mediaInlist && mediaInlist.data.length > 0) ? (<>
-                    <MediaInList media={mediaInlist.data}/>
-                    <div className="flex justify-center">
-                        {(mediaInlist.data.length > 0 && mediaInlist.links.last.page > 1) &&
-                            <PaginationComponent page={page} lastPage={mediaInlist.links.last.page}
-                                                 setPage={setPage}/>}
-                    </div>
-                </>) :
-                <div className="flex justify-center"><Spinner/></div>}
+            <ListMedia mediaUrl={list.mediaUrl}/>
             <CommentSection commentsUrl={list.commentsUrl}/>
         </>) : <Loader/>}
+        <Snackbar open={snackbar} autoHideDuration={6000}
+                  anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+            <Alert severity="success">
+                {t('report_success')}
+            </Alert>
+        </Snackbar>
     </>);
 }
 

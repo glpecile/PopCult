@@ -243,9 +243,12 @@
   "delete_comment_confirmation": "Sí, eliminar comentario",
   "report_comment_title": "Reportar comentario",
   "report_comment_body": "¿Por que deseas reportar este comentario?",
+  "report_list_title": "Reportar lista",
+  "report_list_body": "¿Por que deseas reportar esta lista?",
   "report_submit": "Enviar reporte",
   "report_success": "¡Muchas gracias! Tu reporte se ha enviado correctamente",
-  "report_admin_success": "¡Muchas gracias! Se ha eliminado el comentario."
+  "report_admin_success": "¡Muchas gracias! Se ha eliminado el comentario.",
+  "collaborators_in_list": "Algunos colaboradores de esta lista:"
 
 
 

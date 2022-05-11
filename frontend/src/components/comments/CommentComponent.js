@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import UserService from "../../services/UserService";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {ListItem} from "@mui/material";
 import {Close} from "@mui/icons-material";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -22,8 +22,6 @@ const CommentComponent = (props) => {
     const currentUser = context.username;
 
     const {setErrorStatusCode} = useErrorStatus();
-    const location = useLocation()
-    const navigate = useNavigate();
 
     useEffect(() => {
         setComment(props.comment);
@@ -61,13 +59,6 @@ const CommentComponent = (props) => {
 
     async function submitReport(event) {
         event.preventDefault();
-        if (!context.isLoggedIn) {
-            navigate('/login', {
-                state: {
-                    url: location.pathname
-                }
-            })
-        }
         try {
             const data = await reportService.createListCommentReport({url: comment.reportsUrl, data: reportBody});//data.status
             if (data.status === 204) {

@@ -30,14 +30,6 @@ function Lists() {
     const listCategories = 'categories';
     const location = useLocation()
     const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
-    /* Cuando queramos activar el snackbar de que se borro una lista porque un moderador la elimino -> desde donde se borre redirigir asi
-    navigate('/lists', {
-                    state: {
-                        data: data.status
-                    }
-                })
-    */
-
 
     useEffect(() => {
         async function getCarrouselLists() {
