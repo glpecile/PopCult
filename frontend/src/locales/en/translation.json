@@ -257,6 +257,9 @@
   "lists_edit":"Edit list",
   "lists_collaborate":"Ask to collaborate",
   "lists_fork":"Fork this list",
-  "lists_forkedAmount":". This list has been forked"
+  "lists_forkedAmount":". This list has been forked",
+  "lists_request_okay": "Your request has been sent!",
+  "lists_request_error": "There has been an error with your request, you may have already sent this request."
+
 
 }

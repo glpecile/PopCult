@@ -69,8 +69,7 @@ const collaborativeApi = (() => {
             });
     }
 
-    //TODO Define dto
-    const createListCollaborationRequest = ({url}) => {
+    const createListCollaborationRequest = (url) => {
         return api.post(url);
     }
 
