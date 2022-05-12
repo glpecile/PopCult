@@ -2,7 +2,7 @@ import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
 import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
 import Loader from "../secondary/errors/Loader";
@@ -33,18 +33,18 @@ function Lists() {
     const location = useLocation()
     const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
 
-    useEffect(() => {
-        async function getCarrouselLists() {
-            try {
-                const data = await listService.getLists({pageSize: 12})
-                setCarrouselLists(data.data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        }
+    const getCarrouselLists = useCallback(async () => {
+        const data = await listService.getLists({pageSize: 12})
+        setCarrouselLists(data.data);
+    }, []);
 
-        getCarrouselLists();
-    }, [setErrorStatusCode]);
+    useEffect(() => {
+        try {
+            getCarrouselLists();
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [setErrorStatusCode, getCarrouselLists]);
 
     useEffect(() => {
         async function getLists() {

@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import MediaSlider from "../../components/media/MediaSlider";
@@ -29,17 +29,18 @@ export default function Films() {
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
 
+    const getCarrouselData = useCallback(async () => {
+        let data = await MediaService.getFilms({pageSize: 12});
+        setCarrouselData(data);
+    }, []);
+
     useEffect(() => {
-        const getCarrouselData = async () => {
-            try {
-                let data = await MediaService.getFilms({pageSize: 12});
-                setCarrouselData(data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        };
-        getCarrouselData();
-    }, [setErrorStatusCode]);
+        try {
+            getCarrouselData();
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [setErrorStatusCode, getCarrouselData]);
 
     useEffect(() => {
         async function getData() {
