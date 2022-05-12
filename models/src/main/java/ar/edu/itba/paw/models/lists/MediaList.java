@@ -44,6 +44,9 @@ public class MediaList {
     @Formula("(SELECT COUNT(*) FROM favoritelists AS f WHERE f.medialistid = medialistid)")
     private int likes;
 
+    @Formula("(SELECT COUNT(*) FROM forkedlists AS f WHERE f.originalistid = medialistid)")
+    private int forks;
+
     /* default */ MediaList() {
         //Just for Hibernate, we <3 u!
     }
@@ -138,6 +141,14 @@ public class MediaList {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public int getForks() {
+        return forks;
+    }
+
+    public void setForks(int forks) {
+        this.forks = forks;
     }
 
     @Override

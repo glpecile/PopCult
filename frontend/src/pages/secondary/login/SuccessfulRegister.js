@@ -19,7 +19,7 @@ const SuccessfulRegister = () => {
                         {t('welcome_body')}
                     </div>
                     <Link className="flex justify-end" to='/'>
-                        <button className="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded">
+                        <button className="btn btn-link text-violet-500 hover:text-violet-900 btn-rounded">
                             <HomeOutlinedIcon/> {t('nav_home')}
                         </button>
                     </Link>

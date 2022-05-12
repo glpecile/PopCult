@@ -91,7 +91,7 @@ export default function Login() {
                 <label className="py-2 text-semibold w-full">
                     {t('login_username')}
                 </label>
-                <input className="w-full rounded active:none shadow-sm accent-purple-400" type="text"
+                <input className="w-full rounded active:none shadow-sm accent-violet-400" type="text"
                        value={enteredUsername}
                        pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
                        onChange={UsernameChangeHandler}/>
@@ -123,11 +123,11 @@ export default function Login() {
                     {t('login_error')}
                 </div>}
 
-                <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-purple-400" type="submit">
+                <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
                     {t('login_button')}
                 </button>
 
-                <Link className="text-center text-slate-700 text-sm uppercase hover:text-purple-800" to="/recovery">
+                <Link className="text-center text-slate-700 text-sm uppercase hover:text-violet-800" to="/recovery">
                     {t('login_recovery')}
                 </Link>
             </div>

@@ -26,7 +26,6 @@ const listService = (() => {
             visible: isPublic,
             collaborative: isCollaborative
         });
-        console.log(response);
         return response.headers.location;
     }
 
@@ -81,7 +80,9 @@ const listService = (() => {
     }
 
     const forkList = async (url) => {
-        await listApi.forkList(url);
+        const response = await listApi.forkList(url);
+        return response.headers.location;
+
     }
 
     const getUserEditableListsByUsername = async ({username, page, pageSize}) => {

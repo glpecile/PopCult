@@ -11,6 +11,7 @@ const SearchInput = () => {
     const setTerm = (event) => {
         event.target.validity.valid ? setSearchTerm(event.target.value) : setSearchTerm(searchTerm);
     }
+
     const submitHandler = (event) => {
         event.preventDefault();
         navigate({

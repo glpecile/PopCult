@@ -245,5 +245,18 @@
   "delete_comment_confirmation": "Yes, delete this comment",
   "report_comment_title": "Report comment",
   "report_comment_body": "Why do you want to report this comment?",
-  "report_submit": "Submit report"
+  "report_list_title": "Report list",
+  "report_list_body": "Why do you want to report this list?",
+  "report_submit": "Submit report",
+  "report_success": "Thank you! Your report has been successfully submitted.",
+  "report_content": "Report this content",
+  "report_admin_success": "Thank you! This comment has been removed.",
+  "collaborators_in_list": "Some collaborators of this list:",
+  "list_by": "by: ",
+  "forked_from": ",forked from:",
+  "lists_edit":"Edit list",
+  "lists_collaborate":"Ask to collaborate",
+  "lists_fork":"Fork this list",
+  "lists_forkedAmount":". This list has been forked"
+
 }

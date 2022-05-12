@@ -26,8 +26,8 @@ const ListsSlider = (props) => {
 
     const renderDotsItem = ({isActive}) => {
         return isActive ?
-            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-purple-500 hover:bg-purple-900">
-            </div> : <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-purple-900">
+            <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-violet-500 hover:bg-violet-900">
+            </div> : <div className="h-3 w-3 rounded-full mx-2 cursor-pointer bg-gray-300 hover:bg-violet-900">
             </div>;
     };
 

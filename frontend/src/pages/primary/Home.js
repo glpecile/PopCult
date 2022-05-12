@@ -1,7 +1,7 @@
 import Loader from "../secondary/errors/Loader";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import AuthContext from "../../store/AuthContext";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
@@ -10,6 +10,7 @@ import favoriteService from "../../services/FavoriteService";
 import ListsSlider from "../../components/lists/ListsSlider";
 import mediaService from "../../services/MediaService";
 import MediaSlider from "../../components/media/MediaSlider";
+import Spinner from "../../components/animation/Spinner";
 
 export default function Home() {
     const authContext = useContext(AuthContext);
@@ -25,11 +26,10 @@ export default function Home() {
 
     const {setErrorStatusCode} = useErrorStatus();
     const mountedUser = useRef(true);
-    const mountedData = useRef(true);
-
 
     useEffect(() => {
         mountedUser.current = true;
+
         async function getUser() {
             if (authContext.isLoggedIn) {
                 try {
@@ -49,47 +49,92 @@ export default function Home() {
         }
     }, [setErrorStatusCode, authContext]);
 
-    useEffect(() => {
-        mountedData.current = true;
-        async function getInitialData() {
-            try {
-                if (authContext.isLoggedIn) {
-                    if (user) {
-                        const l = await favoriteService.getUserRecommendedLists({
-                            url: user.recommendedListsUrl,
-                            pageSize: pageSize
-                        });
-                        setLists(l.data);
-                        const f = await favoriteService.getUserRecommendedFilms({
-                            url: user.recommendedMediaUrl,
-                            pageSize: pageSize,
-                        });
-                        setFilms(f.data);
-                        const s = await favoriteService.getUserRecommendedSeries({
-                            url: user.recommendedMediaUrl,
-                            pageSize: pageSize,
-                        });
-                        setSeries(s.data);
-                    }
-                } else {
-                    const l = await listService.getLists({pageSize: pageSize, sortType: "DATE"});
-                    setLists(l.data);
-                    const f = await mediaService.getFilms({pageSize: pageSize, sortType: "DATE"});
-                    setFilms(f.data);
-                    const s = await mediaService.getSeries({pageSize: pageSize, sortType: "DATE"});
-                    setSeries(s.data);
-                }
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        }
+    /** lists **/
 
-        if (mountedData.current)
-        getInitialData();
-        return () => {
-            mountedData.current = false;
+    const getUserLists = useCallback(async () => {
+        if (user) {
+            const l = await favoriteService.getUserRecommendedLists({
+                url: user.recommendedListsUrl,
+                pageSize: pageSize
+            });
+            setLists(l.data);
         }
-    }, [setErrorStatusCode, authContext, pageSize, user]);
+    }, [user, pageSize]);
+
+    const getLists = useCallback(async () => {
+        const l = await listService.getLists({pageSize: pageSize, sortType: "DATE"});
+        setLists(l.data);
+    }, [pageSize]);
+
+    useEffect(() => {
+        try {
+            if (authContext.isLoggedIn) {
+                getUserLists();
+            } else {
+                getLists();
+            }
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [authContext.isLoggedIn, setErrorStatusCode, user, getUserLists, getLists]);
+
+    /** films **/
+
+    const getUserFilms = useCallback(async () => {
+        if (user) {
+            const f = await favoriteService.getUserRecommendedFilms({
+                url: user.recommendedMediaUrl,
+                pageSize: pageSize,
+            });
+            setFilms(f.data);
+        }
+    }, [user, pageSize]);
+
+    const getFilms = useCallback(async () => {
+        const f = await mediaService.getFilms({pageSize: pageSize, sortType: "DATE"});
+        setFilms(f.data);
+    }, [pageSize]);
+
+    useEffect(() => {
+        try {
+            if (authContext.isLoggedIn) {
+                getUserFilms();
+            } else {
+                getFilms();
+            }
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [authContext.isLoggedIn, setErrorStatusCode, user, getUserFilms, getFilms]);
+
+    /** series **/
+
+    const getUserSeries = useCallback(async () => {
+        if (user) {
+            const s = await favoriteService.getUserRecommendedSeries({
+                url: user.recommendedMediaUrl,
+                pageSize: pageSize,
+            });
+            setSeries(s.data);
+        }
+    }, [user, pageSize]);
+
+    const getSeries = useCallback(async () => {
+        const s = await mediaService.getSeries({pageSize: pageSize, sortType: "DATE"});
+        setSeries(s.data);
+    }, [pageSize]);
+
+    useEffect(() => {
+        try {
+            if (authContext.isLoggedIn) {
+                getUserSeries();
+            } else {
+                getSeries();
+            }
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [authContext.isLoggedIn, setErrorStatusCode, user, getUserSeries, getSeries]);
 
     return (<div>
         {(lists || series || films) ?
@@ -99,11 +144,9 @@ export default function Home() {
                         <h1 className="text-center text-3xl">
                             {t('home_slogan')}
                         </h1>
-                        <button
+                        <Link
                             className="btn btn-link text-center text-white bg-violet-500 hover:bg-violet-900 rounded-full shadow-md hover:shadow-lg my-4 w-1/4"
-                            onClick={() => {
-                                navigate('/register')
-                            }}>{t('home_register')}</button>
+                            to={'/register'}>{t('home_register')}</Link>
                     </> : <>
                         <h1 className="text-center text-3xl">
                             {t('home_greeting')}
@@ -115,7 +158,7 @@ export default function Home() {
                     </>}
                 </div>
                 {/*Lists*/}
-                {lists &&
+                {lists ?
                     <>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-2xl pt-2">
@@ -127,9 +170,9 @@ export default function Home() {
                             </button>
                         </div>
                         <ListsSlider lists={lists}/>
-                    </>}
+                    </> : <Spinner/>}
                 {/*Films*/}
-                {films &&
+                {films ?
                     <>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-2xl pt-2">
@@ -141,9 +184,9 @@ export default function Home() {
                             </button>
                         </div>
                         <MediaSlider media={films}/>
-                    </>}
+                    </> : <Spinner/>}
                 {/*Series*/}
-                {series &&
+                {series ?
                     <>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-2xl pt-2">
@@ -155,7 +198,7 @@ export default function Home() {
                             </button>
                         </div>
                         <MediaSlider media={series}/>
-                    </>}
+                    </> : <Spinner/>}
             </>)
             :
             <Loader/>

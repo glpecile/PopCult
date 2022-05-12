@@ -46,7 +46,11 @@ const CommentList = (props) => {
         }
 
         getComments();
-    }, [page, pageSize, props.commentsUrl, update,setErrorStatusCode]);
+    }, [page, pageSize, props.commentsUrl, update, setErrorStatusCode]);
+
+    function showAlert(data) {
+        props.showReportAlert(data);
+    }
 
     return (<div className="pt-1">
         {(links && comments) &&
@@ -54,7 +58,7 @@ const CommentList = (props) => {
                 {comments.map((comment) => {
                     return <CommentComponent comment={comment}
                                              key={comment.id}
-                                             setCommentsUpdate={props.setCommentsUpdate}/>;
+                                             setCommentsUpdate={props.setCommentsUpdate} showAlert={showAlert}/>;
                 })}
             </List>}
         <div className="flex justify-center">

@@ -15,7 +15,7 @@ const ModeratorCard = (moderator) => {
             <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
                  src={moderator.image}/>
             <h4 className="pl-3 py-4 text-xl font-normal tracking-tight">
-                <Link to={`user/${moderator.username}`} className="text-purple-500 hover:text-purple-900 pr-2">
+                <Link to={`user/${moderator.username}`} className="text-violet-500 hover:text-purple-900 pr-2">
                     <strong>
                         {moderator.username}
                     </strong>

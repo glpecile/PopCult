@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import MediaSlider from "../../components/media/MediaSlider";
@@ -9,15 +9,17 @@ import Filters from "../../components/search/filters/Filters";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import MediaCard from "../../components/media/MediaCard";
-import {createSearchParams, useNavigate} from "react-router-dom";
+import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
 
 export default function Films() {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
 
     const [carrouselData, setCarrouselData] = useState(undefined);
+    const [page, setPage] = useState(searchParams.get("page") || 1);
     const [films, setFilms] = useState(undefined);
-    const [page, setPage] = useState(1);
     const {setErrorStatusCode} = useErrorStatus();
     const [filmFilters, setFilmFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
@@ -27,17 +29,18 @@ export default function Films() {
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
 
+    const getCarrouselData = useCallback(async () => {
+        let data = await MediaService.getFilms({pageSize: 12});
+        setCarrouselData(data);
+    }, []);
+
     useEffect(() => {
-        const getCarrouselData = async () => {
-            try {
-                let data = await MediaService.getFilms({pageSize: 12});
-                setCarrouselData(data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
-        };
-        getCarrouselData();
-    }, [setErrorStatusCode]);
+        try {
+            getCarrouselData();
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
+        }
+    }, [setErrorStatusCode, getCarrouselData]);
 
     useEffect(() => {
         async function getData() {
