@@ -18,6 +18,7 @@ public class ListDto {
     private boolean collaborative;
     private String owner;
     private int likes;
+    private int forks;
 
     private String url;
 
@@ -45,6 +46,7 @@ public class ListDto {
         listDto.collaborative = mediaList.getCollaborative();
         listDto.owner = mediaList.getUser().getUsername();
         listDto.likes = mediaList.getLikes();
+        listDto.forks = mediaList.getForks();
 
         listDto.url = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getMediaListId())).build().toString();
         listDto.ownerUrl = url.getBaseUriBuilder().path("users").path(mediaList.getUser().getUsername()).build().toString();
@@ -134,6 +136,14 @@ public class ListDto {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public int getForks() {
+        return forks;
+    }
+
+    public void setForks(int forks) {
+        this.forks = forks;
     }
 
     public String getUrl() {
