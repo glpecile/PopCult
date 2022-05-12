@@ -30,8 +30,8 @@ const collaborativeService = (() => {
         return {links, data};
     }
 
-    const isListCollaborator = async (url) => {
-        const res = await collaborativeApi.isListCollaborator(url);
+    const isListCollaborator = async ({id, username}) => {
+        const res = await collaborativeApi.isListCollaborator({id, username});
         return res.data;
     }
 

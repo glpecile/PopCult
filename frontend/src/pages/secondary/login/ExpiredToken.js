@@ -73,7 +73,7 @@ const ExpiredToken = () => {
                         </div>
                         <div className='flex justify-end'>
                             <button type="submit"
-                                    className="btn btn-link text-purple-500 hover:text-purple-900 btn-rounded ">
+                                    className="btn btn-link text-violet-500 hover:text-violet-900 btn-rounded ">
                                 {t('send')}
                             </button>
                         </div>

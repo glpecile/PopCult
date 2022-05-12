@@ -19,7 +19,7 @@ export default function Error404() {
                         <p className="text-2xl font-semibold text-justify">
                             {t('error_not_found')}
                         </p>
-                        <Link className="text-2xl font-bold text-purple-500 hover:text-purple-900" to='/'>
+                        <Link className="text-2xl font-bold text-violet-500 hover:text-violet-900" to='/'>
                             {t('error_go_home')}
                         </Link>
                     </div>

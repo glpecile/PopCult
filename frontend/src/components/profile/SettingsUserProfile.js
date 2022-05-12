@@ -146,7 +146,7 @@ const SettingsUserProfile = (user) => {
 
             {/* Name Input */}
             <div className="py-1 text-semibold w-full">
-                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                     {t('register_name')}
                 </label>
                 <input
@@ -162,7 +162,7 @@ const SettingsUserProfile = (user) => {
 
             {/* Username Input */}
             <div className="py-1 text-semibold w-full">
-                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                     {t('register_username')}
                 </label>
                 <input className="rounded w-full bg-gray-100" type='text' value={user.username} disabled={true}/>
@@ -170,7 +170,7 @@ const SettingsUserProfile = (user) => {
 
             {/* Email Input */}
             <div className="py-1 text-semibold w-full">
-                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                     {t('register_email')}
                 </label>
                 <input className="rounded w-full bg-gray-100" type='text' value={user.email} disabled={true}/>
@@ -193,7 +193,7 @@ const SettingsUserProfile = (user) => {
                         {prevPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
                     <label
-                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                         {t('profile_settings_oldPassword')}
                     </label>
                     <input type={prevPasswordShown ? "text" : "password"}
@@ -220,7 +220,7 @@ const SettingsUserProfile = (user) => {
                         {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
                     <label
-                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                        className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                         {t('register_password')}
                     </label>
                     <input type={passwordShown ? "text" : "password"}
@@ -242,7 +242,7 @@ const SettingsUserProfile = (user) => {
                                 }}>
                         {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
-                    <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                    <label className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                         {t('register_password_repeat')}
                     </label>
                     <input type={repeatedPasswordShown ? "text" : "password"}
@@ -261,7 +261,7 @@ const SettingsUserProfile = (user) => {
             <div className="flex justify-start space-x-2">
                 {/* Change Password */}
                 <button type="button"
-                        className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-purple-400 hover:shadow-purple-500 font-semibold hover:text-white text-gray-700"
+                        className="btn rounded my-2 bg-gray-300 group shadow-md hover:bg-violet-400 hover:shadow-violet-500 font-semibold hover:text-white text-gray-700"
                         onClick={() => setChangePassword(!changePasswordActive)}>
                     <LockOpenIcon fontSize="small" className="group-hover:text-white mr-2"/>
                     {changePasswordActive ? t('profile_settings_cancelChangePassword') : t('profile_settings_changePassword')}

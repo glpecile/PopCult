@@ -102,7 +102,7 @@ const RegisterForm = (props) => {
                                 <ErrorIcon fontSize="small"/>
                             </span>}
                         <label
-                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                             {t('register_email')}
                         </label>
                         <input type="text"
@@ -129,12 +129,12 @@ const RegisterForm = (props) => {
                                     onClick={togglePassword}>
                             {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                         </IconButton>
-                        <IconButton size="small" className="absolute top-1.5 right-2 text-purple-400"
+                        <IconButton size="small" className="absolute top-1.5 right-2 text-violet-400"
                                     onClick={() => setAlertDisplay(!alertDisplay)}>
                             <HelpIcon fontSize="small"/>
                         </IconButton>
                         <label
-                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                             {t('register_password')}
                         </label>
                         <input type={passwordShown ? "text" : "password"}
@@ -151,7 +151,7 @@ const RegisterForm = (props) => {
                 <FadeIn isActive={alertDisplay}>
                     <motion.div key="modal" className="py-1 px-2.5 collapse show" id="alert">
                         <motion.div key="icon"
-                                    className="alert bg-purple-200/95 text-gray-500 d-flex align-items-center shadow-md"
+                                    className="alert bg-violet-200/95 text-gray-500 d-flex align-items-center shadow-md"
                                     role="alert">
                             <span className="absolute -top-1 bottom-0 -right-2 px-4 py-3">
                                 <IconButton size="small" type="button" onClick={() => setAlertDisplay(false)}>
@@ -177,7 +177,7 @@ const RegisterForm = (props) => {
                             {repeatedPasswordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                         </IconButton>
                         <label
-                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                             {t('register_password_repeat')}
                         </label>
                         <input type={repeatedPasswordShown ? "text" : "password"}
@@ -194,7 +194,7 @@ const RegisterForm = (props) => {
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
                         <label
-                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                             {t('register_username')}
                         </label>
                         {enteredUsernameError &&
@@ -222,7 +222,7 @@ const RegisterForm = (props) => {
                 <div className="py-1 px-2.5 text-semibold w-full">
                     <div className="relative">
                         <label
-                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-purple-400">
+                            className="py-2 text-semibold w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                             {t('register_name')}
                         </label>
                         {enteredNameError &&
@@ -242,7 +242,7 @@ const RegisterForm = (props) => {
                 </div>
 
                 <div className="py-1 px-2.5 text-semibold w-full">
-                    <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-purple-400" type="submit">
+                    <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
                         {t('register_button')}
                     </button>
                     {(badAttempt || props.registrationError) &&

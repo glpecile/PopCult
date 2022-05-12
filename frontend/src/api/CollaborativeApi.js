@@ -35,8 +35,8 @@ const collaborativeApi = (() => {
             });
     }
 
-    const isListCollaborator = (url) => {
-        return api.get(url);
+    const isListCollaborator = ({id, username}) => {
+        return api.get(`/lists/${id}/collaborators/${username}`);
     }
 
     const manageListCollaborators = ({url, add, remove}) => {

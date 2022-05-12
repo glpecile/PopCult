@@ -5,9 +5,11 @@ import Spinner from "../../../components/animation/Spinner";
 import GenreService from "../../../services/GenreService";
 import StudioService from "../../../services/StudioService";
 import useErrorStatus from "../../../hooks/useErrorStatus";
+import {useLocation} from "react-router-dom";
 
 function MediaDescription(props) {
-    const id = window.location.pathname.split('/')[3];
+    const location = useLocation();
+    const id = location.pathname.split('/')[3];
     const [mediaData, setMediaData] = useState(undefined);
     const [genreData, setGenreData] = useState(undefined);
     const {setErrorStatusCode} = useErrorStatus();
@@ -30,7 +32,7 @@ function MediaDescription(props) {
     useEffect(
         () => {
             getMedia();
-        }, [getMedia]
+        }, [getMedia, id]
     );
 
     return (

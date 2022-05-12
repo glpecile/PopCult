@@ -1,7 +1,7 @@
 import Navbar from "../navigation/Navbar";
 import Footer from "../navigation/Footer";
 import {useLocation} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
 import ContextProviderWrapper from "../../store/ContextProviderWrapper";
@@ -11,10 +11,14 @@ function Layout(props) {
     const [layoutVisibility, setLayoutVisibility] = useState(true);
     const {t} = useTranslation();
 
+    const isLayoutVisible = useCallback(() => {
+        return location.pathname !== '/login' && location.pathname !== '/register'
+            && location.pathname !== '/recovery' && location.pathname !== '/resetPassword' && location.pathname !== '/register/success' && location.pathname !== '/register/expired';
+    }, [location.pathname]);
+
     useEffect(() => {
-        setLayoutVisibility(location.pathname !== '/login' && location.pathname !== '/register'
-            && location.pathname !== '/recovery' && location.pathname !== '/resetPassword' && location.pathname !== '/register/success' && location.pathname !== '/register/expired');
-    }, [location]);
+        setLayoutVisibility(isLayoutVisible());
+    }, [isLayoutVisible]);
 
     return (
         <ContextProviderWrapper>

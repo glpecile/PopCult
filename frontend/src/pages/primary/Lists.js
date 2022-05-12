@@ -1,8 +1,8 @@
 import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {createSearchParams, useNavigate} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {useCallback, useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
 import Loader from "../secondary/errors/Loader";
@@ -10,16 +10,19 @@ import Filters from "../../components/search/filters/Filters";
 import ListsCard from "../../components/lists/ListsCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
+import {Alert, Snackbar} from "@mui/material";
 
 function Lists() {
     const {t} = useTranslation();
     const navigate = useNavigate();
 
     const genres = useContext(GenresContext).genres;
+    const [searchParams] = useSearchParams();
+
 
     const [carrouselLists, setCarrouselLists] = useState(undefined);
     const [lists, setLists] = useState(undefined);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
     const [listFilters, setListFilters] = useState(() => new Map());
     const pageSize = 4;
@@ -27,19 +30,21 @@ function Lists() {
     const listSort = 'sort';
     const listDecades = 'decades';
     const listCategories = 'categories';
+    const location = useLocation()
+    const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
+
+    const getCarrouselLists = useCallback(async () => {
+        const data = await listService.getLists({pageSize: 12})
+        setCarrouselLists(data.data);
+    }, []);
 
     useEffect(() => {
-        async function getCarrouselLists() {
-            try {
-                const data = await listService.getLists({pageSize: 12})
-                setCarrouselLists(data.data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
-            }
+        try {
+            getCarrouselLists();
+        } catch (error) {
+            setErrorStatusCode(error.response.status);
         }
-
-        getCarrouselLists();
-    }, [setErrorStatusCode]);
+    }, [setErrorStatusCode, getCarrouselLists]);
 
     useEffect(() => {
         async function getLists() {
@@ -71,6 +76,14 @@ function Lists() {
             }).toString()
         });
     }, [page, navigate, listFilters]);
+
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                setShowAlert(false);
+            }, 3000);
+            return () => clearTimeout(timeOut);
+        }
+        , [showAlert]);
 
     return (
         <section>
@@ -112,6 +125,12 @@ function Lists() {
                         }
                     </div>
                 </> : <div className="flex justify-center text-gray-400">{t('search_no_results')}</div>}
+                <Snackbar open={showAlert} autoHideDuration={6000}
+                          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+                    <Alert severity="success">
+                        {t('report_admin_success')}
+                    </Alert>
+                </Snackbar>
             </> : <Loader/>}
         </section>
     );
