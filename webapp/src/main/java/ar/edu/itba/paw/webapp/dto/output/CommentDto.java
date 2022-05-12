@@ -11,6 +11,7 @@ public abstract class CommentDto {
     private String user;
 
     private String userUrl;
+    private String userImageUrl;
 
 //    protected static void fillFromMediaComment(MediaCommentDto mediaCommentDto, UriInfo url, MediaComment mediaComment) {
 //        mediaCommentDto.setId(mediaComment.getCommentId());
@@ -58,5 +59,13 @@ public abstract class CommentDto {
 
     public void setUserUrl(String userUrl) {
         this.userUrl = userUrl;
+    }
+
+    public String getUserImageUrl() {
+        return userImageUrl;
+    }
+
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
     }
 }
