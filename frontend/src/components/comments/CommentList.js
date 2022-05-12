@@ -17,8 +17,10 @@ const CommentList = (props) => {
     const {setErrorStatusCode} = useErrorStatus();
 
     useEffect(() => {
-        setPage(1);
-        setUpdate(prev => prev + 1);
+        if (props.commentsUpdate !== 0) {
+            setPage(1);
+            setUpdate(prev => prev + 1);
+        }
     }, [props.commentsUpdate]);
 
     useEffect(() => {
