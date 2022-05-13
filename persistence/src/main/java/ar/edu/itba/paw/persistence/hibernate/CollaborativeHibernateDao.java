@@ -53,7 +53,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public Optional<CollabRequest> getUserListCollabRequest(MediaList mediaList, User user) {
-        final TypedQuery<CollabRequest> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", CollabRequest.class);
+        final TypedQuery<CollabRequest> query = em.createQuery("from CollabRequest where mediaList = :mediaList AND collaborator = :user", CollabRequest.class);
         query.setParameter("mediaList", mediaList);
         query.setParameter("user", user);
         return query.getResultList().stream().findFirst();
@@ -73,7 +73,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         countQuery.setParameter("listId", mediaList.getMediaListId());
         countQuery.setParameter("status", true);
         long count = ((Number) countQuery.getSingleResult()).longValue();
-        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", CollabRequest.class)
+        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM CollabRequest WHERE collabId IN (:collabIds)", CollabRequest.class)
                 .setParameter("collabIds", collabIds);
         List<CollabRequest> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
@@ -94,7 +94,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         countQuery.setParameter("status", false);
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", CollabRequest.class)
+        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM CollabRequest WHERE collabId IN (:collabIds)", CollabRequest.class)
                 .setParameter("collabIds", collabIds);
         List<CollabRequest> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
