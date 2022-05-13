@@ -213,6 +213,7 @@
   "lists_noMedia": "No media in this list",
   "search_placeholder": "Search...",
   "search_title": "Search results for: '{{term}}'",
+  "search_title_all": "Showing all results",
   "search_no_results": "It seems there are no matching results for your search.",
   "comments_no_more": "It seems there are no more comments to load! :(",
   "comments_no_comments": "It seems there are no comments yet :(",

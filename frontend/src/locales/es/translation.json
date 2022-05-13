@@ -211,6 +211,7 @@
   "lists_noMedia": "No hay media en la lista",
   "search_placeholder": "Buscar...",
   "search_title": "Resultados para: '{{term}}'",
+  "search_title_all": "Mostrando todos los resultados",
   "search_no_results": "Parece que no hay resultados disponibles para tu búsqueda.",
   "comments_no_more": "Parece que no hay mas comentarios para mostrar!",
   "comments_no_comments": "Aun no hay comentarios aquí",
