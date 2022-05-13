@@ -23,6 +23,7 @@ function ListsDescription() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
+                console.log(data);
                 setList(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
@@ -47,7 +48,7 @@ function ListsDescription() {
                                     to={'/'}>{list.owner}</Link>
                 {list.forkedFrom && <>{t('forked_from')}<Link
                     className="text-violet-500 hover:text-violet-900 font-bold" to={'/'}>{list.forkedFrom}</Link></>}
-                <ListForks forksUrl={list.forksUrl}/>
+                <ListForks forksUrl={list.forksUrl} forks={list.forks}/>
             </div>
             <p className="lead text-justify max-w-full break-words pb-2">
                 {list.description}

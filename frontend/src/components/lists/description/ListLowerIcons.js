@@ -34,7 +34,7 @@ const ListLowerIcons = (props) => {
             }
         }
 
-        if (username.localeCompare(props.owner) !== 0) {
+        if (username && username.localeCompare(props.owner) !== 0) {
             getIsCollaboratorInList();
         }
     }, [setErrorStatusCode, props.id, username, props.owner]);
@@ -89,7 +89,7 @@ const ListLowerIcons = (props) => {
     return (<>
         <div className="flex flex-wrap justify-start">
             <ShareMenu isOpened={false}/>
-            {(props.owner.localeCompare(username) === 0 || isCollaborator) ?
+            {((username && props.owner.localeCompare(username) === 0 )|| isCollaborator) ?
                 <div className="flex justify-center py-2">
                     <button className="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded">
                         <EditIcon/>{t('lists_edit')}

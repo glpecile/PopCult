@@ -255,9 +255,12 @@
   "lists_edit":"Editar Lista",
   "lists_collaborate":"Preguntar para colaborar",
   "lists_fork":"Copiar esta lista",
-  "lists_forkedAmount":". Esta lista ha sido copiada",
+  "lists_forkedAmount":". Cantidad de copias: {{term}}.",
   "lists_request_okay": "¡Tu solicitud ha sido enviada correctamente!",
-  "lists_request_error": "Ha ocurrido un error con tu solicitud, puede que haya una solicitud tuya previa sin atender."
+  "lists_request_error": "Ha ocurrido un error con tu solicitud, puede que haya una solicitud tuya previa sin atender.",
+  "lists_forks": "Copias de esta lista",
+  "see_all": "Ver todos"
+
 
 
 
