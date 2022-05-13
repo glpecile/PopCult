@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
@@ -27,7 +27,7 @@ public interface EmailService {
 
     void sendNewRequestEmail(MediaList list, User requester, User listOwner, Locale locale);
 
-    void sendCollabRequestAcceptedEmail(User to, Request collaboration, Locale locale);
+    void sendCollabRequestAcceptedEmail(User to, CollabRequest collaboration, Locale locale);
 
     void sendModRequestApprovedEmail(User to, Locale locale);
 

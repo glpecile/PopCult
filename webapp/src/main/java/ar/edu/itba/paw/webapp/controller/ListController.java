@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.ListAlreadyReportedException;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
@@ -279,7 +279,7 @@ public class ListController {
                                          @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
 
-        final PageContainer<Request> collaborators = collaborativeListService.getListCollaborators(mediaList, page, pageSize);
+        final PageContainer<CollabRequest> collaborators = collaborativeListService.getListCollaborators(mediaList, page, pageSize);
 
         if (collaborators.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());
@@ -319,7 +319,7 @@ public class ListController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
+        final CollabRequest request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
 
         LOGGER.info("GET /{}: Returning user {} collaboration in list {}", uriInfo.getPath(), username, listId);
         return Response.ok(UserCollaboratorDto.fromRequest(uriInfo, request)).build();
@@ -344,7 +344,7 @@ public class ListController {
                                             @PathParam("username") String username) {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
-        final Request request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
+        final CollabRequest request = collaborativeListService.getUserListCollabRequest(mediaList, user).orElseThrow(RequestNotFoundException::new);
 
         collaborativeListService.deleteCollaborator(request);
 
@@ -402,7 +402,7 @@ public class ListController {
         final MediaList mediaList = listsService.getMediaListById(listId).orElseThrow(ListNotFoundException::new);
         final User user = userService.getCurrentUser().orElseThrow(NoUserLoggedException::new);
 
-        Request request = collaborativeListService.makeNewRequest(mediaList, user);
+        CollabRequest request = collaborativeListService.makeNewRequest(mediaList, user);
 
         LOGGER.info("POST /{}: Collaboration request created with id {} for list {} and user {}", uriInfo.getPath(), request.getCollabId(), listId, user.getUsername());
         return Response.created(uriInfo.getBaseUriBuilder().path("collab-requests").path(String.valueOf(request.getCollabId())).build()).build();

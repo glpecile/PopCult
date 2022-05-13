@@ -2,12 +2,9 @@ package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.lists.MediaList;
-import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
 import org.slf4j.Logger;
@@ -33,11 +30,11 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CollaborativeHibernateDao.class);
 
     @Override
-    public Request makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
+    public CollabRequest makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
         if(collabRequestAlreadyExists(mediaList, user)) {
             throw new CollaboratorRequestAlreadyExistsException();
         }
-        final Request request = new Request(user, mediaList);
+        final CollabRequest request = new CollabRequest(user, mediaList);
         em.persist(request);
         return request;
     }
@@ -50,20 +47,20 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     @Override
-    public Optional<Request> getById(int collabId) {
-        return Optional.ofNullable(em.find(Request.class, collabId));
+    public Optional<CollabRequest> getById(int collabId) {
+        return Optional.ofNullable(em.find(CollabRequest.class, collabId));
     }
 
     @Override
-    public Optional<Request> getUserListCollabRequest(MediaList mediaList, User user) {
-        final TypedQuery<Request> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", Request.class);
+    public Optional<CollabRequest> getUserListCollabRequest(MediaList mediaList, User user) {
+        final TypedQuery<CollabRequest> query = em.createQuery("from Request where mediaList = :mediaList AND collaborator = :user", CollabRequest.class);
         query.setParameter("mediaList", mediaList);
         query.setParameter("user", user);
         return query.getResultList().stream().findFirst();
     }
 
     @Override
-    public PageContainer<Request> getListCollaborators(MediaList mediaList, int page, int pageSize) {
+    public PageContainer<CollabRequest> getListCollaborators(MediaList mediaList, int page, int pageSize) {
         PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("listId", mediaList.getMediaListId());
@@ -76,14 +73,14 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         countQuery.setParameter("listId", mediaList.getMediaListId());
         countQuery.setParameter("status", true);
         long count = ((Number) countQuery.getSingleResult()).longValue();
-        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", Request.class)
+        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", CollabRequest.class)
                 .setParameter("collabIds", collabIds);
-        List<Request> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
+        List<CollabRequest> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
     @Override
-    public PageContainer<Request> getRequestsByUser(User user, int page, int pageSize) {
+    public PageContainer<CollabRequest> getRequestsByUser(User user, int page, int pageSize) {
         PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("userId", user.getUserId());
@@ -97,14 +94,14 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         countQuery.setParameter("status", false);
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
-        final TypedQuery<Request> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", Request.class)
+        final TypedQuery<CollabRequest> typedQuery = em.createQuery("FROM Request WHERE collabId IN (:collabIds)", CollabRequest.class)
                 .setParameter("collabIds", collabIds);
-        List<Request> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
+        List<CollabRequest> requestList = collabIds.isEmpty() ? Collections.emptyList() : typedQuery.getResultList();
         return new PageContainer<>(requestList, page, pageSize, count);
     }
 
     @Override
-    public void rejectRequest(Request request) {
+    public void rejectRequest(CollabRequest request) {
         em.remove(request);
     }
 
@@ -113,12 +110,12 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
         if (user.equals(mediaList.getUser()) || userCollaboratesInList(mediaList, user)) {
             return;
         }
-        Optional<Request> request = getUserListCollabRequest(mediaList, user);
+        Optional<CollabRequest> request = getUserListCollabRequest(mediaList, user);
         if (request.isPresent()) {
             request.get().setAccepted(true);
             return;
         }
-        em.persist(new Request(user, mediaList, true));
+        em.persist(new CollabRequest(user, mediaList, true));
     }
 
     private boolean userCollaboratesInList(MediaList mediaList, User user) {
