@@ -221,6 +221,14 @@ public class UserDto {
         this.publicFavoriteListsUrl = publicFavoriteListsUrl;
     }
 
+    public String getEditableListsUrl() {
+        return editableListsUrl;
+    }
+
+    public void setEditableListsUrl(String editableListsUrl) {
+        this.editableListsUrl = editableListsUrl;
+    }
+
     public String getWatchedMediaUrl() {
         return watchedMediaUrl;
     }
