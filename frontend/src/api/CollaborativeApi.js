@@ -52,7 +52,7 @@ const collaborativeApi = (() => {
     }
 
     const addListCollaborator = (url) => {
-        return api.patch(url);
+        return api.put(url);
     }
 
     const deleteListCollaborator = (url) => {

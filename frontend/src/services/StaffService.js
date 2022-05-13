@@ -1,31 +1,32 @@
 import staffApi from '../api/StaffApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {StaffRole} from '../enums/StaffRole'
 
 const staffService = (() => {
 
-    //TODO
-    const getMediaStaff = async (url) => {
-
+    const getMediaStaff = async ({url, staffType}) => {
+        const res = await staffApi.getMediaStaff({url, staffType});
+        return res.data
     }
 
-    //TODO
     const getMediaDirectors = async (url) => {
-
+        return await getMediaStaff({url, staffType: StaffRole.DIRECTOR})
     }
 
-    //TODO
     const getMediaCrew = async (url) => {
-
+        return await getMediaStaff({url, staffType: StaffRole.ACTOR})
     }
 
-    //TODO
-    const getStaffMembers = async () => {
-
+    const getStaffMembers = async ({page, pageSize, staffType}) => {
+        const res = await staffApi.getStaffMembers({page, pageSize, staffType})
+        const links = parseLinkHeader(res.headers.link);
+        const data = res.data;
+        return {links, data};
     }
 
-    //TODO
-    const getStaffMember = async () => {
-
+    const getStaffMember = async (id) => {
+        const res = await staffApi.getStaffMember(id)
+        return res.data;
     }
 
     return {

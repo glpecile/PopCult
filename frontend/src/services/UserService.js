@@ -53,7 +53,6 @@ const UserService = (function () {
 
     const createPasswordResetToken = async (email) => {
         await userApi.createPasswordResetToken(email);
-        //Retorna tanto location del reset-password como una entidad con el token
     }
 
     const resetPassword = async ({token, newPassword}) => {

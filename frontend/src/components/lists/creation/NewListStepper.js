@@ -111,7 +111,7 @@ export default function NewListStepper() {
         if (toSubmit) {
             async function createNewList() {
                 try {
-                    const listUrl = await ListService.createList(listName, listDescription, isPublic, isCollaborative);
+                    const listUrl = await ListService.createList({name: listName, description: listDescription, isPublic, isCollaborative});
                     const data = await ListService.getList(listUrl);
                     await ListService.manageMediaInList({url: data.mediaUrl, add: Array.from(addedMedia.keys()), remove: []});
                     await collaborativeService.manageListCollaborators({url: data.collaboratorsUrl, add: Array.from(addedCollaborators.keys()), remove: []});

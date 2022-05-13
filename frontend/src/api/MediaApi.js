@@ -2,7 +2,6 @@ import api from './api'
 
 const mediaApi = (() => {
 
-    //TODO define sortType enum
     const getMediaList = ({page, pageSize, mediaType, genres, sortType, decades, query}) => {
         return api.get(`/media`,
             {
