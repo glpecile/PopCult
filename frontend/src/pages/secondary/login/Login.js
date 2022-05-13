@@ -109,7 +109,7 @@ export default function Login() {
                        onChange={PasswordChangeHandler}/>
 
                 {/* Remember me */}
-                <div className="flex py-2.5 justify-start">
+                <div className="flex pt-2 justify-start">
                     <label className="space-x-2 cursor-pointer">
                         <Checkbox checked={enteredRememberMe} label={t('login_remember_me')}
                                   onChange={RememberMeChangeHandler} color="secondary"/>
@@ -123,7 +123,7 @@ export default function Login() {
                     {t('login_error')}
                 </div>}
 
-                <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
+                <button className="btn btn-secondary bg-violet-500 my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
                     {t('login_button')}
                 </button>
 

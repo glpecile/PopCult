@@ -145,7 +145,7 @@ export default function Home() {
                             {t('home_slogan')}
                         </h1>
                         <Link
-                            className="btn btn-link text-center text-white bg-violet-500 hover:bg-violet-900 rounded-full shadow-md hover:shadow-lg my-4 w-1/4"
+                            className="btn btn-secondary text-center text-white bg-violet-500 hover:shadow-violet-500/50 rounded-full shadow-md my-4 w-1/4"
                             to={'/register'}>{t('home_register')}</Link>
                     </> : <>
                         <h1 className="text-center text-3xl">
