@@ -20,8 +20,8 @@ function MediaDescription(props) {
             console.log(mediaDataToAdd);
             const genreDataToAdd = await GenreService.getMediaGenres(mediaDataToAdd.genreUrl);
             console.log(genreDataToAdd);
-            // const studiosToAdd = await StudioService.getMediaStudios(mediaDataToAdd.url);
-            // console.log(studiosToAdd);
+            const studiosToAdd = await StudioService.getMediaStudios(mediaDataToAdd.url);
+            console.log(studiosToAdd);
             setMediaData(mediaDataToAdd);
             setGenreData(genreDataToAdd);
         } catch (e) {

@@ -37,7 +37,7 @@ const Navbar = () => {
                         whileHover={{rotate: '-2deg'}}
                         whileTap={{scale: 0.9}}
                         className="w-52 h-max"
-                        src={require('../../images/PopCultCompleteLogo.png')}
+                        src={require('../../images/PopCultCompleteLogo.webp')}
                         alt="popcult_text_logo"/>
                 </NavLink>
                 <button className={"navbar-toggler " + animation}
