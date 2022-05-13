@@ -28,7 +28,6 @@ const listApi = (() => {
             });
     }
 
-    //TODO define listCreateDto
     const createList = ({name, description, visible, collaborative}) => {
         return api.post(`/lists`,
             {
@@ -52,7 +51,6 @@ const listApi = (() => {
         return api.get(`/lists/${id}`);
     }
 
-    //TODO define listEditDto
     const editList = ({url, name, description, visible, collaborative}) => {
         return api.put(url,
             {
@@ -99,7 +97,7 @@ const listApi = (() => {
     }
 
     const addMediaToList = (url) => {
-        return api.patch(url);
+        return api.put(url);
     }
 
     const removeMediaFromList = (url) => {
@@ -130,6 +128,21 @@ const listApi = (() => {
             });
     }
 
+    /**
+     * @param url: user.listsUrl ||
+     *             user.publicListsUrl ||
+     *             user.editableListsUrl
+     */
+    const getUserLists = ({url, page, pageSize}) => {
+        return api.get(url,
+            {
+                params: {
+                    'page': page,
+                    'page-size': pageSize
+                }
+            })
+    }
+
     return {
         getMediaLists,
         getLists,
@@ -145,7 +158,8 @@ const listApi = (() => {
         removeMediaFromList,
         getListForks,
         forkList,
-        getUserEditableListsByUsername
+        getUserEditableListsByUsername,
+        getUserLists
     }
 })();
 

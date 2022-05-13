@@ -18,10 +18,9 @@ const listService = (() => {
         return {links, data};
     }
 
-    //TODO define listCreateDto
-    const createList = async (title, description, isPublic, isCollaborative) => {
+    const createList = async ({name, description, isPublic, isCollaborative}) => {
         const response = await listApi.createList({
-            name: title,
+            name: name,
             description: description,
             visible: isPublic,
             collaborative: isCollaborative
@@ -39,9 +38,13 @@ const listService = (() => {
         return res.data;
     }
 
-    //TODO define listEditDto
-    const editList = async () => {
-
+    const editList = async ({title, description, isPublic, isCollaborative}) => {
+        await listApi.createList({
+            name: title,
+            description: description,
+            visible: isPublic,
+            collaborative: isCollaborative
+        });
     }
 
     const deleteList = async (url) => {
@@ -92,6 +95,18 @@ const listService = (() => {
         return {links, data};
     }
 
+    /**
+     * @param url: user.listsUrl ||
+     *             user.publicListsUrl ||
+     *             user.editableListsUrl
+     */
+    const getUserLists = async ({url, page, pageSize}) => {
+        const res = await listApi.getUserLists({url, page, pageSize});
+        const links = parseLinkHeader(res.headers.link);
+        const data = res.data;
+        return {links, data};
+    }
+
     return {
         getMediaLists,
         getLists,
@@ -107,7 +122,8 @@ const listService = (() => {
         removeMediaFromList,
         getListForks,
         forkList,
-        getUserEditableListsByUsername
+        getUserEditableListsByUsername,
+        getUserLists
     }
 })();
 

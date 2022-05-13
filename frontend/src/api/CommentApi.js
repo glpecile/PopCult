@@ -13,7 +13,6 @@ const commentApi = (() => {
             });
     }
 
-    //TODO define commentDto
     const createMediaComment = ({url, data}) => {
         return api.post(url,
             {
@@ -36,7 +35,6 @@ const commentApi = (() => {
             });
     }
 
-    //TODO define commentDto
     const createListComment = ({url, data}) => {
         return api.post(url,
             {
