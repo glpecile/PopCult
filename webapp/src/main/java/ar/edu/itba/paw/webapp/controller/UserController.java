@@ -232,10 +232,10 @@ public class UserController {
             byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
 
             LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
-
             return Response.ok(profileImage).tag(eTag).build();
         }
 
+        LOGGER.info("GET /{}: Returning user {} image not modified", uriInfo.getPath(), username);
         return response.cacheControl(cacheControl).build();
     }
 
