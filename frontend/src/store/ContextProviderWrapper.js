@@ -2,6 +2,7 @@ import {AuthContextProvider} from "./AuthContext";
 import {HelmetProvider} from "react-helmet-async";
 import {GenresContextProvider} from "./GenresContext";
 import {ErrorHandler} from "./ErrorStatusContext";
+import {UserContextProvider} from "./UserContext";
 
 const ContextProviderWrapper = (props) => {
     const helmetContext = {};
@@ -10,9 +11,11 @@ const ContextProviderWrapper = (props) => {
         <GenresContextProvider>
             <AuthContextProvider>
                 <ErrorHandler>
-                    <HelmetProvider context={helmetContext}>
-                        {props.children}
-                    </HelmetProvider>
+                    <UserContextProvider>
+                        <HelmetProvider context={helmetContext}>
+                            {props.children}
+                        </HelmetProvider>
+                    </UserContextProvider>
                 </ErrorHandler>
             </AuthContextProvider>
         </GenresContextProvider>
