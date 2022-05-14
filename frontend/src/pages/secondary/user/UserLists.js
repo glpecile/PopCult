@@ -1,15 +1,17 @@
 import ListsCard from "../../../components/lists/ListsCard";
 import {Helmet} from "react-helmet-async";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import listService from "../../../services/ListService";
 import PaginationComponent from "../../../components/PaginationComponent";
 import Spinner from "../../../components/animation/Spinner";
+import UserContext from "../../../store/UserContext";
+import Loader from "../errors/Loader";
 
 const UserLists = () => {
-    let {username} = useParams();
+    const user = useContext(UserContext).user;
     const {t} = useTranslation();
     const navigate = useNavigate();
     const [userLists, setUserLists] = useState(undefined);
@@ -24,20 +26,23 @@ const UserLists = () => {
 
     useEffect(() => {
         async function getUserLists() {
-            try {
-                const data = await listService.getUserEditableListsByUsername({username, page, pageSize});
-                setUserLists(data);
-            } catch (error) {
-                setErrorStatusCode(error.response.status);
+            if (user !== undefined) {
+                try {
+                    const data = await listService.getMediaLists({url: user.editableListsUrl, page, pageSize});
+                    setUserLists(data);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
             }
         }
 
         getUserLists();
-    }, [username, page, pageSize, setErrorStatusCode])
+    }, [user, page, pageSize, setErrorStatusCode])
 
-    return (<>
+    return (<> {
+        user ? <>
             <Helmet>
-                <title>{t('user_lists_header', {username: username})} &#8226; PopCult</title>
+                <title>{t('user_lists_header', {username: user.username})} &#8226; PopCult</title>
             </Helmet>
             {userLists && <div className="row">
                 <div className="flex flex-wrap justify-between p-2.5 pb-0">
@@ -73,7 +78,8 @@ const UserLists = () => {
                     </div>
                 </div>
             </div>}
-        </>
-    );
+        </> : <Loader/>
+    }
+    </>);
 }
 export default UserLists;

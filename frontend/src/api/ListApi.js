@@ -118,31 +118,6 @@ const listApi = (() => {
         return api.post(url);
     }
 
-    const getUserEditableListsByUsername = ({username, page, pageSize}) => {
-        return api.get(`/users/${username}/editable-lists`,
-            {
-                params: {
-                    'page': page,
-                    'page-size': pageSize
-                }
-            });
-    }
-
-    /**
-     * @param url: user.listsUrl ||
-     *             user.publicListsUrl ||
-     *             user.editableListsUrl
-     */
-    const getUserLists = ({url, page, pageSize}) => {
-        return api.get(url,
-            {
-                params: {
-                    'page': page,
-                    'page-size': pageSize
-                }
-            })
-    }
-
     return {
         getMediaLists,
         getLists,
@@ -157,9 +132,7 @@ const listApi = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList,
-        getUserEditableListsByUsername,
-        getUserLists
+        forkList
     }
 })();
 

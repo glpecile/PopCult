@@ -3,7 +3,11 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const listService = (() => {
 
-    //TODO
+    /**
+     * @param url: user.listsUrl ||
+     *             user.publicListsUrl ||
+     *             user.editableListsUrl || ...
+     */
     const getMediaLists = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaLists({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
@@ -89,25 +93,6 @@ const listService = (() => {
 
     }
 
-    const getUserEditableListsByUsername = async ({username, page, pageSize}) => {
-        const res = await listApi.getUserEditableListsByUsername({username, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    /**
-     * @param url: user.listsUrl ||
-     *             user.publicListsUrl ||
-     *             user.editableListsUrl
-     */
-    const getUserLists = async ({url, page, pageSize}) => {
-        const res = await listApi.getUserLists({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
     return {
         getMediaLists,
         getLists,
@@ -122,9 +107,7 @@ const listService = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList,
-        getUserEditableListsByUsername,
-        getUserLists
+        forkList
     }
 })();
 
