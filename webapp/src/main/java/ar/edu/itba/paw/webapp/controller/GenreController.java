@@ -47,6 +47,8 @@ public class GenreController {
         List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
         final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos) {
         });
+        ResponseUtils.setUnconditionalCache(responseBuilder);
+
         LOGGER.info("GET /{}: Returning all genre types", uriInfo.getPath());
         return responseBuilder.build();
     }

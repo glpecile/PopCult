@@ -224,11 +224,10 @@ public class UserController {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
         EntityTag eTag = new EntityTag(String.valueOf(user.getImageId()));
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setNoCache(true);
-        Response.ResponseBuilder response = request.evaluatePreconditions(eTag);
 
-        if(response == null){
+        Response.ResponseBuilder response = ResponseUtils.getConditionalCacheResponse(request, eTag);
+
+        if (response == null) {
             byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
 
             LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
@@ -236,7 +235,7 @@ public class UserController {
         }
 
         LOGGER.info("GET /{}: Returning user {} image not modified", uriInfo.getPath(), username);
-        return response.cacheControl(cacheControl).build();
+        return response.build();
     }
 
     @PUT
