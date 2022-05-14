@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const CompactMediaCard = (props) => {
     return (
         <div
-            className={"w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107 " + props.className}>
+            className={"w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-300 ease-in-out hover:shadow-indigo-500/50 hover:bg-violet-50/50 " + props.className}>
             <div className="flex items-center">
                 <img className="object-cover w-15 h-20" src={props.image} alt="media_image"/>
                 <h4 className="pl-3 py-4 text-xl font-semibold tracking-tight text-gray-800">

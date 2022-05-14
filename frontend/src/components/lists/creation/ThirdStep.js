@@ -64,11 +64,12 @@ const ThirdStep = (props) => {
                         {t('lists_already_collab')}
                     </div>
                     {props.addedCollaborators.size > 0 &&
-                        <div>
+                        <div className="p-1 space-x-2">
                             {Array.from(props.addedCollaborators.values()).map(user => {
                                 return <Chip
                                     label={user.username}
                                     variant="outlined" color="secondary"
+                                    className="ring-1 ring-violet-500"
                                     avatar={<Avatar alt={user.username} src={user.imageUrl}/>}
                                     onDelete={() => {
                                         const aux = new Map(props.addedCollaborators);
