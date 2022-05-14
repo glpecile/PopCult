@@ -26,14 +26,14 @@ public class ResponseUtils {
     public static Response.ResponseBuilder getConditionalCacheResponse(Request request, EntityTag eTag) {
         Response.ResponseBuilder response = request.evaluatePreconditions(eTag);
         if (response != null) {
-            CacheControl cacheControl = new CacheControl();
+            final CacheControl cacheControl = new CacheControl();
             cacheControl.setNoCache(true);
         }
         return response;
     }
 
     public static void setUnconditionalCache(Response.ResponseBuilder responseBuilder) {
-        CacheControl cacheControl = new CacheControl();
+        final CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE);
         responseBuilder.cacheControl(cacheControl);
     }
