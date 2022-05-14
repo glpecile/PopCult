@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
+import ar.edu.itba.paw.webapp.dto.output.GenreDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
 import ar.edu.itba.paw.webapp.dto.output.StaffDto;
 import ar.edu.itba.paw.webapp.exceptions.StaffNotFoundException;
@@ -64,8 +65,11 @@ public class StaffMemberController {
     public Response getStaff(@PathParam("id") int staffId) {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
 
+        final Response.ResponseBuilder response = Response.ok(StaffDto.fromStaff(uriInfo, staffMember));
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning staff {} {}", uriInfo.getPath(), staffId, staffMember.getName());
-        return Response.ok(StaffDto.fromStaff(uriInfo, staffMember)).build();
+        return response.build();
     }
 
     @GET
