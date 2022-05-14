@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.CollaborativeListService;
 import ar.edu.itba.paw.interfaces.CommentService;
 import ar.edu.itba.paw.interfaces.ListsService;
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.comment.ListComment;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.comment.Notification;
@@ -140,7 +140,7 @@ public class AccessControl {
         if (userDetails == null) {
             return false;
         }
-        final Request collabRequest = collaborativeListService.getById(requestId).orElse(null);
+        final CollabRequest collabRequest = collaborativeListService.getById(requestId).orElse(null);
         if (collabRequest == null) {
             return true; // Jersey will throw 404 Response
         }

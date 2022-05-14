@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.CollaborativeListsDao;
 import ar.edu.itba.paw.interfaces.SearchDao;
 import ar.edu.itba.paw.interfaces.SearchService;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
@@ -37,7 +37,7 @@ public class SearchServiceImpl implements SearchService {
     public PageContainer<User> searchUsersToCollabNotInList(String username, MediaList mediaList, int pageSize, int page) {
         List<User> collaborators = new ArrayList<>();
         collaborators.add(mediaList.getUser());
-        List<Request> requestList = collaborativeListsDao.getListCollaborators(mediaList, 0, 50).getElements();
+        List<CollabRequest> requestList = collaborativeListsDao.getListCollaborators(mediaList, 0, 50).getElements();
         if (!requestList.isEmpty()) requestList.forEach((request -> collaborators.add(request.getCollaborator())));
         return searchDao.searchUserByUsername(username, collaborators, page, pageSize);
     }

@@ -45,10 +45,12 @@ public class GenreController {
     @Produces(value = {VndType.APPLICATION_GENRES})
     public Response getGenres() {
         List<GenreDto> genreDtos = GenreDto.fromGenreList(uriInfo, genreService.getAllGenre());
-        final Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos) {
+        final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<GenreDto>>(genreDtos) {
         });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning all genre types", uriInfo.getPath());
-        return responseBuilder.build();
+        return response.build();
     }
 
     @GET
@@ -57,8 +59,11 @@ public class GenreController {
     public Response getGenre(@PathParam("type") final String genreType) {
         final Genre normalizedGenre = NormalizerUtils.getNormalizedGenres(Collections.singletonList(genreType)).stream().findFirst().orElseThrow(GenreNotFoundException::new);
 
+        final Response.ResponseBuilder response = Response.ok(GenreDto.fromGenre(uriInfo, normalizedGenre));
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning genre {} {}", uriInfo.getPath(), normalizedGenre.getGenre(), normalizedGenre.getOrdinal());
-        return Response.ok(GenreDto.fromGenre(uriInfo, normalizedGenre)).build();
+        return response.build();
     }
 
     @GET

@@ -33,10 +33,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -127,9 +124,12 @@ public class MediaController {
 
         final List<GenreDto> genreDtoList = GenreDto.fromGenreList(uriInfo, genres);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning genres from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
-        }).build();
+        return response.build();
     }
 
     @GET
@@ -169,9 +169,12 @@ public class MediaController {
 
         final List<StudioDto> studioDtoList = StudioDto.fromStudioList(uriInfo, studios);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning studios from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList) {
-        }).build();
+        return response.build();
     }
 
     @GET
@@ -195,9 +198,12 @@ public class MediaController {
 
         final List<StaffDto> listsDto = StaffDto.fromRoleList(uriInfo, staffMembers);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StaffDto>>(listsDto) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning staff members from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<StaffDto>>(listsDto) {
-        }).build();
+        return response.build();
     }
 
     @GET
