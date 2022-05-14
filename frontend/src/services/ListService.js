@@ -38,8 +38,9 @@ const listService = (() => {
         return res.data;
     }
 
-    const editList = async ({title, description, isPublic, isCollaborative}) => {
-        await listApi.createList({
+    const editList = async ({url, title, description, isPublic, isCollaborative}) => {
+        await listApi.editList({
+            url,
             name: title,
             description: description,
             visible: isPublic,
