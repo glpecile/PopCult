@@ -7,7 +7,7 @@ import {Helmet} from "react-helmet-async";
 import ContextProviderWrapper from "../../store/ContextProviderWrapper";
 
 function Layout(props) {
-    const location = useLocation()
+    const location = useLocation();
     const [layoutVisibility, setLayoutVisibility] = useState(true);
     const {t} = useTranslation();
 

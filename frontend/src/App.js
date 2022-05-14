@@ -1,5 +1,5 @@
 import React, {Suspense} from "react";
-import {Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
 import Lists from "./pages/primary/Lists";
@@ -29,36 +29,38 @@ import Layout from "./components/Layout/Layout";
 
 export default function App() {
     return (
-        <Suspense fallback={<Loader/>}>
-            <Layout>
-                <Routes>
-                    <Route path='/' element={<Home/>}/>
-                    <Route path='/media/films' element={<Films/>}/>
-                    <Route path='/media/series' element={<Series/>}/>
-                    <Route path='/media/films/:id' element={<MediaDescription/>}/>
-                    <Route path='/media/series/:id' element={<MediaDescription/>}/>
-                    <Route path='/lists' element={<Lists/>}/>
-                    <Route path='/lists/:id' element={<ListsDescription/>}/>
-                    <Route path='/lists/new' element={<ListsCreation/>}/>
-                    <Route path='/login' element={<Login/>}/>
-                    <Route path='/recovery' element={<Recovery/>}/>
-                    <Route path='/resetPassword' element={<ResetPassword/>}/>
-                    <Route path='/register' element={<Register/>}/>
-                    <Route path='/register/success' element={<SuccessfulRegister/>}/>
-                    <Route path='/register/expired' element={<ExpiredToken/>}/>
-                    <Route path='/user/:username' element={<Profile/>}/>
-                    <Route path='/settings' element={<Settings/>}/>
-                    <Route path='/verification' element={<Verification/>}/>
-                    <Route path='/user/:username/panel' element={<UserPanel/>}/>
-                    <Route path='/user/:username/lists' element={<UserLists/>}/>
-                    <Route path='/admin' element={<AdminPanel/>}/>
-                    <Route path='/admin/reports' element={<Reports/>}/>
-                    <Route path='/admin/bans' element={<BannedUsers/>}/>
-                    <Route path='/admin/mods' element={<Moderators/>}/>
-                    <Route path='/search' element={<SearchPage/>}/>
-                    <Route path='*' element={<Error404/>}/>
-                </Routes>
-            </Layout>
-        </Suspense>
+        <BrowserRouter>
+            <Suspense fallback={<Loader/>}>
+                <Layout>
+                    <Routes>
+                        <Route path='/' element={<Home/>}/>
+                        <Route path='/media/films' element={<Films/>}/>
+                        <Route path='/media/series' element={<Series/>}/>
+                        <Route path='/media/films/:id' element={<MediaDescription/>}/>
+                        <Route path='/media/series/:id' element={<MediaDescription/>}/>
+                        <Route path='/lists' element={<Lists/>}/>
+                        <Route path='/lists/:id' element={<ListsDescription/>}/>
+                        <Route path='/lists/new' element={<ListsCreation/>}/>
+                        <Route path='/login' element={<Login/>}/>
+                        <Route path='/recovery' element={<Recovery/>}/>
+                        <Route path='/resetPassword' element={<ResetPassword/>}/>
+                        <Route path='/register' element={<Register/>}/>
+                        <Route path='/register/success' element={<SuccessfulRegister/>}/>
+                        <Route path='/register/expired' element={<ExpiredToken/>}/>
+                        <Route path='/user/:username' element={<Profile/>}/>
+                        <Route path='/settings' element={<Settings/>}/>
+                        <Route path='/verification' element={<Verification/>}/>
+                        <Route path='/user/:username/panel' element={<UserPanel/>}/>
+                        <Route path='/user/:username/lists' element={<UserLists/>}/>
+                        <Route path='/admin' element={<AdminPanel/>}/>
+                        <Route path='/admin/reports' element={<Reports/>}/>
+                        <Route path='/admin/bans' element={<BannedUsers/>}/>
+                        <Route path='/admin/mods' element={<Moderators/>}/>
+                        <Route path='/search' element={<SearchPage/>}/>
+                        <Route path='*' element={<Error404/>}/>
+                    </Routes>
+                </Layout>
+            </Suspense>
+        </BrowserRouter>
     );
 }
