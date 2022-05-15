@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
-import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
