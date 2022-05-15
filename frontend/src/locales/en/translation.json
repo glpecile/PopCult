@@ -108,6 +108,7 @@
   "media_genre": "Genre",
   "media_studio": "Production Companies",
   "media_staff": "Cast & Crew",
+  "media_lists": "Some Lists That Contain This Media",
   "genre_action": "Action",
   "genre_adventure": "Adventure",
   "genre_animation": "Animation",
