@@ -94,19 +94,21 @@ export default function Login() {
                 <input className="w-full rounded active:none shadow-sm accent-violet-400" type="text"
                        value={enteredUsername}
                        pattern="[a-zA-Z0-9]+" minLength={1} maxLength={100}
-                       onChange={UsernameChangeHandler}/>
+                       onChange={UsernameChangeHandler}
+                       data-testid="username-input"/>
 
                 {/* Password */}
-                <IconButton onClick={togglePassword} className="absolute top-28 my-3.5 right-0.5">
-                    {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                </IconButton>
                 <label className="py-2 text-semibold w-full">
                     {t('login_password')}
                 </label>
                 <input className="w-full rounded active:none shadow-sm" type={passwordShown ? "text" : "password"}
                        value={enteredPassword}
                        minLength={8} maxLength={100}
-                       onChange={PasswordChangeHandler}/>
+                       onChange={PasswordChangeHandler}
+                       data-testid="password-input"/>
+                <IconButton onClick={togglePassword} className="absolute top-28 my-3.5 right-0.5">
+                    {passwordShown ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                </IconButton>
 
                 {/* Remember me */}
                 <div className="flex pt-2 justify-start">
@@ -123,7 +125,7 @@ export default function Login() {
                     {t('login_error')}
                 </div>}
 
-                <button className="btn btn-secondary bg-violet-500 my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
+                <button className="btn btn-secondary bg-violet-500 my-2 w-full shadow-md hover:shadow-violet-400" type="submit" data-testid="login-button">
                     {t('login_button')}
                 </button>
 
