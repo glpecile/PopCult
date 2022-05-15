@@ -6,7 +6,8 @@ const listService = (() => {
     /**
      * @param url: user.listsUrl ||
      *             user.publicListsUrl ||
-     *             user.editableListsUrl || ...
+     *             user.editableListsUrl ||
+     *             media.listsContainUrl || ...
      */
     const getMediaLists = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaLists({url, page, pageSize});

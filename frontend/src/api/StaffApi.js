@@ -6,7 +6,7 @@ const staffApi = (() => {
         return api.get(url,
             {
                 params: {
-                    ...(staffType && {'type': staffType})
+                    ...(staffType && {'role': staffType})
                 }
             });
     }
@@ -17,7 +17,7 @@ const staffApi = (() => {
                 params: {
                     'page': page,
                     'page-size': pageSize,
-                    ...(staffType && {'type': staffType})
+                    ...(staffType && {'role': staffType})
                 }
             });
     }

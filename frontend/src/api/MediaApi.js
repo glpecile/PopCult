@@ -47,7 +47,7 @@ const mediaApi = (() => {
                 params: {
                     'page': page,
                     'page-size': pageSize,
-                    ...(staffRole && {'type': staffRole})
+                    ...(staffRole && {'role': staffRole})
                 }
             });
     }
