@@ -205,7 +205,7 @@
   "lists_add_collab": "Agrega nuevos colaboradores",
   "lists_add_media": "Busca nuevo contenido para agregar a tu lista!",
   "lists_already_media": "Ya se encuentran en la lista:",
-  "lists_verify": "Casi listos!\nPor favor, verifica la informacion de tu nueva lista antes de proceder!",
+  "lists_verify": "Casi listos!\nPor favor, verifica la informacion de tu lista antes de proceder!",
   "lists_isPublic": "Es Publica",
   "lists_isCollaborative": "Es Colaborativa",
   "lists_noCollaborators": "No hay colaboradores en la lista",
@@ -269,6 +269,10 @@
   "list_collaborative": "Hacer la lista colaborativa",
   "list_delete": "Eliminar lista",
   "list_delete_body": "¿Estás seguro que deseas eliminar esta lista?",
-  "list_delete_confirm": "Sí, eliminar esta lista"
+  "list_delete_confirm": "Sí, eliminar esta lista",
+  "list_new_media": "Contenido para añadir",
+  "list_remove_media": "Contenido para remover",
+  "list_new_media_none": "No se está añadiendo ningún contenido nuevo a esta lista",
+  "list_remove_media_none": "No se está removiendo contenido de la lista"
 
 }

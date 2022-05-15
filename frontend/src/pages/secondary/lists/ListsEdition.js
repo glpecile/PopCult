@@ -1,20 +1,22 @@
 import {useContext, useEffect, useState} from "react";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import ListService from "../../../services/ListService";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import MediaService from "../../../services/MediaService";
 import ListAddMedia from "../../../components/lists/edition/ListAddMedia";
 import ListHandleMedia from "../../../components/lists/edition/ListHandleMedia";
 import ListEditDetails from "../../../components/lists/edition/ListEditDetails";
-import {Divider} from "@mui/material";
+import {Checkbox, Divider, FormControlLabel} from "@mui/material";
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useTranslation} from "react-i18next";
-import {Close} from "@mui/icons-material";
 import OneButtonDialog from "../../../components/modal/OneButtonDialog";
 import AuthContext from "../../../store/AuthContext";
 import Loader from "../errors/Loader";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CompactMediaCard from "../../../components/media/CompactMediaCard";
+import listService from "../../../services/ListService";
 
 function ListsEdition() {
     const {t} = useTranslation();
@@ -22,6 +24,7 @@ function ListsEdition() {
     const authContext = useContext(AuthContext);
     const {id} = useParams();
     const [list, setList] = useState(undefined);
+    const [isOwner, setIsOwner] = useState(false);
     const [listName, setListName] = useState('');
     const [listDescription, setListDescription] = useState('');
     const [collaborative, setCollaborative] = useState(false);
@@ -44,7 +47,9 @@ function ListsEdition() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
+                console.log(data);
                 setList(data);
+                setIsOwner(authContext.username.localeCompare(data.owner) === 0);
                 setListName(data.name)
                 setListDescription(data.description);
                 setIsPublic(data.visibility);
@@ -53,8 +58,9 @@ function ListsEdition() {
                 setErrorStatusCode(error.response.status);
             }
         }
+
         getList(id);
-    }, [id, setErrorStatusCode]);
+    }, [id, setErrorStatusCode, authContext.username]);
 
 
     useEffect(() => {
@@ -84,13 +90,91 @@ function ListsEdition() {
         navigate('/lists');
     }
 
+    const ConfirmEditData = () => {
+        const publicLabel = t('lists_isPublic');
+        const collaborativeLabel = t('lists_isCollaborative');
+
+        return <div className="space-y-2 text-semibold w-full">
+            <div className="flex justify-center py-1">
+                <CheckCircleOutlineIcon className="text-violet-500 mb-1 mr-1"/>
+                {t('lists_verify')}
+            </div>
+            <Divider className="text-violet-500"/>
+            <div className="flex flex-wrap pt-1">
+                <h2 className="text-xl fw-bolder">
+                    {listName}
+                </h2>
+            </div>
+            <p className="font-thin text-base text-justify max-w-full break-words">
+                {listDescription}
+            </p>
+            <div className="flex justify-between pt-1 px-2">
+                <FormControlLabel control={<Checkbox checked={isPublic} color="secondary"/>} label={publicLabel}/>
+                <FormControlLabel control={<Checkbox checked={collaborative} color="secondary"/>}
+                                  label={collaborativeLabel}/>
+            </div>
+
+            <div className="flex flex-col py-1 font-semibold">
+                {t('list_new_media')}
+            </div>
+            {toAddMedia.size > 0 ?
+                <>
+                    {Array.from(toAddMedia.values()).map((media) => {
+                        return <CompactMediaCard canDelete={false} key={media.id}
+                                                 title={media.title} releaseDate={media.releaseDate.slice(0, 4)}
+                                                 image={media.imageUrl} className="py-1 mb-1"/>
+
+                    })}
+                </> : <div className="text-gray-400 flex justify-center py-2">{t('list_new_media_none')}</div>}
+
+            <div className="flex flex-col py-1 font-semibold">
+                {t('list_remove_media')}
+            </div>
+            {toRemoveMedia.size > 0 ?
+                <>
+                    {Array.from(toRemoveMedia.values()).map((media) => {
+                        return <CompactMediaCard canDelete={false} key={media.id}
+                                                 title={media.title} releaseDate={media.releaseDate.slice(0, 4)}
+                                                 image={media.imageUrl} className="py-1 mb-1"/>
+
+                    })}
+                </> : <div className="text-gray-400 flex justify-center py-2">{t('list_remove_media_none')}</div>}
+        </div>;
+    }
+
+    const saveListChanges = async () => {
+        if (isOwner) {
+            try {
+                await listService.editList({
+                    url: list.url,
+                    title: listName,
+                    description: listDescription,
+                    isPublic: isPublic,
+                    isCollaborative: collaborative
+                });
+            }catch (error){
+                setErrorStatusCode(error.response.status);
+            }
+        }
+        if (toAddMedia.size > 0 || toRemoveMedia.size > 0) {
+            try {
+                console.log(Array.from(toAddMedia.keys()));
+                console.log(Array.from(toRemoveMedia.keys()));
+                await listService.manageMediaInList({url: list.mediaUrl, add: Array.from(toAddMedia.keys()), remove: Array.from(toRemoveMedia.keys())})
+            }catch (error){
+                setErrorStatusCode(error.response.status);
+            }
+        }
+        navigate(`/lists/${list.id}`);
+    }
+
     return (<>
         {list ? <>
             <div>
                 <ListEditDetails listName={listName} setListName={setListName} listDescription={listDescription}
                                  setListDescription={setListDescription} isCollaborative={collaborative}
                                  setCollaborative={setCollaborative}
-                                 isPublic={isPublic} setIsPublic={setIsPublic}/>
+                                 isPublic={isPublic} setIsPublic={setIsPublic} isOwner={isOwner}/>
                 <ListAddMedia openModal={openModal} setOpenModal={setOpenModal} toSearch={toSearch}
                               setToSearch={setToSearch}
                               searchSeries={searchSeries} searchFilms={searchFilms}
@@ -107,7 +191,7 @@ function ListsEdition() {
                                 navigate(`/lists/${list.id}`)
                             }}><ArrowBackIcon className="mb-1 mr-1"/>{t('discard_changes')}
                     </button>
-                    {(authContext.isLoggedIn && authContext.username.localeCompare(list.owner) === 0) &&
+                    {(authContext.isLoggedIn && isOwner) &&
                         <OneButtonDialog
                             buttonClassName="btn btn-link my-2.5 text-red-500 hover:text-red-700 btn-rounded outline mr-2"
                             buttonIcon={<DeleteForeverIcon className="mb-1 mr-1"/>}
@@ -118,9 +202,15 @@ function ListsEdition() {
                             onActionAccepted={deleteList}
                             isOpened={false}/>}
                 </div>
-                <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline">
-                    <DoneAllIcon className="mb-1 mr-1"/>{t('save_changes')}
-                </button>
+                <OneButtonDialog
+                    buttonClassName="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline"
+                    buttonIcon={<DoneAllIcon className="mb-1 mr-1"/>}
+                    buttonText={t('save_changes')}
+                    title={t('lists_edit')}
+                    body={<ConfirmEditData/>}
+                    actionTitle={t('save_changes')}
+                    onActionAccepted={saveListChanges}
+                    isOpened={false}/>
             </div>
         </> : <Loader/>}</>);
 }
