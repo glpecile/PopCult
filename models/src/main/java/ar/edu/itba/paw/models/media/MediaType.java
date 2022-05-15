@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models.media;
 
 public enum MediaType {
 
-    FILMS("Films"), SERIE("Serie"), LIST("List");
+    FILMS("Films"), SERIES("Series"), LIST("List");
     final private String type;
 
     MediaType(String type) {

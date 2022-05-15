@@ -75,19 +75,19 @@ public class MediaController {
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = NormalizerUtils.getStartYear(decade);
         LocalDateTime lastYear = NormalizerUtils.getLastYear(decade);
-        final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
+        final PageContainer<Media> mediaList = mediaService.getMediaByFilters(mediaTypes, page, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
 
-        if (listMedia.getElements().isEmpty()) {
+        if (mediaList.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, listMedia.getElements(), userService.getCurrentUser().orElse(null));
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, mediaList.getElements(), userService.getCurrentUser().orElse(null));
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
         });
-        ResponseUtils.setPaginationLinks(response, listMedia, uriInfo);
+        ResponseUtils.setPaginationLinks(response, mediaList, uriInfo);
 
-        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), listMedia.getCurrentPage(), listMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), mediaList.getCurrentPage(), mediaList.getElements().size());
         return response.build();
     }
 
