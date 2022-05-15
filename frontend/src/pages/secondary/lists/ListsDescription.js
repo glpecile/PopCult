@@ -7,13 +7,12 @@ import ListCollaborators from "../../../components/lists/description/ListCollabo
 import ListMedia from "../../../components/lists/description/ListMedia";
 import {useTranslation} from "react-i18next";
 import ListUpperIcons from "../../../components/lists/description/ListUpperIcons";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
 import ListForks from "../../../components/lists/description/ListForks";
 
 function ListsDescription() {
-    const location = useLocation();
-    const id = location.pathname.split('/')[2];
+    let {id} = useParams();
     const [list, setList] = useState(undefined);
     const {t} = useTranslation();
 
@@ -23,14 +22,15 @@ function ListsDescription() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
-                console.log(data);
                 setList(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }
-
         getList(id);
+        return () => {
+
+        }
     }, [id, setErrorStatusCode]);
 
 
@@ -56,7 +56,7 @@ function ListsDescription() {
             {/* collaborators */}
             <ListCollaborators collaboratorsUrl={list.collaboratorsUrl}/>
             {/* share edit and fork */}
-            <ListLowerIcons id={list.id} collaborative={list.collaborative} owner={list.owner} url={list.forksUrl}
+            <ListLowerIcons id={id} collaborative={list.collaborative} owner={list.owner} url={list.forksUrl}
                             collaborativeRequestUrl={list.requestsUrl}/>
             <ListMedia mediaUrl={list.mediaUrl}/>
             <CommentSection commentsUrl={list.commentsUrl}/>

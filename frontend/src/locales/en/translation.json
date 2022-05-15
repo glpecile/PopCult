@@ -263,8 +263,13 @@
   "lists_request_okay": "Your request has been sent!",
   "lists_request_error": "There has been an error with your request, you may have already sent this request.",
   "lists_forks": "Forks of this list",
-  "see_all": "See all"
-
-
-
+  "see_all": "See all",
+  "list_add_media": "Add new media",
+  "list_no_media": "It seems there is no selected media to add to the list.",
+  "list_already_media": "Handle media in this list",
+  "list_public": "Make list public",
+  "list_collaborative": "Make list collaborative",
+  "list_delete": "Delete list",
+  "list_delete_body": "Are you sure you wish to delete this list?",
+  "list_delete_confirm": "Yes, delete this list"
 }

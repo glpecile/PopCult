@@ -51,8 +51,6 @@ const ListLowerIcons = (props) => {
             const listUrl = await listService.forkList(props.url);
             const data = await ListService.getList(listUrl);
             navigate('/lists/' + data.id);
-
-            console.log(data);
         } catch (error) {
             setIsCollaborator(false);
         }
@@ -67,12 +65,10 @@ const ListLowerIcons = (props) => {
             });
         }
         try {
-            console.log(props.collaborativeRequestUrl);
             await collaborativeService.createListCollaborationRequest(props.collaborativeRequestUrl);
             setError(false);
             setShowSnackbar(true);
         } catch (error) {
-            console.log(error);
             setError(true);
             setShowSnackbar(true);
         }
@@ -91,7 +87,7 @@ const ListLowerIcons = (props) => {
             <ShareMenu isOpened={false}/>
             {((username && props.owner.localeCompare(username) === 0 )|| isCollaborator) ?
                 <div className="flex justify-center py-2">
-                    <button className="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded">
+                    <button className="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded" onClick={() => {navigate(`/lists/${props.id}/edit`)}}>
                         <EditIcon/>{t('lists_edit')}
                     </button>
                 </div> :

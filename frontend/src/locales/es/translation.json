@@ -261,13 +261,14 @@
   "lists_request_okay": "¡Tu solicitud ha sido enviada correctamente!",
   "lists_request_error": "Ha ocurrido un error con tu solicitud, puede que haya una solicitud tuya previa sin atender.",
   "lists_forks": "Copias de esta lista",
-  "see_all": "Ver todos"
-
-
-
-
-
-
-
+  "see_all": "Ver todos",
+  "list_add_media": "Agrega nueva contenido",
+  "list_no_media": "Parece no haber contenido seleccionado para agregar a la lista.",
+  "list_already_media": "Maneja el contenido de esta lista",
+  "list_public": "Hacer la lista publica",
+  "list_collaborative": "Hacer la lista colaborativa",
+  "list_delete": "Eliminar lista",
+  "list_delete_body": "¿Estás seguro que deseas eliminar esta lista?",
+  "list_delete_confirm": "Sí, eliminar esta lista"
 
 }

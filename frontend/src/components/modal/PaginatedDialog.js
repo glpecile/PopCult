@@ -1,7 +1,6 @@
 import PaginationComponent from "../PaginationComponent";
 import * as React from 'react';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import LocalDialog from "./LocalDialog";
 import LocalDialogTitle from "./LocalDialogTitle";
 

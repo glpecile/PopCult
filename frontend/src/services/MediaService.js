@@ -6,19 +6,19 @@ import {StaffRole} from '../enums/StaffRole'
 const MediaService = (() => {
 
     // TODO use sortType enum
-    const getMediaList = async ({page, pageSize, mediaType, genres, sortType, decades, query}) => {
-        const res = await mediaApi.getMediaList({page, pageSize, mediaType, genres, sortType, decades, query});
+    const getMediaList = async ({page, pageSize, mediaType, genres, sortType, decades, query, notInList}) => {
+        const res = await mediaApi.getMediaList({page, pageSize, mediaType, genres, sortType, decades, query, notInList});
         const links = parseLinkHeader(res.headers.link);
         const data = res.data;
         return {links, data};
     }
 
-    const getFilms = async ({page, pageSize, genres, sortType, decades, query}) => {
-        return await getMediaList({page, pageSize, mediaType: MediaType.FILMS, genres, sortType, decades, query})
+    const getFilms = async ({page, pageSize, genres, sortType, decades, query, notInList}) => {
+        return await getMediaList({page, pageSize, mediaType: MediaType.FILMS, genres, sortType, decades, query, notInList})
     }
 
-    const getSeries = async ({page, pageSize, genres, sortType, decades, query}) => {
-        return await getMediaList({page, pageSize, mediaType: MediaType.SERIES, genres, sortType, decades, query})
+    const getSeries = async ({page, pageSize, genres, sortType, decades, query, notInList}) => {
+        return await getMediaList({page, pageSize, mediaType: MediaType.SERIES, genres, sortType, decades, query, notInList})
     }
 
     const getMedia = async (id) => {

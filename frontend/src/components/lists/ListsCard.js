@@ -25,7 +25,7 @@ function ListsCard(content) {
         }
 
         getMediaPictures();
-    }, [content.mediaUrl, setErrorStatusCode]);
+    }, [content, setErrorStatusCode]);
 
     return (<>
         {media ?

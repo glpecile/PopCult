@@ -1,4 +1,3 @@
-import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 

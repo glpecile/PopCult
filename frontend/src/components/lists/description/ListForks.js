@@ -2,9 +2,7 @@ import {useEffect, useState} from "react";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import listService from "../../../services/ListService";
 import {useTranslation} from "react-i18next";
-import NoButtonDialog from "../../modal/NoButtonDialog";
 import CompactListsCard from "../CompactListsCard";
-import PaginationComponent from "../../PaginationComponent";
 import PaginatedDialog from "../../modal/PaginatedDialog";
 
 const ListForks = (props) => {
