@@ -147,25 +147,4 @@ public class CommentHibernateDao implements CommentDao {
         return new PageContainer<>(notifications, page, pageSize, count);
     }
 
-    @Override
-    public void setUserListsCommentsNotificationsAsOpened(User user) {
-        em.createNativeQuery("UPDATE commentnotifications SET opened = :opened " +
-                        "WHERE commentid IN " +
-                        "(SELECT commentid FROM " +
-                        "(commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
-                .setParameter("opened", true)
-                .setParameter("userId", user.getUserId())
-                .executeUpdate();
-
-    }
-
-    @Override
-    public void deleteUserListsCommentsNotifications(User user) {
-        em.createNativeQuery("DELETE FROM commentnotifications " +
-                        "WHERE commentid IN " +
-                        "(SELECT commentid FROM " +
-                        "(commentnotifications NATURAL JOIN listcomment) AS aux JOIN medialist m ON aux.listid = m.medialistid WHERE m.userid = :userId)")
-                .setParameter("userId", user.getUserId())
-                .executeUpdate();
-    }
 }

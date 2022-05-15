@@ -59,7 +59,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image uploadImage(byte[] photoBlob, int width, int height, String format) throws ImageConversionException {
         byte[] resizedImage = getScaledImage(photoBlob, width, height, format);
-        return imageDao.uploadImage(resizedImage);
+        return uploadImage(resizedImage);
     }
 
     private byte[] getScaledImage(byte[] image, int width, int height, String format) throws ImageConversionException {

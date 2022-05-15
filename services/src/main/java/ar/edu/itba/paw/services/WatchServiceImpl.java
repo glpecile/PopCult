@@ -29,7 +29,7 @@ public class WatchServiceImpl implements WatchService {
         if (isWatched(media, user)) {
             watchDao.updateWatchedMediaDate(media, user, dateTime);
         } else {
-            watchDao.addWatchMedia(media, user, dateTime);
+            watchDao.addWatchedMedia(media, user, dateTime);
         }
     }
 
@@ -39,7 +39,7 @@ public class WatchServiceImpl implements WatchService {
         if(isToWatch(media, user)) {
             return;
         }
-        watchDao.addWatchMedia(media, user, null);
+        watchDao.addWatchedMedia(media, user, null);
     }
 
     @Transactional
@@ -53,12 +53,6 @@ public class WatchServiceImpl implements WatchService {
     public void deleteToWatchMedia(Media media, User user) {
         watchDao.deleteToWatchMedia(media, user);
     }
-
-//    @Transactional
-//    @Override
-//    public void updateWatchedMediaDate(Media media, User user, LocalDateTime date) {
-//        watchDao.updateWatchedMediaDate(media, user, date);
-//    }
 
     @Transactional(readOnly = true)
     @Override

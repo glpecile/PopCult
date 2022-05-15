@@ -7,8 +7,6 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +22,6 @@ public class UserHibernateDao implements UserDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserHibernateDao.class);
 
     @Override
     public Optional<User> getById(int userId) {
@@ -76,26 +72,6 @@ public class UserHibernateDao implements UserDao {
     @Override
     public void deleteUser(User user) {
         em.remove(user);
-    }
-
-    @Override
-    public PageContainer<User> getBannedUsers(int page, int pageSize) {
-        final Query nativeQuery = em.createNativeQuery("SELECT userid FROM users WHERE nonlocked = :nonLocked ORDER BY bandate DESC OFFSET :offset LIMIT :limit")
-                .setParameter("nonLocked", false)
-                .setParameter("offset", page * pageSize)
-                .setParameter("limit", pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> userIds = nativeQuery.getResultList();
-
-        final Query countQuery = em.createQuery("SELECT COUNT(*) FROM User WHERE nonLocked = :nonLocked")
-                .setParameter("nonLocked", false);
-        final long count = (long) countQuery.getSingleResult();
-
-        final TypedQuery<User> query = em.createQuery("FROM User where userId IN :userIds ORDER BY banDate DESC", User.class)
-                .setParameter("userIds", userIds);
-        List<User> bannedUsers = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
-
-        return new PageContainer<>(bannedUsers, page, pageSize, count);
     }
 
     @Override

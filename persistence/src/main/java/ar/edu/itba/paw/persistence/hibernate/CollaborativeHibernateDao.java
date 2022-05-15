@@ -7,8 +7,6 @@ import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +24,6 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CollaborativeHibernateDao.class);
 
     @Override
     public CollabRequest makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {

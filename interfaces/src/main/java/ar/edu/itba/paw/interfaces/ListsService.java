@@ -14,23 +14,17 @@ import java.util.Optional;
 public interface ListsService {
     Optional<MediaList> getMediaListById(int mediaListId);
 
-    PageContainer<MediaList> getAllLists(int page, int pageSize);
-
     PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize);
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
     PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize);
 
-    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
-
     PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term);
 
     PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize);
 
     MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative);
-
-    MediaList createMediaList(User user, String title, String description, boolean visibility, boolean collaborative, Media mediaToAdd);
 
     void manageMedia(MediaList mediaList, List<Media> mediaToAdd, List<Media> mediaToRemove);
 

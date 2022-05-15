@@ -61,30 +61,6 @@ public class MediaHibernateDao implements MediaDao {
         return new PageContainer<>(mediaList, page, pageSize, count);
     }
 
-    @Override
-    public PageContainer<Media> getLatestMediaList(MediaType mediaType, int page, int pageSize) {
-        //Para paginacion
-        //Pedimos el contenido paginado.
-        PaginationValidator.validate(page,pageSize);
-        final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media WHERE type = :type ORDER BY releasedate DESC OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("type", mediaType.ordinal());
-        nativeQuery.setParameter("offset", (page-1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> mediaIds = nativeQuery.getResultList();
-        //Obtenemos la cantidad total de elementos.
-        final Query countQuery = em.createQuery("SELECT COUNT(mediaId) FROM Media WHERE type = :type");
-        countQuery.setParameter("type", mediaType);
-        final long count = (long) countQuery.getSingleResult();
-
-        //Query que se pide con los ids ya paginados
-        final TypedQuery<Media> query = em.createQuery("from Media where mediaId in (:mediaids)", Media.class);
-        query.setParameter("mediaids", mediaIds);
-        List<Media> mediaList = mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
-
-        return new PageContainer<>(mediaList, page, pageSize, count);
-    }
-
     private Query buildAndWhereStatement(String baseQuery,Integer page, Integer pageSize, String term,List<MediaType> mediaType, SortType sort, List<Genre> genre, LocalDateTime fromDate, LocalDateTime toDate, Integer notInList){
         StringBuilder toReturn = new StringBuilder();
         final Map<String, Object> parameters = new HashMap<>();
