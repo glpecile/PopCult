@@ -13,14 +13,6 @@ public abstract class CommentDto {
     private String userUrl;
     private String userImageUrl;
 
-//    protected static void fillFromMediaComment(MediaCommentDto mediaCommentDto, UriInfo url, MediaComment mediaComment) {
-//        mediaCommentDto.setId(mediaComment.getCommentId());
-//        mediaCommentDto.setCommentBody(mediaComment.getCommentBody());
-//        mediaCommentDto.setCreationDate(mediaComment.getCreationDate());
-//        mediaCommentDto.setUser(mediaComment.getUser().getUsername());
-//        mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(String.valueOf(mediaComment.getUser().getUsername())).build().toString());
-//    } //TODO DELETE
-
     public Integer getId() {
         return id;
     }
