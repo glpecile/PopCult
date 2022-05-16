@@ -25,7 +25,7 @@ const ListForks = (props) => {
     }, [props.forksUrl, setErrorStatusCode, page]);
 
     return <>
-        {forks &&
+        {(forks && forks.data)&&
             <> {t('lists_forkedAmount', {times: props.forks})}{props.forks > 0 &&
                 <PaginatedDialog
                     buttonClassName="btn btn-link text-violet-500 group hover:text-violet-900 btn-rounded h-min my-0 py-0 mx-1 px-1 py-1"
