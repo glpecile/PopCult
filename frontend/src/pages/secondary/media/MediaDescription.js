@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import MediaDetails from "../../../components/media/MediaDetails";
 import MediaService from "../../../services/MediaService";
@@ -13,8 +13,7 @@ import ListService from "../../../services/ListService";
 import ListsInMedia from "../../../components/media/ListsInMedia";
 
 function MediaDescription() {
-    const location = useLocation();
-    const id = location.pathname.split('/')[3];
+    let {id} = useParams();
     const [t] = useTranslation();
 
     const [mediaData, setMediaData] = useState(undefined);

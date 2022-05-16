@@ -2,7 +2,7 @@ import ListsCard from "../lists/ListsCard";
 
 const ListsInMedia = (props) => {
     return (
-        <>
+        <div className="my-4">
             <h5 className="font-bold text-2xl py-2">
                 {props.title}
             </h5>
@@ -17,7 +17,7 @@ const ListsInMedia = (props) => {
                     )
                 }
             </div>
-        </>
+        </div>
     )
 }
 
