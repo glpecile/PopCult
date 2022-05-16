@@ -1,8 +1,7 @@
 import {Link} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import {Trans} from "react-i18next";
 
 const CompactListsCard = (props) => {
-    const {t} = useTranslation();
     const list = props.fork;
 
     return <div
@@ -11,8 +10,10 @@ const CompactListsCard = (props) => {
             <Link className="pl-3 py-4 text-xl font-semibold tracking-tight text-gray-800"
                   to={'/lists/' + list.id}>{list.name}</Link>
             <div className="pl-1 justify-end">
-                {t('list_by')}<Link className="text-violet-500 hover:text-violet-900 font-bold"
-                                    to={'/user/' + list.owner}>{list.owner}</Link>
+                <Trans i18nKey="list_by">
+                    <Link className="text-violet-500 hover:text-violet-900 font-bold"
+                          to={`/user/${list.owner}`}>{{username: list.owner}}</Link>
+                </Trans>
             </div>
         </div>
     </div>;
