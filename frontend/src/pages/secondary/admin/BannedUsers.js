@@ -52,7 +52,7 @@ const BannedUsers = () => {
         {bannedUsers !== undefined && bannedUsers.data.length === 0 && <NothingToShow text={t('banned_users_empty')}/>}
         {bannedUsers !== undefined && bannedUsers.data.length !== 0 && (bannedUsers.data.map(user => {
             return <BannedUserCard key={user.username} username={user.username} strikes={user.strikes}
-                                   unbanDate={user.banDate}
+                                   unbanDate={user.unbanDate}
                                    image={user.imageUrl}
                                    url={user.lockedUrl}
                                    unbanUser={unbanUser}

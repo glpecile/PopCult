@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 
 const BannedUserCard = (props) => {
     const {t} = useTranslation();
+    const banDays = Math.ceil((new Date(props.unbanDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24))
 
     return (
         <div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
@@ -18,7 +19,7 @@ const BannedUserCard = (props) => {
                     &#8226;
                     {t('profile_strikes', {strikes: props.strikes})}
                     <p className="text-sm text-red-400">
-                        {t('profile_unbanDate', {date: props.unbanDate})}
+                        {t('profile_unbanDate', {count: banDays})}
                     </p>
                 </h4>
             </div>
