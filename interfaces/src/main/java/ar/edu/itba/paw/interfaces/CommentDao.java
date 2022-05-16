@@ -36,8 +36,4 @@ public interface CommentDao {
 
     PageContainer<Notification> getUserListsCommentsNotifications(User user, int page, int pageSize);
 
-    void setUserListsCommentsNotificationsAsOpened(User user);
-
-    void deleteUserListsCommentsNotifications(User user);
-
 }

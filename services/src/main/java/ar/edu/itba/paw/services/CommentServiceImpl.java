@@ -95,15 +95,4 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getUserListsCommentsNotifications(user, page, pageSize);
     }
 
-    @Transactional
-    @Override
-    public void setUserListsCommentsNotificationsAsOpened(User user) {
-        commentDao.setUserListsCommentsNotificationsAsOpened(user);
-    }
-
-    @Transactional
-    @Override
-    public void deleteUserListsCommentsNotifications(User user) {
-        commentDao.deleteUserListsCommentsNotifications(user);
-    }
 }

@@ -26,7 +26,7 @@ public class WatchHibernateDao implements WatchDao {
     private EntityManager em;
 
     @Override
-    public void addWatchMedia(Media media, User user, LocalDateTime date) {
+    public void addWatchedMedia(Media media, User user, LocalDateTime date) {
         final WatchedMedia watchedMedia = new WatchedMedia(user, media, date);
         em.persist(watchedMedia);
     }

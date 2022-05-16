@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.user;
 
 import ar.edu.itba.paw.models.image.Image;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -49,6 +50,12 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    @Formula("(SELECT COUNT(*)\n" +
+            "FROM commentnotifications n JOIN listcomment c ON n.commentid = c.commentid\n" +
+            "    JOIN medialist m on c.listid = m.medialistid\n" +
+            "WHERE m.userid = userid)")
+    private int notifications;
+
     /* default */ User() {
         //Just for Hibernate, we love you!
     }
@@ -65,6 +72,7 @@ public class User {
         this.banDate = builder.banDate;
         this.image = builder.image;
         this.role = builder.role;
+        this.notifications = builder.notifications;
     }
 
     public int getUserId() {
@@ -167,6 +175,14 @@ public class User {
         this.role = role;
     }
 
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+
     public static class Builder {
         //Required parameters
         private final String email;
@@ -181,6 +197,7 @@ public class User {
         private LocalDateTime banDate = null;
         private Image image = null;
         private UserRole role = UserRole.USER;
+        private int notifications = 0;
 
         public Builder(String email, String username, String password, String name) {
             this.email = email;
@@ -221,6 +238,11 @@ public class User {
 
         public Builder role(UserRole role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder notifications(int notifications) {
+            this.notifications = notifications;
             return this;
         }
 

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.models.PageContainer;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.comment.Notification;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Media;
@@ -219,13 +219,23 @@ public class UserController {
     @GET
     @Path("/{username}/image")
     @Produces(value = {"image/webp"})
-    public Response getProfileImage(@PathParam("username") String username) throws ImageConversionException {
+    public Response getProfileImage(@PathParam("username") String username,
+                                    @Context javax.ws.rs.core.Request request) throws ImageConversionException {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
+        EntityTag eTag = new EntityTag(String.valueOf(user.getImageId()));
 
-        LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
-        return Response.ok(profileImage).build();
+        Response.ResponseBuilder response = ResponseUtils.getConditionalCacheResponse(request, eTag);
+
+        if (response == null) {
+            byte[] profileImage = userService.getUserProfileImage(user.getImageId()).orElseThrow(ImageNotFoundException::new).getImageBlob();
+
+            LOGGER.info("GET /{}: Returning user {} image", uriInfo.getPath(), username);
+            return Response.ok(profileImage).tag(eTag).build();
+        }
+
+        LOGGER.info("GET /{}: Returning user {} image not modified", uriInfo.getPath(), username);
+        return response.build();
     }
 
     @PUT
@@ -700,7 +710,7 @@ public class UserController {
                                                  @QueryParam("page-size") @DefaultValue(defaultPageSize) int pageSize) {
         final User user = userService.getByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        final PageContainer<Request> collaborationRequests = collaborativeListService.getRequestsByUser(user, page, pageSize);
+        final PageContainer<CollabRequest> collaborationRequests = collaborativeListService.getRequestsByUser(user, page, pageSize);
 
         if (collaborationRequests.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list.", uriInfo.getPath());

@@ -11,14 +11,7 @@ public abstract class CommentDto {
     private String user;
 
     private String userUrl;
-
-//    protected static void fillFromMediaComment(MediaCommentDto mediaCommentDto, UriInfo url, MediaComment mediaComment) {
-//        mediaCommentDto.setId(mediaComment.getCommentId());
-//        mediaCommentDto.setCommentBody(mediaComment.getCommentBody());
-//        mediaCommentDto.setCreationDate(mediaComment.getCreationDate());
-//        mediaCommentDto.setUser(mediaComment.getUser().getUsername());
-//        mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(String.valueOf(mediaComment.getUser().getUsername())).build().toString());
-//    } //TODO DELETE
+    private String userImageUrl;
 
     public Integer getId() {
         return id;
@@ -58,5 +51,13 @@ public abstract class CommentDto {
 
     public void setUserUrl(String userUrl) {
         this.userUrl = userUrl;
+    }
+
+    public String getUserImageUrl() {
+        return userImageUrl;
+    }
+
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
     }
 }

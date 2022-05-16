@@ -30,7 +30,7 @@ public class MediaInListDto {
 
         mediaInListDto.url = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getMediaListId())).path("media").path(String.valueOf(media.getMediaId())).build().toString();
         mediaInListDto.mediaUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).build().toString();
-        mediaInListDto.imageUrl = media.getImage();
+        mediaInListDto.imageUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("image").build().toString();
 
         return mediaInListDto;
     }

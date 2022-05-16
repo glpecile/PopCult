@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface WatchDao {
-    void addWatchMedia(Media media, User user, LocalDateTime date);
+    void addWatchedMedia(Media media, User user, LocalDateTime date);
 
     void deleteWatchedMedia(Media media, User user);
 

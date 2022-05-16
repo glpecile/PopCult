@@ -53,7 +53,7 @@ public class MediaDto {
         mediaDto.likes = media.getLikes();
 
         mediaDto.url = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).build().toString();
-        mediaDto.imageUrl = media.getImage();
+        mediaDto.imageUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("image").build().toString();
         mediaDto.listsContainUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("lists").build().toString();
         mediaDto.genreUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("genres").build().toString();
         mediaDto.staffUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("staff").build().toString();
@@ -79,7 +79,7 @@ public class MediaDto {
         mediaDto.setSeasons(media.getSeasons());
         mediaDto.setCountry(media.getCountry());
         mediaDto.setLikes(media.getLikes());
-        mediaDto.setImageUrl(media.getImage());
+        mediaDto.setImageUrl(url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("image").build().toString());
     }
 
     public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.hibernate;
 
 import ar.edu.itba.paw.interfaces.ListsDao;
-import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
@@ -9,8 +8,6 @@ import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.search.SortType;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -29,29 +26,9 @@ public class ListsHibernateDao implements ListsDao {
     @PersistenceContext
     private EntityManager em;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ListsHibernateDao.class);
-
     @Override
     public Optional<MediaList> getMediaListById(int mediaListId) {
         return Optional.ofNullable(em.find(MediaList.class, mediaListId));
-    }
-
-    @Override
-    public PageContainer<MediaList> getAllLists(int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
-
-        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> listIds = nativeQuery.getResultList();
-
-        final Query countQuery = em.createQuery("SELECT COUNT(mediaListId) FROM MediaList");
-        long count = (long) countQuery.getSingleResult();
-
-        List<MediaList> list = getMediaLists(listIds);
-
-        return new PageContainer<>(list, page, pageSize, count);
     }
 
     @Override
@@ -120,25 +97,6 @@ public class ListsHibernateDao implements ListsDao {
         final TypedQuery<Media> query = em.createQuery("from Media where mediaId in :mediaIds", Media.class);
         query.setParameter("mediaIds", mediaIds);
         return mediaIds.isEmpty() ? Collections.emptyList() : query.getResultList();
-    }
-
-    @Override
-    public PageContainer<MediaList> getLastAddedLists(int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
-        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE visibility = :visibility ORDER BY creationDate DESC OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("visibility", true);
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> listIds = nativeQuery.getResultList();
-
-        final Query countQuery = em.createQuery("SELECT COUNT(mediaListId) FROM MediaList WHERE visible = :visibility")
-                .setParameter("visibility", true);
-        long count = (long) countQuery.getSingleResult();
-
-        List<MediaList> list = getMediaLists(listIds);
-
-        return new PageContainer<>(list, page, pageSize, count);
     }
 
     private Query buildAndWhereStatement(String baseQuery, Integer page, Integer pageSize, String term, boolean visibility, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate) {

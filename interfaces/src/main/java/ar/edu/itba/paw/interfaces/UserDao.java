@@ -25,8 +25,6 @@ public interface UserDao {
 
     void deleteUser(User user);
 
-    PageContainer<User> getBannedUsers(int page, int pageSize);
-
     List<User> getBannedUsers();
 
     PageContainer<User> getUsers(int page, int pageSize, UserRole userRole, Boolean banned, String term, Integer notInListId);

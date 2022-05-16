@@ -25,6 +25,7 @@ public class ListCommentDto extends CommentDto {
         listCommentDto.setCreationDate(listComment.getCreationDate());
         listCommentDto.setUser(listComment.getUser().getUsername());
         listCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(listComment.getUser().getUsername()).build().toString());
+        listCommentDto.setUserImageUrl(url.getBaseUriBuilder().path("users").path(listComment.getUser().getUsername()).path("image").build().toString());
         listCommentDto.listTitle = listComment.getMediaList().getListName();
 
         listCommentDto.url = url.getBaseUriBuilder().path("lists-comments").path(String.valueOf(listComment.getCommentId())).build().toString();

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
-import ar.edu.itba.paw.models.collaborative.Request;
-import ar.edu.itba.paw.models.lists.MediaList;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CollaboratorRequestDto {
     private String userUrl;
     private String listUrl;
 
-    public static CollaboratorRequestDto fromRequest(UriInfo url, Request request) {
+    public static CollaboratorRequestDto fromRequest(UriInfo url, CollabRequest request) {
         CollaboratorRequestDto collaboratorRequestDto = new CollaboratorRequestDto();
         collaboratorRequestDto.accepted = request.isAccepted();
         collaboratorRequestDto.username = request.getCollaborator().getUsername();
@@ -30,7 +29,7 @@ public class CollaboratorRequestDto {
         return collaboratorRequestDto;
     }
 
-    public static List<CollaboratorRequestDto> fromRequestList(UriInfo url, List<Request> requestList) {
+    public static List<CollaboratorRequestDto> fromRequestList(UriInfo url, List<CollabRequest> requestList) {
         return requestList.stream().map(r -> CollaboratorRequestDto.fromRequest(url, r)).collect(Collectors.toList());
     }
 

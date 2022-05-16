@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.user.User;
 import java.util.Optional;
 
 public interface ModeratorDao {
-    PageContainer<User> getModerators(int page, int pageSize);
 
     Optional<ModRequest> getModRequest(int modRequestId);
 

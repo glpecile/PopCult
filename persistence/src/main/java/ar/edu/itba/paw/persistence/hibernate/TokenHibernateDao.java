@@ -4,8 +4,6 @@ import ar.edu.itba.paw.interfaces.TokenDao;
 import ar.edu.itba.paw.models.user.Token;
 import ar.edu.itba.paw.models.user.TokenType;
 import ar.edu.itba.paw.models.user.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -21,8 +19,6 @@ public class TokenHibernateDao implements TokenDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenHibernateDao.class);
 
     @Override
     public Token createToken(User user, TokenType type, String token, LocalDateTime expiryDate) {

@@ -104,6 +104,20 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/static/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <jsp-file>/index.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
     <!-- https://wiki.metawerx.net/wiki/Web.xml.MimeMapping -->
     <mime-mapping>
         <extension>ico</extension>

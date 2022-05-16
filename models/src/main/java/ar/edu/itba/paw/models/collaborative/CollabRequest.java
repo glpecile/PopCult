@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "collaborative")
-public class Request {
+public class CollabRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collaborative_collabid_seq")
     @SequenceGenerator(sequenceName = "collaborative_collabid_seq", name="collaborative_collabid_seq", allocationSize = 1)
@@ -25,18 +25,18 @@ public class Request {
     @Column
     private boolean accepted;
 
-    /*default*/ Request() {
+    /*default*/ CollabRequest() {
         //hibernate!!!!!
     }
 
-    public Request(User collaborator, MediaList mediaList) {
+    public CollabRequest(User collaborator, MediaList mediaList) {
         this.collabId = null;
         this.collaborator = collaborator;
         this.mediaList = mediaList;
         this.accepted = false;
     }
 
-    public Request(User collaborator, MediaList mediaList, boolean accepted) {
+    public CollabRequest(User collaborator, MediaList mediaList, boolean accepted) {
         this.collabId = null;
         this.collaborator = collaborator;
         this.mediaList = mediaList;
@@ -79,7 +79,7 @@ public class Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Request request = (Request) o;
+        CollabRequest request = (CollabRequest) o;
         return Objects.equals(collaborator, request.collaborator) && Objects.equals(mediaList, request.mediaList);
     }
 

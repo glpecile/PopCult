@@ -5,10 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.ModRequestAlreadyExistsException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.user.ModRequest;
 import ar.edu.itba.paw.models.user.User;
-import ar.edu.itba.paw.models.user.UserRole;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -27,30 +24,6 @@ public class ModeratorHibernateDao implements ModeratorDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModeratorHibernateDao.class);
-
-    @Override
-    public PageContainer<User> getModerators(int page, int pageSize) {
-        PaginationValidator.validate(page, pageSize);
-
-        final Query nativeQuery = em.createNativeQuery("SELECT u.userid FROM users u WHERE u.role = :role LIMIT :limit OFFSET :offset");
-        nativeQuery.setParameter("role", UserRole.MOD.ordinal());
-        nativeQuery.setParameter("limit", pageSize);
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        @SuppressWarnings("unchecked")
-        List<Long> userIds = nativeQuery.getResultList();
-
-        final TypedQuery<User> query = em.createQuery("from User where userId in (:userIds)", User.class);
-        query.setParameter("userIds", userIds);
-        List<User> moderators = userIds.isEmpty() ? Collections.emptyList() : query.getResultList();
-
-        final Query countQuery = em.createQuery("Select count(u.userId) from User u where role = :role");
-        countQuery.setParameter("role", UserRole.MOD);
-        long count = (long)countQuery.getSingleResult();
-
-        return new PageContainer<>(moderators, page, pageSize, count);
-    }
 
     @Override
     public Optional<ModRequest> getModRequest(int modRequestId) {
