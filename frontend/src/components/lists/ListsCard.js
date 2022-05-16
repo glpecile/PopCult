@@ -13,6 +13,7 @@ function ListsCard(content) {
             try {
                 const data = await listService.getMediaInList({url: content.mediaUrl, pageSize: 4});
                 let media = data.data;
+                media = media ? media : []
                 while (media.length < 4)
                     media.push({
                         id: Math.random() * 999, // random integer from 0 to 999.
