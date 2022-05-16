@@ -63,7 +63,7 @@ const UserLists = () => {
                                                                             mediaUrl={content.mediaUrl}
                                                                             listTitle={content.name}/></div>;
                                 })}
-                                    <div className="flex justify-center">
+                                    <div className="flex justify-center pt-3">
                                         {(userLists.data.length > 0 && userLists.links.last.page > 1) &&
                                             <PaginationComponent page={page}
                                                                  lastPage={userLists.links.last.page}

@@ -50,7 +50,6 @@ function ListsEdition() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
-                console.log(data);
                 setList(data);
                 setIsOwner(authContext.username.localeCompare(data.owner) === 0);
                 setListName(data.name)
