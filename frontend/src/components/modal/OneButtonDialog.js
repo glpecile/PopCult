@@ -16,7 +16,7 @@ export default function OneButtonDialog(props) {
                 {props.buttonIcon}
                 {props.buttonText}
             </button>
-            <LocalDialog
+            <LocalDialog fullWidth
                 onClose={handleState}
                 aria-labelledby="customized-dialog-title"
                 open={open}

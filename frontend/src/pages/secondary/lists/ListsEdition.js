@@ -17,6 +17,7 @@ import Loader from "../errors/Loader";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CompactMediaCard from "../../../components/media/CompactMediaCard";
 import listService from "../../../services/ListService";
+import ListHandleCollaborators from "../../../components/lists/edition/ListHandleCollaborators";
 
 function ListsEdition() {
     const {t} = useTranslation();
@@ -38,9 +39,10 @@ function ListsEdition() {
     const [openModal, setOpenModal] = useState(false);
     const [seriesPage, setSeriesPage] = useState(1);
     const [filmsPage, setFilmsPage] = useState(1);
+    const [toAddCollaborators, setToAddCollaborators] = useState(() => new Map());
+    const [toRemoveCollaborators, setToRemoveCollaborators] = useState(() => new Map());
 
     const navigate = useNavigate();
-
     const pageSize = 4;
 
     useEffect(() => {
@@ -70,6 +72,19 @@ function ListsEdition() {
                     page: seriesPage, pageSize: pageSize, query: term, notInList: id
                 });
                 setSearchSeries(series);
+            } catch (error) {
+                setErrorStatusCode(error.response.status);
+            }
+        }
+
+        if (toSearch !== '') {
+            searchMedia(toSearch);
+        }
+    }, [seriesPage, id, setErrorStatusCode, toSearch]);
+
+    useEffect(() => {
+        async function searchMedia(term) {
+            try {
                 const films = await MediaService.getFilms({
                     page: filmsPage, pageSize: pageSize, query: term, notInList: id
                 });
@@ -83,7 +98,7 @@ function ListsEdition() {
             searchMedia(toSearch);
             setOpenModal(true);
         }
-    }, [filmsPage, id, seriesPage, setErrorStatusCode, toSearch]);
+    }, [filmsPage, id, setErrorStatusCode, toSearch]);
 
     const deleteList = async () => {
         await ListService.deleteList(list.url);
@@ -152,7 +167,7 @@ function ListsEdition() {
                     isPublic: isPublic,
                     isCollaborative: collaborative
                 });
-            }catch (error){
+            } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }
@@ -160,8 +175,12 @@ function ListsEdition() {
             try {
                 console.log(Array.from(toAddMedia.keys()));
                 console.log(Array.from(toRemoveMedia.keys()));
-                await listService.manageMediaInList({url: list.mediaUrl, add: Array.from(toAddMedia.keys()), remove: Array.from(toRemoveMedia.keys())})
-            }catch (error){
+                await listService.manageMediaInList({
+                    url: list.mediaUrl,
+                    add: Array.from(toAddMedia.keys()),
+                    remove: Array.from(toRemoveMedia.keys())
+                })
+            } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }
@@ -175,6 +194,12 @@ function ListsEdition() {
                                  setListDescription={setListDescription} isCollaborative={collaborative}
                                  setCollaborative={setCollaborative}
                                  isPublic={isPublic} setIsPublic={setIsPublic} isOwner={isOwner}/>
+                {(authContext.isLoggedIn && isOwner) &&
+                    <ListHandleCollaborators collaboratorsUrl={list.collaboratorsUrl}
+                                             toAddCollaborators={toAddCollaborators}
+                                             setToAddCollaborators={setToAddCollaborators}
+                                             toRemoveCollaborators={toRemoveCollaborators}
+                                             setToRemoveCollaborators={setToRemoveCollaborators} id={id}/>}
                 <ListAddMedia openModal={openModal} setOpenModal={setOpenModal} toSearch={toSearch}
                               setToSearch={setToSearch}
                               searchSeries={searchSeries} searchFilms={searchFilms}
