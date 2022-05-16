@@ -8,6 +8,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import reportService from "../../../services/ReportService";
 import {useTranslation} from "react-i18next";
+import {Alert, Snackbar} from "@mui/material";
 
 const ListUpperIcons = (list) => {
     const {t} = useTranslation();
@@ -18,6 +19,7 @@ const ListUpperIcons = (list) => {
     const userIsLogged = context.isLoggedIn;
     const navigate = useNavigate();
     const location = useLocation();
+    const [snackbar, setSnackbar] = useState(false);
 
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -75,6 +77,14 @@ const ListUpperIcons = (list) => {
         if (!(aux.includes('<') || aux.includes('>'))) setReportBody(aux);
     }
 
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                setSnackbar(false);
+            }, 3000);
+            return () => clearTimeout(timeOut);
+        }
+        , [snackbar]);
+
     async function submitReport(event) {
         event.preventDefault();
         try {
@@ -86,7 +96,7 @@ const ListUpperIcons = (list) => {
                     }
                 });
             } else if (data.status === 201) {
-                list.openAlert();
+                setSnackbar(true);
             }
         } catch (error) {
             setErrorStatusCode(error.response.status);
@@ -107,6 +117,12 @@ const ListUpperIcons = (list) => {
             handleReport={handleReport}
             submitButtonClassName="text-amber-500 hover:text-amber-700"
             isOpened={false}/>}
+        <Snackbar open={snackbar} autoHideDuration={6000}
+                  anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+            <Alert severity="success">
+                {t('report_success')}
+            </Alert>
+        </Snackbar>
     </div>;
 }
 export default ListUpperIcons;

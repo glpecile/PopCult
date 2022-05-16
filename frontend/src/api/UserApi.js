@@ -81,7 +81,15 @@ const userApi = (() => {
     }
 
     const createPasswordResetToken = (email) => {
-        return api.post(`/users/password-token`, {'email': email});
+        return api.post(`/users/password-token`,
+            {
+                'email': email
+            },
+            {
+                headers: {
+                    'Content-Type': VndType.APPLICATION_USER
+                }
+            });
     }
 
     const resetPassword = ({token, newPassword}) => {

@@ -1,7 +1,6 @@
 import {useState} from "react";
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
 import LocalDialogTitle from "./LocalDialogTitle";
 import LocalDialog from "./LocalDialog";
 
@@ -17,7 +16,7 @@ export default function OneButtonDialog(props) {
                 {props.buttonIcon}
                 {props.buttonText}
             </button>
-            <LocalDialog
+            <LocalDialog fullWidth
                 onClose={handleState}
                 aria-labelledby="customized-dialog-title"
                 open={open}
@@ -26,9 +25,9 @@ export default function OneButtonDialog(props) {
                     {props.title}
                 </LocalDialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
+                    <div>
                         {props.body}
-                    </Typography>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <button autoFocus onClick={() => {

@@ -242,7 +242,7 @@ const RegisterForm = (props) => {
                 </div>
 
                 <div className="py-1 px-2.5 text-semibold w-full">
-                    <button className="btn btn-secondary my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
+                    <button className="btn btn-secondary bg-violet-500 my-2 w-full shadow-md hover:shadow-violet-400" type="submit">
                         {t('register_button')}
                     </button>
                     {(badAttempt || props.registrationError) &&

@@ -23,7 +23,10 @@ const NewComment = (props) => {
 
         async function submitComment() {
             try {
-                await CommentService.createListComment({url: props.commentsUrl, data: comment});
+                if (props.type.toUpperCase().localeCompare("MEDIA") === 0)
+                    await CommentService.createMediaComment({url: props.commentsUrl, data: comment});
+                else
+                    await CommentService.createListComment({url: props.commentsUrl, data: comment});
                 setComment("");
                 props.setCommentsUpdate(prev => prev + 1);
             }catch (error){

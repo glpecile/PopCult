@@ -3,7 +3,12 @@ import {parseLinkHeader} from '@web3-storage/parse-link-header'
 
 const listService = (() => {
 
-    //TODO
+    /**
+     * @param url: user.listsUrl ||
+     *             user.publicListsUrl ||
+     *             user.editableListsUrl ||
+     *             media.listsContainUrl || ...
+     */
     const getMediaLists = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaLists({url, page, pageSize});
         const links = parseLinkHeader(res.headers.link);
@@ -18,10 +23,9 @@ const listService = (() => {
         return {links, data};
     }
 
-    //TODO define listCreateDto
-    const createList = async (title, description, isPublic, isCollaborative) => {
+    const createList = async ({name, description, isPublic, isCollaborative}) => {
         const response = await listApi.createList({
-            name: title,
+            name: name,
             description: description,
             visible: isPublic,
             collaborative: isCollaborative
@@ -39,9 +43,14 @@ const listService = (() => {
         return res.data;
     }
 
-    //TODO define listEditDto
-    const editList = async () => {
-
+    const editList = async ({url, title, description, isPublic, isCollaborative}) => {
+        await listApi.editList({
+            url,
+            name: title,
+            description: description,
+            visible: isPublic,
+            collaborative: isCollaborative
+        });
     }
 
     const deleteList = async (url) => {
@@ -85,13 +94,6 @@ const listService = (() => {
 
     }
 
-    const getUserEditableListsByUsername = async ({username, page, pageSize}) => {
-        const res = await listApi.getUserEditableListsByUsername({username, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
     return {
         getMediaLists,
         getLists,
@@ -106,8 +108,7 @@ const listService = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList,
-        getUserEditableListsByUsername
+        forkList
     }
 })();
 

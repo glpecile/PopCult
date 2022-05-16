@@ -2,9 +2,6 @@ import {Link} from "react-router-dom";
 
 function MediaCard(props) {
     let mediaType = props.type;
-    if (mediaType.localeCompare("serie") === 0) {
-        mediaType = "series";
-    }
     return (
         <Link className="text-decoration-none" to={'/media/' + mediaType + '/' + props.id}>
             <div

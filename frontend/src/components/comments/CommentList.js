@@ -17,8 +17,10 @@ const CommentList = (props) => {
     const {setErrorStatusCode} = useErrorStatus();
 
     useEffect(() => {
-        setPage(1);
-        setUpdate(prev => prev + 1);
+        if (props.commentsUpdate !== 0) {
+            setPage(1);
+            setUpdate(prev => prev + 1);
+        }
     }, [props.commentsUpdate]);
 
     useEffect(() => {
@@ -48,17 +50,13 @@ const CommentList = (props) => {
         getComments();
     }, [page, pageSize, props.commentsUrl, update, setErrorStatusCode]);
 
-    function showAlert(data) {
-        props.showReportAlert(data);
-    }
-
     return (<div className="pt-1">
         {(links && comments) &&
             <List>
                 {comments.map((comment) => {
                     return <CommentComponent comment={comment}
                                              key={comment.id}
-                                             setCommentsUpdate={props.setCommentsUpdate} showAlert={showAlert}/>;
+                                             setCommentsUpdate={props.setCommentsUpdate}/>;
                 })}
             </List>}
         <div className="flex justify-center">
