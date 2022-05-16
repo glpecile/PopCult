@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.ImageSize;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
@@ -104,9 +105,12 @@ public class MediaController {
 
     @GET
     @Path("/{id}/image")
-    public Response getMediaImage(@PathParam("id") int mediaId) throws URISyntaxException {
+    public Response getMediaImage(@PathParam("id") int mediaId,
+                                  @QueryParam("size") @DefaultValue("md") String size ) throws URISyntaxException {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();
+        Response.ResponseBuilder response = Response.noContent();
+        ResponseUtils.setUnconditionalCache(response);
+        return response.status(Response.Status.SEE_OTHER).location(new URI(media.getImage(ImageSize.valueOf(size.toLowerCase())))).build();
     }
 
 
