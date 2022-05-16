@@ -9,6 +9,7 @@ import NewListSearchInput from "../creation/NewListSearchInput";
 import UserService from "../../../services/UserService";
 import PaginationComponent from "../../PaginationComponent";
 import NoResults from "../../search/NoResults";
+import Collapse from "@mui/material/Collapse";
 
 const ListHandleCollaborators = (props) => {
     const {t} = useTranslation();
@@ -175,8 +176,7 @@ const ListHandleCollaborators = (props) => {
                         <div className="text-gray-400 flex justify-center py-2">
                             {t('lists_noCollaborators')}
                         </div>}
-                    {props.toRemoveCollaborators.size > 0 &&
-                        <>
+                    <Collapse in={props.toRemoveCollaborators.size > 0} className="w-full">
                             <div className="font-semibold text-xl py-2">
                                 {t('list_collaborators_to_remove')}
                             </div>
@@ -192,8 +192,7 @@ const ListHandleCollaborators = (props) => {
 
                                 })}
                             </div>
-                        </>
-                    }
+                    </Collapse>
                 </>
                 : <Spinner/>}
         </>

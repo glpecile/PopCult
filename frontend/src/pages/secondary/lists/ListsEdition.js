@@ -19,6 +19,7 @@ import CompactMediaCard from "../../../components/media/CompactMediaCard";
 import listService from "../../../services/ListService";
 import ListHandleCollaborators from "../../../components/lists/edition/ListHandleCollaborators";
 import collaborativeService from "../../../services/CollaborativeService";
+import Collapse from "@mui/material/Collapse";
 
 function ListsEdition() {
     const {t} = useTranslation();
@@ -243,12 +244,14 @@ function ListsEdition() {
                                  setListDescription={setListDescription} isCollaborative={collaborative}
                                  setCollaborative={setCollaborative}
                                  isPublic={isPublic} setIsPublic={setIsPublic} isOwner={isOwner}/>
+                <Collapse in={collaborative} className="w-full">
                 {(authContext.isLoggedIn && isOwner) &&
                     <ListHandleCollaborators collaboratorsUrl={list.collaboratorsUrl}
                                              toAddCollaborators={toAddCollaborators}
                                              setToAddCollaborators={setToAddCollaborators}
                                              toRemoveCollaborators={toRemoveCollaborators}
                                              setToRemoveCollaborators={setToRemoveCollaborators} id={id}/>}
+                </Collapse>
                 <ListAddMedia openModal={openModal} setOpenModal={setOpenModal} toSearch={toSearch}
                               setToSearch={setToSearch}
                               searchSeries={searchSeries} searchFilms={searchFilms}
