@@ -28,10 +28,11 @@ const ListHandleCollaborators = (props) => {
                     pageSize,
                     page
                 });
-                collaborators.data.forEach((user) => {
+                Array.prototype.forEach.call(collaborators.data, (user) => {
                     setShowCollaborators(prev => new Map([...prev, [user.username, user]]));
                 })
             } catch (error) {
+                console.log(error);
                 setErrorStatusCode(error.response.status);
             }
 
