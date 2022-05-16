@@ -15,7 +15,7 @@ function MediaDetails(props) {
             </Helmet>
             <div className="col-12 col-lg-4">
                 <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
-                    <img className="w-full rounded-t-lg" src={props.image} alt="Media Details"/>
+                    <img className="w-full rounded-t-lg" src={`${props.image}?size=lg`} alt="Media Details"/>
                     <MediaOptions mediaData={props.mediaData}/>
                     <ShareMenu isOpened={false}/>
                     {

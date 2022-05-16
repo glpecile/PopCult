@@ -34,16 +34,16 @@ function ListsCard(content) {
                 <Link className='text-decoration-none' to={'/lists/' + content.id}>
                     <div className="row row-cols-2 mx-0 px-0">
                         <div className="col px-0 mx-0" key={media[0].id}>
-                            <img className="img-fluid rounded-tl-lg" src={media[0].imageUrl} alt={media[0].id}/>
+                            <img className="img-fluid rounded-tl-lg" src={`${media[0].imageUrl}?size=sm`} alt={media[0].id}/>
                         </div>
                         <div className="col px-0 mx-0" key={media[1].id}>
-                            <img className="img-fluid rounded-tr-lg" src={media[1].imageUrl} alt={media[1].id}/>
+                            <img className="img-fluid rounded-tr-lg" src={`${media[1].imageUrl}?size=sm`} alt={media[1].id}/>
                         </div>
                         <div className="col px-0 mx-0" key={media[2].id}>
-                            <img className="img-fluid" src={media[2].imageUrl} alt={media[2].id}/>
+                            <img className="img-fluid" src={`${media[2].imageUrl}?size=sm`} alt={media[2].id}/>
                         </div>
                         <div className="col px-0 mx-0" key={media[3].id}>
-                            <img className="img-fluid" src={media[3].imageUrl} alt={media[3].id}/>
+                            <img className="img-fluid" src={`${media[3].imageUrl}?size=sm`} alt={media[3].id}/>
                         </div>
                     </div>
                     <div
