@@ -11,7 +11,7 @@ export default function Error401() {
             </Helmet>
             <div className="flex-grow whitespace-pre-line">
                 <div className="flex flex-wrap p-3.5 mx-auto my-auto">
-                    <img className="w-80 pt-12" src={require('../../../images/PopCultLogoForbidden.png')} alt="error_image"/>
+                    <img className="w-80 pt-12" src={require('../../../images/PopCultLogoForbidden.webp')} alt="error_image"/>
                     <div className="flex flex-col pl-8">
                         <h1 className="text-6xl font-black text-justify">
                             {t('error_private')}

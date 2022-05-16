@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import UserService from "../../services/UserService";
 import {Link} from "react-router-dom";
-import {ListItem} from "@mui/material";
+import {Alert, ListItem, Snackbar} from "@mui/material";
 import {Close} from "@mui/icons-material";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import AuthContext from "../../store/AuthContext";
@@ -20,6 +20,9 @@ const CommentComponent = (props) => {
     const [reportBody, setReportBody] = useState('');
     const context = useContext(AuthContext);
     const currentUser = context.username;
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [status, setStatus] = useState(0);
 
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -63,14 +66,24 @@ const CommentComponent = (props) => {
             const data = await reportService.createListCommentReport({url: comment.reportsUrl, data: reportBody});//data.status
             if (data.status === 204) {
                 props.setCommentsUpdate(prev => prev - 1);
-                props.showAlert(data.status);
+                setStatus(data.status)
+                setShowAlert(true);
             } else if (data.status === 201) {
-                props.showAlert(data.status);
+                setStatus(data.status)
+                setShowAlert(true);
             }
         } catch (error) {
             setErrorStatusCode(error.response.status);
         }
     }
+
+    useEffect(() => {
+            const timeOut = setTimeout(() => {
+                setShowAlert(false);
+            }, 3000);
+            return () => clearTimeout(timeOut);
+        }
+        , [showAlert]);
 
     return (
         <>{(comment && user) &&
@@ -120,7 +133,14 @@ const CommentComponent = (props) => {
                         <div className=" m-0 max-w-full break-words"> {comment.commentBody} </div>
                     </div>
                 </div>
-            </ListItem>}</>
+            </ListItem>}
+            <Snackbar open={showAlert} autoHideDuration={6000}
+                      anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+                <Alert severity="success">
+                    {status === 201 ? <>{t('report_success')} </> : <>{t('report_admin_success')}</>}
+                </Alert>
+            </Snackbar>
+        </>
     );
 }
 export default CommentComponent;

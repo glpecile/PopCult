@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
     private static final int FIRST_BAN_STRIKES = 3;
     private static final int SECOND_BAN_STRIKES = 6;
     private static final int THIRD_BAN_STRIKES = 9;
-    private static final int BAN_DAYS = User.BAN_DAYS;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -159,29 +158,8 @@ public class UserServiceImpl implements UserService {
         }
         final User user = token.getUser();
         user.setEnabled(ENABLED_USER);
-//        authWithoutPassword(user);
         tokenService.deleteToken(token);
         return user;
-    }
-
-//    private void authWithoutPassword(User user) {
-//        final Collection<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType()));
-//        org.springframework.security.core.userdetails.User userDetails =
-//                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//    }
-
-    @Transactional
-    @Override
-    public void resendToken(Token token) {
-        tokenService.renewToken(token);
-        if (token.getType() == TokenType.VERIFICATION) {
-            emailService.sendVerificationEmail(token.getUser(), token.getToken(), LocaleContextHolder.getLocale());
-        } else if (token.getType() == TokenType.RESET_PASS) {
-            emailService.sendResetPasswordEmail(token.getUser(), token.getToken(), LocaleContextHolder.getLocale());
-        }
     }
 
     @Transactional(readOnly = true)
@@ -216,12 +194,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserData(User user, String name) {
         user.setName(name);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<User> getBannedUsers(int page, int pageSize) {
-        return userDao.getBannedUsers(page, pageSize);
     }
 
     @Transactional

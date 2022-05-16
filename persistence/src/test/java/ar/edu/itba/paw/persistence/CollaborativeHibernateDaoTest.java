@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.CollaboratorRequestAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyCollaboratesInListException;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -57,7 +56,7 @@ public class CollaborativeHibernateDaoTest {
     @Rollback
     @Test
     public void testMakeNewRequest() throws CollaboratorRequestAlreadyExistsException {
-        Request request = collaborativeHibernateDao.makeNewRequest(mediaList, user);
+        CollabRequest request = collaborativeHibernateDao.makeNewRequest(mediaList, user);
 
         em.flush();
 
@@ -80,7 +79,7 @@ public class CollaborativeHibernateDaoTest {
     @Rollback
     @Test
     public void testGetById() {
-        Optional<Request> request = collaborativeHibernateDao.getById(ALREADY_EXISTS_COLLAB_ID);
+        Optional<CollabRequest> request = collaborativeHibernateDao.getById(ALREADY_EXISTS_COLLAB_ID);
 
         Assert.assertTrue(request.isPresent());
         Assert.assertEquals(ALREADY_EXISTS_COLLAB_ID, request.get().getCollabId().intValue());

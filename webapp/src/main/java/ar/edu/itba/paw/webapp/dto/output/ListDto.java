@@ -31,7 +31,6 @@ public class ListDto {
     private String reportsUrl; //Only for POST a report
 
     private String favoriteUrl;
-    private String isFavorite; //If user is logged returns true or false if this list is favorite
 
     private String forkedFrom;
     private String forkedFromUrl;
@@ -58,13 +57,12 @@ public class ListDto {
         listDto.reportsUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getMediaListId())).path("reports").build().toString();
 
         if (currentUser != null) {
-            //TODO SET isFavorite
             listDto.favoriteUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("favorite-lists").path(String.valueOf(mediaList.getMediaListId())).build().toString();
         }
 
         if (mediaList.getForkedFrom() != null) {
             listDto.forkedFrom = mediaList.getForkedFrom().getListName();
-            listDto.forkedFromUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getForkedFrom().getMediaListId())).build().toString();//TODO
+            listDto.forkedFromUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(mediaList.getForkedFrom().getMediaListId())).build().toString();
         }
 
         return listDto;
@@ -216,14 +214,6 @@ public class ListDto {
 
     public void setFavoriteUrl(String favoriteUrl) {
         this.favoriteUrl = favoriteUrl;
-    }
-
-    public String getIsFavorite() {
-        return isFavorite;
-    }
-
-    public void setIsFavorite(String isFavorite) {
-        this.isFavorite = isFavorite;
     }
 
     public String getForkedFrom() {

@@ -24,6 +24,7 @@ public class MediaCommentDto extends CommentDto {
         mediaCommentDto.setCreationDate(mediaComment.getCreationDate());
         mediaCommentDto.setUser(mediaComment.getUser().getUsername());
         mediaCommentDto.setUserUrl(url.getBaseUriBuilder().path("users").path(mediaComment.getUser().getUsername()).build().toString());
+        mediaCommentDto.setUserImageUrl(url.getBaseUriBuilder().path("users").path(mediaComment.getUser().getUsername()).path("image").build().toString());
         mediaCommentDto.mediaTitle = mediaComment.getMedia().getTitle();
 
         mediaCommentDto.url = url.getBaseUriBuilder().path("media-comments").path(String.valueOf(mediaComment.getCommentId())).build().toString();

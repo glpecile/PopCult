@@ -52,7 +52,7 @@ const collaborativeApi = (() => {
     }
 
     const addListCollaborator = (url) => {
-        return api.patch(url);
+        return api.put(url);
     }
 
     const deleteListCollaborator = (url) => {
@@ -69,8 +69,7 @@ const collaborativeApi = (() => {
             });
     }
 
-    //TODO Define dto
-    const createListCollaborationRequest = ({url}) => {
+    const createListCollaborationRequest = (url) => {
         return api.post(url);
     }
 

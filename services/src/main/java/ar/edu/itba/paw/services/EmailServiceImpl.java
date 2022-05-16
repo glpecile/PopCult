@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.models.collaborative.Request;
+import ar.edu.itba.paw.models.collaborative.CollabRequest;
 import ar.edu.itba.paw.models.comment.Comment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.user.User;
@@ -165,7 +165,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendCollabRequestAcceptedEmail(User to, Request collaboration, Locale locale) {
+    public void sendCollabRequestAcceptedEmail(User to, CollabRequest collaboration, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("listname", collaboration.getMediaList().getListName());
         mailMap.put("collabUsername", collaboration.getCollaborator().getUsername());

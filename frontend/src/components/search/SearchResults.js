@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import MediaCard from "../media/MediaCard";
 import ListsCard from "../lists/ListsCard";
 import PaginationComponent from "../PaginationComponent";
+import NoResults from "./NoResults";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -73,7 +74,7 @@ const SearchResults = (props) => {
                                                      setPage={props.setMediaPage}/>
                             }
                         </div>
-                    </>: <div className="flex justify-center text-gray-400">{t('search_no_results')}</div>}
+                    </> : <NoResults/>}
                 </TabPanel>
 
                 <TabPanel value={props.activeTab} index={1}>
@@ -93,7 +94,7 @@ const SearchResults = (props) => {
                                                      setPage={props.setListPage}/>
                             }
                         </div>
-                    </>: <div className="flex justify-center text-gray-400">{t('search_no_results')}</div>}
+                    </> : <NoResults/>}
                 </TabPanel>
             </div>
         </>);

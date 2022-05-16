@@ -14,6 +14,8 @@ import java.util.Objects;
 @Table(name = "media")
 public class Media {
 
+    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "media_mediaid_seq")
     @SequenceGenerator(sequenceName = "media_mediaid_seq", name="media_mediaid_seq", allocationSize = 1)
@@ -128,8 +130,8 @@ public class Media {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImage(ImageSize imageSize) {
+        return IMAGE_BASE_URL + imageSize.getSize() + image;
     }
 
     public void setImage(String image) {

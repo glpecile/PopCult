@@ -89,7 +89,7 @@ export default function SearchPage() {
     return (
         <div>
             <h1 className="text-3xl font-black justify-start p-2 break-words max-w-full tracking-wide">
-                {t('search_title', {term: term})}
+                { term.length ? t('search_title', {term: term}) : t('search_title_all')}
             </h1>
             {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters} mediaFilters={mediaFilters}
                       setListPage={setListPage} setMediaPage={setMediaPage}

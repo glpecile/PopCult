@@ -17,8 +17,6 @@ public interface WatchService {
 
     void deleteToWatchMedia(Media media, User user);
 
-//    void updateWatchedMediaDate(Media media, User user, LocalDateTime date);
-
     boolean isWatched(Media media, User user);
 
     boolean isToWatch(Media media, User user);

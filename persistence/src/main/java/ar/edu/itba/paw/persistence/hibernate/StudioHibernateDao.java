@@ -5,11 +5,8 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.persistence.hibernate.utils.PaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,8 +22,6 @@ public class StudioHibernateDao implements StudioDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudioHibernateDao.class);
 
     @Override
     public Optional<Studio> getById(int studioId) {

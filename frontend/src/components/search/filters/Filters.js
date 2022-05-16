@@ -68,8 +68,8 @@ const Filters = (props) => {
     }
 
     return <>
-        <Divider className="text-violet-500"/> {/* despues esto se puede sacar */}
-        <form onSubmit={submitHandler} className="flex justify-between py-2">
+        <Divider className="text-violet-500"/>
+        <form onSubmit={submitHandler} className="flex justify-between flex-wrap mb-1.5 py-2">
             {props.showMediaFilters ?
                 (<MediaFilters sortBy={mSortBy} setSortBy={setMSortBy} categories={mCategories}
                                setCategories={setMCategories}
@@ -89,7 +89,6 @@ const Filters = (props) => {
                 </button>
             </div>
         </form>
-        <Divider className="text-violet-500"/>
     </>;
 }
 

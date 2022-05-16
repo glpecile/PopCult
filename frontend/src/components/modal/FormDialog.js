@@ -5,7 +5,6 @@ import LocalDialog from "./LocalDialog";
 import {useLocation, useNavigate} from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import {Tooltip} from "@mui/material";
-import {useTranslation} from "react-i18next";
 
 export default function FormDialog(props) {
     const [open, setOpen] = useState(props.isOpened);

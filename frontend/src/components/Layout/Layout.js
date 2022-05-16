@@ -30,7 +30,7 @@ function Layout(props) {
                     <div className="bg-gray-50">
                         <div className="flex flex-col justify-between min-h-screen">
                             <Navbar/>
-                            <main className="col-8 offset-2 flex-grow mb-auto">{props.children}</main>
+                            <main className="flex-grow lg:max-w-screen-lg md:max-w-screen-md max-w-screen-sm container mx-auto">{props.children}</main>
                             <Footer styleName="text-slate-900"/>
                         </div>
                     </div>

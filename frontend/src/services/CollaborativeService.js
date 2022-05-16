@@ -54,9 +54,8 @@ const collaborativeService = (() => {
         return {links, data};
     }
 
-    //TODO Define dto
-    const createListCollaborationRequest = async ({url}) => {
-
+    const createListCollaborationRequest = async (url) => {
+        await collaborativeApi.createListCollaborationRequest(url);
     }
 
     return {

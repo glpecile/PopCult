@@ -32,12 +32,6 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Autowired
     private RoleHierarchy roleHierarchy;
 
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<User> getModerators(int page, int pageSize) {
-        return moderatorDao.getModerators(page, pageSize);
-    }
-
     @Transactional
     @Override
     public void promoteToMod(User user) {

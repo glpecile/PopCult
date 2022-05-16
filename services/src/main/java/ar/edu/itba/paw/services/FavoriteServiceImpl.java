@@ -95,12 +95,6 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageContainer<MediaList> getMostLikedLists(int page, int pageSize) {
-        return favoriteDao.getMostLikedLists(page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public PageContainer<Media> getRecommendationsBasedOnFavMedia(MediaType mediaType, User user, int page, int pageSize) {
         PageContainer<Media> recommendations = favoriteDao.getRecommendationsBasedOnFavMedia(mediaType, user, page, pageSize);
         if (recommendations.getTotalCount() < pageSize) {
@@ -115,27 +109,4 @@ public class FavoriteServiceImpl implements FavoriteService {
         return recommendations;
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<Media> getMostLikedMedia(int page, int pageSize) {
-        return favoriteDao.getMostLikedMedia(page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageContainer<Media> getMostLikedMedia(MediaType mediaType, int page, int pageSize) {
-        return favoriteDao.getMostLikedMedia(mediaType, page, pageSize);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public int getLikesFromList(MediaList mediaList) {
-        return favoriteDao.getLikesFromList(mediaList);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public int getLikesFromMedia(Media media) {
-        return favoriteDao.getLikesFromMedia(media);
-    }
 }

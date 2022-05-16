@@ -10,10 +10,8 @@ const commentService = (() => {
         return {links, data};
     }
 
-
-    //TODO define commentDto
-    const createMediaComment = async (url) => {
-        await commentApi.createMediaComment(url);
+    const createMediaComment = async ({url, data}) => {
+        await commentApi.createMediaComment({url, data});
     }
 
     const getListComments = async ({url, page, pageSize}) => {
@@ -23,8 +21,6 @@ const commentService = (() => {
         return {links, data};
     }
 
-
-    //TODO define commentDto
     const createListComment = async ({url, data}) => {
         await commentApi.createListComment({url, data});
     }

@@ -79,7 +79,6 @@ const reportApi = (() => {
             });
     }
 
-    //TODO define dto
     const createListReport = ({url, data}) => {
         return api.post(url,
             {
@@ -102,7 +101,6 @@ const reportApi = (() => {
             });
     }
 
-    //TODO define dto
     const createListCommentReport = ({url, data}) => {
         return api.post(url,
             {
@@ -125,7 +123,6 @@ const reportApi = (() => {
             });
     }
 
-    //TODO define dto
     const createMediaCommentReport = ({url, data}) => {
         return api.post(url,
             {

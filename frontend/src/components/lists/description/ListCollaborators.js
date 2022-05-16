@@ -33,6 +33,7 @@ const ListCollaborators = (props) => {
         {collaboratorsInlist.data.map((user) => {
             return <Chip
                 label={user.username}
+                className="ring-1 ring-violet-500 mx-1"
                 variant="outlined" color="secondary"
                 avatar={<Avatar alt={user.username} src={user.imageUrl}/>}
                 key={user.username}

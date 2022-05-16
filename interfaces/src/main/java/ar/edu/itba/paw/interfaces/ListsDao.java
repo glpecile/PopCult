@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.interfaces.exceptions.MediaAlreadyInListException;
 import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
@@ -15,15 +14,11 @@ import java.util.Optional;
 public interface ListsDao {
     Optional<MediaList> getMediaListById(int mediaListId);
 
-    PageContainer<MediaList> getAllLists(int page, int pageSize);
-
     PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize);
 
     PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize);
 
     PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize);
-
-    PageContainer<MediaList> getLastAddedLists(int page, int pageSize);
 
     PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term);
 

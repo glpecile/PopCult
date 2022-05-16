@@ -96,7 +96,7 @@ public class InstanceProvider {
     }
 
     public static Media getMedia() {
-        return new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.SERIE, "House", "...", "", 7788, null, 8, Country.US);
+        return new Media(ALREADY_EXISTS_MEDIA_ID, MediaType.SERIES, "House", "...", "", 7788, null, 8, Country.US);
     }
 
     public static MediaList getMediaList() {
@@ -112,7 +112,7 @@ public class InstanceProvider {
     }
 
     public static Media getLikedMedia() {
-        return new Media(ALREADY_EXISTS_LIKED_MEDIA_ID, MediaType.SERIE, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
+        return new Media(ALREADY_EXISTS_LIKED_MEDIA_ID, MediaType.SERIES, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
     }
 
     public static MediaList getLikedMediaList() {
@@ -128,11 +128,11 @@ public class InstanceProvider {
     }
 
     public static Media getToWatchMedia() {
-        return new Media(ALREADY_EXISTS_TO_WATCH_MEDIA_ID, MediaType.SERIE, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
+        return new Media(ALREADY_EXISTS_TO_WATCH_MEDIA_ID, MediaType.SERIES, "Sons of Anarchy", "...", "", 4140, null, 7, Country.US);
     }
 
     public static Media getWatchedMedia() {
-        return new Media(ALREADY_EXISTS_WATCHED_MEDIA_ID, MediaType.SERIE, "Revolution", "...", "", 1764, null, 2, Country.US);
+        return new Media(ALREADY_EXISTS_WATCHED_MEDIA_ID, MediaType.SERIES, "Revolution", "...", "", 1764, null, 2, Country.US);
     }
 
     public static MediaList getAlreadyReportedList() {

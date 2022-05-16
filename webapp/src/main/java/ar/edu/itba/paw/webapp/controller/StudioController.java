@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.Studio;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
+import ar.edu.itba.paw.webapp.dto.output.StaffDto;
 import ar.edu.itba.paw.webapp.dto.output.StudioDto;
 import ar.edu.itba.paw.webapp.exceptions.StudioNotFoundException;
 import ar.edu.itba.paw.webapp.mediaType.VndType;
@@ -62,8 +63,11 @@ public class StudioController {
     public Response getStudio(@PathParam("id") int studioId) {
         final Studio studio = studioService.getById(studioId).orElseThrow(StudioNotFoundException::new);
 
+        final Response.ResponseBuilder response = Response.ok(StudioDto.fromStudio(uriInfo, studio));
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{} : Returning studio {} {}", uriInfo.getPath(), studioId, studio.getName());
-        return Response.ok(StudioDto.fromStudio(uriInfo, studio)).build();
+        return response.build();
     }
 
     @GET

@@ -37,8 +37,6 @@ public interface UserService {
 
     User confirmRegister(Token token) throws InvalidTokenException;
 
-    void resendToken(Token token);
-
     Optional<Image> getUserProfileImage(int imageId) throws ImageConversionException;
 
     void uploadUserProfileImage(User user, byte[] photoBlob, String format) throws ImageConversionException;
@@ -46,8 +44,6 @@ public interface UserService {
     void deleteUserProfileImage(User user);
 
     void updateUserData(User user, String name);
-
-    PageContainer<User> getBannedUsers(int page, int pageSize);
 
     void strikeUser(User user);
 

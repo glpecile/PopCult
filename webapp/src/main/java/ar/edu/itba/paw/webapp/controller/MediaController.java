@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.comment.MediaComment;
 import ar.edu.itba.paw.models.lists.MediaList;
 import ar.edu.itba.paw.models.media.Genre;
+import ar.edu.itba.paw.models.media.ImageSize;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.MediaType;
 import ar.edu.itba.paw.models.search.SortType;
@@ -33,10 +34,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -78,19 +76,19 @@ public class MediaController {
         final SortType normalizedSortType = NormalizerUtils.getNormalizedSortType(sortType);
         LocalDateTime startYear = NormalizerUtils.getStartYear(decade);
         LocalDateTime lastYear = NormalizerUtils.getLastYear(decade);
-        final PageContainer<Media> listMedia = mediaService.getMediaByFilters(mediaTypes, page, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
+        final PageContainer<Media> mediaList = mediaService.getMediaByFilters(mediaTypes, page, pageSize, normalizedSortType, genreList, startYear, lastYear, term, listId);
 
-        if (listMedia.getElements().isEmpty()) {
+        if (mediaList.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, listMedia.getElements(), userService.getCurrentUser().orElse(null));
+        final List<MediaDto> mediaDtoList = MediaDto.fromMediaList(uriInfo, mediaList.getElements(), userService.getCurrentUser().orElse(null));
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtoList) {
         });
-        ResponseUtils.setPaginationLinks(response, listMedia, uriInfo);
+        ResponseUtils.setPaginationLinks(response, mediaList, uriInfo);
 
-        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), listMedia.getCurrentPage(), listMedia.getElements().size());
+        LOGGER.info("GET /{}: Returning page {} with {} results ", uriInfo.getPath(), mediaList.getCurrentPage(), mediaList.getElements().size());
         return response.build();
     }
 
@@ -107,9 +105,12 @@ public class MediaController {
 
     @GET
     @Path("/{id}/image")
-    public Response getMediaImage(@PathParam("id") int mediaId) throws URISyntaxException {
+    public Response getMediaImage(@PathParam("id") int mediaId,
+                                  @QueryParam("size") @DefaultValue("md") String size ) throws URISyntaxException {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
-        return Response.noContent().status(Response.Status.SEE_OTHER).location(new URI(media.getImage())).build();
+        Response.ResponseBuilder response = Response.noContent();
+        ResponseUtils.setUnconditionalCache(response);
+        return response.status(Response.Status.SEE_OTHER).location(new URI(media.getImage(ImageSize.valueOf(size.toLowerCase())))).build();
     }
 
 
@@ -127,9 +128,12 @@ public class MediaController {
 
         final List<GenreDto> genreDtoList = GenreDto.fromGenreList(uriInfo, genres);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning genres from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<GenreDto>>(genreDtoList) {
-        }).build();
+        return response.build();
     }
 
     @GET
@@ -169,9 +173,12 @@ public class MediaController {
 
         final List<StudioDto> studioDtoList = StudioDto.fromStudioList(uriInfo, studios);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning studios from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<StudioDto>>(studioDtoList) {
-        }).build();
+        return response.build();
     }
 
     @GET
@@ -195,9 +202,12 @@ public class MediaController {
 
         final List<StaffDto> listsDto = StaffDto.fromRoleList(uriInfo, staffMembers);
 
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<StaffDto>>(listsDto) {
+        });
+        ResponseUtils.setUnconditionalCache(response);
+
         LOGGER.info("GET /{}: Returning staff members from media {} {}", uriInfo.getPath(), mediaId, media.getTitle());
-        return Response.ok(new GenericEntity<List<StaffDto>>(listsDto) {
-        }).build();
+        return response.build();
     }
 
     @GET

@@ -19,6 +19,7 @@ public class UserDto {
     private LocalDateTime banDate;
     private LocalDateTime unbanDate;
     private UserRole role;
+    private int notifications;
 
     private String url;
 
@@ -51,6 +52,7 @@ public class UserDto {
         userDto.banDate = user.getBanDate();
         userDto.unbanDate = user.getUnbanDate();
         userDto.role = user.getRole();
+        userDto.notifications = user.getNotifications();
 
         userDto.url = url.getBaseUriBuilder().path("users").path(user.getUsername()).build().toString();
         userDto.imageUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("image").build().toString();
@@ -149,6 +151,14 @@ public class UserDto {
         this.role = role;
     }
 
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -219,6 +229,14 @@ public class UserDto {
 
     public void setPublicFavoriteListsUrl(String publicFavoriteListsUrl) {
         this.publicFavoriteListsUrl = publicFavoriteListsUrl;
+    }
+
+    public String getEditableListsUrl() {
+        return editableListsUrl;
+    }
+
+    public void setEditableListsUrl(String editableListsUrl) {
+        this.editableListsUrl = editableListsUrl;
     }
 
     public String getWatchedMediaUrl() {
