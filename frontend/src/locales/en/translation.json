@@ -277,5 +277,8 @@
   "list_remove_media_none": "You are not removing anything from this list",
   "list_collaborators": "Collaborates in this list",
   "list_collaborators_to_add": "Add to collaborators",
-  "list_collaborators_to_remove": "Collaborators to remove"
+  "list_collaborators_to_remove": "Collaborators to remove",
+  "list_collaborators_new" : "New collaborators",
+  "list_new_collaborators_none": "You are not adding collaborators to this list",
+  "list_remove_collaborators_none": "You are not removing collaborators from this list"
 }

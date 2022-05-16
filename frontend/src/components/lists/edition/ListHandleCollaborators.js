@@ -156,7 +156,7 @@ const ListHandleCollaborators = (props) => {
             {showCollaborators ?
                 <>
                     {(Array.from(showCollaborators.values()).length !== 0 && Array.from(showCollaborators.values()).length !== props.toRemoveCollaborators.size) ?
-                        <div className="flex flex-row space-x-1">
+                        <div className="flex flex-row space-x-1 flex-wrap">
                             {Array.from(showCollaborators.values()).map(user => {
                                 return <div key={user.username}>
                                     {showChip(user) &&
@@ -176,7 +176,7 @@ const ListHandleCollaborators = (props) => {
                         </div>}
                     {props.toRemoveCollaborators.size > 0 &&
                         <>
-                            <div className="font-semibold text-xl p-2">
+                            <div className="font-semibold text-xl py-2">
                                 {t('list_collaborators_to_remove')}
                             </div>
                             <div className="flex flex-row space-x-1">

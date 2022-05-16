@@ -276,7 +276,10 @@
   "list_remove_media_none": "No se está removiendo contenido de la lista",
   "list_collaborators": "Colabora en la lista",
   "list_collaborators_to_add": "Añadir a colaboradores",
-  "list_collaborators_to_remove": "Colaboradores a remover"
+  "list_collaborators_to_remove": "Colaboradores a remover",
+  "list_collaborators_new" : "Nuevos colaboradores",
+  "list_new_collaborators_none": "No se están añadiendo nuevos colaboradores a esta lista",
+  "list_remove_collaborators_none": "No se están removiendo colaboradores de la lista"
 
 
 
