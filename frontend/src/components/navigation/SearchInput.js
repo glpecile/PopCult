@@ -17,7 +17,9 @@ const SearchInput = () => {
         navigate({
             pathname: '/search',
             search: createSearchParams({
-                term: searchTerm
+                term: searchTerm,
+                mp: 1,
+                lp: 1
             }).toString()
         });
     }

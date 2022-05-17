@@ -1,7 +1,7 @@
 import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
 import Filters from "../../../components/search/filters/Filters";
 import SearchResults from "../../../components/search/SearchResults";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import mediaService from "../../../services/MediaService";
 import listService from "../../../services/ListService";
@@ -14,18 +14,6 @@ export default function SearchPage() {
     const [searchParams] = useSearchParams();
     const term = searchParams.get("term");
 
-    const navigate = useNavigate();
-    const genres = useContext(GenresContext).genres;
-    const [media, setMedia] = useState(undefined);
-    const [lists, setLists] = useState(undefined);
-    const [mediaPage, setMediaPage] = useState(searchParams.get("mp") || 1);
-    const [listPage, setListPage] = useState(searchParams.get("lp") || 1);
-    const [activeTab, setActiveTab] = useState(0); //use this in order to know which options of filters to give
-    const [mediaFilters, setMediaFilters] = useState(() => new Map());
-    const [listFilters, setListFilters] = useState(() => new Map());
-    const pageSize = 4;
-    const {setErrorStatusCode} = useErrorStatus();
-
     const mediaSort = 'msort';
     const mediaType = 'mtype';
     const mediaDecades = 'mdecades';
@@ -34,29 +22,61 @@ export default function SearchPage() {
     const listDecades = 'ldecades';
     const listCategories = 'lcategories';
 
+    const navigate = useNavigate();
+    const genres = useContext(GenresContext).genres;
+    const [media, setMedia] = useState(undefined);
+    const [lists, setLists] = useState(undefined);
+    const [mediaPage, setMediaPage] = useState(searchParams.get("mp") || 1);
+    const [listPage, setListPage] = useState(searchParams.get("lp") || 1);
+    const [activeTab, setActiveTab] = useState(0); //use this in order to know which options of filters to give
 
-    useEffect(() => {
-        if (searchParams.has(mediaCategories)) setMediaFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
-        if (searchParams.has(mediaType)) setMediaFilters(prev => new Map([...prev, [mediaType, searchParams.get(mediaType)]]));
-        if (searchParams.has(mediaDecades)) setMediaFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
-        if (searchParams.has(mediaSort)) setMediaFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
-        if (searchParams.has(listCategories)) setListFilters(prev => new Map([...prev, [listCategories, searchParams.getAll(listCategories)]]));
-        if (searchParams.has(listSort)) setListFilters(prev => new Map([...prev, [listSort, searchParams.get(listSort)]]));
-        if (searchParams.has(listDecades)) setListFilters(prev => new Map([...prev, [listDecades, searchParams.get(listDecades)]]));
+    const pageSize = 4;
+    const {setErrorStatusCode} = useErrorStatus();
+    let firstLoad = useRef(true);
+
+
+    const getMediaFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(mediaCategories)) aux.set(mediaCategories, searchParams.getAll(mediaCategories));
+        if (searchParams.has(mediaType)) aux.set(mediaType, searchParams.get(mediaType));
+        if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
+        if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        return aux;
     }, [searchParams]);
 
-    const applyFilters = () => {
-        navigate({
-            pathname: '/search',
-            search: createSearchParams({
-                term: term,
-                mp: mediaPage,
-                lp: listPage,
-                ...Object.fromEntries(mediaFilters.entries()),
-                ...Object.fromEntries(listFilters.entries())
-            }).toString()
-        });
-    }
+    const getListFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(listCategories)) aux.set(listCategories, searchParams.getAll(listCategories));
+        if (searchParams.has(listDecades)) aux.set(listDecades, searchParams.get(listDecades));
+        if (searchParams.has(listSort)) aux.set(listSort, searchParams.get(listSort));
+        return aux;
+    }, [searchParams]);
+
+    const [mediaFilters, setMediaFilters] = useState(getMediaFilters);
+    const [listFilters, setListFilters] = useState(getListFilters);
+
+    useEffect(() => {
+        firstLoad.current = true;
+        setMediaPage(searchParams.get("mp"));
+        setListPage(searchParams.get("lp"));
+        setMediaFilters(getMediaFilters)
+        setListFilters(getListFilters)
+    }, [searchParams, getMediaFilters, getListFilters])
+
+    useEffect(() => {
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/search',
+                search: createSearchParams({
+                    term: term,
+                    mp: mediaPage,
+                    lp: listPage,
+                    ...Object.fromEntries(mediaFilters.entries()),
+                    ...Object.fromEntries(listFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [term, mediaPage, listPage, mediaFilters, listFilters, navigate]);
 
 
     useEffect(() => {
@@ -108,7 +128,7 @@ export default function SearchPage() {
                       setListFilters={setListFilters} listFilters={listFilters} genres={genres} mediaSort={mediaSort}
                       mediaType={mediaType} mediaDecades={mediaDecades} mediaCategories={mediaCategories}
                       listSort={listSort} listDecades={listDecades} listCategories={listCategories}
-                      applyFilters={applyFilters}/>}
+            />}
             {(media && lists) ?
                 <SearchResults media={media} mediaPage={mediaPage} setMediaPage={setMediaPage} lists={lists}
                                listPage={listPage} setListPage={setListPage} activeTab={activeTab}

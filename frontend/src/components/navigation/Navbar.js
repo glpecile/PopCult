@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom";
+import {createSearchParams, NavLink} from "react-router-dom";
 import DropdownMenu from "./DropdownMenu";
 import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
@@ -52,19 +52,35 @@ const Navbar = () => {
                     <ul className="navbar-nav">
                         <li className="nav-item flex justify-end">
                             <NavLink className={"nav-link active text-lg " + animation} aria-current="page"
-                                     to='/media/films'>
+                                     to={{
+                                         pathname: '/media/films',
+                                         search: createSearchParams({
+                                             page: 1
+                                         }).toString()
+                                     }}>
                                 {t('nav_films')}
                             </NavLink>
                         </li>
                         <li className="nav-item flex justify-end">
                             <NavLink className={"nav-link active text-lg " + animation} aria-current="page"
-                                     to='/media/series'>
+                                     to={{
+                                         pathname: '/media/series',
+                                         search: createSearchParams({
+                                             page: 1
+                                         }).toString()
+                                     }}>
                                 {t('nav_series')}
                             </NavLink>
                         </li>
 
                         <li className="nav-item flex justify-end">
-                            <NavLink className={"nav-link active text-lg " + animation} aria-current="page" to='/lists'>
+                            <NavLink className={"nav-link active text-lg " + animation} aria-current="page"
+                                     to={{
+                                         pathname: '/lists',
+                                         search: createSearchParams({
+                                             page: 1
+                                         }).toString()
+                                     }}>
                                 {t('nav_lists')}
                             </NavLink>
                         </li>

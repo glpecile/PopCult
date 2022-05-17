@@ -1,7 +1,7 @@
 import MediaSlider from "../../components/media/MediaSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import useErrorStatus from "../../hooks/useErrorStatus";
@@ -22,19 +22,28 @@ function Series() {
     const [series, setSeries] = useState(undefined);
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
-    const [seriesFilters, setSeriesFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
     const pageSize = 12;
 
     const mediaSort = 'sort';
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
+    const getMediaFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(mediaCategories)) aux.set(mediaCategories, searchParams.getAll(mediaCategories));
+        if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
+        if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        return aux;
+    }, [searchParams]);
+
+    const [seriesFilters, setSeriesFilters] = useState(getMediaFilters);
+    let firstLoad = useRef(true);
 
     useEffect(() => {
-        if (searchParams.has(mediaCategories)) setSeriesFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
-        if (searchParams.has(mediaDecades)) setSeriesFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
-        if (searchParams.has(mediaSort)) setSeriesFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
-    }, [searchParams]);
+        firstLoad.current = true;
+        setPage(searchParams.get("page"));
+        setSeriesFilters(getMediaFilters)
+    }, [searchParams, getMediaFilters]);
 
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getSeries({pageSize: 12});
@@ -69,13 +78,16 @@ function Series() {
         getData();
     }, [page, seriesFilters, pageSize, setErrorStatusCode])
 
-    const applyFilters = () => {
-        navigate({
-            pathname: '/media/series', search: createSearchParams({
-                page: page, ...Object.fromEntries(seriesFilters.entries())
-            }).toString()
-        });
-    };
+    useEffect(() => {
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/media/series', search: createSearchParams({
+                    page: page,
+                    ...Object.fromEntries(seriesFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [page, seriesFilters, navigate]);
 
     return (<section>
         <Helmet>
@@ -92,7 +104,7 @@ function Series() {
             <Filters showMediaFilters={true} showMediaType={false} setMediaFilters={setSeriesFilters}
                      mediaFilters={seriesFilters}
                      setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
-                     mediaDecades={mediaDecades} mediaCategories={mediaCategories} applyFilters={applyFilters}/>
+                     mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
             {(series && series.data) ? <>
                 <ResponsiveMediaGrid>
                     {series.data.map((content) => {

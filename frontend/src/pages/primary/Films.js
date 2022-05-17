@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import MediaSlider from "../../components/media/MediaSlider";
@@ -22,19 +22,27 @@ export default function Films() {
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const [films, setFilms] = useState(undefined);
     const {setErrorStatusCode} = useErrorStatus();
-    const [filmFilters, setFilmFilters] = useState(() => new Map());
+    const mediaCategories = 'categories';
+    const mediaDecades = 'decades';
+    const mediaSort = 'sort';
+    const getMediaFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
+        if (searchParams.has(mediaCategories)) aux.set(mediaCategories, searchParams.getAll(mediaCategories));
+        if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        return aux;
+    }, [searchParams]);
+
+    const [filmFilters, setFilmFilters] = useState(getMediaFilters);
     const genres = useContext(GenresContext).genres;
+    let firstLoad = useRef(true);
     const pageSize = 12;
 
-    const mediaSort = 'sort';
-    const mediaDecades = 'decades';
-    const mediaCategories = 'categories';
-
     useEffect(() => {
-        if (searchParams.has(mediaCategories)) setFilmFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
-        if (searchParams.has(mediaDecades)) setFilmFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
-        if (searchParams.has(mediaSort)) setFilmFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
-    }, [searchParams]);
+        firstLoad.current = true;
+        setPage(searchParams.get("page"));
+        setFilmFilters(getMediaFilters)
+    }, [searchParams, getMediaFilters]);
 
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getFilms({pageSize: 12});
@@ -69,15 +77,17 @@ export default function Films() {
         getData();
     }, [page, filmFilters, pageSize, setErrorStatusCode])
 
-    const applyFilters = () => {
-        navigate({
-            pathname: '/media/films',
-            search: createSearchParams({
-                page: page,
-                ...Object.fromEntries(filmFilters.entries())
-            }).toString()
-        });
-    }
+    useEffect(() => {
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/media/films',
+                search: createSearchParams({
+                    page: page,
+                    ...Object.fromEntries(filmFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [page, filmFilters, navigate]);
 
 
     return (
@@ -98,7 +108,7 @@ export default function Films() {
                         <Filters showMediaFilters={true} showMediaType={false} setMediaFilters={setFilmFilters}
                                  mediaFilters={filmFilters}
                                  setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
-                                 mediaDecades={mediaDecades} mediaCategories={mediaCategories} applyFilters={applyFilters}/>
+                                 mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
                         {(films && films.data) ? <>
                             <ResponsiveMediaGrid>
                                 {films.data.map((content) => {

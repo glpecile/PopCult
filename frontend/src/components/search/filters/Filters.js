@@ -61,7 +61,6 @@ const Filters = (props) => {
             handleListsFilters(props.listDecades, lDecades);
             handleListsFilters(props.listCategories, lCategories);
         }
-        props.applyFilters();
     }
 
     const cleanFilters = () => {
