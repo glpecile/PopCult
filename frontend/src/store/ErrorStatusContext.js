@@ -1,6 +1,7 @@
 import {useLocation} from 'react-router-dom';
 import {createContext, useEffect, useMemo, useState} from "react";
 import Error404 from "../pages/secondary/errors/Error404";
+import Layout from "../components/Layout/Layout";
 
 const ErrorStatusContext = createContext({});
 
@@ -14,7 +15,7 @@ export const ErrorHandler = ({children}) => {
 
     const handleErrors = () => {
         if (errorStatusCode === 404) {
-            return <Error404/>
+            return <Layout><Error404/></Layout>
         }
         return children;
     }
