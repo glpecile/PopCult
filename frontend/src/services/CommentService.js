@@ -1,13 +1,12 @@
 import commentApi from '../api/CommentApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const commentService = (() => {
 
     const getMediaComments = async ({url, page, pageSize}) => {
         const res = await commentApi.getMediaComments({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const createMediaComment = async ({url, data}) => {
@@ -16,9 +15,7 @@ const commentService = (() => {
 
     const getListComments = async ({url, page, pageSize}) => {
         const res = await commentApi.getListComments({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const createListComment = async ({url, data}) => {

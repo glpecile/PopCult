@@ -1,5 +1,6 @@
 import listApi from '../api/ListApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from './ResponseUtils'
 
 const listService = (() => {
 
@@ -11,16 +12,12 @@ const listService = (() => {
      */
     const getMediaLists = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaLists({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getLists = async ({page, pageSize, query, genres, sortType, decades}) => {
         const res = await listApi.getLists({page, pageSize, query, genres, sortType, decades});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res)
     }
 
     const createList = async ({name, description, isPublic, isCollaborative}) => {
@@ -59,9 +56,7 @@ const listService = (() => {
 
     const getMediaInList = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaInList({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isMediaInList = async (url) => {
@@ -83,15 +78,12 @@ const listService = (() => {
 
     const getListForks = async ({url, page, pageSize}) => {
         const res = await listApi.getListForks({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const forkList = async (url) => {
         const response = await listApi.forkList(url);
         return response.headers.location;
-
     }
 
     return {

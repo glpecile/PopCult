@@ -1,6 +1,6 @@
 import staffApi from '../api/StaffApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {StaffRole} from '../enums/StaffRole'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const staffService = (() => {
 
@@ -19,9 +19,7 @@ const staffService = (() => {
 
     const getStaffMembers = async ({page, pageSize, staffType}) => {
         const res = await staffApi.getStaffMembers({page, pageSize, staffType})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getStaffMember = async (id) => {

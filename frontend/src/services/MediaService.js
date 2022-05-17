@@ -1,16 +1,14 @@
 import mediaApi from '../api/MediaApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {MediaType} from '../enums/MediaType'
 import {StaffRole} from '../enums/StaffRole'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const MediaService = (() => {
 
     // TODO use sortType enum
     const getMediaList = async ({page, pageSize, mediaType, genres, sortType, decades, query, notInList}) => {
         const res = await mediaApi.getMediaList({page, pageSize, mediaType, genres, sortType, decades, query, notInList});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getFilms = async ({page, pageSize, genres, sortType, decades, query, notInList}) => {
@@ -28,24 +26,18 @@ const MediaService = (() => {
 
     const getMediaByUrl = async ({url, page, pageSize}) => {
         const res = await mediaApi.getMediaByUrl({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getGenreMedia = async ({url, page, pageSize}) => {
         const res = await mediaApi.getGenreMedia({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     // Devuelve la media de un staff en particular.
     const getMediaFromStaff = async ({url, page, pageSize, staffRole}) => {
         const res = await mediaApi.getGenreMedia({url, page, pageSize, staffRole});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getDirectorMedia = async ({url, page, pageSize}) => {
@@ -58,9 +50,7 @@ const MediaService = (() => {
 
     const getStudioMedia = async ({url, page, pageSize}) => {
         const res = await mediaApi.getStudioMedia({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     return {
