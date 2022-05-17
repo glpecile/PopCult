@@ -281,5 +281,11 @@
   "list_collaborators_to_remove": "Collaborators to remove",
   "list_collaborators_new" : "New collaborators",
   "list_new_collaborators_none": "You are not adding collaborators to this list",
-  "list_remove_collaborators_none": "You are not removing collaborators from this list"
+  "list_remove_collaborators_none": "You are not removing collaborators from this list",
+  "panel_collaborators": "<0>{{username}}</0> wants to collaborate in your list: <1>{{list}}</1>",
+  "collaborator_accept": "Accept Collaborator",
+  "collaborator_accept_body": "Are you sure you want to accept {{username}} as a collaborator?",
+  "collaborator_reject": "Reject Collaborator",
+  "collaborator_reject_body": "Are you sure you want to reject {{username}} from becoming a collaborator of your list?",
+  "notification_comment_title": "<0>{{username}}</0> commented on your list <1>{{list}}</1>:"
 }

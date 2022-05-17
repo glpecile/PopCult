@@ -15,7 +15,9 @@ import ExpiredToken from "./pages/secondary/login/ExpiredToken";
 import Profile from "./pages/secondary/user/Profile";
 import Settings from "./pages/secondary/user/Settings";
 import Verification from "./pages/secondary/login/Verification";
-import UserPanel from "./pages/secondary/user/UserPanel";
+import UserPanel from "./pages/secondary/user/panel/UserPanel";
+import UserRequests from "./pages/secondary/user/panel/UserRequests";
+import UserNotifications from "./pages/secondary/user/panel/UserNotifications";
 import UserLists from "./pages/secondary/user/UserLists";
 import AdminPanel from "./pages/secondary/admin/AdminPanel";
 import Reports from "./pages/secondary/admin/Reports";
@@ -57,6 +59,8 @@ export default function App() {
                         <Route path='/settings' element={<Settings/>}/>
                         <Route path='/verification' element={<Verification/>}/>
                         <Route path='/user/:username/panel' element={<UserPanel/>}/>
+                        <Route path='/user/:username/requests' element={<UserRequests/>}/>
+                        <Route path='/user/:username/notifications' element={<UserNotifications/>}/>
                         <Route path='/user/:username/lists' element={<UserLists/>}/>
                         <Route path='/admin' element={<AdminPanel/>}/>
                         <Route path='/admin/reports' element={<Reports/>}/>

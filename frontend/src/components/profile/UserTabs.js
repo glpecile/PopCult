@@ -129,7 +129,6 @@ const UserTabs = (props) => {
                     page: userWatchedMediaPage,
                     pageSize
                 });
-                console.log(data);
 
                 setUserWatchedMedia(data);
             } catch (error) {
@@ -148,7 +147,6 @@ const UserTabs = (props) => {
                     page: userToWatchMediaPage,
                     pageSize
                 });
-                console.log(data);
 
                 setUserToWatchMedia(data);
             } catch (error) {

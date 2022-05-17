@@ -21,7 +21,6 @@ function ListsDescription() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
-                console.log(data)
                 setList(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
