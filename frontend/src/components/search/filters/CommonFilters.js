@@ -3,9 +3,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import {Decades} from "../../../enums/Decades";
 import {useTranslation} from "react-i18next";
+import {SortType} from "../../../enums/SortType";
 
 const CommonFilters = (props) => {
     const decades = Object.keys(Decades);
+    const sortType = Object.keys(SortType);
+
     const {t} = useTranslation();
 
     const style = {
@@ -43,8 +46,10 @@ const CommonFilters = (props) => {
                 label={t('search_sort')}
                 onChange={handleSortBy}
             >
-                <MenuItem value={"DATE"}>{t('search_sort_date')}</MenuItem>
-                <MenuItem value={"TITLE"}>{t('search_sort_title')}</MenuItem>
+                {sortType.map((key) => {
+                    return <MenuItem key={key} value={key}>{t('search_sort_' + key.toLowerCase())}</MenuItem>
+
+                })}
             </Select>
         </FormControl>
             {props.children}
