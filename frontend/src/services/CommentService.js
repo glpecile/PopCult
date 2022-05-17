@@ -1,5 +1,4 @@
 import commentApi from '../api/CommentApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {parsePaginatedResponse} from "./ResponseUtils";
 
 const commentService = (() => {

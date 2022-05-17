@@ -1,5 +1,4 @@
 import listApi from '../api/ListApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {parsePaginatedResponse} from './ResponseUtils'
 
 const listService = (() => {

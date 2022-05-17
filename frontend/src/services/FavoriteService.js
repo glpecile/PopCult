@@ -1,5 +1,4 @@
 import favoriteApi from '../api/FavoriteApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {MediaType} from '../enums/MediaType'
 import {parsePaginatedResponse} from "./ResponseUtils";
 
