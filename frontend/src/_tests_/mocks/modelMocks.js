@@ -85,3 +85,70 @@ export const user = "{\n" +
     "        \"username\": \"john\",\n" +
     "        \"watchedMediaUrl\": \"http://localhost:8080/webapp_war/api/users/john/watched-media\"\n" +
     "    }"
+
+export const listList = "[\n" +
+    "    {\n" +
+    "        \"collaborative\": false,\n" +
+    "        \"collaboratorsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/collaborators\",\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/comments\",\n" +
+    "        \"creationDate\": \"2022-04-05T18:36:16.276\",\n" +
+    "        \"description\": \"Up for a trilogy marathon? We got you covered.\",\n" +
+    "        \"forkedFrom\": \"Trilogies\",\n" +
+    "        \"forkedFromUrl\": \"http://localhost:8080/webapp_war/api/lists/9\",\n" +
+    "        \"forks\": 0,\n" +
+    "        \"forksUrl\": \"http://localhost:8080/webapp_war/api/lists/13/forks\",\n" +
+    "        \"id\": 13,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"mediaUrl\": \"http://localhost:8080/webapp_war/api/lists/13/media\",\n" +
+    "        \"name\": \"Copy from Trilogies\",\n" +
+    "        \"owner\": \"PopCult\",\n" +
+    "        \"ownerUrl\": \"http://localhost:8080/webapp_war/api/users/PopCult\",\n" +
+    "        \"reportsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/reports\",\n" +
+    "        \"requestsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/requests\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/lists/13\",\n" +
+    "        \"visibility\": true\n" +
+    "    },\n" +
+    "    {\n" +
+    "        \"collaborative\": false,\n" +
+    "        \"collaboratorsUrl\": \"http://localhost:8080/webapp_war/api/lists/19/collaborators\",\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/lists/19/comments\",\n" +
+    "        \"creationDate\": \"2022-05-11T20:24:17.257\",\n" +
+    "        \"description\": \"Up for a trilogy marathon? We got you covered.\",\n" +
+    "        \"forkedFrom\": \"Trilogies\",\n" +
+    "        \"forkedFromUrl\": \"http://localhost:8080/webapp_war/api/lists/9\",\n" +
+    "        \"forks\": 0,\n" +
+    "        \"forksUrl\": \"http://localhost:8080/webapp_war/api/lists/19/forks\",\n" +
+    "        \"id\": 19,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"mediaUrl\": \"http://localhost:8080/webapp_war/api/lists/19/media\",\n" +
+    "        \"name\": \"Copy from Trilogies\",\n" +
+    "        \"owner\": \"PopCult\",\n" +
+    "        \"ownerUrl\": \"http://localhost:8080/webapp_war/api/users/PopCult\",\n" +
+    "        \"reportsUrl\": \"http://localhost:8080/webapp_war/api/lists/19/reports\",\n" +
+    "        \"requestsUrl\": \"http://localhost:8080/webapp_war/api/lists/19/requests\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/lists/19\",\n" +
+    "        \"visibility\": true\n" +
+    "    }\n" +
+    "]"
+
+export const list = "{\n" +
+    "        \"collaborative\": false,\n" +
+    "        \"collaboratorsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/collaborators\",\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/comments\",\n" +
+    "        \"creationDate\": \"2022-04-05T18:36:16.276\",\n" +
+    "        \"description\": \"Up for a trilogy marathon? We got you covered.\",\n" +
+    "        \"forkedFrom\": \"Trilogies\",\n" +
+    "        \"forkedFromUrl\": \"http://localhost:8080/webapp_war/api/lists/9\",\n" +
+    "        \"forks\": 0,\n" +
+    "        \"forksUrl\": \"http://localhost:8080/webapp_war/api/lists/13/forks\",\n" +
+    "        \"id\": 1,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"mediaUrl\": \"http://localhost:8080/webapp_war/api/lists/13/media\",\n" +
+    "        \"name\": \"Copy from Trilogies\",\n" +
+    "        \"owner\": \"PopCult\",\n" +
+    "        \"ownerUrl\": \"http://localhost:8080/webapp_war/api/users/PopCult\",\n" +
+    "        \"reportsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/reports\",\n" +
+    "        \"requestsUrl\": \"http://localhost:8080/webapp_war/api/lists/13/requests\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/lists/13\",\n" +
+    "        \"visibility\": true\n" +
+    "    }"

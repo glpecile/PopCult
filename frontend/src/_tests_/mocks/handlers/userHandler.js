@@ -3,7 +3,6 @@ import {user, userList} from "../modelMocks";
 
 export const userHandler = [
 
-    // Handles a GET /users request
     rest.get('/users', (req, res, ctx) => {
         if (req.headers.get('Authorization') === 'Basic UG9wQ3VsdDoxMjMxMjMxMjM=') {
             return res(
@@ -18,7 +17,6 @@ export const userHandler = [
         )
     }),
 
-    // Handles a GET /user request
     rest.get('/users/john', (req, res, ctx) => {
         return res(
             // Respond with a 200 status code
