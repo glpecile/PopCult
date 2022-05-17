@@ -196,7 +196,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * CollabRequest Controller
                  */
-                .antMatchers("/api/collab-requests/{id}")
+                .antMatchers("/api/collab-requests/{id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_COLLAB_REQUEST_LIST_OWNER)
 
                 /**
@@ -204,31 +204,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  */
                 .antMatchers(HttpMethod.POST, "/api/lists")
                     .authenticated()
-                .antMatchers(HttpMethod.POST, "/api/lists/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/api/lists/{id:\\d+}/comments")
                     .access(ACCESS_CONTROL_CHECK_AUTH_AND_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
-                .antMatchers(HttpMethod.PATCH, "/api/lists/{id}/collaborators")
+                .antMatchers(HttpMethod.PATCH, "/api/lists/{id:\\d+}/collaborators")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.DELETE, "/api/lists/{id}", "/api/lists/{id}/collaborators/{username}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists/{id:\\d+}", "/api/lists/{id:\\d+}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.PUT, "/api/lists/{id}", "/api/lists/{id}/collaborators/{username}")
+                .antMatchers(HttpMethod.PUT, "/api/lists/{id:\\d+}", "/api/lists/{id:\\d+}/collaborators/{username}")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER)
-                .antMatchers(HttpMethod.PATCH, "/api/lists/{id}/media")
+                .antMatchers(HttpMethod.PATCH, "/api/lists/{id:\\d+}/media")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.DELETE, "/api/lists/{id}/media/{media-id}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists/{id:\\d+}/media/{media-id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.PUT, "/api/lists/{id}/media/{media-id}")
+                .antMatchers(HttpMethod.PUT, "/api/lists/{id:\\d+}/media/{media-id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COLLABORATOR)
-                .antMatchers(HttpMethod.POST, "/api/lists/{id}/forks", "/api/lists/{id}/reports", "/api/lists/{id}/requests")
+                .antMatchers(HttpMethod.POST, "/api/lists/{id:\\d+}/forks", "/api/lists/{id:\\d+}/reports", "/api/lists/{id:\\d+}/requests")
                     .access(ACCESS_CONTROL_CHECK_LIST_NOT_OWNER)
-                .antMatchers(HttpMethod.GET, "/api/lists/{id}/**")
+                .antMatchers(HttpMethod.GET, "/api/lists/{id:\\d+}/**")
                     .access(ACCESS_CONTROL_CHECK_LIST_OWNER_COLLABORATOR_OR_PUBLIC)
 
                 /**
                  * ListComments Controller
                  */
-                .antMatchers(HttpMethod.DELETE, "/api/lists-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/api/lists-comments/{id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "/api/lists-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/api/lists-comments/{id:\\d+}/reports")
                     .access(ACCESS_CONTROL_CHECK_LIST_COMMENT_NOT_OWNER)
 
                 /**
@@ -242,15 +242,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * Media Controller
                  */
-                .antMatchers(HttpMethod.POST, "/api/media/{id}/comments")
+                .antMatchers(HttpMethod.POST, "/api/media/{id:\\d+}/comments")
                     .authenticated()
 
                 /**
                  * MediaCommentController
                  */
-                .antMatchers(HttpMethod.DELETE, "/api/media-comments/{id}")
+                .antMatchers(HttpMethod.DELETE, "/api/media-comments/{id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_OWNER)
-                .antMatchers(HttpMethod.POST, "/api/media-comments/{id}/reports")
+                .antMatchers(HttpMethod.POST, "/api/media-comments/{id:\\d+}/reports")
                     .access(ACCESS_CONTROL_CHECK_MEDIA_COMMENT_NOT_OWNER)
 
 
@@ -263,7 +263,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * Notification Controller
                  */
-                .antMatchers("/api/notifications/{id}")
+                .antMatchers("/api/notifications/{id:\\d+}")
                     .access(ACCESS_CONTROL_CHECK_NOTIFICATION_OWNER)
 
                 /**
