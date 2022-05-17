@@ -17,7 +17,7 @@ const UserLists = () => {
     const navigate = useNavigate();
     const [userLists, setUserLists] = useState(undefined);
     const [page, setPage] = useState(1);
-    const pageSize = 8;
+    const pageSize = 12;
     const {setErrorStatusCode} = useErrorStatus();
 
 
@@ -46,18 +46,20 @@ const UserLists = () => {
                 <title>{t('user_lists_header', {username: user.username})} &#8226; PopCult</title>
             </Helmet>
             {userLists && <div className="row">
-                <div className="flex flex-wrap justify-between p-2.5 pb-0">
-                    <h2 className="text-3xl fw-bolder py-2">
+                <div className="flex flex-wrap justify-between p-3.5 mb-2">
+                    <h2 className="text-4xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                         {t('user_lists_title')}
                     </h2>
                     <button className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded"
                             onClick={createNewList}>
                         {t('lists_newList')}
                     </button>
-                    <ResponsiveMediaGrid>
-                        {(userLists) ? (
-                            (userLists.data && userLists.data.length > 0) ?
-                                (<>{userLists.data.map(content => {
+                </div>
+                {(userLists) ? (
+                    (userLists.data && userLists.data.length > 0) ?
+                        (<div>
+                            <ResponsiveMediaGrid>
+                                {userLists.data.map(content => {
                                     return <div className="m-0 p-0"
                                                 data-slider-target="image"
                                                 key={content.id}>
@@ -66,20 +68,19 @@ const UserLists = () => {
                                                    listTitle={content.name}/>
                                     </div>;
                                 })}
-                                    <div className="flex justify-center pt-3">
-                                        {(userLists.data.length > 0 && userLists.links.last.page > 1) &&
-                                            <PaginationComponent page={page}
-                                                                 lastPage={userLists.links.last.page}
-                                                                 setPage={setPage}/>
-                                        }
-                                    </div>
-                                </>)
-                                : (<h3 className="text-center text-gray-400">
-                                    {t('user_lists_empty')}
-                                </h3>)) : (<Spinner/>)
-                        }
-                    </ResponsiveMediaGrid>
-                </div>
+                            </ResponsiveMediaGrid>
+                            <div className="flex justify-center mt-4">
+                                {(userLists.data.length > 0 && userLists.links.last.page > 1) &&
+                                    <PaginationComponent page={page}
+                                                         lastPage={userLists.links.last.page}
+                                                         setPage={setPage}/>
+                                }
+                            </div>
+                        </div>)
+                        : (<h3 className="text-center text-gray-400">
+                            {t('user_lists_empty')}
+                        </h3>)) : (<Spinner/>)
+                }
             </div>}
         </> : <Loader/>
     }
