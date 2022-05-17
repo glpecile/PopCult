@@ -2,7 +2,7 @@ import api from './api'
 
 const mediaApi = (() => {
 
-    const getMediaList = ({page, pageSize, mediaType, genres, sortType, decades, query}) => {
+    const getMediaList = ({page, pageSize, mediaType, genres, sortType, decades, query, notInList}) => {
         return api.get(`/media`,
             {
                 params: {
@@ -12,7 +12,8 @@ const mediaApi = (() => {
                     ...(genres && {'genres': genres}),
                     ...(sortType && {'sort-type': sortType}),
                     ...(decades && {'decade': decades}),
-                    ...(query && {'query': query})
+                    ...(query && {'query': query}),
+                    ...(notInList && {'not-in-list': notInList})
                 }
             });
     }
@@ -47,7 +48,7 @@ const mediaApi = (() => {
                 params: {
                     'page': page,
                     'page-size': pageSize,
-                    ...(staffRole && {'type': staffRole})
+                    ...(staffRole && {'role': staffRole})
                 }
             });
     }

@@ -41,7 +41,8 @@
   "profile_secondary_description": "Tambien conocido como: {{username}} ",
   "profile_edit": "Editar Perfil",
   "profile_strikes": " Infracciones {{strikes}}",
-  "profile_unbanDate": "Suspendido hasta {{date}}",
+  "profile_unbanDate_one": "Suspendido por {{count}} día",
+  "profile_unbanDate_other": "Suspendido por {{count}} días",
   "discard_changes": "Descartar cambios",
   "save_changes": "Guardar cambios",
   "settings_title": "Actualiza Tu Perfil • PopCult",
@@ -107,6 +108,7 @@
   "media_genre": "Género",
   "media_studio": "Compañías Productoras",
   "media_staff": "Reparto",
+  "media_lists": "Algunas Listas Donde Está Este Contenido",
   "genre_action": "Acción",
   "genre_adventure": "Aventura",
   "genre_animation": "Animación",
@@ -204,7 +206,7 @@
   "lists_add_collab": "Agrega nuevos colaboradores",
   "lists_add_media": "Busca nuevo contenido para agregar a tu lista!",
   "lists_already_media": "Ya se encuentran en la lista:",
-  "lists_verify": "Casi listos!\nPor favor, verifica la informacion de tu nueva lista antes de proceder!",
+  "lists_verify": "Casi listos!\nPor favor, verifica la informacion de tu lista antes de proceder!",
   "lists_isPublic": "Es Publica",
   "lists_isCollaborative": "Es Colaborativa",
   "lists_noCollaborators": "No hay colaboradores en la lista",
@@ -260,13 +262,30 @@
   "lists_request_okay": "¡Tu solicitud ha sido enviada correctamente!",
   "lists_request_error": "Ha ocurrido un error con tu solicitud, puede que haya una solicitud tuya previa sin atender.",
   "lists_forks": "Copias de esta lista",
-  "see_all": "Ver todos"
-
-
-
-
-
-
-
+  "see_all": "Ver todos",
+  "list_add_media": "Agrega nueva contenido",
+  "list_no_media": "Parece no haber contenido seleccionado para agregar a la lista.",
+  "list_already_media": "Maneja el contenido de esta lista",
+  "list_public": "Hacer la lista publica",
+  "list_collaborative": "Hacer la lista colaborativa",
+  "list_delete": "Eliminar lista",
+  "list_delete_body": "¿Estás seguro que deseas eliminar esta lista?",
+  "list_delete_confirm": "Sí, eliminar esta lista",
+  "list_new_media": "Contenido para añadir",
+  "list_remove_media": "Contenido para remover",
+  "list_new_media_none": "No se está añadiendo ningún contenido nuevo a esta lista",
+  "list_remove_media_none": "No se está removiendo contenido de la lista",
+  "list_collaborators": "Colabora en la lista",
+  "list_collaborators_to_add": "Añadir a colaboradores",
+  "list_collaborators_to_remove": "Colaboradores a remover",
+  "list_collaborators_new" : "Nuevos colaboradores",
+  "list_new_collaborators_none": "No se están añadiendo nuevos colaboradores a esta lista",
+  "list_remove_collaborators_none": "No se están removiendo colaboradores de la lista",
+  "panel_collaborators": "<0>{{username}}</0> quiere colaborar en tu lista: <1>{{list}}</1>",
+  "collaborator_accept": "Aceptar Colaborador",
+  "collaborator_accept_body": "Estas seguro que deseas aceptar a {{username}} como colaborador?",
+  "collaborator_reject": "Rechazar Colaborador",
+  "collaborator_reject_body": "Estas seguro que deseas rechazar a {{username}} de colaborar de tu lista?",
+  "notification_comment_title": "<0>{{username}}</0> ha comentado en tu lista <1>{{list}}</1>:"
 
 }

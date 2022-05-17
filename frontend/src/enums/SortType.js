@@ -1,4 +1,4 @@
-export const Roles = {
+export const SortType = {
     DATE: "date",
     TITLE: "title",
     POPULARITY: "popularity"

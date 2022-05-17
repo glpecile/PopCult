@@ -61,7 +61,7 @@ export default function Login() {
         setPasswordShown(!passwordShown);
     };
 
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         event.preventDefault();
 
         async function login() {
@@ -78,7 +78,7 @@ export default function Login() {
         }
 
         if (!(enteredPasswordError || enteredUsernameError) && enteredUsername.length !== 0 && enteredPassword.length !== 0) {
-            login();
+            await login();
         } else {
             setErrorMessage();
         }

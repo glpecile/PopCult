@@ -1,21 +1,22 @@
 import listApi from '../api/ListApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from './ResponseUtils'
 
 const listService = (() => {
 
-    //TODO
+    /**
+     * @param url: user.listsUrl ||
+     *             user.publicListsUrl ||
+     *             user.editableListsUrl ||
+     *             media.listsContainUrl || ...
+     */
     const getMediaLists = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaLists({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getLists = async ({page, pageSize, query, genres, sortType, decades}) => {
         const res = await listApi.getLists({page, pageSize, query, genres, sortType, decades});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res)
     }
 
     const createList = async ({name, description, isPublic, isCollaborative}) => {
@@ -38,8 +39,9 @@ const listService = (() => {
         return res.data;
     }
 
-    const editList = async ({title, description, isPublic, isCollaborative}) => {
-        await listApi.createList({
+    const editList = async ({url, title, description, isPublic, isCollaborative}) => {
+        await listApi.editList({
+            url,
             name: title,
             description: description,
             visible: isPublic,
@@ -53,9 +55,7 @@ const listService = (() => {
 
     const getMediaInList = async ({url, page, pageSize}) => {
         const res = await listApi.getMediaInList({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isMediaInList = async (url) => {
@@ -77,34 +77,12 @@ const listService = (() => {
 
     const getListForks = async ({url, page, pageSize}) => {
         const res = await listApi.getListForks({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const forkList = async (url) => {
         const response = await listApi.forkList(url);
         return response.headers.location;
-
-    }
-
-    const getUserEditableListsByUsername = async ({username, page, pageSize}) => {
-        const res = await listApi.getUserEditableListsByUsername({username, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
-    }
-
-    /**
-     * @param url: user.listsUrl ||
-     *             user.publicListsUrl ||
-     *             user.editableListsUrl
-     */
-    const getUserLists = async ({url, page, pageSize}) => {
-        const res = await listApi.getUserLists({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
     }
 
     return {
@@ -121,9 +99,7 @@ const listService = (() => {
         addMediaToList,
         removeMediaFromList,
         getListForks,
-        forkList,
-        getUserEditableListsByUsername,
-        getUserLists
+        forkList
     }
 })();
 

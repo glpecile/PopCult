@@ -88,7 +88,7 @@ export default function AddMediaDialog(props) {
                                                                           image={media.imageUrl} className="mb-1"/>}
                                                  key={media.id}
                                                  className="py-1"/>
-                    })) : (<div className="text-gray-400">
+                    })) : (<div className="text-gray-400 flex justify-center">
                         {t('search_no_results')}
                     </div>)}
             </FormGroup>

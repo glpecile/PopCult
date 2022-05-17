@@ -31,7 +31,7 @@ const Navbar = () => {
     return (
         <nav
             className="relative navbar navbar-dark navbar-expand-lg w-full mb-3 text-white shadow-md bg-gradient-to-r from-amber-500 to-violet-900">
-            <div className="container-fluid flex sm:px-12 px-16">
+            <div className="container-fluid flex px-6 md:px-16">
                 <NavLink className="navbar-brand m-0 p-0" to='/'>
                     <motion.img
                         whileHover={{rotate: '-2deg'}}

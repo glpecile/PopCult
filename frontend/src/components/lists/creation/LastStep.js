@@ -29,7 +29,7 @@ const LastStep = (list) => {
                 <FormControlLabel control={<Checkbox checked={list.isCollaborative} color="secondary"/>}
                                   label={isCollaborative}/>
             </div>
-            {list.collaborators.length > 0 ? <div>
+            {list.collaborators.length > 0 ? <div className="space-x-2">
                 <div className="flex flex-col py-1">
                     {t('lists_already_collab')}
                 </div>
@@ -37,6 +37,7 @@ const LastStep = (list) => {
                     return <Chip
                         label={user.username}
                         variant="outlined" color="secondary"
+                        className="ring-1 ring-violet-500"
                         avatar={<Avatar alt={user.username} src={user.imageUrl}/>}
                         key={user.username}
                     />

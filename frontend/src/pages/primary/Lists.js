@@ -33,6 +33,12 @@ function Lists() {
     const location = useLocation()
     const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
 
+    useEffect(() => {
+        if (searchParams.has(listCategories)) setListFilters(prev => new Map([...prev, [listCategories, searchParams.getAll(listCategories)]]));
+        if (searchParams.has(listSort)) setListFilters(prev => new Map([...prev, [listSort, searchParams.get(listSort)]]));
+        if (searchParams.has(listDecades)) setListFilters(prev => new Map([...prev, [listDecades, searchParams.get(listDecades)]]));
+    }, [searchParams]);
+
     const getCarrouselLists = useCallback(async () => {
         const data = await listService.getLists({pageSize: 12})
         setCarrouselLists(data.data);
@@ -67,7 +73,7 @@ function Lists() {
         navigate('/lists/new');
     }
 
-    useEffect(() => {
+    const applyFilters = () => {
         navigate({
             pathname: '/lists',
             search: createSearchParams({
@@ -75,7 +81,7 @@ function Lists() {
                 ...Object.fromEntries(listFilters.entries())
             }).toString()
         });
-    }, [page, navigate, listFilters]);
+    };
 
     useEffect(() => {
             const timeOut = setTimeout(() => {
@@ -107,7 +113,7 @@ function Lists() {
                 <Filters showMediaFilters={false}
                          setListPage={setPage}
                          setListFilters={setListFilters} listFilters={listFilters} genres={genres} listSort={listSort}
-                         listDecades={listDecades} listCategories={listCategories}/>
+                         listDecades={listDecades} listCategories={listCategories} applyFilters={applyFilters}/>
                 {(lists && lists.data) ? <>
                     <div className="row py-2">
                         {lists.data.map((content) => {

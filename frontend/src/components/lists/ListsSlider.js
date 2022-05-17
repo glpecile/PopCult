@@ -19,6 +19,7 @@ const ListsSlider = (props) => {
             <div className="px-2.5 py-3">
                 <ListsCard id={content.id} key={content.id}
                            mediaUrl={content.mediaUrl}
+                           onDragStart={handleDragStart}
                            listTitle={content.name}/>
             </div>
         );

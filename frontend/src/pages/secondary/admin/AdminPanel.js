@@ -17,7 +17,7 @@ export default function AdminPanel() {
             <title>{t('admin_title')}</title>
         </Helmet>
         {/*Title*/}
-        <h1 className="text-center display-5 fw-bolder py-4">
+        <h1 className="text-center text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide py-4">
             {t('admin_header')}
         </h1>
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">

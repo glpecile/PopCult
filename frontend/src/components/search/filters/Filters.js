@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MediaFilters from "./MediaFilters";
@@ -9,14 +9,23 @@ import {useTranslation} from "react-i18next";
 const Filters = (props) => {
     const {t} = useTranslation();
 
-    const [type, setType] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaType)) ? props.mediaFilters.get(props.mediaType) : '');
-    const [mSortBy, setMSortBy] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaSort)) ? props.mediaFilters.get(props.mediaSort) : '');
-    const [mDecades, setMDecades] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaDecades)) ? props.mediaFilters.get(props.mediaDecades) : '');
-    const [mCategories, setMCategories] = useState((props.mediaFilters && props.mediaFilters.has(props.mediaCategories)) ? props.mediaFilters.get(props.mediaCategories) : []);
-    const [lSortBy, setLSortBy] = useState((props.listFilters && props.listFilters.has(props.listSort)) ? props.listFilters.get(props.listSort) : '');
-    const [lDecades, setLDecades] = useState((props.listFilters && props.listFilters.has(props.listDecades)) ? props.listFilters.get(props.listDecades) : '');
-    const [lCategories, setLCategories] = useState((props.listFilters && props.listFilters.has(props.listCategories)) ? props.listFilters.get(props.listCategories) : []);
+    const [type, setType] = useState('');
+    const [mSortBy, setMSortBy] = useState('');
+    const [mDecades, setMDecades] = useState(  '');
+    const [mCategories, setMCategories] = useState( []);
+    const [lSortBy, setLSortBy] = useState(  '');
+    const [lDecades, setLDecades] = useState( '');
+    const [lCategories, setLCategories] = useState( []);
 
+    useEffect(() => {
+        if (props.mediaFilters && props.mediaFilters.has(props.mediaType)) setType(props.mediaFilters.get(props.mediaType));
+        if (props.mediaFilters && props.mediaFilters.has(props.mediaSort)) setMSortBy(props.mediaFilters.get(props.mediaSort));
+        if (props.mediaFilters && props.mediaFilters.has(props.mediaDecades)) setMDecades(props.mediaFilters.get(props.mediaDecades));
+        if (props.mediaFilters && props.mediaFilters.has(props.mediaCategories))setMCategories(props.mediaFilters.get(props.mediaCategories));
+        if (props.listFilters && props.listFilters.has(props.listSort)) setLSortBy(props.listFilters.get(props.listSort));
+        if (props.listFilters && props.listFilters.has(props.listDecades)) setLDecades(props.listFilters.get(props.listDecades));
+        if (props.listFilters && props.listFilters.has(props.listCategories)) setLCategories(props.listFilters.get(props.listCategories));
+    }, [props]);
 
     const handleMediaFilters = (key, value) => {
         if (value !== '') {
@@ -52,6 +61,7 @@ const Filters = (props) => {
             handleListsFilters(props.listDecades, lDecades);
             handleListsFilters(props.listCategories, lCategories);
         }
+        props.applyFilters();
     }
 
     const cleanFilters = () => {
@@ -68,8 +78,8 @@ const Filters = (props) => {
     }
 
     return <>
-        <Divider className="text-violet-500"/> {/* despues esto se puede sacar */}
-        <form onSubmit={submitHandler} className="flex justify-between py-2">
+        <Divider className="text-violet-500"/>
+        <form onSubmit={submitHandler} className="flex justify-between flex-wrap mb-1.5 py-2">
             {props.showMediaFilters ?
                 (<MediaFilters sortBy={mSortBy} setSortBy={setMSortBy} categories={mCategories}
                                setCategories={setMCategories}
@@ -89,7 +99,6 @@ const Filters = (props) => {
                 </button>
             </div>
         </form>
-        <Divider className="text-violet-500"/>
     </>;
 }
 
