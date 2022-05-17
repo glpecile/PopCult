@@ -26,6 +26,7 @@ function ListsDescription() {
                 setErrorStatusCode(error.response.status);
             }
         }
+
         getList(id);
         return () => {
 
@@ -36,7 +37,7 @@ function ListsDescription() {
     return (<>
         {list ? (<>
             <div className="flex flex-wrap pt-2">
-                <h2 className="display-5 fw-bolder">
+                <h2 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                     {list.name}
                 </h2>
                 <ListUpperIcons owner={list.owner} favoriteUrl={list.favoriteUrl} reportsUrl={list.reportsUrl}/>
@@ -45,7 +46,7 @@ function ListsDescription() {
             <div className="flex justify-right">
                 <Trans i18nKey="list_by">
                     <Link className="text-violet-500 hover:text-violet-900 font-bold"
-                    to={`/user/${list.owner}`}>{{username: list.owner}}</Link>
+                          to={`/user/${list.owner}`}>{{username: list.owner}}</Link>
                 </Trans>
 
                 {list.forkedFrom && <Trans i18nKey="forked_from">

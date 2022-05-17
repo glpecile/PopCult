@@ -31,7 +31,8 @@ const ListEditDetails = (props) => {
                     className="py-2 font-semibold text-xl w-full after:content-['*'] after:ml-0.5 after:text-violet-400">
                     List title
                 </label>
-                <input className="rounded w-full bg-gray-50 display-5 fw-bolder" type='text' value={props.listName}
+                <input className="rounded w-full bg-gray-50 text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide"
+                       type='text' value={props.listName}
                        pattern='[^<\/>]+'
                        onChange={handleListName}/>
             </div>
@@ -53,7 +54,7 @@ const ListEditDetails = (props) => {
             </div>
         </> : <>
             <div className="flex flex-wrap pt-2">
-                <h2 className="display-5 fw-bolder">
+                <h2 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                     {props.listName}
                 </h2>
             </div>
