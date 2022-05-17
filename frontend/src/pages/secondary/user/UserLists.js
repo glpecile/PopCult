@@ -9,6 +9,7 @@ import PaginationComponent from "../../../components/PaginationComponent";
 import Spinner from "../../../components/animation/Spinner";
 import UserContext from "../../../store/UserContext";
 import Loader from "../errors/Loader";
+import ResponsiveMediaGrid from "../../../components/ResponsiveMediaGrid";
 
 const UserLists = () => {
     const user = useContext(UserContext).user;
@@ -53,15 +54,17 @@ const UserLists = () => {
                             onClick={createNewList}>
                         {t('lists_newList')}
                     </button>
-                    <div className="row py-2">
+                    <ResponsiveMediaGrid>
                         {(userLists) ? (
                             (userLists.data && userLists.data.length > 0) ?
                                 (<>{userLists.data.map(content => {
-                                    return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
+                                    return <div className="m-0 p-0"
                                                 data-slider-target="image"
-                                                key={content.id}><ListsCard id={content.id} key={content.id}
-                                                                            mediaUrl={content.mediaUrl}
-                                                                            listTitle={content.name}/></div>;
+                                                key={content.id}>
+                                        <ListsCard id={content.id} key={content.id}
+                                                   mediaUrl={content.mediaUrl}
+                                                   listTitle={content.name}/>
+                                    </div>;
                                 })}
                                     <div className="flex justify-center pt-3">
                                         {(userLists.data.length > 0 && userLists.links.last.page > 1) &&
@@ -75,7 +78,7 @@ const UserLists = () => {
                                     {t('user_lists_empty')}
                                 </h3>)) : (<Spinner/>)
                         }
-                    </div>
+                    </ResponsiveMediaGrid>
                 </div>
             </div>}
         </> : <Loader/>

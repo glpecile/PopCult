@@ -10,6 +10,7 @@ import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import MediaCard from "../../components/media/MediaCard";
 import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
+import ResponsiveMediaGrid from "../../components/ResponsiveMediaGrid";
 
 export default function Films() {
     const {t} = useTranslation();
@@ -23,7 +24,7 @@ export default function Films() {
     const {setErrorStatusCode} = useErrorStatus();
     const [filmFilters, setFilmFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
-    const pageSize = 4;
+    const pageSize = 12;
 
     const mediaSort = 'sort';
     const mediaDecades = 'decades';
@@ -99,10 +100,9 @@ export default function Films() {
                                  setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
                                  mediaDecades={mediaDecades} mediaCategories={mediaCategories} applyFilters={applyFilters}/>
                         {(films && films.data) ? <>
-                            <div className="row py-2">
+                            <ResponsiveMediaGrid>
                                 {films.data.map((content) => {
-                                    return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                                                key={content.id}>
+                                    return <div className="p-0 m-0" key={content.id}>
                                         <MediaCard
                                             key={content.id}
                                             id={content.id}
@@ -112,7 +112,7 @@ export default function Films() {
                                             type={content.type.toLowerCase()}
                                         /></div>
                                 })}
-                            </div>
+                            </ResponsiveMediaGrid>
                             <div className="flex justify-center pt-2">
                                 {(films.data.length > 0 && films.links.last.page > 1) &&
                                     <PaginationComponent page={page} lastPage={films.links.last.page}

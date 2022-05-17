@@ -11,6 +11,7 @@ import ListsCard from "../../components/lists/ListsCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import {Alert, Snackbar} from "@mui/material";
+import ResponsiveMediaGrid from "../../components/ResponsiveMediaGrid";
 
 function Lists() {
     const {t} = useTranslation();
@@ -25,7 +26,7 @@ function Lists() {
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
     const [listFilters, setListFilters] = useState(() => new Map());
-    const pageSize = 4;
+    const pageSize = 12;
 
     const listSort = 'sort';
     const listDecades = 'decades';
@@ -115,16 +116,18 @@ function Lists() {
                          setListFilters={setListFilters} listFilters={listFilters} genres={genres} listSort={listSort}
                          listDecades={listDecades} listCategories={listCategories} applyFilters={applyFilters}/>
                 {(lists && lists.data) ? <>
-                    <div className="row py-2">
+                    <ResponsiveMediaGrid>
                         {lists.data.map((content) => {
-                            return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                                        key={content.id}>
-                                <ListsCard id={content.id} key={content.id}
-                                           mediaUrl={content.mediaUrl}
-                                           listTitle={content.name}/></div>
+                            return <div className="m-0 p-0" key={content.id}>
+                                <ListsCard
+                                    id={content.id}
+                                    key={content.id}
+                                    mediaUrl={content.mediaUrl}
+                                    listTitle={content.name}/>
+                            </div>
                         })}
-                    </div>
-                    <div className="flex justify-center pt-2">
+                    </ResponsiveMediaGrid>
+                    <div className="flex justify-center mt-4">
                         {(lists.data.length > 0 && lists.links.last.page > 1) &&
                             <PaginationComponent page={page} lastPage={lists.links.last.page}
                                                  setPage={setPage}/>
