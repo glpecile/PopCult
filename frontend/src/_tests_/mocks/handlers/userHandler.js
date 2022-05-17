@@ -1,4 +1,5 @@
-import { rest } from 'msw'
+import {rest} from 'msw'
+import {user, userList} from "../modelMocks";
 
 export const userHandler = [
 
@@ -13,11 +14,18 @@ export const userHandler = [
         return res(
             // Respond with a 200 status code
             ctx.status(200),
+            ctx.body(userList)
         )
     }),
 
     // Handles a GET /user request
-    rest.get('/user', null),
+    rest.get('/users/john', (req, res, ctx) => {
+        return res(
+            // Respond with a 200 status code
+            ctx.status(200),
+            ctx.body(user)
+        )
+    })
 ]
 
 export default userHandler

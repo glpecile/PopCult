@@ -1,13 +1,13 @@
-import {fireEvent, render, screen} from '@testing-library/react';
-import {setupTests} from "./utils/setupTests";
-import renderFromRoute from "./utils/renderFromRoute";
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {setupTests} from "./testUtils/setupTests";
+import renderFromRoute from "./testUtils/renderFromRoute";
 import userEvent from "@testing-library/user-event";
 
 
 setupTests()
 
 test('login', async () => {
-    renderFromRoute('/login');
+    await act(async () => renderFromRoute('/login'));
 
     fireEvent.change(screen.getByTestId('username-input'), {
         target: {value: 'PopCult'},
