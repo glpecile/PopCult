@@ -29,6 +29,12 @@ function Series() {
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
 
+    useEffect(() => {
+        if (searchParams.has(mediaCategories)) setSeriesFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
+        if (searchParams.has(mediaDecades)) setSeriesFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
+        if (searchParams.has(mediaSort)) setSeriesFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
+    }, [searchParams]);
+
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getSeries({pageSize: 12});
         setCarrouselData(data);
@@ -62,13 +68,13 @@ function Series() {
         getData();
     }, [page, seriesFilters, pageSize, setErrorStatusCode])
 
-    useEffect(() => {
+    const applyFilters = () => {
         navigate({
             pathname: '/media/series', search: createSearchParams({
                 page: page, ...Object.fromEntries(seriesFilters.entries())
             }).toString()
         });
-    }, [page, navigate, seriesFilters]);
+    };
 
     return (<section>
         <Helmet>
@@ -85,7 +91,7 @@ function Series() {
             <Filters showMediaFilters={true} showMediaType={false} setMediaFilters={setSeriesFilters}
                      mediaFilters={seriesFilters}
                      setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
-                     mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
+                     mediaDecades={mediaDecades} mediaCategories={mediaCategories} applyFilters={applyFilters}/>
             {(series && series.data) ? <>
                 <div className="row py-2">
                     {series.data.map((content) => {

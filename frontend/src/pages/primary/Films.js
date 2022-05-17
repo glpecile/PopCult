@@ -29,6 +29,12 @@ export default function Films() {
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
 
+    useEffect(() => {
+        if (searchParams.has(mediaCategories)) setFilmFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
+        if (searchParams.has(mediaDecades)) setFilmFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
+        if (searchParams.has(mediaSort)) setFilmFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
+    }, [searchParams]);
+
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getFilms({pageSize: 12});
         setCarrouselData(data);
@@ -62,7 +68,7 @@ export default function Films() {
         getData();
     }, [page, filmFilters, pageSize, setErrorStatusCode])
 
-    useEffect(() => {
+    const applyFilters = () => {
         navigate({
             pathname: '/media/films',
             search: createSearchParams({
@@ -70,7 +76,7 @@ export default function Films() {
                 ...Object.fromEntries(filmFilters.entries())
             }).toString()
         });
-    }, [page, navigate, filmFilters]);
+    }
 
 
     return (
@@ -91,7 +97,7 @@ export default function Films() {
                         <Filters showMediaFilters={true} showMediaType={false} setMediaFilters={setFilmFilters}
                                  mediaFilters={filmFilters}
                                  setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
-                                 mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
+                                 mediaDecades={mediaDecades} mediaCategories={mediaCategories} applyFilters={applyFilters}/>
                         {(films && films.data) ? <>
                             <div className="row py-2">
                                 {films.data.map((content) => {

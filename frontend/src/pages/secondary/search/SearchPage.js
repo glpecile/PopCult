@@ -34,7 +34,18 @@ export default function SearchPage() {
     const listDecades = 'ldecades';
     const listCategories = 'lcategories';
 
+
     useEffect(() => {
+        if (searchParams.has(mediaCategories)) setMediaFilters(prev => new Map([...prev, [mediaCategories, searchParams.getAll(mediaCategories)]]));
+        if (searchParams.has(mediaType)) setMediaFilters(prev => new Map([...prev, [mediaType, searchParams.get(mediaType)]]));
+        if (searchParams.has(mediaDecades)) setMediaFilters(prev => new Map([...prev, [mediaDecades, searchParams.get(mediaDecades)]]));
+        if (searchParams.has(mediaSort)) setMediaFilters(prev => new Map([...prev, [mediaSort, searchParams.get(mediaSort)]]));
+        if (searchParams.has(listCategories)) setListFilters(prev => new Map([...prev, [listCategories, searchParams.getAll(listCategories)]]));
+        if (searchParams.has(listSort)) setListFilters(prev => new Map([...prev, [listSort, searchParams.get(listSort)]]));
+        if (searchParams.has(listDecades)) setListFilters(prev => new Map([...prev, [listDecades, searchParams.get(listDecades)]]));
+    }, [searchParams]);
+
+    const applyFilters = () => {
         navigate({
             pathname: '/search',
             search: createSearchParams({
@@ -45,7 +56,7 @@ export default function SearchPage() {
                 ...Object.fromEntries(listFilters.entries())
             }).toString()
         });
-    }, [mediaPage, listPage, navigate, term, mediaFilters, listFilters])
+    }
 
 
     useEffect(() => {
@@ -89,13 +100,15 @@ export default function SearchPage() {
     return (
         <div>
             <h1 className="text-3xl font-black justify-start p-2 break-words max-w-full tracking-wide">
-                { term.length ? t('search_title', {term: term}) : t('search_title_all')}
+                {term.length ? t('search_title', {term: term}) : t('search_title_all')}
             </h1>
-            {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters} mediaFilters={mediaFilters}
+            {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters}
+                      mediaFilters={mediaFilters}
                       setListPage={setListPage} setMediaPage={setMediaPage}
                       setListFilters={setListFilters} listFilters={listFilters} genres={genres} mediaSort={mediaSort}
                       mediaType={mediaType} mediaDecades={mediaDecades} mediaCategories={mediaCategories}
-                      listSort={listSort} listDecades={listDecades} listCategories={listCategories}/>}
+                      listSort={listSort} listDecades={listDecades} listCategories={listCategories}
+                      applyFilters={applyFilters}/>}
             {(media && lists) ?
                 <SearchResults media={media} mediaPage={mediaPage} setMediaPage={setMediaPage} lists={lists}
                                listPage={listPage} setListPage={setListPage} activeTab={activeTab}
