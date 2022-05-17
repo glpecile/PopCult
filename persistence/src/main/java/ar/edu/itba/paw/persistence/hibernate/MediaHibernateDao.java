@@ -129,7 +129,7 @@ public class MediaHibernateDao implements MediaDao {
         String sortBaseString = "";
         String sortCountString = "";
         StringBuilder fromTables = new StringBuilder();
-        fromTables.append( "media NATURAL JOIN mediagenre ");
+        fromTables.append( "media LEFT JOIN mediagenre ON media.mediaid = mediagenre.mediaid ");
         if (sort != null) {
             if (sort == SortType.TITLE) {
                 sortBaseString = ", LOWER(" + sort.getNameMedia() + ") ";
