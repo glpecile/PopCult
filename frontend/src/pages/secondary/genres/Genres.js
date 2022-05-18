@@ -32,21 +32,18 @@ export default function Genres() {
                 const filteredGenre = genresFromContext.filter((g) => g.genre.localeCompare(genreParam.toUpperCase()) === 0)[0];
                 if (!filteredGenre)
                     setErrorStatusCode(404);
-                const mediaFromGenre = await MediaService.getMediaByUrl({
+                const mediaFromGenrePromise = MediaService.getMediaByUrl({
                     url: filteredGenre.mediaUrl,
                     page: page,
                     pageSize: pageSize
                 });
-                const listsFromGenre = await ListService.getMediaLists({
+                const listsFromGenrePromise = ListService.getMediaLists({
                     url: filteredGenre.listsUrl,
                     page: 1,
                     pageSize: pageSize
-                })
-
-                // logs
-                console.log(filteredGenre);
-                console.log(mediaFromGenre);
-                console.log(listsFromGenre);
+                });
+                // promise all
+                const [mediaFromGenre, listsFromGenre] = await Promise.all([mediaFromGenrePromise, listsFromGenrePromise]);
 
                 // set
                 setMediaPaginated(mediaFromGenre);

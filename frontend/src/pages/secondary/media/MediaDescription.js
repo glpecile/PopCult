@@ -31,19 +31,13 @@ function MediaDescription() {
         try {
             // fetch
             const mediaDataToAdd = await MediaService.getMedia(id);
-            const genreDataToAdd = await GenreService.getMediaGenres(mediaDataToAdd.genreUrl);
-            const studiosDataToAdd = await StudioService.getMediaStudios(mediaDataToAdd.studiosUrl);
-            const directorsDataToAdd = await staffService.getMediaDirectors(mediaDataToAdd.staffUrl);
-            const crewDataToAdd = await staffService.getMediaCrew(mediaDataToAdd.staffUrl);
-            const listsDataToAdd = await ListService.getMediaLists({url: mediaDataToAdd.listsContainUrl, page: page, pageSize: pageSize})
-
-            // log | TODO: delete in production.
-            console.log(mediaDataToAdd);
-            console.log(genreDataToAdd);
-            console.log(studiosDataToAdd);
-            console.log(directorsDataToAdd);
-            console.log(crewDataToAdd);
-            console.log(listsDataToAdd);
+            const genreDataToAddPromise = GenreService.getMediaGenres(mediaDataToAdd.genreUrl);
+            const studiosDataToAddPromise = StudioService.getMediaStudios(mediaDataToAdd.studiosUrl);
+            const directorsDataToAddPromise = staffService.getMediaDirectors(mediaDataToAdd.staffUrl);
+            const crewDataToAddPromise = staffService.getMediaCrew(mediaDataToAdd.staffUrl);
+            const listsDataToAddPromise = ListService.getMediaLists({url: mediaDataToAdd.listsContainUrl, page: page, pageSize: pageSize})
+            // promise all
+            const [genreDataToAdd, studiosDataToAdd, directorsDataToAdd, crewDataToAdd, listsDataToAdd] = await Promise.all([genreDataToAddPromise, studiosDataToAddPromise, directorsDataToAddPromise, crewDataToAddPromise, listsDataToAddPromise]);
 
             // set
             setMediaData(mediaDataToAdd);
