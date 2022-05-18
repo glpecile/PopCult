@@ -40,7 +40,7 @@ export default function App() {
 
     return (
         <HelmetProvider context={helmetContext}>
-            <BrowserRouter>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Suspense fallback={<Loader/>}>
                     <Layout>
                         <Routes>
