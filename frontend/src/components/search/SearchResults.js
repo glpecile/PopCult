@@ -75,7 +75,7 @@ const SearchResults = (props) => {
                                                      setPage={props.setMediaPage}/>
                             }
                         </div>
-                    </> : <NoResults/>}
+                    </> : <NoResults title={t('search_no_results')}/>}
                 </TabPanel>
 
                 <TabPanel value={props.activeTab} index={1}>

@@ -6,6 +6,7 @@ import Lists from "./pages/primary/Lists";
 import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
+import Genres from "./pages/secondary/genres/Genres";
 import Login from "./pages/secondary/login/Login";
 import Recovery from "./pages/secondary/login/Recovery";
 import ResetPassword from "./pages/secondary/login/ResetPassword";
@@ -45,6 +46,7 @@ export default function App() {
                         <Route path='/media/series' element={<Series/>}/>
                         <Route path='/media/films/:id' element={<MediaDescription/>}/>
                         <Route path='/media/series/:id' element={<MediaDescription/>}/>
+                        <Route path='/genres/:genre' element={<Genres/>}/>
                         <Route path='/lists' element={<Lists/>}/>
                         <Route path='/lists/:id' element={<ListsDescription/>}/>
                         <Route path='/lists/:id/edit' element={<ListsEdition/>}/>

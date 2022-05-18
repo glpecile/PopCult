@@ -30,7 +30,7 @@ export default function SearchPage() {
     const [listPage, setListPage] = useState(searchParams.get("lp") || 1);
     const [activeTab, setActiveTab] = useState(0); //use this in order to know which options of filters to give
 
-    const pageSize = 4;
+    const pageSize = 12;
     const {setErrorStatusCode} = useErrorStatus();
     let firstLoad = useRef(true);
 
