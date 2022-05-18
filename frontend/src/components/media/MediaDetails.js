@@ -32,18 +32,21 @@ function MediaDetails(props) {
                 <div className="text-xl pb-2 tracking-wide">
                     <span>{props.releaseYear} • {props.countryName}</span>
                 </div>
-                <p className="lead tracking-tight text-justify">{props.description}</p>
-
+                <p className="lead tracking-tight text-justify">
+                    {props.description}
+                </p>
                 {
                     /**
                      * Genres
                      * -------------------
-                     * genre: "COMEDY"
-                     * id: 5
-                     * listsUrl: "http://localhost:8080/webapp_war/api/genres/Comedy/lists"
-                     * mediaUrl: "http://localhost:8080/webapp_war/api/genres/Comedy/media"
-                     * url: "http://localhost:8080/webapp_war/api/genres/Comedy"
-                     * [[Prototype]]: Object
+                     * @type
+                     * - Object
+                     * @properties
+                     * - genre
+                     * - id
+                     * - listsUrl
+                     * - mediaUrl
+                     * - url
                      */
                     props.genres && <>
                         <h5 className="font-bold text-2xl py-2">
@@ -65,11 +68,14 @@ function MediaDetails(props) {
                     /**
                      * Studios
                      * -------------------
-                     * id: 54
-                     * imageUrl: "http://localhost:8080/webapp_war/api/studios/54/image"
-                     * mediaUrl: "http://localhost:8080/webapp_war/api/studios/54/media"
-                     * name: "Paramount"
-                     * url: "http://localhost:8080/webapp_war/api/studios/5
+                     * @type
+                     * - Object
+                     * @properties
+                     * - id
+                     * - imageUrl
+                     * - mediaUrl
+                     * - name
+                     * - url
                      */
                     props.studios &&
                     <>
@@ -91,14 +97,17 @@ function MediaDetails(props) {
                     /**
                      * Staff (crew & directors)
                      * -------------------
-                     * description: "Idris Elba (born 6 September 1972) is a British television, theatre, and film actor who has starred in both British and American productions. One of his first acting roles was in the soap opera Family Affairs. Since then he has worked in a variety of TV and movie projects including Ultraviolet, The Wire, No Good Deed and Zootopia."
-                     * id: 161
-                     * imageUrl: "http://localhost:8080/webapp_war/api/staff/161/image"
-                     * mediaActorUrl: "http://localhost:8080/webapp_war/api/staff/161/media?role=Actor"
-                     * mediaDirectorUrl: "http://localhost:8080/webapp_war/api/staff/161/media?role=Director"
-                     * mediaUrl: "http://localhost:8080/webapp_war/api/staff/161/media"
-                     * name: "Idris Elba"
-                     * url: "http://localhost:8080/webapp_war/api/staff/161"
+                     * @type
+                     * - Object
+                     * @properties
+                     * - description
+                     * - id
+                     * - imageUrl
+                     * - mediaActorUrl
+                     * - mediaDirectorUrl
+                     * - mediaUrl
+                     * - name
+                     * - url
                      */
                     (props.directors || props.crew) && <>
                         <h5 className="font-bold text-2xl py-2 mt-3">
@@ -110,7 +119,7 @@ function MediaDetails(props) {
                                 props.directors.map(
                                     (d) => {
                                         return (
-                                            <MediaChips role="Director" key={d.id} url="#" text={d.name}/>
+                                            <MediaChips role="Director" key={d.id} url={'/staff/' + d.id} text={d.name}/>
                                         )
                                     }
                                 )
@@ -120,7 +129,7 @@ function MediaDetails(props) {
                                 props.crew.map(
                                     (c) => {
                                         return (
-                                            <MediaChips role="Actor" key={c.id} url="#" text={c.name}/>
+                                            <MediaChips role="Actor" key={c.id} url={'/staff/' + c.id} text={c.name}/>
                                         )
                                     }
                                 )

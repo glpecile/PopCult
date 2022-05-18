@@ -1,5 +1,6 @@
-import React, {Suspense} from "react";
+import {HelmetProvider} from "react-helmet-async";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, {Suspense} from "react";
 import Films from "./pages/primary/Films";
 import Series from "./pages/primary/Series";
 import Lists from "./pages/primary/Lists";
@@ -8,6 +9,7 @@ import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
 import Genres from "./pages/secondary/genres/Genres";
 import Studio from "./pages/secondary/studios/Studio"
+import StaffProfile from "./pages/secondary/staff/StaffProfile";
 import Login from "./pages/secondary/login/Login";
 import Recovery from "./pages/secondary/login/Recovery";
 import ResetPassword from "./pages/secondary/login/ResetPassword";
@@ -32,7 +34,6 @@ import SearchPage from "./pages/secondary/search/SearchPage";
 import Layout from "./components/Layout/Layout";
 import ListsEdition from "./pages/secondary/lists/ListsEdition";
 import LoggedGate from "./components/permissions/LoggedGate";
-import {HelmetProvider} from "react-helmet-async";
 
 export default function App() {
     const helmetContext = {};
@@ -50,6 +51,7 @@ export default function App() {
                             <Route path='/media/series/:id' element={<MediaDescription/>}/>
                             <Route path='/genres/:genre' element={<Genres/>}/>
                             <Route path='/studios/:id' element={<Studio/>}/>
+                            <Route path='/staff/:id' element={<StaffProfile/>}/>
                             <Route path='/lists' element={<Lists/>}/>
                             <Route path='/lists/:id' element={<ListsDescription/>}/>
                             <Route path='/lists/:id/edit' element={<ListsEdition/>}/>
