@@ -1,8 +1,9 @@
 import {useLocation} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
-import * as React from 'react';
 import {Tab, Tabs} from "@mui/material";
+import {a11yProps, TabPanel} from "../../../components/TabsComponent";
+import * as React from 'react';
 import UserService from "../../../services/UserService";
 import ModRequestService from "../../../services/ModRequestService";
 import Spinner from "../../../components/animation/Spinner";
@@ -11,35 +12,6 @@ import ModeratorCard from "../../../components/admin/ModeratorCard";
 import ModeratorsRequest from "../../../components/admin/ModeratorsRequest";
 import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
-
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <div className="p-3">
-                    {children}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
-}
-
 
 const Moderators = () => {
     const query = new URLSearchParams(useLocation().search);

@@ -1,37 +1,11 @@
 import {Tab, Tabs} from "@mui/material";
 import {useTranslation} from "react-i18next";
+import {TabPanel, a11yProps} from "../TabsComponent";
 import MediaCard from "../media/MediaCard";
 import ListsCard from "../lists/ListsCard";
 import PaginationComponent from "../PaginationComponent";
 import NoResults from "./NoResults";
 import ResponsiveMediaGrid from "../ResponsiveMediaGrid";
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <div className="p-3">
-                    {children}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
-}
 
 const SearchResults = (props) => {
     const {t} = useTranslation();

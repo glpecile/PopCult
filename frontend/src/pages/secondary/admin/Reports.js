@@ -2,42 +2,16 @@ import * as React from "react";
 import {useTranslation} from "react-i18next";
 import {Tab, Tabs} from "@mui/material";
 import {useEffect, useRef, useState} from "react";
+import {Roles} from "../../../enums/Roles";
 import ReportService from "../../../services/ReportService";
 import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
 import RolesGate from "../../../components/permissions/RolesGate";
-import {Roles} from "../../../enums/Roles";
 import ListReport from "../../../components/admin/ListReport";
 import useErrorStatus from "../../../hooks/useErrorStatus";
 import PaginationComponent from "../../../components/PaginationComponent";
 import ListCommentReport from "../../../components/admin/ListCommentReport";
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <div className="p-3">
-                    {children}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
-}
+import {a11yProps, TabPanel} from "../../../components/TabsComponent";
 
 const Reports = () => {
     let tabStyle = "capitalize";

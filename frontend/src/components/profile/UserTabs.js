@@ -6,33 +6,7 @@ import ListService from "../../services/ListService";
 import MediaService from "../../services/MediaService";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import UserMedia from "./tabs/UserMedia";
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <div className="p-3">
-                    {children}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
-}
+import {a11yProps, TabPanel} from "../TabsComponent";
 
 const UserTabs = (props) => {
     const {t} = useTranslation();
