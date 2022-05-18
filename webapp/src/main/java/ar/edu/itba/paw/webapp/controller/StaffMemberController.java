@@ -81,8 +81,8 @@ public class StaffMemberController {
                                   @QueryParam("role") String role) {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizedRole = role != null ? RoleType.valueOf(role.toUpperCase()) : null;
-        final PageContainer<Media> staffMedia = staffService.
-                getMediaByRoleType(staffMember, page, pageSize, normalizedRole);
+        final PageContainer<Media> staffMedia = staffService.getMediaByRoleType(staffMember, page, pageSize, normalizedRole);
+
         if (staffMedia.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();

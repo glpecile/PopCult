@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 @Table(name = "studio")
 public class Studio {
-    public static final String DEFAULT_IMAGE =" https://cdn.discordapp.com/attachments/851847371851956334/884854181586944030/clipart85790.png";
+    public static final String DEFAULT_IMAGE = "https://cdn.discordapp.com/attachments/851847371851956334/884854181586944030/clipart85790.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studio_studioid_seq")
@@ -51,6 +51,6 @@ public class Studio {
     }
 
     public String getImage() {
-        return image;
+        return image.equals("") ? DEFAULT_IMAGE : image;
     }
 }
