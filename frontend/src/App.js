@@ -63,12 +63,12 @@ export default function App() {
                             <Route path='/register/success' element={<SuccessfulRegister/>}/>
                             <Route path='/register/expired' element={<ExpiredToken/>}/>
                             <Route path='/user/:username' element={<Profile/>}/>
-                            <Route path='/settings' element={<Settings/>}/>
+                            <Route path='/settings' element={<LoggedGate><Settings/></LoggedGate>}/>
                             <Route path='/verification' element={<Verification/>}/>
                             <Route path='/user/:username/panel' element={<UserPanel/>}/>
                             <Route path='/user/:username/requests' element={<UserRequests/>}/>
                             <Route path='/user/:username/notifications' element={<UserNotifications/>}/>
-                            <Route path='/user/:username/lists' element={<UserLists/>}/>
+                            <Route path='/user/:username/lists' element={<LoggedGate><UserLists/></LoggedGate>}/>
                             <Route path='/admin' element={<AdminPanel/>}/>
                             <Route path='/admin/reports' element={<Reports/>}/>
                             <Route path='/admin/bans' element={<BannedUsers/>}/>
