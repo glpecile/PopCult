@@ -41,6 +41,7 @@ export default function SearchPage() {
         if (searchParams.has(mediaType)) aux.set(mediaType, searchParams.get(mediaType));
         if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
         if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        firstLoad.current = true;
         return aux;
     }, [searchParams]);
 
@@ -49,6 +50,7 @@ export default function SearchPage() {
         if (searchParams.has(listCategories)) aux.set(listCategories, searchParams.getAll(listCategories));
         if (searchParams.has(listDecades)) aux.set(listDecades, searchParams.get(listDecades));
         if (searchParams.has(listSort)) aux.set(listSort, searchParams.get(listSort));
+        firstLoad.current = true;
         return aux;
     }, [searchParams]);
 
@@ -64,7 +66,8 @@ export default function SearchPage() {
     }, [searchParams, getMediaFilters, getListFilters])
 
     useEffect(() => {
-        if (firstLoad.current !== true)
+        if (firstLoad.current !== true) {
+            console.log("nav")
             navigate({
                 pathname: '/search',
                 search: createSearchParams({
@@ -75,6 +78,7 @@ export default function SearchPage() {
                     ...Object.fromEntries(listFilters.entries())
                 }).toString()
             });
+        }
         firstLoad.current = false;
     }, [term, mediaPage, listPage, mediaFilters, listFilters, navigate]);
 
