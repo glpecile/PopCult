@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@XmlType(name="")
+@XmlType(name = "")
 public class MediaCommentDto extends CommentDto {
 
     private String mediaTitle;
@@ -33,7 +33,7 @@ public class MediaCommentDto extends CommentDto {
         return mediaCommentDto;
     }
 
-    public static List<MediaCommentDto> fromMediaCommentList(UriInfo url, List<MediaComment> mediaComments){
+    public static List<MediaCommentDto> fromMediaCommentList(UriInfo url, List<MediaComment> mediaComments) {
         return mediaComments.stream().map(c -> MediaCommentDto.fromMediaComment(url, c)).collect(Collectors.toList());
     }
 

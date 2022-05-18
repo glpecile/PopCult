@@ -22,7 +22,7 @@ public class AcceptLanguageFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
         List<Locale> acceptableLanguages = requestContext.getAcceptableLanguages();
-        if(!acceptableLanguages.isEmpty()) {
+        if (!acceptableLanguages.isEmpty()) {
             LocaleContextHolder.setLocale(acceptableLanguages.get(0));
         }
     }

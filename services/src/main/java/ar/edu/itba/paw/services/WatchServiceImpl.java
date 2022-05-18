@@ -23,7 +23,7 @@ public class WatchServiceImpl implements WatchService {
     @Transactional
     @Override
     public void addWatchedMedia(Media media, User user, LocalDateTime dateTime) {
-        if(dateTime == null || dateTime.isAfter(LocalDateTime.now().plusDays(1)) || dateTime.isBefore(media.getReleaseDate())) {
+        if (dateTime == null || dateTime.isAfter(LocalDateTime.now().plusDays(1)) || dateTime.isBefore(media.getReleaseDate())) {
             throw new InvalidDateException();
         }
         if (isWatched(media, user)) {
@@ -36,7 +36,7 @@ public class WatchServiceImpl implements WatchService {
     @Transactional
     @Override
     public void addMediaToWatch(Media media, User user) {
-        if(isToWatch(media, user)) {
+        if (isToWatch(media, user)) {
             return;
         }
         watchDao.addWatchedMedia(media, user, null);

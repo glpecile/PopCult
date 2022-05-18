@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.PageContainer;
 import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.staff.RoleType;
 import ar.edu.itba.paw.models.staff.StaffMember;
-import ar.edu.itba.paw.webapp.dto.output.GenreDto;
 import ar.edu.itba.paw.webapp.dto.output.MediaDto;
 import ar.edu.itba.paw.webapp.dto.output.StaffDto;
 import ar.edu.itba.paw.webapp.exceptions.StaffNotFoundException;
@@ -18,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -81,8 +83,8 @@ public class StaffMemberController {
                                   @QueryParam("role") String role) {
         final StaffMember staffMember = staffService.getById(staffId).orElseThrow(StaffNotFoundException::new);
         final RoleType normalizedRole = role != null ? RoleType.valueOf(role.toUpperCase()) : null;
-        final PageContainer<Media> staffMedia = staffService.
-                getMediaByRoleType(staffMember, page, pageSize, normalizedRole);
+        final PageContainer<Media> staffMedia = staffService.getMediaByRoleType(staffMember, page, pageSize, normalizedRole);
+
         if (staffMedia.getElements().isEmpty()) {
             LOGGER.info("GET /{}: Returning empty list", uriInfo.getPath());
             return Response.noContent().build();

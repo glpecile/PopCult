@@ -26,7 +26,7 @@ public class StaffDto {
     private String mediaDirectorUrl;
     private String mediaActorUrl;
 
-    public static StaffDto fromStaff(UriInfo url, StaffMember staffMember){
+    public static StaffDto fromStaff(UriInfo url, StaffMember staffMember) {
         StaffDto staffDto = new StaffDto();
         staffDto.id = staffMember.getStaffMemberId();
         staffDto.name = staffMember.getName();
@@ -35,23 +35,22 @@ public class StaffDto {
         staffDto.url = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).build().toString();
         staffDto.imageUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("image").build().toString();
         staffDto.mediaUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").build().toString();
-        staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Director").build().toString();
-        staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role","Actor").build().toString();
+        staffDto.mediaDirectorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role", "Director").build().toString();
+        staffDto.mediaActorUrl = url.getBaseUriBuilder().path("staff").path(staffMember.getStaffMemberId().toString()).path("media").queryParam("role", "Actor").build().toString();
         return staffDto;
     }
 
-    public static StaffDto fromRole(UriInfo url, Role staffMemberRole){
-        return fromStaff(url,staffMemberRole.getStaffMember());
+    public static StaffDto fromRole(UriInfo url, Role staffMemberRole) {
+        return fromStaff(url, staffMemberRole.getStaffMember());
     }
 
-    public static List<StaffDto> fromStaffList(UriInfo url, List<StaffMember> staffMembers){
+    public static List<StaffDto> fromStaffList(UriInfo url, List<StaffMember> staffMembers) {
         return staffMembers.stream().map(m -> StaffDto.fromStaff(url, m)).collect(Collectors.toList());
     }
 
-    public static List<StaffDto> fromRoleList(UriInfo url, List<? extends Role> staffMemberRoles){
-        return fromStaffList(url,staffMemberRoles.stream().map(Role::getStaffMember).collect(Collectors.toList()));
+    public static List<StaffDto> fromRoleList(UriInfo url, List<? extends Role> staffMemberRoles) {
+        return fromStaffList(url, staffMemberRoles.stream().map(Role::getStaffMember).collect(Collectors.toList()));
     }
-
 
 
     public int getId() {

@@ -30,13 +30,13 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMediaByGenre(Genre genre, int page, int pageSize) {
-        return mediaService.getMediaByFilters(Collections.emptyList(),page,pageSize, null ,Collections.singletonList(genre),null,null,null,null);
+        return mediaService.getMediaByFilters(Collections.emptyList(), page, pageSize, null, Collections.singletonList(genre), null, null, null, null);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageContainer<MediaList> getListsContainingGenre(Genre genre, int page, int pageSize, int minMatches) {
-        return listsService.getMediaListByFilters(page,pageSize,null,Collections.singletonList(genre),minMatches,null,null,null);
+        return listsService.getMediaListByFilters(page, pageSize, null, Collections.singletonList(genre), minMatches, null, null, null);
     }
 
     @Transactional(readOnly = true)

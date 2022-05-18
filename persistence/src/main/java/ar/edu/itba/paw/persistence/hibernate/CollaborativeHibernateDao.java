@@ -27,7 +27,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
 
     @Override
     public CollabRequest makeNewRequest(MediaList mediaList, User user) throws CollaboratorRequestAlreadyExistsException {
-        if(collabRequestAlreadyExists(mediaList, user)) {
+        if (collabRequestAlreadyExists(mediaList, user)) {
             throw new CollaboratorRequestAlreadyExistsException();
         }
         final CollabRequest request = new CollabRequest(user, mediaList);
@@ -36,7 +36,7 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     }
 
     private boolean collabRequestAlreadyExists(MediaList mediaList, User user) {
-        return ((Number)em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :listId AND collaboratorid = :userId")
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM collaborative WHERE listid = :listId AND collaboratorid = :userId")
                 .setParameter("listId", mediaList.getMediaListId())
                 .setParameter("userId", user.getUserId())
                 .getSingleResult()).intValue() != 0;
@@ -58,11 +58,11 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     @Override
     public PageContainer<CollabRequest> getListCollaborators(MediaList mediaList, int page, int pageSize) {
         PaginationValidator.validate(page, pageSize);
-        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("listId", mediaList.getMediaListId());
-        nativeQuery.setParameter("status", true);
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
+        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status OFFSET :offset LIMIT :limit")
+                .setParameter("listId", mediaList.getMediaListId())
+                .setParameter("status", true)
+                .setParameter("offset", (page - 1) * pageSize)
+                .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> collabIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(collabid) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid AND medialistid = :listId) WHERE accepted = :status");
@@ -78,11 +78,11 @@ public class CollaborativeHibernateDao implements CollaborativeListsDao {
     @Override
     public PageContainer<CollabRequest> getRequestsByUser(User user, int page, int pageSize) {
         PaginationValidator.validate(page, pageSize);
-        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit");
-        nativeQuery.setParameter("userId", user.getUserId());
-        nativeQuery.setParameter("status", false);
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
+        final Query nativeQuery = em.createNativeQuery("SELECT collabid FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status OFFSET :offset LIMIT :limit")
+                .setParameter("userId", user.getUserId())
+                .setParameter("status", false)
+                .setParameter("offset", (page - 1) * pageSize)
+                .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> collabIds = nativeQuery.getResultList();
         final Query countQuery = em.createNativeQuery("SELECT COUNT(collabid) FROM (medialist m JOIN collaborative c ON m.medialistid = c.listid) JOIN users u on u.userid= c.collaboratorid AND m.userid = :userId WHERE accepted = :status");

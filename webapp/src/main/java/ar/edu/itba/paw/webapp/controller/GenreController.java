@@ -79,7 +79,7 @@ public class GenreController {
             return Response.noContent().build();
         }
 
-        final List<MediaDto> mediaDtos = MediaDto.fromMediaList(uriInfo, mediaPageContainer.getElements(),userService.getCurrentUser().orElse(null));
+        final List<MediaDto> mediaDtos = MediaDto.fromMediaList(uriInfo, mediaPageContainer.getElements(), userService.getCurrentUser().orElse(null));
         final Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MediaDto>>(mediaDtos) {
         });
         ResponseUtils.setPaginationLinks(response, mediaPageContainer, uriInfo);

@@ -21,7 +21,7 @@ public class ResponseUtils {
         }
         response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getLastPage()).build().toString(), "last");
         response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("page", pageContainer.getFirstPage()).build().toString(), "first");
-        response.header("Total-Elements",pageContainer.getTotalCount());
+        response.header("Total-Elements", pageContainer.getTotalCount());
     }
 
     public static Response.ResponseBuilder getConditionalCacheResponse(Request request, EntityTag eTag) {

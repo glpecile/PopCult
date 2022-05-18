@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.staff.Studio;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.UriInfo;
@@ -14,7 +15,7 @@ public class StudioDto {
     private String imageUrl;
     private String mediaUrl;
 
-    public static StudioDto fromStudio(UriInfo url, Studio studio){
+    public static StudioDto fromStudio(UriInfo url, Studio studio) {
         StudioDto studioDto = new StudioDto();
         studioDto.id = studio.getStudioId();
         studioDto.name = studio.getName();
@@ -25,11 +26,11 @@ public class StudioDto {
         studioDto.mediaUrl = url.getBaseUriBuilder().path("studios").path(String.valueOf(studio.getStudioId())).path("media").build().toString();
         return studioDto;
     }
-    public static List<StudioDto> fromStudioList(UriInfo uriInfo, List<Studio> studioList){
-        return studioList.stream().map(s -> StudioDto.fromStudio(uriInfo,s)).collect(Collectors.toList());
+
+    public static List<StudioDto> fromStudioList(UriInfo uriInfo, List<Studio> studioList) {
+        return studioList.stream().map(s -> StudioDto.fromStudio(uriInfo, s)).collect(Collectors.toList());
 
     }
-
 
 
     public int getId() {

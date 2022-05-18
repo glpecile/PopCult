@@ -68,7 +68,7 @@ public class UserDto {
         userDto.listsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("lists").build().toString();
         userDto.publicListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("public-lists").build().toString();
         userDto.editableListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("editable-lists").build().toString();
-        userDto.notificationsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("notification").build().toString();
+        userDto.notificationsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("notifications").build().toString();
         userDto.collabRequestsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("collab-requests").build().toString();
         userDto.recommendedMediaUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-media").build().toString();
         userDto.recommendedListsUrl = url.getBaseUriBuilder().path("users").path(user.getUsername()).path("recommended-lists").build().toString();

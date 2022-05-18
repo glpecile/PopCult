@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.report.ListCommentReport;
-import ar.edu.itba.paw.models.report.ListReport;
 
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDateTime;
