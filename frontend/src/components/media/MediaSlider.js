@@ -38,13 +38,13 @@ const MediaSlider = (props) => {
     };
 
     const renderNext = () => {
-        return <IconButton type="button" className={"-right-4" + buttonStyle}>
+        return <IconButton aria-label="next" type="button" className={"-right-4" + buttonStyle}>
             <NavigateNextIcon/>
         </IconButton>;
     }
 
     const renderPrev = () => {
-        return <IconButton type="button" className={"-left-2" + buttonStyle}>
+        return <IconButton aria-label="prev" type="button" className={"-left-2" + buttonStyle}>
             <NavigateBeforeIcon/>
         </IconButton>;
     }

@@ -62,7 +62,7 @@ const UserRequests = () => {
                         </div>
                     </>
                     :
-                    <NoResults/>}
+                    <NoResults title={t('collaborator_no_results')}/>}
             </>
             :
             <Spinner/>}
