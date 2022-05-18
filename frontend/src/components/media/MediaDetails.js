@@ -7,16 +7,16 @@ import {useTranslation} from "react-i18next";
 function MediaDetails(props) {
     const {t} = useTranslation();
     return (
-        <div className="row">
+        <div className="flex flex-col lg:flex-row gap-4">
             <Helmet>
                 <title>
                     {props.title} • PopCult
                 </title>
             </Helmet>
 
-            <div className="col-12 col-lg-4">
-                <div className="grid auto-rows-min shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
-                    <img className="w-full rounded-t-lg" src={`${props.image}?size=lg`} alt="Media Details"/>
+            <div className="flex flex-col basis-1/3">
+                <div className="shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
+                    <img className="w-full object-center rounded-t-lg" src={`${props.image}?size=lg`} alt="Media Details"/>
                     <MediaOptions mediaData={props.mediaData}/>
                     <ShareMenu isOpened={false}/>
                     {
@@ -25,7 +25,7 @@ function MediaDetails(props) {
                 </div>
             </div>
 
-            <div className="col-12 col-lg-8 mb-1.5">
+            <div className="basis-3/4">
                 <h1 className="text-5xl font-black justify-start pt-2 break-words max-w-full tracking-wide">
                     {props.title}
                 </h1>
