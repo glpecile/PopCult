@@ -1,9 +1,8 @@
 import {rest} from 'msw'
 import {media, mediaList} from "../modelMocks";
 
-export const userHandler = [
+export const mediaHandler = [
 
-    // Handles a GET /users request
     rest.get('/media', (req, res, ctx) => {
         if (req.headers.get('Authorization') === 'Basic UG9wQ3VsdDoxMjMxMjMxMjM=') {
             return res(
@@ -18,8 +17,7 @@ export const userHandler = [
         )
     }),
 
-    // Handles a GET /user request
-    rest.get('/users/john', (req, res, ctx) => {
+    rest.get('/media/1', (req, res, ctx) => {
         return res(
             // Respond with a 200 status code
             ctx.status(200),
@@ -28,4 +26,4 @@ export const userHandler = [
     })
 ]
 
-export default userHandler
+export default mediaHandler

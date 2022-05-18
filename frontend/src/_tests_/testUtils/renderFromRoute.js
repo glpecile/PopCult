@@ -31,49 +31,54 @@ import BannedUsers from "../../pages/secondary/admin/BannedUsers";
 import Moderators from "../../pages/secondary/admin/Moderators";
 import SearchPage from "../../pages/secondary/search/SearchPage";
 import Error404 from "../../pages/secondary/errors/Error404";
+import {HelmetProvider} from "react-helmet-async";
 
 
 // https://v5.reactrouter.com/web/api/MemoryRouter
 
 const renderFromRoute = (path) => {
+    const helmetContext = {};
+
     render(
         <React.StrictMode>
-            <MemoryRouter initialEntries={[path]}>
-                <Suspense fallback={<Loader/>}>
-                    <Layout>
-                        <Routes>
-                            <Route path='/' element={<Home/>}/>
-                            <Route path='/media/films' element={<Films/>}/>
-                            <Route path='/media/series' element={<Series/>}/>
-                            <Route path='/media/films/:id' element={<MediaDescription/>}/>
-                            <Route path='/media/series/:id' element={<MediaDescription/>}/>
-                            <Route path='/lists' element={<Lists/>}/>
-                            <Route path='/lists/:id' element={<ListsDescription/>}/>
-                            <Route path='/lists/:id/edit' element={<ListsEdition/>}/>
-                            <Route path='/lists/new' element={<LoggedGate><ListsCreation/></LoggedGate>}/>
-                            <Route path='/login' element={<Login/>}/>
-                            <Route path='/recovery' element={<Recovery/>}/>
-                            <Route path='/resetPassword' element={<ResetPassword/>}/>
-                            <Route path='/register' element={<Register/>}/>
-                            <Route path='/register/success' element={<SuccessfulRegister/>}/>
-                            <Route path='/register/expired' element={<ExpiredToken/>}/>
-                            <Route path='/user/:username' element={<Profile/>}/>
-                            <Route path='/settings' element={<Settings/>}/>
-                            <Route path='/verification' element={<Verification/>}/>
-                            <Route path='/user/:username/panel' element={<UserPanel/>}/>
-                            <Route path='/user/:username/requests' element={<UserRequests/>}/>
-                            <Route path='/user/:username/notifications' element={<UserNotifications/>}/>
-                            <Route path='/user/:username/lists' element={<UserLists/>}/>
-                            <Route path='/admin' element={<AdminPanel/>}/>
-                            <Route path='/admin/reports' element={<Reports/>}/>
-                            <Route path='/admin/bans' element={<BannedUsers/>}/>
-                            <Route path='/admin/mods' element={<Moderators/>}/>
-                            <Route path='/search' element={<SearchPage/>}/>
-                            <Route path='*' element={<Error404/>}/>
-                        </Routes>
-                    </Layout>
-                </Suspense>
-            </MemoryRouter>
+            <HelmetProvider context={helmetContext}>
+                <MemoryRouter initialEntries={[path]}>
+                    <Suspense fallback={<Loader/>}>
+                        <Layout>
+                            <Routes>
+                                <Route path='/' element={<Home/>}/>
+                                <Route path='/media/films' element={<Films/>}/>
+                                <Route path='/media/series' element={<Series/>}/>
+                                <Route path='/media/films/:id' element={<MediaDescription/>}/>
+                                <Route path='/media/series/:id' element={<MediaDescription/>}/>
+                                <Route path='/lists' element={<Lists/>}/>
+                                <Route path='/lists/:id' element={<ListsDescription/>}/>
+                                <Route path='/lists/:id/edit' element={<ListsEdition/>}/>
+                                <Route path='/lists/new' element={<LoggedGate><ListsCreation/></LoggedGate>}/>
+                                <Route path='/login' element={<Login/>}/>
+                                <Route path='/recovery' element={<Recovery/>}/>
+                                <Route path='/resetPassword' element={<ResetPassword/>}/>
+                                <Route path='/register' element={<Register/>}/>
+                                <Route path='/register/success' element={<SuccessfulRegister/>}/>
+                                <Route path='/register/expired' element={<ExpiredToken/>}/>
+                                <Route path='/user/:username' element={<Profile/>}/>
+                                <Route path='/settings' element={<Settings/>}/>
+                                <Route path='/verification' element={<Verification/>}/>
+                                <Route path='/user/:username/panel' element={<UserPanel/>}/>
+                                <Route path='/user/:username/requests' element={<UserRequests/>}/>
+                                <Route path='/user/:username/notifications' element={<UserNotifications/>}/>
+                                <Route path='/user/:username/lists' element={<UserLists/>}/>
+                                <Route path='/admin' element={<AdminPanel/>}/>
+                                <Route path='/admin/reports' element={<Reports/>}/>
+                                <Route path='/admin/bans' element={<BannedUsers/>}/>
+                                <Route path='/admin/mods' element={<Moderators/>}/>
+                                <Route path='/search' element={<SearchPage/>}/>
+                                <Route path='*' element={<Error404/>}/>
+                            </Routes>
+                        </Layout>
+                    </Suspense>
+                </MemoryRouter>
+            </HelmetProvider>
         </React.StrictMode>
     )
 }

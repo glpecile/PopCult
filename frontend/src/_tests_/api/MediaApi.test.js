@@ -1,8 +1,6 @@
 import {setupTests} from "../testUtils/setupTests";
 import mediaApi from "../../api/MediaApi.js";
 
-
-
 setupTests()
 
 test('get media', async () => {
