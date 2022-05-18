@@ -103,7 +103,7 @@ const ListUpperIcons = (list) => {
         }
     }
 
-    return <div className="flex flex-grow justify-between align-center">
+    return <div className="flex flex-grow justify-between items-center">
         <FavoriteButton isLiked={isLiked} handleLike={handleLike}/>
         {(context.isLoggedIn && context.username.localeCompare(list.owner) !== 0) && <FormDialog
             tooltip={t('report_content')}

@@ -3,6 +3,7 @@ import PaginationComponent from "../../PaginationComponent";
 import {useTranslation} from "react-i18next";
 import Spinner from "../../animation/Spinner";
 import ResponsiveMediaGrid from "../../ResponsiveMediaGrid";
+import NoResults from "../../search/NoResults";
 
 const UserMedia = (props) => {
     const {t} = useTranslation();
@@ -34,7 +35,7 @@ const UserMedia = (props) => {
                 </div>
             </>)
             :
-            (<div className="flex justify-center text-gray-400">{t('profile_tabs_noContent')}</div>) : <Spinner/>
+            (<NoResults title={t('profile_tabs_noContent')}/>) : <Spinner/>
     }</>;
 }
 export default UserMedia;
