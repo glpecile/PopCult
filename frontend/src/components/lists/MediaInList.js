@@ -9,7 +9,7 @@ function MediaInList(props) {
                            id={content.id}
                            image={content.imageUrl}
                            title={content.title}
-                           releaseDate={content.releaseDate}
+                           releaseDate={content.releaseDate.slice(0, 4)}
                            type={content.type.toLowerCase()}
                 />
             </div>);
