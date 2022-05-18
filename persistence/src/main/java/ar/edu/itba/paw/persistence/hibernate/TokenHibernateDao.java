@@ -22,7 +22,7 @@ public class TokenHibernateDao implements TokenDao {
 
     @Override
     public Token createToken(User user, TokenType type, String token, LocalDateTime expiryDate) {
-        final Token tkn =  new Token(user, type, token, expiryDate);
+        final Token tkn = new Token(user, type, token, expiryDate);
         em.persist(tkn);
         return tkn;
     }

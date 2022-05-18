@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.staff;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name = "staffmember")
 public class StaffMember {
@@ -9,7 +10,7 @@ public class StaffMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "staffmember_staffmemberid_seq")
-    @SequenceGenerator(sequenceName = "staffmember_staffmemberid_seq", name="staffmember_staffmemberid_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "staffmember_staffmemberid_seq", name = "staffmember_staffmemberid_seq", allocationSize = 1)
     private Integer staffMemberId;
 
     @Column(length = 100, nullable = false)
@@ -22,10 +23,10 @@ public class StaffMember {
     private String image;
 
 
-
-    public StaffMember(){
+    public StaffMember() {
 
     }
+
     public StaffMember(Integer staffMemberId, String name, String description, String image) {
         super();
         this.staffMemberId = staffMemberId;

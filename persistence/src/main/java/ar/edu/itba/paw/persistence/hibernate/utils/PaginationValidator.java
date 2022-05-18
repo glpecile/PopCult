@@ -9,7 +9,7 @@ public class PaginationValidator {
     }
 
     public static void validate(int page, int pageSize) throws InvalidPaginationParametersException {
-        if(page < 1 || pageSize < 1) {
+        if (page < 1 || pageSize < 1) {
             throw new InvalidPaginationParametersException();
         }
     }

@@ -33,19 +33,19 @@ public class StaffServiceImpl implements StaffService {
     @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMediaByActor(StaffMember staffMember, int page, int pageSize) {
-        return staffDao.getMediaByActor(staffMember,page,pageSize);
+        return staffDao.getMediaByActor(staffMember, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageContainer<Media> getMedia(StaffMember staffMember, int page, int pageSize) {
-        return staffDao.getMedia(staffMember,page,pageSize);
+        return staffDao.getMedia(staffMember, page, pageSize);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageContainer<StaffMember> getAllStaff(int page, int pageSize) {
-        return staffDao.getAllStaff(page,pageSize);
+        return staffDao.getAllStaff(page, pageSize);
     }
 
 }

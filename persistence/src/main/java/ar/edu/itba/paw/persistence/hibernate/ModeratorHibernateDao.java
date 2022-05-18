@@ -45,14 +45,14 @@ public class ModeratorHibernateDao implements ModeratorDao {
         List<ModRequest> moderators = modRequestsIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         final Query countQuery = em.createQuery("Select count(*) from ModRequest u");
-        long count = (long)countQuery.getSingleResult();
+        long count = (long) countQuery.getSingleResult();
 
         return new PageContainer<>(moderators, page, pageSize, count);
     }
 
     @Override
     public ModRequest addModRequest(User user) throws ModRequestAlreadyExistsException {
-        if(modRequestAlreadyExists(user)) {
+        if (modRequestAlreadyExists(user)) {
             throw new ModRequestAlreadyExistsException();
         }
         ModRequest modRequest = new ModRequest(null, user, LocalDateTime.now());
@@ -61,7 +61,7 @@ public class ModeratorHibernateDao implements ModeratorDao {
     }
 
     private boolean modRequestAlreadyExists(User user) {
-        return ((Number)em.createNativeQuery("SELECT COUNT(*) FROM modrequests WHERE userid = :userId")
+        return ((Number) em.createNativeQuery("SELECT COUNT(*) FROM modrequests WHERE userid = :userId")
                 .setParameter("userId", user.getUserId())
                 .getSingleResult()).intValue() != 0;
     }

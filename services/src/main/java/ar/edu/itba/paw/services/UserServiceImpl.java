@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null)
+        if (auth == null)
             return Optional.empty();
         return getByUsername(auth.getName());
     }
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void uploadUserProfileImage(User user, byte[] photoBlob, String format) throws ImageConversionException {
         final Image image = imageService.uploadImage(photoBlob, WIDTH, HEIGHT, format);
-        if(user.getImage() != null) {
+        if (user.getImage() != null) {
             imageService.deleteImage(user.getImage());
         }
         user.setImage(image);
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUserProfileImage(User user) {
-        if(user.getImage() != null) {
+        if (user.getImage() != null) {
             imageService.deleteImage(user.getImage());
             user.setImage(null);
         }

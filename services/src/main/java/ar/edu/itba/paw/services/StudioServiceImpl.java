@@ -32,7 +32,7 @@ public class StudioServiceImpl implements StudioService {
     @Transactional(readOnly = true)
     @Override
     public PageContainer<Studio> getAllStudios(int page, int pageSize) {
-        return studioDao.getAllStudios(page,pageSize);
+        return studioDao.getAllStudios(page, pageSize);
     }
 
 }

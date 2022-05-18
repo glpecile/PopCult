@@ -11,7 +11,7 @@ import java.util.Objects;
 public class CollabRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "collaborative_collabid_seq")
-    @SequenceGenerator(sequenceName = "collaborative_collabid_seq", name="collaborative_collabid_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "collaborative_collabid_seq", name = "collaborative_collabid_seq", allocationSize = 1)
     private Integer collabId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

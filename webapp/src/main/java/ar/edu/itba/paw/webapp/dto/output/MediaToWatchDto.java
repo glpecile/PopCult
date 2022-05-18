@@ -28,7 +28,7 @@ public class MediaToWatchDto extends MediaDto {
         return mediaToWatchDto;
     }
 
-    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser){
+    public static List<MediaDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
         throw new AssertionError();
     }
 

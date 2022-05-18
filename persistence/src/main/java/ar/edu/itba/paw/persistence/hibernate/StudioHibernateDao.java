@@ -25,7 +25,6 @@ public class StudioHibernateDao implements StudioDao {
 
     @Override
     public Optional<Studio> getById(int studioId) {
-
         return Optional.ofNullable(em.find(Studio.class, studioId));
     }
 
@@ -71,8 +70,6 @@ public class StudioHibernateDao implements StudioDao {
         List<Studio> studios = studioIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
         return new PageContainer<>(studios,page,pageSize,count);
-
-
     }
 
 }

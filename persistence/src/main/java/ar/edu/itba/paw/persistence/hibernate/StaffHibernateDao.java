@@ -30,12 +30,12 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByDirector(StaffMember staffMember, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN director WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", (page-1) * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -54,12 +54,12 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMediaByActor(StaffMember staffMember, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM media NATURAL JOIN crew WHERE staffmemberid = :staffMemberId OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", (page-1) * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -78,7 +78,7 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<Media> getMedia(StaffMember staffMember, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         //Para paginacion
         //Pedimos el contenido paginado.
         final Query nativeQuery = em.createNativeQuery("SELECT DISTINCT(mediaid) FROM " +
@@ -87,7 +87,7 @@ public class StaffHibernateDao implements StaffDao {
                 "(SELECT mediaid FROM media NATURAL JOIN crew WHERE staffmemberid = :staffMemberId)) as u " +
                 "OFFSET :offset LIMIT :limit");
         nativeQuery.setParameter("staffMemberId", staffMember.getStaffMemberId());
-        nativeQuery.setParameter("offset", (page-1) * pageSize);
+        nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> mediaIds = nativeQuery.getResultList();
@@ -109,10 +109,10 @@ public class StaffHibernateDao implements StaffDao {
 
     @Override
     public PageContainer<StaffMember> getAllStaff(int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
 
         final Query nativeQuery = em.createNativeQuery("SELECT staffmemberid FROM staffmember OFFSET :offset LIMIT :limit")
-                .setParameter("offset",(page-1) * pageSize)
+                .setParameter("offset", (page - 1) * pageSize)
                 .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> staffIds = nativeQuery.getResultList();
@@ -124,7 +124,7 @@ public class StaffHibernateDao implements StaffDao {
                 .setParameter("staffMemberIds", staffIds);
         List<StaffMember> staffMembers = staffIds.isEmpty() ? Collections.emptyList() : query.getResultList();
 
-        return new PageContainer<>(staffMembers,page,pageSize,count);
+        return new PageContainer<>(staffMembers, page, pageSize, count);
 
     }
 

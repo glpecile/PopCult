@@ -84,7 +84,7 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Override
     public boolean principalIsMod() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null)
+        if (auth == null)
             return false;
         return roleHierarchy.getReachableGrantedAuthorities(auth.getAuthorities()).contains(new SimpleGrantedAuthority(UserRole.MOD.getRoleType()));
     }

@@ -57,7 +57,7 @@ public class ReportServiceImpl implements ReportService {
             sendDeletedListEmail(mediaList.getUser(), mediaList, report);
         } else {
             Optional<User> user = userService.getCurrentUser();
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 listReport = reportDao.reportList(mediaList, user.get(), report);
                 sendReportCreatedEmail(user.get(), report);
             }
@@ -75,7 +75,7 @@ public class ReportServiceImpl implements ReportService {
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
             Optional<User> user = userService.getCurrentUser();
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 listCommentReport = reportDao.reportListComment(comment, user.get(), report);
                 sendReportCreatedEmail(user.get(), report);
             }
@@ -93,7 +93,7 @@ public class ReportServiceImpl implements ReportService {
             sendDeletedCommentEmail(comment.getUser(), comment, report);
         } else {
             Optional<User> user = userService.getCurrentUser();
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 mediaCommentReport = reportDao.reportMediaComment(comment, user.get(), report);
                 sendReportCreatedEmail(user.get(), report);
             }

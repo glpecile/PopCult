@@ -20,7 +20,7 @@ public class Studio {
     private String image;
 
 
-    public Studio(){
+    public Studio() {
 
     }
 

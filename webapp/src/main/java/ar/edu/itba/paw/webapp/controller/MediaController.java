@@ -106,7 +106,7 @@ public class MediaController {
     @GET
     @Path("/{id}/image")
     public Response getMediaImage(@PathParam("id") int mediaId,
-                                  @QueryParam("size") @DefaultValue("md") String size ) throws URISyntaxException {
+                                  @QueryParam("size") @DefaultValue("md") String size) throws URISyntaxException {
         final Media media = mediaService.getById(mediaId).orElseThrow(MediaNotFoundException::new);
         Response.ResponseBuilder response = Response.noContent();
         ResponseUtils.setUnconditionalCache(response);
