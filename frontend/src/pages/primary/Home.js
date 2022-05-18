@@ -1,8 +1,8 @@
 import Loader from "../secondary/errors/Loader";
 import {useCallback, useContext, useEffect, useState} from "react";
 import AuthContext from "../../store/AuthContext";
-import {Link, useNavigate} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import {createSearchParams, Link, useNavigate} from "react-router-dom";
+import {Trans, useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
 import favoriteService from "../../services/FavoriteService";
@@ -27,7 +27,6 @@ export default function Home() {
     const {setErrorStatusCode} = useErrorStatus();
 
     /** lists **/
-
     const getUserLists = useCallback(async () => {
         if (user) {
             const l = await favoriteService.getUserRecommendedLists({
@@ -56,7 +55,6 @@ export default function Home() {
     }, [authContext.isLoggedIn, setErrorStatusCode, user, getUserLists, getLists]);
 
     /** films **/
-
     const getUserFilms = useCallback(async () => {
         if (user) {
             const f = await favoriteService.getUserRecommendedFilms({
@@ -85,7 +83,6 @@ export default function Home() {
     }, [authContext.isLoggedIn, setErrorStatusCode, user, getUserFilms, getFilms]);
 
     /** series **/
-
     const getUserSeries = useCallback(async () => {
         if (user) {
             const s = await favoriteService.getUserRecommendedSeries({
@@ -121,20 +118,23 @@ export default function Home() {
                         <h1 className="text-center text-3xl">
                             {t('home_slogan')}
                         </h1>
-                        <Link
-                            className="btn btn-secondary text-center text-white bg-violet-500 hover:shadow-violet-500/50 rounded-full shadow-md my-4 w-1/4"
-                            to={'/register'}>{t('home_register')}</Link>
+                        <Link className="btn btn-secondary text-center text-white bg-violet-500 hover:shadow-violet-500/50 rounded-full shadow-md my-4 w-1/4" to={'/register'}>
+                            {t('home_register')}
+                        </Link>
                     </> : <>
-                        <h1 className="text-center text-3xl">
-                            {t('home_greeting')}
+                        <h1 className="text-center text-3xl flex flex-col">
+                            <Trans i18nKey="home_greeting">
+                                <button className="text-center text-5xl font-bold text-violet-500 hover:text-violet-900"
+                                        onClick={() => {
+                                            navigate({pathname: 'user/' + authContext.username})
+                                        }}>
+                                    {{username: authContext.username}}
+                                </button>
+                            </Trans>
                         </h1>
-                        <button className="text-center text-5xl font-bold text-violet-500 hover:text-violet-900"
-                                onClick={() => {
-                                    navigate({pathname: 'user/' + authContext.username})
-                                }}>{authContext.username}</button>
                     </>}
                 </div>
-                {/*Lists*/}
+                {/* Lists */}
                 {lists ?
                     <>
                         <div className="flex justify-between">
@@ -142,13 +142,17 @@ export default function Home() {
                                 {!authContext.isLoggedIn ? <>{t('home_title_lists')}</> : <>{t('home_title_lists_discovery')}</>}
                             </h2>
                             <button className="btn btn-link text-violet-500 hover:text-violet-900 btn-rounded"
-                                    onClick={() => navigate('/lists')}>
+                                    onClick={() => navigate({
+                                        pathname: '/lists', search: createSearchParams({
+                                            page: 1
+                                        }).toString()
+                                    })}>
                                 {t('home_viewAll')}
                             </button>
                         </div>
                         <ListsSlider lists={lists}/>
                     </> : <Spinner/>}
-                {/*Films*/}
+                {/* Films */}
                 {films ?
                     <>
                         <div className="flex justify-between">
@@ -156,13 +160,17 @@ export default function Home() {
                                 {!authContext.isLoggedIn ? <>{t('home_title_films')}</> : <>{t('home_title_films_discovery')}</>}
                             </h2>
                             <button className="btn btn-link text-violet-500 hover:text-violet-900 btn-rounded"
-                                    onClick={() => navigate('/media/films')}>
+                                    onClick={() => navigate({
+                                        pathname: '/media/films', search: createSearchParams({
+                                            page: 1
+                                        }).toString()
+                                    })}>
                                 {t('home_viewAll')}
                             </button>
                         </div>
                         <MediaSlider media={films}/>
                     </> : <Spinner/>}
-                {/*Series*/}
+                {/* Series */}
                 {series ?
                     <>
                         <div className="flex justify-between">
@@ -170,7 +178,11 @@ export default function Home() {
                                 {!authContext.isLoggedIn ? <>{t('home_title_series')}</> : <>{t('home_title_series_discovery')}</>}
                             </h2>
                             <button className="btn btn-link text-violet-500 hover:text-violet-900 btn-rounded"
-                                    onClick={() => navigate('/media/series')}>
+                                    onClick={() => navigate({
+                                        pathname: '/media/series', search: createSearchParams({
+                                            page: 1
+                                        }).toString()
+                                    })}>
                                 {t('home_viewAll')}
                             </button>
                         </div>

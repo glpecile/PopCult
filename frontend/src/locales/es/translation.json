@@ -70,7 +70,7 @@
   "profile_settings_oldPassword_error": "Por favor, ingrese su contraseña actual si desea cambiar la misma",
   "profile_settings_oldPassword_verification_error": "La contraseña ingresada es incorrecta",
   "login_title": "Ingresa • PopCult",
-  "login_greeting": "¡Bienvenido De Vuelta!",
+  "login_greeting": "¡Bienvenido De Vuelta! <0>{{username}}<0>",
   "login_button": "Ingresa",
   "login_sign_up": "¿No tiene cuenta? ¡Crea una!",
   "login_username": "Nombre de usuario:",
