@@ -25,15 +25,14 @@ const ModeratorCard = (moderator) => {
         </div>
         <div className="flex justify-between p-3 text-center justify-center items-center">
             <OneButtonDialog
-                buttonClassName="hover:text-red-400"
+                buttonClassName="hover:text-amber-500"
                 buttonIcon={<Close/>}
-                buttonText=''
                 title={t("moderator_remove")}
                 body={t('moderator_remove_body', {username: moderator.username})}
                 actionTitle={t('remove')}
                 onActionAccepted={removeMod}
                 isOpened={false}
-                submitButtonClassName="btn btn-danger my-1 shadow-md bg-gray-300 hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
+                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 outline"
             />
         </div>
     </div>);
