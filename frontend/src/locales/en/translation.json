@@ -277,7 +277,7 @@
   "report_admin_success": "Thank you! This comment has been removed.",
   "collaborators_in_list": "Some collaborators of this list:",
   "list_by": "by: <0>{{username}}</0>",
-  "forked_from": ",forked from: <0>{{list}}</0>",
+  "forked_from": ", forked from: <0>{{list}}</0>",
   "lists_edit": "Edit list",
   "lists_collaborate": "Ask to collaborate",
   "lists_fork": "Fork this list",
