@@ -80,7 +80,7 @@ function MediaDetails(props) {
                             {
                                 props.studios.map(
                                     (s) => {
-                                        return <MediaChips key={s.id} url="#" text={s.name}/>
+                                        return <MediaChips key={s.id} url={'/studios/' + s.id} text={s.name}/>
                                     }
                                 )
                             }

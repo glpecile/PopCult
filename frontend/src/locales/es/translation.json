@@ -143,6 +143,8 @@
   "genre_no_lists": "No hay listas de este género para mostrar.",
   "genre_media": "Todo contenido de este género:",
   "genre_no_media": "No hay contenido de este género para mostrar.",
+  "studio_media": "Todo el contenido de esta productora:",
+  "studio_no_media": "No hay contenido de esta productora para mostrar.",
   "comments_header": "Discusión",
   "register_error": "Por favor, asegurese que todos los campos obligatorios* hayan sido completados correctamente.",
   "register_username_exists": "Parece que este nombre de usuario esta siendo utilizado por alguien mas",

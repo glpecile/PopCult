@@ -144,6 +144,8 @@
   "genre_no_lists": "No lists from this genre to display.",
   "genre_media": "All media from this genre:",
   "genre_no_media": "No media from this genre to display.",
+  "studio_media": "All media from this studio:",
+  "studio_no_media": "No media from this studio to display",
   "comments_header": "Discussion",
   "register_error": "Please make sure that all mandatory* fields are filled in correctly.",
   "register_username_exists": "It seems this username is already in use",
