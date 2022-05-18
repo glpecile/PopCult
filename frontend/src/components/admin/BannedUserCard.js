@@ -1,4 +1,3 @@
-import {Close} from "@mui/icons-material";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import ClearIcon from "@mui/icons-material/Clear";

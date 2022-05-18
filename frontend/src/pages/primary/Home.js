@@ -1,53 +1,30 @@
 import Loader from "../secondary/errors/Loader";
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import AuthContext from "../../store/AuthContext";
 import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
-import userService from "../../services/UserService";
 import favoriteService from "../../services/FavoriteService";
 import ListsSlider from "../../components/lists/ListsSlider";
 import mediaService from "../../services/MediaService";
 import MediaSlider from "../../components/media/MediaSlider";
 import Spinner from "../../components/animation/Spinner";
+import UserContext from "../../store/UserContext";
 
 export default function Home() {
     const authContext = useContext(AuthContext);
+    const user = useContext(UserContext).user;
+
     const {t} = useTranslation();
-
     const navigate = useNavigate();
-    const pageSize = 12;
 
-    const [user, setUser] = useState(undefined);
+    const pageSize = 12;
     const [lists, setLists] = useState(undefined);
     const [films, setFilms] = useState(undefined);
     const [series, setSeries] = useState(undefined);
 
     const {setErrorStatusCode} = useErrorStatus();
-    const mountedUser = useRef(true);
-
-    useEffect(() => {
-        mountedUser.current = true;
-
-        async function getUser() {
-            if (authContext.isLoggedIn) {
-                try {
-                    const data = await userService.getUserByUsername(authContext.username);
-                    setUser(data);
-                } catch (error) {
-                    setErrorStatusCode(error.response.status);
-                }
-            }
-        }
-
-        if (mountedUser.current)
-            getUser();
-
-        return () => {
-            mountedUser.current = false;
-        }
-    }, [setErrorStatusCode, authContext]);
 
     /** lists **/
 
