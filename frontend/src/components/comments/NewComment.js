@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import AuthContext from "../../store/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import useErrorStatus from "../../hooks/useErrorStatus";
+import {CommentSectionType} from "../../enums/CommentSectionType";
 
 const NewComment = (props) => {
     const {t} = useTranslation();
@@ -23,13 +24,13 @@ const NewComment = (props) => {
 
         async function submitComment() {
             try {
-                if (props.type.toUpperCase().localeCompare("MEDIA") === 0)
-                    await CommentService.createMediaComment({url: props.commentsUrl, data: comment});
-                else
+                if (props.type === CommentSectionType.LISTS)
                     await CommentService.createListComment({url: props.commentsUrl, data: comment});
+                else if (props.type === CommentSectionType.MEDIA)
+                    await CommentService.createMediaComment({url: props.commentsUrl, data: comment});
                 setComment("");
                 props.setCommentsUpdate(prev => prev + 1);
-            }catch (error){
+            } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }

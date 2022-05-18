@@ -64,7 +64,7 @@ export default function AddCollaboratorsDialog(props) {
                                         {t('search_no_results')}
                                     </div>)}
                             </FormGroup>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center pt-4">
                                 {(props.searchUsers.data.length > 0 && props.searchUsers.links.last.page > 1) &&
                                     <PaginationComponent page={props.page} lastPage={props.searchUsers.links.last.page}
                                                          setPage={props.setPage}/>

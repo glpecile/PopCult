@@ -29,7 +29,7 @@ const ListMedia = (props) => {
 
     return <>{(mediaInlist) ? (<>{mediaInlist.data.length > 0 ? <>
             <MediaInList media={mediaInlist.data}/>
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-4">
                 {(mediaInlist.data.length > 0 && mediaInlist.links.last.page > 1) &&
                     <PaginationComponent page={page} lastPage={mediaInlist.links.last.page}
                                          setPage={setPage}/>}

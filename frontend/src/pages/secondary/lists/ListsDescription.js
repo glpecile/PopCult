@@ -10,6 +10,7 @@ import ListUpperIcons from "../../../components/lists/description/ListUpperIcons
 import {Link, useParams} from "react-router-dom";
 import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
 import ListForks from "../../../components/lists/description/ListForks";
+import {CommentSectionType} from "../../../enums/CommentSectionType";
 
 function ListsDescription() {
     let {id} = useParams();
@@ -21,12 +22,12 @@ function ListsDescription() {
         async function getList(id) {
             try {
                 const data = await ListService.getListById(id);
-                console.log(data)
                 setList(data);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
             }
         }
+
         getList(id);
         return () => {
 
@@ -37,7 +38,7 @@ function ListsDescription() {
     return (<>
         {list ? (<>
             <div className="flex flex-wrap pt-2">
-                <h2 className="display-5 fw-bolder">
+                <h2 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                     {list.name}
                 </h2>
                 <ListUpperIcons owner={list.owner} favoriteUrl={list.favoriteUrl} reportsUrl={list.reportsUrl}/>
@@ -46,7 +47,7 @@ function ListsDescription() {
             <div className="flex justify-right">
                 <Trans i18nKey="list_by">
                     <Link className="text-violet-500 hover:text-violet-900 font-bold"
-                    to={`/user/${list.owner}`}>{{username: list.owner}}</Link>
+                          to={`/user/${list.owner}`}>{{username: list.owner}}</Link>
                 </Trans>
 
                 {list.forkedFrom && <Trans i18nKey="forked_from">
@@ -64,7 +65,7 @@ function ListsDescription() {
             <ListLowerIcons id={id} collaborative={list.collaborative} owner={list.owner} url={list.forksUrl}
                             collaborativeRequestUrl={list.requestsUrl}/>
             <ListMedia mediaUrl={list.mediaUrl}/>
-            <CommentSection commentsUrl={list.commentsUrl}/>
+            <CommentSection commentsUrl={list.commentsUrl} type={CommentSectionType.LISTS}/>
         </>) : <Loader/>}
     </>);
 }

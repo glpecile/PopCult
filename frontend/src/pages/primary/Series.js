@@ -1,7 +1,7 @@
 import MediaSlider from "../../components/media/MediaSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import useErrorStatus from "../../hooks/useErrorStatus";
@@ -10,6 +10,7 @@ import GenresContext from "../../store/GenresContext";
 import Filters from "../../components/search/filters/Filters";
 import MediaCard from "../../components/media/MediaCard";
 import PaginationComponent from "../../components/PaginationComponent";
+import ResponsiveMediaGrid from "../../components/ResponsiveMediaGrid";
 
 
 function Series() {
@@ -21,13 +22,28 @@ function Series() {
     const [series, setSeries] = useState(undefined);
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
-    const [seriesFilters, setSeriesFilters] = useState(() => new Map());
     const genres = useContext(GenresContext).genres;
-    const pageSize = 4;
+    const pageSize = 12;
 
     const mediaSort = 'sort';
     const mediaDecades = 'decades';
     const mediaCategories = 'categories';
+    const getMediaFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(mediaCategories)) aux.set(mediaCategories, searchParams.getAll(mediaCategories));
+        if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
+        if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        return aux;
+    }, [searchParams]);
+
+    const [seriesFilters, setSeriesFilters] = useState(getMediaFilters);
+    let firstLoad = useRef(true);
+
+    useEffect(() => {
+        firstLoad.current = true;
+        setPage(searchParams.get("page"));
+        setSeriesFilters(getMediaFilters)
+    }, [searchParams, getMediaFilters]);
 
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getSeries({pageSize: 12});
@@ -63,12 +79,15 @@ function Series() {
     }, [page, seriesFilters, pageSize, setErrorStatusCode])
 
     useEffect(() => {
-        navigate({
-            pathname: '/media/series', search: createSearchParams({
-                page: page, ...Object.fromEntries(seriesFilters.entries())
-            }).toString()
-        });
-    }, [page, navigate, seriesFilters]);
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/media/series', search: createSearchParams({
+                    page: page,
+                    ...Object.fromEntries(seriesFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [page, seriesFilters, navigate]);
 
     return (<section>
         <Helmet>
@@ -87,10 +106,9 @@ function Series() {
                      setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
                      mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
             {(series && series.data) ? <>
-                <div className="row py-2">
+                <ResponsiveMediaGrid>
                     {series.data.map((content) => {
-                        return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                                    key={content.id}>
+                        return <div className="p-0 m-0" key={content.id}>
                             <MediaCard
                                 key={content.id}
                                 id={content.id}
@@ -100,8 +118,8 @@ function Series() {
                                 type={content.type.toLowerCase()}
                             /></div>
                     })}
-                </div>
-                <div className="flex justify-center pt-2">
+                </ResponsiveMediaGrid>
+                <div className="flex justify-center pt-4">
                     {(series.data.length > 0 && series.links.last.page > 1) &&
                         <PaginationComponent page={page} lastPage={series.links.last.page}
                                              setPage={setPage}/>}

@@ -4,11 +4,12 @@ import CommentComponent from "./CommentComponent";
 import {List} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
+import {CommentSectionType} from "../../enums/CommentSectionType";
 
 const CommentList = (props) => {
     const {t} = useTranslation();
 
-    const pageSize = 2;
+    const pageSize = 5;
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const [comments, setComments] = useState([])
@@ -26,11 +27,20 @@ const CommentList = (props) => {
     useEffect(() => {
         async function getComments() {
             try {
-                const commentsList = await CommentService.getListComments({
-                    url: props.commentsUrl,
-                    page: page,
-                    pageSize: pageSize
-                });
+                let commentsList;
+                if (props.type === CommentSectionType.LISTS) {
+                    commentsList = await CommentService.getListComments({
+                        url: props.commentsUrl,
+                        page: page,
+                        pageSize: pageSize
+                    });
+                } else {
+                    commentsList = await CommentService.getMediaComments({
+                        url: props.commentsUrl,
+                        page: page,
+                        pageSize: pageSize
+                    });
+                }
                 if (page !== 1) {
                     setComments(prevState => [...prevState, ...commentsList.data]);
                 } else {
@@ -48,7 +58,7 @@ const CommentList = (props) => {
         }
 
         getComments();
-    }, [page, pageSize, props.commentsUrl, update, setErrorStatusCode]);
+    }, [page, pageSize, props.commentsUrl, update, setErrorStatusCode, props.type]);
 
     return (<div className="pt-1">
         {(links && comments) &&
@@ -56,7 +66,7 @@ const CommentList = (props) => {
                 {comments.map((comment) => {
                     return <CommentComponent comment={comment}
                                              key={comment.id}
-                                             setCommentsUpdate={props.setCommentsUpdate}/>;
+                                             setCommentsUpdate={props.setCommentsUpdate} type={props.type}/>;
                 })}
             </List>}
         <div className="flex justify-center">

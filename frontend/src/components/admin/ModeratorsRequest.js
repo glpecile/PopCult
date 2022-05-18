@@ -13,7 +13,7 @@ const ModeratorsRequest = (user) => {
     const rejectRequest = () => {
         user.rejectModerator(user.url);
     }
-    return (<div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
+    return (<div className="w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between mt-2">
         <div className="flex">
             <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
                  src={user.image}/>
@@ -26,28 +26,28 @@ const ModeratorsRequest = (user) => {
                 {t('profile_secondary_description', {username: user.username})}
             </h4>
         </div>
-        <div className="flex justify-between m-3.5  justify-center text-center">
+        <div className="flex justify-between m-3.5 justify-center text-center items-center">
             <div className="pr-2">
-                {/* TODO: check style */}
                 <OneButtonDialog
-                    buttonClassName="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
-                    buttonIcon={<CheckOutlinedIcon className="group-hover:text-white mr-2"/>}
+                    buttonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900 h-min flex items-center"
+                    buttonIcon={<CheckOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                     buttonText={t("moderator_accept")}
                     title={t("moderator_accept")}
                     body={t('moderator_accept_body', {username: user.username})}
                     actionTitle={t('accept')}
                     onActionAccepted={acceptRequest}
+                    submitButtonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900"
                     isOpened={false}/>
             </div>
-            {/* TODO: check style */}
             <OneButtonDialog
-                buttonClassName="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
+                buttonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 h-min flex items-center"
                 buttonIcon={<ClearIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                 buttonText={t("moderator_reject")}
                 title={t("moderator_reject")}
                 body={t('moderator_reject_body', {username: user.username})}
                 actionTitle={t('reject')}
                 onActionAccepted={rejectRequest}
+                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900"
                 isOpened={false}/>
         </div>
     </div>);

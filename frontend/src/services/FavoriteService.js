@@ -1,14 +1,12 @@
 import favoriteApi from '../api/FavoriteApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {MediaType} from '../enums/MediaType'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const favoriteService = (() => {
 
     const getUserFavoriteMedia = async ({url, page, pageSize}) => {
         const res = await favoriteApi.getUserFavoriteMedia({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isFavoriteMedia = async (url) => {
@@ -26,9 +24,7 @@ const favoriteService = (() => {
 
     const getUserFavoriteLists = async ({url, page, pageSize}) => {
         const res = await favoriteApi.getUserFavoriteLists({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isFavoriteList = async (url) => {
@@ -46,9 +42,7 @@ const favoriteService = (() => {
 
     const getUserRecommendedMedia = async ({url, page, pageSize, mediaType}) => {
         const res = await favoriteApi.getUserRecommendedMedia({url, page, pageSize, mediaType})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getUserRecommendedFilms = async ({url, page, pageSize}) => {
@@ -61,9 +55,7 @@ const favoriteService = (() => {
 
     const getUserRecommendedLists = async ({url, page, pageSize}) => {
         const res = await favoriteApi.getUserRecommendedLists({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     return {

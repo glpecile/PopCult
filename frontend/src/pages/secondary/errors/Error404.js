@@ -1,12 +1,11 @@
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import Layout from "../../../components/Layout/Layout";
 
 export default function Error404() {
     const {t} = useTranslation();
     return (
-        <Layout>
+        <>
             <Helmet>
                 <title>{t('error404_title')}</title>
             </Helmet>
@@ -26,6 +25,6 @@ export default function Error404() {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </>
     );
 }

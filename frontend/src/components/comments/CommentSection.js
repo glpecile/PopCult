@@ -14,7 +14,7 @@ const CommentSection = (props) => {
                 <div className="px-2">
                     <NewComment type={props.type} commentsUrl={props.commentsUrl} setCommentsUpdate={setCommentsUpdate}/>
                     <CommentList commentsUrl={props.commentsUrl} commentsUpdate={commentsUpdate}
-                                 setCommentsUpdate={setCommentsUpdate}/>
+                                 setCommentsUpdate={setCommentsUpdate} type={props.type}/>
                 </div>
 
             </div>

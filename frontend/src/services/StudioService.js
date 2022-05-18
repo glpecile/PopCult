@@ -1,5 +1,5 @@
 import studioApi from '../api/StudioApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const studioService = (() => {
 
@@ -10,9 +10,7 @@ const studioService = (() => {
 
     const getStudios = async ({page, pageSize}) => {
         const res = await studioApi.getStudios({page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getStudio = async (id) => {

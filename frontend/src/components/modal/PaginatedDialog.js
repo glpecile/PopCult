@@ -29,7 +29,7 @@ export default function PaginatedDialog(props) {
                     <div>
                         {props.body}
                     </div>
-                    <div className="flex justify-center pt-2">
+                    <div className="flex justify-center pt-4">
                         {(props.forks.links.last.page > 1) &&
                             <PaginationComponent page={props.page}
                                                  lastPage={props.forks.links.last.page}

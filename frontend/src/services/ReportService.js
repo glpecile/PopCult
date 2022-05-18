@@ -1,13 +1,11 @@
 import reportApi from '../api/ReportApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const reportService = (() => {
 
     const getListReports = async ({page, pageSize}) => {
         const res = await reportApi.getListReports({page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getListReport = async (id) => {
@@ -25,9 +23,7 @@ const reportService = (() => {
 
     const getListCommentReports = async ({page, pageSize}) => {
         const res = await reportApi.getListCommentReports({page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getListCommentReport = async (id) => {
@@ -45,9 +41,7 @@ const reportService = (() => {
 
     const getMediaCommentReports = async ({page, pageSize}) => {
         const res = await reportApi.getMediaCommentReports({page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getMediaCommentReport = async (id) => {
@@ -65,9 +59,7 @@ const reportService = (() => {
 
     const getReportsFromList = async ({url, page, pageSize}) => {
         const res = await reportApi.getReportsFromList({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const createListReport = async ({url, data}) => {
@@ -76,9 +68,7 @@ const reportService = (() => {
 
     const getReportsFromListComment = async ({url, page, pageSize}) => {
         const res = await reportApi.getReportsFromListComment({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const createListCommentReport = async ({url, data}) => {
@@ -87,9 +77,7 @@ const reportService = (() => {
 
     const getReportsFromMediaComment = async ({url, page, pageSize}) => {
         const res = await reportApi.getReportsFromMediaComment({url, page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const createMediaCommentReport = async ({url, data}) => {
