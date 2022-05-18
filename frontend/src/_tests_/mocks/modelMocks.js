@@ -152,3 +152,61 @@ export const list = "{\n" +
     "        \"url\": \"http://localhost:8080/webapp_war/api/lists/13\",\n" +
     "        \"visibility\": true\n" +
     "    }"
+export const mediaList = "[\n" +
+    "    {\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/media/92/comments\",\n" +
+    "        \"country\": \"DE\",\n" +
+    "        \"description\": \"Women enter and exit a science fiction author's life over the course of a few years after the author loses the woman he considers his one true love.\",\n" +
+    "        \"genreUrl\": \"http://localhost:8080/webapp_war/api/media/92/genres\",\n" +
+    "        \"id\": 92,\n" +
+    "        \"imageUrl\": \"http://localhost:8080/webapp_war/api/media/92/image\",\n" +
+    "        \"length\": 128,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"listsContainUrl\": \"http://localhost:8080/webapp_war/api/media/92/lists\",\n" +
+    "        \"releaseDate\": \"2004-09-29\",\n" +
+    "        \"seasons\": 0,\n" +
+    "        \"staffUrl\": \"http://localhost:8080/webapp_war/api/media/92/staff\",\n" +
+    "        \"studiosUrl\": \"http://localhost:8080/webapp_war/api/media/92/studios\",\n" +
+    "        \"title\": \"2046\",\n" +
+    "        \"type\": \"FILMS\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/media/92\"\n" +
+    "    },\n" +
+    "    {\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/media/61/comments\",\n" +
+    "        \"country\": \"US\",\n" +
+    "        \"description\": \"The persons and events in this film are fictitious - fortunately! A masterpiece of off-the-wall comedy, Airplane! features Robert Hays as an ex-fighter pilot forced to take over the controls of an airliner when the flight crew succumbs to food poisoning; Julie Hagerty as his girlfriend/stewardess/co-pilot; and a cast of all-stars including Robert Stack, Lloyd Bridges, Peter Graves, Leslie Nielsen, Kareem Abdul-Jabbar... and more. Their hilarious high jinks spoof airplane disaster flicks, religious zealots, television commercials, romantic love... the list whirls by in rapid succession. And the story races from one moment of zany fun to the next.\",\n" +
+    "        \"genreUrl\": \"http://localhost:8080/webapp_war/api/media/61/genres\",\n" +
+    "        \"id\": 61,\n" +
+    "        \"imageUrl\": \"http://localhost:8080/webapp_war/api/media/61/image\",\n" +
+    "        \"length\": 88,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"listsContainUrl\": \"http://localhost:8080/webapp_war/api/media/61/lists\",\n" +
+    "        \"releaseDate\": \"1980-07-02\",\n" +
+    "        \"seasons\": 0,\n" +
+    "        \"staffUrl\": \"http://localhost:8080/webapp_war/api/media/61/staff\",\n" +
+    "        \"studiosUrl\": \"http://localhost:8080/webapp_war/api/media/61/studios\",\n" +
+    "        \"title\": \"Airplane!\",\n" +
+    "        \"type\": \"FILMS\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/media/61\"\n" +
+    "    }\n" +
+    "]"
+
+export const media =
+    "    {\n" +
+    "        \"commentsUrl\": \"http://localhost:8080/webapp_war/api/media/92/comments\",\n" +
+    "        \"country\": \"DE\",\n" +
+    "        \"description\": \"Women enter and exit a science fiction author's life over the course of a few years after the author loses the woman he considers his one true love.\",\n" +
+    "        \"genreUrl\": \"http://localhost:8080/webapp_war/api/media/92/genres\",\n" +
+    "        \"id\": 1,\n" +
+    "        \"imageUrl\": \"http://localhost:8080/webapp_war/api/media/92/image\",\n" +
+    "        \"length\": 128,\n" +
+    "        \"likes\": 0,\n" +
+    "        \"listsContainUrl\": \"http://localhost:8080/webapp_war/api/media/92/lists\",\n" +
+    "        \"releaseDate\": \"2004-09-29\",\n" +
+    "        \"seasons\": 0,\n" +
+    "        \"staffUrl\": \"http://localhost:8080/webapp_war/api/media/92/staff\",\n" +
+    "        \"studiosUrl\": \"http://localhost:8080/webapp_war/api/media/92/studios\",\n" +
+    "        \"title\": \"2046\",\n" +
+    "        \"type\": \"FILMS\",\n" +
+    "        \"url\": \"http://localhost:8080/webapp_war/api/media/92\"\n" +
+    "    }"

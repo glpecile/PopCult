@@ -1,4 +1,4 @@
 import { setupServer } from 'msw/node';
-import { userHandlers, listHandlers } from './handlers/handlers';
+import {userHandlers, listHandlers, mediaHandlers} from './handlers/handlers';
 
-export const mswServer = setupServer(...userHandlers, ...listHandlers);
+export const mswServer = setupServer(...userHandlers, ...listHandlers, ...mediaHandlers);
