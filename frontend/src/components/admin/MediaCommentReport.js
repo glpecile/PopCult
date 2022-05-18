@@ -27,7 +27,7 @@ const MediaCommentReport = (props) => {
     }
 
     return <div
-        className="my-2 w-full h-30 bg-white overflow-hidden rounded-lg shadow-md flex flex-col transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
+        className="my-2 w-full h-min-30 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex flex-col transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107">
         <h4 className="text-base text-xl py-2 pl-4 font-normal tracking-tight">
             <Trans i18nKey="report_comment_media">
                 <Link className="text-violet-500 hover:text-violet-900 font-bold"

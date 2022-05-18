@@ -8,7 +8,7 @@ const BannedUserCard = (props) => {
     const banDays = Math.ceil((new Date(props.unbanDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24))
 
     return (
-        <div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
+        <div className="w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between mt-2">
             <div className="flex">
                 <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="user_profile"
                      src={props.image}/>
@@ -24,24 +24,19 @@ const BannedUserCard = (props) => {
                     </p>
                 </h4>
             </div>
-            <OneButtonDialog
-                buttonClassName="p-3 text-gray-500 hover:text-amber-500 h-min w-min flex items-center"
-                buttonIcon={<ClearIcon/>}
-                title={t('unban_user')}
-                body={t('unban_user_name', {username: props.username})}
-                actionTitle={t('unban')}
-                onActionAccepted={() => {
-                    props.unbanUser(props.url)
-                }}
-                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 outline"
-                isOpened={false}/>
-            {/*<div className="flex justify-between p-3 text-center justify-center items-center">*/}
-            {/*    <button onClick={ () => {*/}
-            {/*        props.unbanUser(props.url);*/}
-            {/*    }}>*/}
-            {/*        <Close/>*/}
-            {/*    </button>*/}
-            {/*</div>*/}
+            <div className="flex justify-center items-center">
+                <OneButtonDialog
+                    buttonClassName="p-3 text-gray-500 hover:text-amber-500 h-min w-min flex items-center"
+                    buttonIcon={<ClearIcon/>}
+                    title={t('unban_user')}
+                    body={t('unban_user_name', {username: props.username})}
+                    actionTitle={t('unban')}
+                    onActionAccepted={() => {
+                        props.unbanUser(props.url)
+                    }}
+                    submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900"
+                    isOpened={false}/>
+            </div>
         </div>
     );
 }
