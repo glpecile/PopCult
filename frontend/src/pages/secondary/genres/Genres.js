@@ -13,15 +13,14 @@ import PaginationComponent from "../../../components/PaginationComponent";
 import NoResults from "../../../components/search/NoResults";
 
 export default function Genres() {
+    const {t} = useTranslation();
     const {genre: genreParam} = useParams();
     const genresFromContext = useContext(GenresContext).genres;
-    const {setErrorStatusCode} = useErrorStatus();
-    const [searchParams] = useSearchParams();
-    const {t} = useTranslation();
-
     const [mediaPaginated, setMediaPaginated] = useState(undefined);
     const [listsCarrousel, setListsCarrousel] = useState(undefined);
+    const {setErrorStatusCode} = useErrorStatus();
 
+    const [searchParams] = useSearchParams();
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const [pageSize] = useState(12);
 
@@ -61,7 +60,7 @@ export default function Genres() {
             (genresFromContext && mediaPaginated !== undefined && listsCarrousel !== undefined) ?
                 <div className="space-y-3">
                     <h1 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
-                        {genreParam}
+                        {t('genre_' + genreParam.toLowerCase())}
                     </h1>
                     <h5 className="font-bold text-2xl py-2">
                         {t('genre_lists')}
@@ -93,7 +92,7 @@ export default function Genres() {
                                         })
                                     }
                                 </ResponsiveMediaGrid>
-                                <div className="flex justify-center mt-4">
+                                <div className="flex justify-center pt-4">
                                     {
                                         (mediaPaginated.data.length > 0 && mediaPaginated.links.last.page > 1) &&
                                         <PaginationComponent page={page}
