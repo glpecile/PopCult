@@ -30,24 +30,26 @@ const ModeratorsRequest = (user) => {
             <div className="pr-2">
                 {/* TODO: check style */}
                 <OneButtonDialog
-                    buttonClassName="btn btn-success bg-gray-300 group hover:bg-green-400 text-gray-700 font-semibold hover:text-white"
+                    buttonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900 h-min outline flex items-center"
                     buttonIcon={<CheckOutlinedIcon className="group-hover:text-white mr-2"/>}
                     buttonText={t("moderator_accept")}
                     title={t("moderator_accept")}
                     body={t('moderator_accept_body', {username: user.username})}
                     actionTitle={t('accept')}
                     onActionAccepted={acceptRequest}
+                    submitButtonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900 outline"
                     isOpened={false}/>
             </div>
             {/* TODO: check style */}
             <OneButtonDialog
-                buttonClassName="btn btn-danger bg-gray-300 group hover:bg-red-400 text-gray-700 font-semibold hover:text-white"
+                buttonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 h-min outline flex items-center"
                 buttonIcon={<ClearIcon fontSize="small" className="group-hover:text-white mr-2"/>}
                 buttonText={t("moderator_reject")}
                 title={t("moderator_reject")}
                 body={t('moderator_reject_body', {username: user.username})}
                 actionTitle={t('reject')}
                 onActionAccepted={rejectRequest}
+                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 outline"
                 isOpened={false}/>
         </div>
     </div>);

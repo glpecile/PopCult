@@ -1,6 +1,8 @@
 import {Close} from "@mui/icons-material";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import ClearIcon from "@mui/icons-material/Clear";
+import OneButtonDialog from "../modal/OneButtonDialog";
 
 const BannedUserCard = (props) => {
     const {t} = useTranslation();
@@ -23,13 +25,24 @@ const BannedUserCard = (props) => {
                     </p>
                 </h4>
             </div>
-            <div className="flex justify-between p-3 text-center justify-center items-center">
-                <button onClick={ () => {
-                    props.unbanUser(props.url);
-                }}>
-                    <Close/>
-                </button>
-            </div>
+            <OneButtonDialog
+                buttonClassName="p-3 text-gray-500 hover:text-amber-500 h-min w-min flex items-center"
+                buttonIcon={<ClearIcon/>}
+                title={t('unban_user')}
+                body={t('unban_user_name', {username: props.username})}
+                actionTitle={t('unban')}
+                onActionAccepted={() => {
+                    props.unbanUser(props.url)
+                }}
+                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 outline"
+                isOpened={false}/>
+            {/*<div className="flex justify-between p-3 text-center justify-center items-center">*/}
+            {/*    <button onClick={ () => {*/}
+            {/*        props.unbanUser(props.url);*/}
+            {/*    }}>*/}
+            {/*        <Close/>*/}
+            {/*    </button>*/}
+            {/*</div>*/}
         </div>
     );
 }

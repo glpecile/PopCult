@@ -29,7 +29,7 @@ const BannedUsers = () => {
     const unbanUser = useCallback(async (url) => {
         try {
             await UserService.unbanUser(url);
-            setRefresh((prevState => !prevState));
+            setRefresh((prevState => prevState + 1));
         } catch (error) {
             console.log(error);
         }
