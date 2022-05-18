@@ -12,7 +12,7 @@
   "bans_title": "Usuarios suspendidos",
   "collaborator_accept": "Aceptar Colaborador",
   "collaborator_accept_body": "Estas seguro que deseas aceptar a {{username}} como colaborador?",
-  "collaborator_no_results": "There are no collaborators requests at the moment.",
+  "collaborator_no_results": "No hay pedidos para colaborar en este momento.",
   "collaborator_reject": "Rechazar Colaborador",
   "collaborator_reject_body": "Estas seguro que deseas rechazar a {{username}} de colaborar de tu lista?",
   "collaborators_in_list": "Algunos colaboradores de esta lista:",
