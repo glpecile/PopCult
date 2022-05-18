@@ -4,7 +4,6 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import StudioService from "../../../services/StudioService";
 import MediaService from "../../../services/MediaService";
-import ListsSlider from "../../../components/lists/ListsSlider";
 import NoResults from "../../../components/search/NoResults";
 import ResponsiveMediaGrid from "../../../components/ResponsiveMediaGrid";
 import MediaCard from "../../../components/media/MediaCard";
