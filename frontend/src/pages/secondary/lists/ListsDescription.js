@@ -10,6 +10,7 @@ import ListUpperIcons from "../../../components/lists/description/ListUpperIcons
 import {Link, useParams} from "react-router-dom";
 import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
 import ListForks from "../../../components/lists/description/ListForks";
+import {CommentSectionType} from "../../../enums/CommentSectionType";
 
 function ListsDescription() {
     let {id} = useParams();
@@ -64,7 +65,7 @@ function ListsDescription() {
             <ListLowerIcons id={id} collaborative={list.collaborative} owner={list.owner} url={list.forksUrl}
                             collaborativeRequestUrl={list.requestsUrl}/>
             <ListMedia mediaUrl={list.mediaUrl}/>
-            <CommentSection commentsUrl={list.commentsUrl}/>
+            <CommentSection commentsUrl={list.commentsUrl} type={CommentSectionType.LISTS}/>
         </>) : <Loader/>}
     </>);
 }

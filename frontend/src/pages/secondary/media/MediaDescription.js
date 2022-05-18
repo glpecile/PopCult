@@ -11,6 +11,7 @@ import StudioService from "../../../services/StudioService";
 import staffService from "../../../services/StaffService";
 import ListService from "../../../services/ListService";
 import ListsInMedia from "../../../components/media/ListsInMedia";
+import {CommentSectionType} from "../../../enums/CommentSectionType";
 
 function MediaDescription() {
     let {id} = useParams();
@@ -72,7 +73,7 @@ function MediaDescription() {
                     // Lists that contain this media.
                     listsData && listsData.data.length > 0 && <ListsInMedia title={t('media_lists')} data={listsData.data}/>
                 }
-                <CommentSection commentsUrl={mediaData.commentsUrl} type="MEDIA"/>
+                <CommentSection commentsUrl={mediaData.commentsUrl} type={CommentSectionType.MEDIA}/>
             </> : <Spinner/>}
         </>
     );
