@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter} from "react-router-dom";
 import './i18n';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -23,11 +22,9 @@ const theme = createTheme({
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <ThemeProvider theme={theme}>
                 <App/>
             </ThemeProvider>
-        </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
 );

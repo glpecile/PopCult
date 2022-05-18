@@ -18,7 +18,7 @@ public class Media {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "media_mediaid_seq")
-    @SequenceGenerator(sequenceName = "media_mediaid_seq", name="media_mediaid_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "media_mediaid_seq", name = "media_mediaid_seq", allocationSize = 1)
     private Integer mediaId;
 
     @Enumerated(EnumType.ORDINAL)
@@ -59,12 +59,12 @@ public class Media {
     @CollectionTable(name = "mediagenre",
             joinColumns = {@JoinColumn(name = "mediaid", nullable = false)}
     )
-    @Column(name="genreid")
+    @Column(name = "genreid")
     private List<Genre> genres;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "director",
-            joinColumns = {@JoinColumn(name="mediaid")},
+            joinColumns = {@JoinColumn(name = "mediaid")},
             inverseJoinColumns = {@JoinColumn(name = "directorid")}
     )
     private List<Director> directorList;
@@ -72,7 +72,7 @@ public class Media {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "crew",
-            joinColumns = {@JoinColumn(name="mediaid")},
+            joinColumns = {@JoinColumn(name = "mediaid")},
             inverseJoinColumns = {@JoinColumn(name = "crewid")}
     )
     private List<Actor> actorList;
@@ -81,7 +81,7 @@ public class Media {
     private int likes;
 
 
-    /*default */ Media(){
+    /*default */ Media() {
         //Just for hibernate
     }
 

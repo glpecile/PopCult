@@ -125,7 +125,7 @@ const ListHandleCollaborators = (props) => {
                                         key={user.username}/>
                                 })}
                             </FormGroup>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center pt-4">
                                 {(searchResults.links.last.page > 1) &&
                                     <PaginationComponent page={page} lastPage={searchResults.links.last.page}
                                                          setPage={setPage}/>

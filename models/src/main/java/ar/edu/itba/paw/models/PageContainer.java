@@ -15,9 +15,10 @@ public class PageContainer<T> {
         this.totalCount = totalCount;
     }
 
-    public int getFirstPage(){
+    public int getFirstPage() {
         return 1;
     }
+
     public List<T> getElements() {
         return elements;
     }
@@ -34,18 +35,19 @@ public class PageContainer<T> {
         return totalCount;
     }
 
-    public int getTotalPages(){
+    public int getTotalPages() {
         return (int) Math.ceil((double) totalCount / pageSize);
     }
 
-    public int getLastPage(){
+    public int getLastPage() {
         return getTotalPages();
     }
-    public boolean hasNextPage(){
+
+    public boolean hasNextPage() {
         return getCurrentPage() < getLastPage();
     }
 
-    public boolean hasPrevPage(){
+    public boolean hasPrevPage() {
         return getCurrentPage() > 1;
     }
 }

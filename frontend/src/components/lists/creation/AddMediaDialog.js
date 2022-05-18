@@ -5,36 +5,10 @@ import LocalDialog from "../../modal/LocalDialog";
 import {Checkbox, FormControlLabel, FormGroup, Tab, Tabs} from "@mui/material";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {a11yProps, TabPanel} from "../../TabsComponent";
 import CompactMediaCard from "../../media/CompactMediaCard";
 import Spinner from "../../animation/Spinner";
 import PaginationComponent from "../../PaginationComponent";
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <div className="p-3">
-                    {children}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
-}
 
 export default function AddMediaDialog(props) {
     const {t} = useTranslation();
@@ -92,7 +66,7 @@ export default function AddMediaDialog(props) {
                         {t('search_no_results')}
                     </div>)}
             </FormGroup>
-            <div className="flex justify-center pt-2">
+            <div className="flex justify-center pt-4">
                 {(searchMedia.data.length > 0 && searchMedia.links.last.page > 1) && <> {
                     isFilm === true ?
                         (<PaginationComponent page={page} lastPage={searchMedia.links.last.page}

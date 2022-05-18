@@ -1,13 +1,11 @@
 import modRequestApi from '../api/ModRequestApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const modRequestService = (() => {
 
     const getModRequests = async ({page, pageSize}) => {
         const res = await modRequestApi.getModRequests({page, pageSize});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getModRequest = async (id) => {

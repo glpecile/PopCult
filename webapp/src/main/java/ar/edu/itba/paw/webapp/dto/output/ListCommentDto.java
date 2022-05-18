@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // Remove type attribute added automatically by jersey when extending class
-@XmlType(name="")
+@XmlType(name = "")
 public class ListCommentDto extends CommentDto {
 
     private String listTitle;

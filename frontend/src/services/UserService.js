@@ -1,6 +1,6 @@
 import userApi from '../api/UserApi'
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
 import {UserRole} from '../enums/UserRole'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const UserService = (function () {
 
@@ -11,9 +11,7 @@ const UserService = (function () {
 
     const getUsers = async ({page, pageSize, userRole, banned, query, notCollabInList}) => {
         const res = await userApi.getUsers({page, pageSize, userRole, banned, query, notCollabInList});
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data}
+        return parsePaginatedResponse(res);
     }
 
     const getModerators = async ({page, pageSize}) => {

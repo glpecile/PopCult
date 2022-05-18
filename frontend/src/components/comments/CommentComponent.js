@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import UserService from "../../services/UserService";
 import {Link} from "react-router-dom";
 import {Alert, ListItem, Snackbar} from "@mui/material";
@@ -11,6 +11,7 @@ import OneButtonDialog from "../modal/OneButtonDialog";
 import {useTranslation} from "react-i18next";
 import reportService from "../../services/ReportService";
 import FormDialog from "../modal/FormDialog";
+import {CommentSectionType} from "../../enums/CommentSectionType";
 
 const CommentComponent = (props) => {
     const {t} = useTranslation();
@@ -47,11 +48,21 @@ const CommentComponent = (props) => {
     }, [comment, setErrorStatusCode]);
 
     async function deleteComment() {
-        try {
-            await commentService.deleteListComment(comment.url);
-            props.setCommentsUpdate(prev => prev - 1);
-        } catch (error) {
-            setErrorStatusCode(error.response.status);
+        if (props.type === CommentSectionType.LISTS) {
+            try {
+                await commentService.deleteListComment(comment.url);
+                props.setCommentsUpdate(prev => prev + 1);
+            } catch (error) {
+                setErrorStatusCode(error.response.status);
+            }
+        } else {
+            try {
+                await commentService.deleteMediaComment(comment.url);
+                props.setCommentsUpdate(prev => prev + 1);
+
+            } catch (error) {
+                setErrorStatusCode(error.response.status);
+            }
         }
     }
 
@@ -60,12 +71,26 @@ const CommentComponent = (props) => {
         if (!(aux.includes('<') || aux.includes('>'))) setReportBody(aux);
     }
 
+    const createReport = useCallback(async () => {
+        if (props.type === CommentSectionType.LISTS)
+            return await reportService.createListCommentReport({
+                url: comment.reportsUrl,
+                data: reportBody
+            });//data.status
+        else
+            return await reportService.createMediaCommentReport({
+                url: comment.reportsUrl,
+                data: reportBody
+            })
+    }, [comment, props.type, reportBody]);
+
     async function submitReport(event) {
+        console.log(comment)
         event.preventDefault();
         try {
-            const data = await reportService.createListCommentReport({url: comment.reportsUrl, data: reportBody});//data.status
+            const data = createReport();
             if (data.status === 204) {
-                props.setCommentsUpdate(prev => prev - 1);
+                props.setCommentsUpdate(prev => prev + 1);
                 setStatus(data.status)
                 setShowAlert(true);
             } else if (data.status === 201) {
@@ -129,7 +154,7 @@ const CommentComponent = (props) => {
                         }
                     </div>
                     <div/>
-                    <div className=" col-span-11 flex items-center lg:pb-2">
+                    <div className="col-span-11 flex items-center lg:pb-2">
                         <div className=" m-0 max-w-full break-words"> {comment.commentBody} </div>
                     </div>
                 </div>

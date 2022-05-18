@@ -33,7 +33,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getMediaListByUser(User user, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -52,7 +52,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getPublicMediaListByUser(User user, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM medialist WHERE userid = :userid AND visibility = :visibility OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -78,7 +78,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<Media> getMediaInList(MediaList mediaList, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT mediaid FROM listelement WHERE medialistid = :mediaListId OFFSET (:offset) LIMIT (:limit)");
         nativeQuery.setParameter("offset", (page - 1) * pageSize);
         nativeQuery.setParameter("limit", pageSize);
@@ -125,7 +125,7 @@ public class ListsHibernateDao implements ListsDao {
             having.add(" COUNT(mediaId) >= :minMatches ");
             parameters.put("minMatches", minMatches);
         }
-        if(sort == SortType.POPULARITY){
+        if (sort == SortType.POPULARITY) {
             groupBy.add(" medialist.medialistid");
         }
         where.add(" visibility = :visibility ");
@@ -175,23 +175,23 @@ public class ListsHibernateDao implements ListsDao {
     public PageContainer<MediaList> getMediaListByFilters(int page, int pageSize, SortType sort, List<Genre> genre, int minMatches, LocalDateTime fromDate, LocalDateTime toDate, String term) {
         //Para paginacion
         //Pedimos el contenido paginado.
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
 
         String sortBaseString = "";
         String sortCountString = "";
         StringBuilder fromTables = new StringBuilder();
-        fromTables.append( "mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ");
+        fromTables.append("mediaGenre NATURAL JOIN listelement NATURAL JOIN mediaList ");
         if (sort != null) {
             if (sort == SortType.TITLE) {
                 sortBaseString = ", LOWER(" + sort.getNameMediaList() + ") ";
                 sortCountString = "order by lower(" + sort.getNameMediaList() + ")";
-            } else{
+            } else {
                 sortBaseString = ", " + sort.getNameMediaList();
 
-                if(sort == SortType.POPULARITY){
-                    fromTables.append( "LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid " );
+                if (sort == SortType.POPULARITY) {
+                    fromTables.append("LEFT JOIN favoritelists ON medialist.medialistid = favoritelists.medialistid ");
                     sortCountString = "order by likes DESC ";
-                }else{
+                } else {
                     sortCountString = "order by " + sort.getNameMediaList();
                 }
 
@@ -216,17 +216,19 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getListsIncludingMedia(Media media, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
 
-        final Query nativeQuery = em.createNativeQuery("SELECT medialistid FROM listelement WHERE mediaid = :mediaid OFFSET (:offset) LIMIT (:limit)");
-        nativeQuery.setParameter("mediaid", media.getMediaId());
-        nativeQuery.setParameter("offset", (page - 1) * pageSize);
-        nativeQuery.setParameter("limit", pageSize);
+        final Query nativeQuery = em.createNativeQuery("SELECT listelement.medialistid FROM listelement LEFT JOIN medialist ml ON listelement.medialistid = ml.medialistid WHERE mediaid = :mediaid AND visibility = :visibility OFFSET (:offset) LIMIT (:limit)")
+                .setParameter("mediaid", media.getMediaId())
+                .setParameter("visibility", true)
+                .setParameter("offset", (page - 1) * pageSize)
+                .setParameter("limit", pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = nativeQuery.getResultList();
 
-        final Query countQuery = em.createNativeQuery("SELECT COUNT(mediaListId) FROM listelement WHERE mediaid = :mediaId")
-                .setParameter("mediaId", media.getMediaId());
+        final Query countQuery = em.createNativeQuery("SELECT COUNT(listelement.mediaListId) FROM listelement LEFT JOIN medialist ml ON listelement.medialistid = ml.medialistid WHERE mediaid = :mediaId AND visibility = :visibility")
+                .setParameter("mediaId", media.getMediaId())
+                .setParameter("visibility", true);
         long count = ((Number) countQuery.getSingleResult()).longValue();
 
         List<MediaList> list = getMediaLists(listIds);
@@ -317,7 +319,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getUserEditableLists(User user, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = em.createNativeQuery("(SELECT medialistid FROM medialist WHERE userid = :userId) UNION " +
                         "(SELECT m.medialistid FROM collaborative c JOIN medialist m on c.listid = m.medialistid WHERE collaboratorid = :userId AND accepted = :accepted) " +
@@ -339,7 +341,7 @@ public class ListsHibernateDao implements ListsDao {
 
     @Override
     public PageContainer<MediaList> getListForks(MediaList mediaList, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         @SuppressWarnings("unchecked")
         List<Long> listIds = em.createNativeQuery("SELECT m.medialistid FROM forkedlists f JOIN medialist m ON f.forkedlistid = m.medialistid " +
                         "WHERE f.originalistid = :mediaListId AND m.visibility = :visibility " +

@@ -29,7 +29,7 @@ public class MediaFavoriteDto extends MediaDto {
         return mediaFavoriteDto;
     }
 
-    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser){
+    public static List<MediaDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
         throw new AssertionError();
     }
 

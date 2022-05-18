@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
-import ar.edu.itba.paw.models.media.Media;
 import ar.edu.itba.paw.models.media.WatchedMedia;
 import ar.edu.itba.paw.models.user.User;
 

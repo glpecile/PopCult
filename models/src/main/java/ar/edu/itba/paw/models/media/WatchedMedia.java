@@ -15,7 +15,7 @@ public class WatchedMedia {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "towatchmedia_watchedmediaid_seq")
     @SequenceGenerator(sequenceName = "towatchmedia_watchedmediaid_seq", name = "towatchmedia_watchedmediaid_seq", allocationSize = 1)
     private Integer watchedMediaId;
-    
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId")
     private User user;

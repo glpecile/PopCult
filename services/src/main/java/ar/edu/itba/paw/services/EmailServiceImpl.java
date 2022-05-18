@@ -65,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
 
     private String getHtmlBody(String template, Map<String, Object> variables, Locale locale) {
         Context thymeleafContext = new Context(locale);
-        if(variables == null) {
+        if (variables == null) {
             variables = new HashMap<>();
         }
         variables.put("basePath", basePath);

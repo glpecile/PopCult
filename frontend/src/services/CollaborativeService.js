@@ -1,13 +1,12 @@
 import collaborativeApi from '../api/CollaborativeApi'
 import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const collaborativeService = (() => {
 
     const getUserCollaborationRequests = async ({url, page, pageSize}) => {
         const res = await collaborativeApi.getUserCollaborationRequests({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getCollaborationRequest = async (id) => {

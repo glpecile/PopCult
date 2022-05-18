@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import MediaService from "../../services/MediaService";
 import Loader from "../secondary/errors/Loader";
 import MediaSlider from "../../components/media/MediaSlider";
@@ -10,6 +10,7 @@ import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import MediaCard from "../../components/media/MediaCard";
 import {createSearchParams, useNavigate, useSearchParams} from "react-router-dom";
+import ResponsiveMediaGrid from "../../components/ResponsiveMediaGrid";
 
 export default function Films() {
     const {t} = useTranslation();
@@ -21,13 +22,27 @@ export default function Films() {
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const [films, setFilms] = useState(undefined);
     const {setErrorStatusCode} = useErrorStatus();
-    const [filmFilters, setFilmFilters] = useState(() => new Map());
-    const genres = useContext(GenresContext).genres;
-    const pageSize = 4;
-
-    const mediaSort = 'sort';
-    const mediaDecades = 'decades';
     const mediaCategories = 'categories';
+    const mediaDecades = 'decades';
+    const mediaSort = 'sort';
+    const getMediaFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(mediaDecades)) aux.set(mediaDecades, searchParams.get(mediaDecades));
+        if (searchParams.has(mediaCategories)) aux.set(mediaCategories, searchParams.getAll(mediaCategories));
+        if (searchParams.has(mediaSort)) aux.set(mediaSort, searchParams.get(mediaSort));
+        return aux;
+    }, [searchParams]);
+
+    const [filmFilters, setFilmFilters] = useState(getMediaFilters);
+    const genres = useContext(GenresContext).genres;
+    let firstLoad = useRef(true);
+    const pageSize = 12;
+
+    useEffect(() => {
+        firstLoad.current = true;
+        setPage(searchParams.get("page"));
+        setFilmFilters(getMediaFilters)
+    }, [searchParams, getMediaFilters]);
 
     const getCarrouselData = useCallback(async () => {
         let data = await MediaService.getFilms({pageSize: 12});
@@ -63,14 +78,16 @@ export default function Films() {
     }, [page, filmFilters, pageSize, setErrorStatusCode])
 
     useEffect(() => {
-        navigate({
-            pathname: '/media/films',
-            search: createSearchParams({
-                page: page,
-                ...Object.fromEntries(filmFilters.entries())
-            }).toString()
-        });
-    }, [page, navigate, filmFilters]);
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/media/films',
+                search: createSearchParams({
+                    page: page,
+                    ...Object.fromEntries(filmFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [page, filmFilters, navigate]);
 
 
     return (
@@ -93,10 +110,9 @@ export default function Films() {
                                  setMediaPage={setPage} genres={genres} mediaSort={mediaSort}
                                  mediaDecades={mediaDecades} mediaCategories={mediaCategories}/>
                         {(films && films.data) ? <>
-                            <div className="row py-2">
+                            <ResponsiveMediaGrid>
                                 {films.data.map((content) => {
-                                    return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                                                key={content.id}>
+                                    return <div className="p-0 m-0" key={content.id}>
                                         <MediaCard
                                             key={content.id}
                                             id={content.id}
@@ -106,8 +122,8 @@ export default function Films() {
                                             type={content.type.toLowerCase()}
                                         /></div>
                                 })}
-                            </div>
-                            <div className="flex justify-center pt-2">
+                            </ResponsiveMediaGrid>
+                            <div className="flex justify-center pt-4">
                                 {(films.data.length > 0 && films.links.last.page > 1) &&
                                     <PaginationComponent page={page} lastPage={films.links.last.page}
                                                          setPage={setPage}/>

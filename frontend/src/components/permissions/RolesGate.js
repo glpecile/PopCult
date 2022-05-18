@@ -17,6 +17,7 @@ const RolesGate = ({children, level}) => {
             if (!user.isLoggedIn || !(role.localeCompare(Roles.ADMIN) === 0 || role.localeCompare(Roles.MOD) === 0)){
                 return <Error401/>
             }
+            break;
         default:
             break;
     }

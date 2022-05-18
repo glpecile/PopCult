@@ -2,7 +2,7 @@ import ListsSlider from "../../components/lists/ListsSlider";
 import {useTranslation} from "react-i18next";
 import {Helmet} from "react-helmet-async";
 import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import listService from "../../services/ListService";
 import Loader from "../secondary/errors/Loader";
@@ -11,6 +11,7 @@ import ListsCard from "../../components/lists/ListsCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import GenresContext from "../../store/GenresContext";
 import {Alert, Snackbar} from "@mui/material";
+import ResponsiveMediaGrid from "../../components/ResponsiveMediaGrid";
 
 function Lists() {
     const {t} = useTranslation();
@@ -24,14 +25,29 @@ function Lists() {
     const [lists, setLists] = useState(undefined);
     const [page, setPage] = useState(searchParams.get("page") || 1);
     const {setErrorStatusCode} = useErrorStatus();
-    const [listFilters, setListFilters] = useState(() => new Map());
-    const pageSize = 4;
-
+    const pageSize = 12;
     const listSort = 'sort';
     const listDecades = 'decades';
     const listCategories = 'categories';
+    const getListFilters = useCallback(() => {
+        const aux = new Map();
+        if (searchParams.has(listCategories)) aux.set(listCategories, searchParams.getAll(listCategories));
+        if (searchParams.has(listSort)) aux.set(listSort, searchParams.get(listSort));
+        if (searchParams.has(listDecades)) aux.set(listDecades, searchParams.get(listDecades));
+        return aux;
+    }, [searchParams]);
+
+    const [listFilters, setListFilters] = useState(getListFilters);
     const location = useLocation()
     const [showAlert, setShowAlert] = useState(location.state && location.state.data === 204);
+    let firstLoad = useRef(true);
+
+
+    useEffect(() => {
+        firstLoad.current = true;
+        setPage(searchParams.get("page"));
+        setListFilters(getListFilters)
+    }, [searchParams, getListFilters]);
 
     const getCarrouselLists = useCallback(async () => {
         const data = await listService.getLists({pageSize: 12})
@@ -68,14 +84,16 @@ function Lists() {
     }
 
     useEffect(() => {
-        navigate({
-            pathname: '/lists',
-            search: createSearchParams({
-                page: page,
-                ...Object.fromEntries(listFilters.entries())
-            }).toString()
-        });
-    }, [page, navigate, listFilters]);
+        if (firstLoad.current !== true)
+            navigate({
+                pathname: '/lists',
+                search: createSearchParams({
+                    page: page,
+                    ...Object.fromEntries(listFilters.entries())
+                }).toString()
+            });
+        firstLoad.current = false;
+    }, [page, listFilters, navigate]);
 
     useEffect(() => {
             const timeOut = setTimeout(() => {
@@ -109,16 +127,18 @@ function Lists() {
                          setListFilters={setListFilters} listFilters={listFilters} genres={genres} listSort={listSort}
                          listDecades={listDecades} listCategories={listCategories}/>
                 {(lists && lists.data) ? <>
-                    <div className="row py-2">
+                    <ResponsiveMediaGrid>
                         {lists.data.map((content) => {
-                            return <div className="px-2 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
-                                        key={content.id}>
-                                <ListsCard id={content.id} key={content.id}
-                                           mediaUrl={content.mediaUrl}
-                                           listTitle={content.name}/></div>
+                            return <div className="m-0 p-0" key={content.id}>
+                                <ListsCard
+                                    id={content.id}
+                                    key={content.id}
+                                    mediaUrl={content.mediaUrl}
+                                    listTitle={content.name}/>
+                            </div>
                         })}
-                    </div>
-                    <div className="flex justify-center pt-2">
+                    </ResponsiveMediaGrid>
+                    <div className="flex justify-center pt-4">
                         {(lists.data.length > 0 && lists.links.last.page > 1) &&
                             <PaginationComponent page={page} lastPage={lists.links.last.page}
                                                  setPage={setPage}/>

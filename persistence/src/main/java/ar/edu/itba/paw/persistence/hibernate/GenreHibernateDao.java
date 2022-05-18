@@ -23,7 +23,7 @@ public class GenreHibernateDao implements GenreDao {
         final Query nativeQuery = em.createNativeQuery("SELECT name FROM genre");
         @SuppressWarnings("unchecked")
         List<String> genres = nativeQuery.getResultList();
-        return genres.stream().map(g -> g.replaceAll(" ","")).map(String::toUpperCase).map(Genre::valueOf).collect(Collectors.toList());
+        return genres.stream().map(g -> g.replaceAll(" ", "")).map(String::toUpperCase).map(Genre::valueOf).collect(Collectors.toList());
     }
 
 }

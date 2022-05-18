@@ -61,7 +61,7 @@ const ListHandleMedia = (props) => {
                                                  key={media.id} className="py-1"/>
                     })}
                 </FormGroup>
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-4">
                     {(mediaInList.links.last.page > 1) &&
                         <PaginationComponent page={page} lastPage={mediaInList.links.last.page}
                                              setPage={setPage}/>

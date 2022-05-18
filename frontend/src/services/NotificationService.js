@@ -1,13 +1,11 @@
 import notificationApi from '../api/NotificationApi'
-import {parseLinkHeader} from "@web3-storage/parse-link-header";
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const notificationService = (() => {
 
     const getUserNotifications = async ({url, page, pageSize}) => {
         const res = await notificationApi.getUserNotifications({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const getNotification = async (id) => {

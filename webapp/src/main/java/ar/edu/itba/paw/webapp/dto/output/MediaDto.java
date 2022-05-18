@@ -59,7 +59,7 @@ public class MediaDto {
         mediaDto.staffUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("staff").build().toString();
         mediaDto.studiosUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("studios").build().toString();
         mediaDto.commentsUrl = url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("comments").build().toString();
-        if(currentUser != null) {
+        if (currentUser != null) {
             mediaDto.favoriteUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("favorite-media").path(String.valueOf(media.getMediaId())).build().toString();
             mediaDto.toWatchMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("to-watch-media").path(String.valueOf(media.getMediaId())).build().toString();
             mediaDto.watchedMediaUrl = url.getBaseUriBuilder().path("users").path(currentUser.getUsername()).path("watched-media").path(String.valueOf(media.getMediaId())).build().toString();
@@ -82,7 +82,7 @@ public class MediaDto {
         mediaDto.setImageUrl(url.getBaseUriBuilder().path("media").path(String.valueOf(media.getMediaId())).path("image").build().toString());
     }
 
-    public static List< MediaDto > fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
+    public static List<MediaDto> fromMediaList(UriInfo uriInfo, List<Media> mediaList, User currentUser) {
         return mediaList.stream().map(m -> MediaDto.fromMedia(uriInfo, m, currentUser)).collect(Collectors.toList());
     }
 

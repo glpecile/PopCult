@@ -1,13 +1,11 @@
 import watchApi from '../api/WatchApi';
-import {parseLinkHeader} from '@web3-storage/parse-link-header'
+import {parsePaginatedResponse} from "./ResponseUtils";
 
 const watchService = (() => {
 
     const getUserWatchedMedia = async ({url, page, pageSize}) => {
         const res = await watchApi.getUserWatchedMedia({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isWatchedMedia = async (url) => {
@@ -25,9 +23,7 @@ const watchService = (() => {
 
     const getUserToWatchMedia = async ({url, page, pageSize}) => {
         const res = await watchApi.getUserToWatchMedia({url, page, pageSize})
-        const links = parseLinkHeader(res.headers.link);
-        const data = res.data;
-        return {links, data};
+        return parsePaginatedResponse(res);
     }
 
     const isToWatchMedia = async (url) => {

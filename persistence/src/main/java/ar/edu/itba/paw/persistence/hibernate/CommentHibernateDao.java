@@ -59,7 +59,7 @@ public class CommentHibernateDao implements CommentDao {
 
     @Override
     public PageContainer<MediaComment> getMediaComments(Media media, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM mediacomment WHERE mediaid = :mediaId " +
                         "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("mediaId", media.getMediaId())
@@ -81,7 +81,7 @@ public class CommentHibernateDao implements CommentDao {
 
     @Override
     public PageContainer<ListComment> getListComments(MediaList mediaList, int page, int pageSize) {
-        PaginationValidator.validate(page,pageSize);
+        PaginationValidator.validate(page, pageSize);
         final Query nativeQuery = em.createNativeQuery("SELECT commentid FROM listcomment WHERE listid = :listId " +
                         "ORDER BY date DESC OFFSET :offset LIMIT :limit")
                 .setParameter("listId", mediaList.getMediaListId())

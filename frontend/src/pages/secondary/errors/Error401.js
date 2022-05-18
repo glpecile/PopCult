@@ -14,7 +14,7 @@ export default function Error401() {
                     <img className="w-80 pt-12" src={require('../../../images/PopCultLogoForbidden.webp')} alt="error_image"/>
                     <div className="flex flex-col pl-8">
                         <h1 className="text-6xl font-black text-justify">
-                            {t('error_private')}
+                            Error 401
                         </h1>
                         <p className="text-2xl font-semibold text-justify">
                             {t('error_private_body')}

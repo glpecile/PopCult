@@ -21,10 +21,11 @@ public class CollaboratorRequestDto {
         CollaboratorRequestDto collaboratorRequestDto = new CollaboratorRequestDto();
         collaboratorRequestDto.accepted = request.isAccepted();
         collaboratorRequestDto.username = request.getCollaborator().getUsername();
+        collaboratorRequestDto.list = request.getMediaList().getListName();
 
         collaboratorRequestDto.url = url.getBaseUriBuilder().path("collab-requests").path(String.valueOf(request.getCollabId())).build().toString();
         collaboratorRequestDto.userUrl = url.getBaseUriBuilder().path("users").path(request.getCollaborator().getUsername()).build().toString();
-
+        collaboratorRequestDto.listUrl = url.getBaseUriBuilder().path("lists").path(String.valueOf(request.getMediaList().getMediaListId())).build().toString();
 
         return collaboratorRequestDto;
     }

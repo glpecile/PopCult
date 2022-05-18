@@ -22,6 +22,7 @@ const NewListSearchInput = (props) => {
                            onChange={setTerm}/>
                     <button
                         className="btn btn-link bg-transparent rounded-full h-8 w-8 p-2 absolute inset-y-3 right-2 flex items-center"
+                        aria-label={t('search_placeholder')}
                         type="submit">
                         <SearchIcon
                             className="text-gray-500 hover:text-gray-800 text-center rounded-full mb-2 pr-2"></SearchIcon>

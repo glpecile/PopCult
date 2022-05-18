@@ -1,21 +1,22 @@
 import MediaCard from "../media/MediaCard";
+import ResponsiveMediaGrid from "../ResponsiveMediaGrid";
 
 function MediaInList(props) {
     const showMedia = (content) => {
         return (
-            <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 py-2" key={content.id}>
+            <div className="p-0 m-0" key={content.id}>
                 <MediaCard key={content.id}
                            id={content.id}
                            image={content.imageUrl}
                            title={content.title}
-                           releaseDate={content.releaseDate}
+                           releaseDate={content.releaseDate.slice(0, 4)}
                            type={content.type.toLowerCase()}
                 />
             </div>);
     }
-    return (<div className="row pb-4">
+    return (<ResponsiveMediaGrid>
         {props.media.map(content => showMedia(content))}
-    </div>);
+    </ResponsiveMediaGrid>);
 }
 
 export default MediaInList;
