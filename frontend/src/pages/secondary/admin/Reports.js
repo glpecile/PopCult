@@ -12,6 +12,7 @@ import useErrorStatus from "../../../hooks/useErrorStatus";
 import PaginationComponent from "../../../components/PaginationComponent";
 import ListCommentReport from "../../../components/admin/ListCommentReport";
 import {a11yProps, TabPanel} from "../../../components/TabsComponent";
+import MediaCommentReport from "../../../components/admin/MediaCommentReport";
 
 const Reports = () => {
     let tabStyle = "capitalize";
@@ -90,6 +91,7 @@ const Reports = () => {
                         page: mediaCommentsReportsPage,
                         pageSize: 12
                     });
+                    console.log(comments)
                     setReportedMediaComments(comments);
                 } catch (error) {
                     setErrorStatusCode(error.response.status);
@@ -160,7 +162,8 @@ const Reports = () => {
                         )}
                         <div className="flex justify-center pt-2">
                             {(reportedListComments.data.length > 0 && reportedListComments.links.last.page > 1) &&
-                                <PaginationComponent page={listsCommentsReportsPage} lastPage={reportedListComments.links.last.page}
+                                <PaginationComponent page={listsCommentsReportsPage}
+                                                     lastPage={reportedListComments.links.last.page}
                                                      setPage={setListsCommentsReportsPage}/>
                             }
                         </div>
@@ -170,11 +173,29 @@ const Reports = () => {
         </TabPanel>
 
         <TabPanel value={value} index={2}>
-            {!reportedMediaComments ? <Spinner/> :
-                <>{reportedMediaComments.data.length === 0 ?
-                    <NothingToShow text={t('reports_media_comments_empty')}/> :
-                    <></>}
-                </>}
+            {reportedMediaComments ?
+                <>
+                    {!reportedMediaComments.data || reportedMediaComments.data.length === 0 ?
+                        <NothingToShow text={t('reports_media_comments_empty')}/> :
+                        <>
+                            {reportedMediaComments.data.map((report) => {
+                                return <MediaCommentReport key={report.url} url={report.url} comment={report.reportedComment}
+                                                           reporterUsername={report.reporterUsername}
+                                                           reportedUsername={report.reportedUsername}
+                                                           mediaId={report.mediaUrl.split('/').pop()}
+                                                           mediaName={report.mediaTitle} reportBody={report.report}
+                                                           refresh={() => setRefreshMediaComments(prev => prev + 1)}/>
+                            })}
+                            <div className="flex justify-center pt-2">
+                                {(reportedMediaComments.data.length > 0 && reportedMediaComments.links.last.page > 1) &&
+                                    <PaginationComponent page={mediaCommentsReportsPage}
+                                                         lastPage={reportedMediaComments.links.last.page}
+                                                         setPage={setMediaCommentsReportsPage}/>
+                                }
+                            </div>
+                        </>
+                    }
+                </>: <Spinner/>}
         </TabPanel>
     </RolesGate>);
 

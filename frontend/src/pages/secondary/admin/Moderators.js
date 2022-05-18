@@ -1,4 +1,3 @@
-import {useLocation} from "react-router-dom";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Tab, Tabs} from "@mui/material";
@@ -12,14 +11,13 @@ import ModeratorCard from "../../../components/admin/ModeratorCard";
 import ModeratorsRequest from "../../../components/admin/ModeratorsRequest";
 import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
+import PaginationComponent from "../../../components/PaginationComponent";
 
 const Moderators = () => {
-    const query = new URLSearchParams(useLocation().search);
+    // const query = new URLSearchParams(useLocation().search);
 
-    const [requestsPage, setRequestsPage] = useState(query.get('page') || 1);
-    const [requestsPageSize, setRequestsPageSize] = useState(query.get('page-size') || 2);
-    const [moderatorsPage, setModeratorsPage] = useState(query.get('page') || 1);
-    const [moderatorsPageSize, setModeratorsPageSize] = useState(query.get('page-size') || 2);
+    const [requestsPage, setRequestsPage] = useState(1);
+    const [moderatorsPage, setModeratorsPage] = useState(1);
 
     const [moderatorsRequests, setModeratorsRequests] = useState(undefined);
     const [activeModerators, setActiveModerators] = useState(undefined);
@@ -38,27 +36,26 @@ const Moderators = () => {
     const getModerators = useCallback(async () => {
         if (moderatorsUsersMounted.current) {
             try {
-                const mods = await UserService.getModerators({page: moderatorsPage, pageSize: moderatorsPageSize});
+                const mods = await UserService.getModerators({page: moderatorsPage, pageSize: 12});
                 setActiveModerators(mods);
             } catch (error) {
                 console.log(error);
             }
         }
-    }, [moderatorsPage, moderatorsPageSize]);
+    }, [moderatorsPage]);
 
     const getModeratorRequests = useCallback(async () => {
         if (moderatorsRequestMounted.current) {
             try {
                 const requests = await ModRequestService.getModRequests({
-                    page: requestsPage,
-                    pageSize: requestsPageSize
+                    page: requestsPage, pageSize: 12
                 });
                 setModeratorsRequests(requests);
             } catch (error) {
                 console.log(error);
             }
         }
-    }, [requestsPage, requestsPageSize]);
+    }, [requestsPage]);
 
     const removeModerator = useCallback(async (url) => {
         try {
@@ -110,48 +107,59 @@ const Moderators = () => {
         setValue(newValue);
     };
 
-    return (
-        <RolesGate level={Roles.ADMIN}>
-            <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
-                {t('moderators')}
-            </h1>
-            <div className="flex justify-center">
-                <Tabs value={value}
-                      onChange={handleChange}
-                      textColor="secondary"
-                      indicatorColor="secondary"
-                      aria-label="tabs">
-                    <Tab className={tabStyle} label={t('moderators_active')} {...a11yProps(0)}/>
-                    <Tab className={tabStyle} label={t('moderators_request')} {...a11yProps(1)}/>
-                </Tabs>
-            </div>
-            <TabPanel value={value} index={0}>
-                {activeModerators === undefined && <Spinner/>}
-                {activeModerators !== undefined && activeModerators.data.length === 0 &&
-                    <NothingToShow text={t('moderators_active_empty')}/>}
-                {activeModerators !== undefined && activeModerators.data.length !== 0 && (activeModerators.data.map(user => {
-                    return <ModeratorCard key={user.username} username={user.username}
-                                          image={user.imageUrl}
-                                          url={user.removeModUrl}
-                                          removeModerator={removeModerator}
-                    />;
-                }))}
+    return (<RolesGate level={Roles.ADMIN}>
+        <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
+            {t('moderators')}
+        </h1>
+        <div className="flex justify-center">
+            <Tabs value={value}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="tabs">
+                <Tab className={tabStyle} label={t('moderators_active')} {...a11yProps(0)}/>
+                <Tab className={tabStyle} label={t('moderators_request')} {...a11yProps(1)}/>
+            </Tabs>
+        </div>
+        <TabPanel value={value} index={0}>
+            {activeModerators === undefined ? <Spinner/> : activeModerators.data.length === 0 ? <NothingToShow
+                text={t('moderators_active_empty')}/> : <>{activeModerators.data.length !== 0 && <>{(activeModerators.data.map(user => {
+                return <ModeratorCard key={user.username} username={user.username}
+                                      image={user.imageUrl}
+                                      url={user.removeModUrl}
+                                      removeModerator={removeModerator}
+                />;
+            }))}
+                <div className="flex justify-center pt-2">
+                    {(activeModerators.data.length > 0 && activeModerators.links.last.page > 1) &&
+                        <PaginationComponent page={moderatorsPage}
+                                             lastPage={activeModerators.links.last.page}
+                                             setPage={setModeratorsPage}/>}
+                </div>
+            </>}
+            </>}
 
-            </TabPanel>
+        </TabPanel>
 
-            <TabPanel value={value} index={1}>
-                {moderatorsRequests === undefined && <Spinner/>}
-                {moderatorsRequests !== undefined && moderatorsRequests.data.length === 0 &&
-                    <NothingToShow text={t('moderators_request_empty')}/>}
-                {moderatorsRequests !== undefined && moderatorsRequests.data.length !== 0 && (moderatorsRequests.data.map(user => {
-                    return <ModeratorsRequest key={user.username} username={user.username}
-                                              image={user.imageUrl}
-                                              url={user.url}
-                                              rejectModerator={rejectModerator}
-                                              acceptModerator={acceptModerator}
-                    />;
-                }))}
-            </TabPanel>
-        </RolesGate>);
+        <TabPanel value={value} index={1}>
+            {moderatorsRequests === undefined ? <Spinner/> : moderatorsRequests.data.length === 0 ?
+                <NothingToShow text={t('moderators_request_empty')}/> : <>{moderatorsRequests.data.length !== 0 && <>
+                    {(moderatorsRequests.data.map(user => {
+                        return <ModeratorsRequest key={user.username} username={user.username}
+                                                  image={user.imageUrl}
+                                                  url={user.url}
+                                                  rejectModerator={rejectModerator}
+                                                  acceptModerator={acceptModerator}
+                        />;
+                    }))}
+                    <div className="flex justify-center pt-2">
+                        {(moderatorsRequests.data.length > 0 && moderatorsRequests.links.last.page > 1) &&
+                            <PaginationComponent page={requestsPage}
+                                                 lastPage={moderatorsRequests.links.last.page}
+                                                 setPage={setRequestsPage}/>}
+                    </div>
+                </>}</>}
+        </TabPanel>
+    </RolesGate>);
 }
 export default Moderators;

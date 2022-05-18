@@ -1,9 +1,5 @@
-import {Trans, useTranslation} from "react-i18next";
+import {Trans} from "react-i18next";
 import {Link} from "react-router-dom";
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import ClearIcon from '@mui/icons-material/Clear';
-
-import OneButtonDialog from "../modal/OneButtonDialog";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import ReportService from "../../services/ReportService";
 import ReportButtons from "./ReportButtons";

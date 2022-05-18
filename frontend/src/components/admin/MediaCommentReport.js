@@ -1,16 +1,11 @@
-import {Trans, useTranslation} from "react-i18next";
+import {Trans} from "react-i18next";
 import {Link} from "react-router-dom";
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import ClearIcon from '@mui/icons-material/Clear';
-
-import OneButtonDialog from "../modal/OneButtonDialog";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import ReportService from "../../services/ReportService";
 import ReportButtons from "./ReportButtons";
 
 
 const MediaCommentReport = (props) => {
-    const {t} = useTranslation();
     const {setErrorStatusCode} = useErrorStatus();
 
     const rejectReport = async () => {
@@ -41,7 +36,9 @@ const MediaCommentReport = (props) => {
                       to={`/user/${props.reportedUsername}`}>{{reportedUsername: props.reportedUsername}}</Link>
                 {{comment: props.comment}}
                 <Link className="text-violet-500 hover:text-violet-900 font-bold"
-                      to={`/lists/${props.listId}`}>{{media: props.mediaName}}</Link>
+                      to={`/media/films/${props.mediaId}`}>
+                    {{media: props.mediaName}}
+                </Link>
             </Trans>
         </h4>
         <div className="text-base pl-4 tracking-tight flex flex-wrap whitespace-pre-wrap">
