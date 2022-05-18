@@ -300,5 +300,14 @@
   "collaborator_accept_body": "Are you sure you want to accept {{username}} as a collaborator?",
   "collaborator_reject": "Reject Collaborator",
   "collaborator_reject_body": "Are you sure you want to reject {{username}} from becoming a collaborator of your list?",
-  "notification_comment_title": "<0>{{username}}</0> commented on your list <1>{{list}}</1>:"
+  "notification_comment_title": "<0>{{username}}</0> commented on your list <1>{{list}}</1>:",
+  "report_list": "<0>{{reporterUsername}}</0> reported <1>{{reportedUsername}}</1>'s list <2>{{list}}</2>",
+  "report_comment_list": "<0>{{reporterUsername}}</0> reported <1>{{reportedUsername}}</1>'s comment \"<2>{{comment}}</2>\" in list <3>{{list}}</3>",
+  "report_comment_media": "<0>{{reporterUsername}}</0> reported <1>{{reportedUsername}}</1>'s comment \"<2>{{comment}}</2>\" in media <3>{{media}}</3>",
+  "report_body": "Additional comment:\n\"<0>{{reportBody}}</0>\"",
+  "reject_report_title": "Reject Report",
+  "reject_report_body": "Are you sure you wish to reject {{username}}'s report?",
+  "accept_report_title": "Accept Report",
+  "accept_report_body": "Are you sure you wish to accept {{username}}'s report?"
+
 }

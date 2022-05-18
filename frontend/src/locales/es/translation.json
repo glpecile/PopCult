@@ -299,5 +299,9 @@
   "collaborator_accept_body": "Estas seguro que deseas aceptar a {{username}} como colaborador?",
   "collaborator_reject": "Rechazar Colaborador",
   "collaborator_reject_body": "Estas seguro que deseas rechazar a {{username}} de colaborar de tu lista?",
-  "notification_comment_title": "<0>{{username}}</0> ha comentado en tu lista <1>{{list}}</1>:"
+  "notification_comment_title": "<0>{{username}}</0> ha comentado en tu lista <1>{{list}}</1>:",
+  "report_list": "<0>{{reporterUsername}}</0> reportó la lista <2>{{list}}</2> de <1>{{reportedUsername}}</1>",
+  "report_body": "Comentario adicional:\n\"<0>{{reportBody}}</0>\""
+
+
 }

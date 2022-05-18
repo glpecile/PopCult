@@ -24,21 +24,21 @@ export default function AdminPanel() {
             {/* Link to Reports */}
             {<IconLinkCard icon={<ReportOutlinedIcon fontSize="large"
                                                      className="text-violet-500 group-hover:text-violet-900 mt-3"/>}
-                           linkTo='/admin/reports?page=1&page-size=2'
+                           linkTo='/admin/reports'
                            title={t('report_title_plural')}
                            description={t('admin_reports_description')}/>}
             {/* Link to Bans */}
             <IconLinkCard
                 icon={<GroupRemoveOutlinedIcon fontSize="large"
                                                className="text-violet-500 group-hover:text-violet-900 mt-3"/>}
-                linkTo='/admin/bans?page=1&page-size=2'
+                linkTo='/admin/bans'
                 title={t('bans_title')}
                 description={t('admin_bans_description')}/>
             {/* Link to Mods */}
             {isAdmin && <IconLinkCard
                 icon={<GroupOutlinedIcon fontSize="large"
                                          className="text-violet-500 group-hover:text-violet-900 mt-3"/>}
-                linkTo='/admin/mods?page=1&page-size=2'
+                linkTo='/admin/mods'
                 title={t('mods_title')}
                 description={t('admin_mods_description')}/>
             }

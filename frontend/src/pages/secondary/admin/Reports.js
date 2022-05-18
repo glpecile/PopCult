@@ -1,13 +1,16 @@
 import * as React from "react";
 import {useTranslation} from "react-i18next";
 import {Tab, Tabs} from "@mui/material";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
 import ReportService from "../../../services/ReportService";
 import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
 import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
+import ListReport from "../../../components/admin/ListReport";
+import useErrorStatus from "../../../hooks/useErrorStatus";
+import PaginationComponent from "../../../components/PaginationComponent";
+import ListCommentReport from "../../../components/admin/ListCommentReport";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -40,9 +43,10 @@ const Reports = () => {
     let tabStyle = "capitalize";
     const {t} = useTranslation();
     const [value, setValue] = useState(0);
-    const query = new URLSearchParams(useLocation().search);
-    const [page, setPage] = useState(query.get('page') || 1);
-    const [pageSize, setPageSize] = useState(query.get('page-size') || 2);
+    // const query = new URLSearchParams(useLocation().search);
+    const [listsReportsPage, setListsReportsPage] = useState(1);
+    const [listsCommentsReportsPage, setListsCommentsReportsPage] = useState(1);
+    const [mediaCommentsReportsPage, setMediaCommentsReportsPage] = useState(1);
 
     const [reportedLists, setReportedLists] = useState(undefined);
     const [reportedListComments, setReportedListComments] = useState(undefined);
@@ -56,63 +60,74 @@ const Reports = () => {
     const reportedListCommentsMounted = useRef(true);
     const reportedMediaCommentsMounted = useRef(true);
 
-    const getReportedLists = useCallback(async () => {
-        if (reportedListsMounted.current) {
-            try {
-                const lists = await ReportService.getListReports({page, pageSize});
-                setReportedLists(lists);
-                console.log(lists);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }, [page, pageSize]);
+    const {setErrorStatusCode} = useErrorStatus();
 
-    const getReportedListsComments = useCallback(async () => {
-        if (reportedListCommentsMounted.current) {
-            try {
-                const comments = await ReportService.getListCommentReports({page, pageSize});
-                setReportedListComments(comments);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }, [page, pageSize]);
-
-    const getReportedMediaComments = useCallback(async () => {
-        if (reportedMediaCommentsMounted.current) {
-            try {
-                const comments = await ReportService.getMediaCommentReports({page, pageSize});
-                setReportedMediaComments(comments);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }, [page, pageSize]);
 
     useEffect(() => {
         reportedListsMounted.current = true;
+
+        const getReportedLists = async () => {
+            if (reportedListsMounted.current) {
+                try {
+                    const lists = await ReportService.getListReports({page: listsReportsPage, pageSize: 12});
+                    setReportedLists(lists);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
+            }
+        }
+
         getReportedLists();
         return () => {
             reportedListsMounted.current = false;
         }
-    }, [getReportedLists]);
+    }, [listsReportsPage, setErrorStatusCode, refreshLists]);
 
     useEffect(() => {
         reportedListCommentsMounted.current = true;
+
+        const getReportedListsComments = async () => {
+            if (reportedListCommentsMounted.current) {
+                try {
+                    const comments = await ReportService.getListCommentReports({
+                        page: listsCommentsReportsPage,
+                        pageSize: 12
+                    });
+                    setReportedListComments(comments);
+                    console.log(comments);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
+            }
+        }
+
         getReportedListsComments();
         return () => {
             reportedListCommentsMounted.current = false;
         }
-    }, [getReportedListsComments]);
+    }, [listsCommentsReportsPage, setErrorStatusCode, refreshListComments]);
 
     useEffect(() => {
         reportedMediaCommentsMounted.current = true;
+        const getReportedMediaComments = async () => {
+            if (reportedMediaCommentsMounted.current) {
+                try {
+                    const comments = await ReportService.getMediaCommentReports({
+                        page: mediaCommentsReportsPage,
+                        pageSize: 12
+                    });
+                    setReportedMediaComments(comments);
+                } catch (error) {
+                    setErrorStatusCode(error.response.status);
+                }
+            }
+        }
+
         getReportedMediaComments();
         return () => {
             reportedMediaCommentsMounted.current = false;
         }
-    }, [getReportedMediaComments]);
+    }, [mediaCommentsReportsPage, setErrorStatusCode, refreshMediaComments]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -135,21 +150,57 @@ const Reports = () => {
         </div>
 
         <TabPanel value={value} index={0}>
-            {reportedLists === undefined && <Spinner/>}
-            {reportedLists !== undefined && reportedLists.data.length === 0 &&
-                <NothingToShow text={t('reports_lists_empty')}/>}
+            {!reportedLists ? <Spinner/> : reportedLists.data.length === 0 ?
+                <NothingToShow text={t('reports_lists_empty')}/> :
+                <>
+                    {reportedLists.data.map((report) => {
+                        return <ListReport key={report.url} url={report.url} reporterUsername={report.reporterUsername}
+                                           reportedUsername={report.reportedUsername}
+                                           listname={"\"" + report.reportedListName + "\""}
+                                           reportBody={report.report}
+                                           refresh={() => setRefreshLists(prev => prev + 1)}
+                                           listId={report.reportedListUrl.split('/').pop()}/>
+                    })}
+                    <div className="flex justify-center pt-2">
+                        {(reportedLists.data.length > 0 && reportedLists.links.last.page > 1) &&
+                            <PaginationComponent page={listsReportsPage} lastPage={reportedLists.links.last.page}
+                                                 setPage={setListsReportsPage}/>
+                        }
+                    </div>
+                </>}
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-            {reportedListComments === undefined && <Spinner/>}
-            {reportedListComments !== undefined && reportedListComments.data.length === 0 &&
-                <NothingToShow text={t('reports_lists_comments_empty')}/>}
+            {!reportedListComments ? <Spinner/> :
+                <>{reportedListComments.data.length === 0 ?
+                    <NothingToShow text={t('reports_lists_comments_empty')}/> :
+                    <>
+                        {reportedListComments.data.map((report) => {
+                                return <ListCommentReport key={report.url} url={report.url} comment={report.reportedComment}
+                                                          reporterUsername={report.reporterUsername}
+                                                          reportedUsername={report.reportedUsername}
+                                                          listId={report.listUrl.split('/').pop()}
+                                                          listname={report.listName} reportBody={report.report}
+                                                          refresh={() => setRefreshListComments(prev => prev + 1)}/>;
+                            }
+                        )}
+                        <div className="flex justify-center pt-2">
+                            {(reportedListComments.data.length > 0 && reportedListComments.links.last.page > 1) &&
+                                <PaginationComponent page={listsCommentsReportsPage} lastPage={reportedListComments.links.last.page}
+                                                     setPage={setListsCommentsReportsPage}/>
+                            }
+                        </div>
+                    </>
+                }
+                </>}
         </TabPanel>
 
         <TabPanel value={value} index={2}>
-            {reportedMediaComments === undefined && <Spinner/>}
-            {reportedMediaComments !== undefined && reportedMediaComments.data.length === 0 &&
-                <NothingToShow text={t('reports_media_comments_empty')}/>}
+            {!reportedMediaComments ? <Spinner/> :
+                <>{reportedMediaComments.data.length === 0 ?
+                    <NothingToShow text={t('reports_media_comments_empty')}/> :
+                    <></>}
+                </>}
         </TabPanel>
     </RolesGate>);
 
