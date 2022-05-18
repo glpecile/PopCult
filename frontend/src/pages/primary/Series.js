@@ -119,7 +119,7 @@ function Series() {
                             /></div>
                     })}
                 </ResponsiveMediaGrid>
-                <div className="flex justify-center pt-2">
+                <div className="flex justify-center pt-4">
                     {(series.data.length > 0 && series.links.last.page > 1) &&
                         <PaginationComponent page={page} lastPage={series.links.last.page}
                                              setPage={setPage}/>}

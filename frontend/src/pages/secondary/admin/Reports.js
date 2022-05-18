@@ -137,7 +137,7 @@ const Reports = () => {
                                            refresh={() => setRefreshLists(prev => prev + 1)}
                                            listId={report.reportedListUrl.split('/').pop()}/>
                     })}
-                    <div className="flex justify-center pt-2">
+                    <div className="flex justify-center pt-4">
                         {(reportedLists.data.length > 0 && reportedLists.links.last.page > 1) &&
                             <PaginationComponent page={listsReportsPage} lastPage={reportedLists.links.last.page}
                                                  setPage={setListsReportsPage}/>
@@ -160,7 +160,7 @@ const Reports = () => {
                                                           refresh={() => setRefreshListComments(prev => prev + 1)}/>;
                             }
                         )}
-                        <div className="flex justify-center pt-2">
+                        <div className="flex justify-center pt-4">
                             {(reportedListComments.data.length > 0 && reportedListComments.links.last.page > 1) &&
                                 <PaginationComponent page={listsCommentsReportsPage}
                                                      lastPage={reportedListComments.links.last.page}
@@ -186,7 +186,7 @@ const Reports = () => {
                                                            mediaName={report.mediaTitle} reportBody={report.report}
                                                            refresh={() => setRefreshMediaComments(prev => prev + 1)}/>
                             })}
-                            <div className="flex justify-center pt-2">
+                            <div className="flex justify-center pt-4">
                                 {(reportedMediaComments.data.length > 0 && reportedMediaComments.links.last.page > 1) &&
                                     <PaginationComponent page={mediaCommentsReportsPage}
                                                          lastPage={reportedMediaComments.links.last.page}

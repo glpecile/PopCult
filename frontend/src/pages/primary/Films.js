@@ -123,7 +123,7 @@ export default function Films() {
                                         /></div>
                                 })}
                             </ResponsiveMediaGrid>
-                            <div className="flex justify-center pt-2">
+                            <div className="flex justify-center pt-4">
                                 {(films.data.length > 0 && films.links.last.page > 1) &&
                                     <PaginationComponent page={page} lastPage={films.links.last.page}
                                                          setPage={setPage}/>

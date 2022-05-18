@@ -54,7 +54,7 @@ const UserRequests = () => {
                         return <CollaborationRequest key={request.url} url={request.url} username={request.username} listname={request.list}
                         listId={request.listUrl.split('/').pop()} refresh={refreshRequests}/>
                     })}
-                        <div className="flex justify-center pt-2">
+                        <div className="flex justify-center pt-4">
                             {(requests.links.last.page > 1) &&
                                 <PaginationComponent page={page} lastPage={requests.links.last.page}
                                                      setPage={setPage}/>

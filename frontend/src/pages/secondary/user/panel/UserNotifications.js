@@ -58,7 +58,7 @@ const UserNotifications = () => {
                                                     refresh={refreshRequests}
                                                     commentBody={notification.comment} opened={notification.opened}/>
                     })}
-                        <div className="flex justify-center pt-2">
+                        <div className="flex justify-center pt-4">
                             {(notifications.links.last.page > 1) &&
                                 <PaginationComponent page={page} lastPage={notifications.links.last.page}
                                                      setPage={setPage}/>

@@ -130,7 +130,7 @@ const Moderators = () => {
                                       removeModerator={removeModerator}
                 />;
             }))}
-                <div className="flex justify-center pt-2">
+                <div className="flex justify-center pt-4">
                     {(activeModerators.data.length > 0 && activeModerators.links.last.page > 1) &&
                         <PaginationComponent page={moderatorsPage}
                                              lastPage={activeModerators.links.last.page}
@@ -152,7 +152,7 @@ const Moderators = () => {
                                                   acceptModerator={acceptModerator}
                         />;
                     }))}
-                    <div className="flex justify-center pt-2">
+                    <div className="flex justify-center pt-4">
                         {(moderatorsRequests.data.length > 0 && moderatorsRequests.links.last.page > 1) &&
                             <PaginationComponent page={requestsPage}
                                                  lastPage={moderatorsRequests.links.last.page}

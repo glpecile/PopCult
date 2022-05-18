@@ -56,7 +56,7 @@ const BannedUsers = () => {
                                        unbanUser={unbanUser}
                 />;
             }))}
-                <div className="flex justify-center pt-2">
+                <div className="flex justify-center pt-4">
                     {(bannedUsers.data.length > 0 && bannedUsers.links.last.page > 1) &&
                         <PaginationComponent page={page} lastPage={bannedUsers.links.last.page}
                                              setPage={setPage}/>

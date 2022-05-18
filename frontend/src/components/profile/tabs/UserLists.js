@@ -20,7 +20,7 @@ const UserLists = (props) => {
                         </div>);
                     })}
                 </ResponsiveMediaGrid>
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-4">
                     {(props.lists.data.length > 0 && props.lists.links.last.page > 1) &&
                         <PaginationComponent page={props.page}
                                              lastPage={props.lists.links.last.page}

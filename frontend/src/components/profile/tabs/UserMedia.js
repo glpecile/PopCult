@@ -25,7 +25,7 @@ const UserMedia = (props) => {
                         );
                     })}
                 </ResponsiveMediaGrid>
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-4">
                     {(props.media.data.length > 0 && props.media.links.last.page > 1) &&
                         <PaginationComponent page={props.page}
                                              lastPage={props.media.links.last.page}

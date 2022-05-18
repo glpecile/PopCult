@@ -79,7 +79,7 @@ export default function Studio() {
                                         })
                                     }
                                 </ResponsiveMediaGrid>
-                                <div className="flex justify-center mt-4">
+                                <div className="flex justify-center pt-4">
                                     {
                                         (mediaPaginated.data.length > 0 && mediaPaginated.links.last.page > 1) &&
                                         <PaginationComponent page={page}

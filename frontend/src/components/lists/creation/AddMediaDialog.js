@@ -66,7 +66,7 @@ export default function AddMediaDialog(props) {
                         {t('search_no_results')}
                     </div>)}
             </FormGroup>
-            <div className="flex justify-center pt-2">
+            <div className="flex justify-center pt-4">
                 {(searchMedia.data.length > 0 && searchMedia.links.last.page > 1) && <> {
                     isFilm === true ?
                         (<PaginationComponent page={page} lastPage={searchMedia.links.last.page}

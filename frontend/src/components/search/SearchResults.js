@@ -43,7 +43,7 @@ const SearchResults = (props) => {
                                     /></div>
                             })}
                         </ResponsiveMediaGrid>
-                        <div className="flex justify-center pt-1">
+                        <div className="flex justify-center pt-4">
                             {(props.media.data.length > 0 && props.media.links.last.page > 1) &&
                                 <PaginationComponent page={props.mediaPage} lastPage={props.media.links.last.page}
                                                      setPage={props.setMediaPage}/>
@@ -63,7 +63,7 @@ const SearchResults = (props) => {
                                                listTitle={content.name}/></div>
                             })}
                         </ResponsiveMediaGrid>
-                        <div className="flex justify-center pt-1">
+                        <div className="flex justify-center pt-4">
                             {(props.lists.data.length > 0 && props.lists.links.last.page > 1) &&
                                 <PaginationComponent page={props.listPage} lastPage={props.lists.links.last.page}
                                                      setPage={props.setListPage}/>

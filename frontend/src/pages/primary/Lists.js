@@ -138,7 +138,7 @@ function Lists() {
                             </div>
                         })}
                     </ResponsiveMediaGrid>
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center pt-4">
                         {(lists.data.length > 0 && lists.links.last.page > 1) &&
                             <PaginationComponent page={page} lastPage={lists.links.last.page}
                                                  setPage={setPage}/>
