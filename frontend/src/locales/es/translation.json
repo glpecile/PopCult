@@ -275,8 +275,8 @@
   "report_admin_success": "¡Muchas gracias! Se ha eliminado el comentario.",
   "report_content": "Reportar este contenido",
   "collaborators_in_list": "Algunos colaboradores de esta lista:",
-  "list_by": "por: ",
-  "forked_from": ",copia de: ",
+  "list_by": "por: <0>{{username}}</0>",
+  "forked_from": ",copia de: <0>{{list}}</0>",
   "lists_edit": "Editar Lista",
   "lists_collaborate": "Preguntar para colaborar",
   "lists_fork": "Copiar esta lista",
@@ -310,7 +310,11 @@
   "collaborator_reject_body": "Estas seguro que deseas rechazar a {{username}} de colaborar de tu lista?",
   "notification_comment_title": "<0>{{username}}</0> ha comentado en tu lista <1>{{list}}</1>:",
   "report_list": "<0>{{reporterUsername}}</0> reportó la lista <2>{{list}}</2> de <1>{{reportedUsername}}</1>",
-  "report_body": "Comentario adicional:\n\"<0>{{reportBody}}</0>\""
-
-
+  "report_comment_list": "<0>{{reporterUsername}}</0> reportó el comentario \"<2>{{comment}}</2>\" de <1>{{reportedUsername}}</1> en la lista <3>{{list}}</3>",
+  "report_comment_media": "<0>{{reporterUsername}}</0> reportó el comentario \"<2>{{comment}}</2>\" de <1>{{reportedUsername}}</1> en el contenido <3>{{media}}</3>",
+  "report_body": "Comentario adicional:\n\"<0>{{reportBody}}</0>\"",
+  "reject_report_title": "Rechazar Reporte",
+  "reject_report_body": "¿Estas seguro que deseas rechazar el reporte de {{username}}?",
+  "accept_report_title": "Aceptar Reporte",
+  "accept_report_body": "¿Estas seguro que deseas aceptar el reporte de {{username}}?"
 }

@@ -318,5 +318,4 @@
   "reject_report_body": "Are you sure you wish to reject {{username}}'s report?",
   "accept_report_title": "Accept Report",
   "accept_report_body": "Are you sure you wish to accept {{username}}'s report?"
-
 }
