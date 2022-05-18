@@ -36,7 +36,7 @@ const MediaService = (() => {
 
     // Devuelve la media de un staff en particular.
     const getMediaFromStaff = async ({url, page, pageSize, staffRole}) => {
-        const res = await mediaApi.getGenreMedia({url, page, pageSize, staffRole});
+        const res = await mediaApi.getMediaFromStaff({url, page, pageSize, staffRole});
         return parsePaginatedResponse(res);
     }
 
