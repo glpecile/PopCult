@@ -36,7 +36,11 @@ function MediaDescription() {
             const studiosDataToAddPromise = StudioService.getMediaStudios(mediaDataToAdd.studiosUrl);
             const directorsDataToAddPromise = staffService.getMediaDirectors(mediaDataToAdd.staffUrl);
             const crewDataToAddPromise = staffService.getMediaCrew(mediaDataToAdd.staffUrl);
-            const listsDataToAddPromise = ListService.getMediaLists({url: mediaDataToAdd.listsContainUrl, page: page, pageSize: pageSize})
+            const listsDataToAddPromise = ListService.getMediaLists({
+                url: mediaDataToAdd.listsContainUrl,
+                page: page,
+                pageSize: pageSize
+            })
             // promise all
             const [genreDataToAdd, studiosDataToAdd, directorsDataToAdd, crewDataToAdd, listsDataToAdd] = await Promise.all([genreDataToAddPromise, studiosDataToAddPromise, directorsDataToAddPromise, crewDataToAddPromise, listsDataToAddPromise]);
 
@@ -59,8 +63,9 @@ function MediaDescription() {
     );
 
     return (
-        <>
-            {(mediaData && genreData && studiosData && (directorData || crewData)) ? <>
+        <section>
+
+            {(mediaData) ? <>
                 <MediaDetails image={mediaData.imageUrl} title={mediaData.title}
                               releaseYear={mediaData.releaseDate.slice(0, 4)} countryName={mediaData.country}
                               description={mediaData.description} mediaData={mediaData}
@@ -71,11 +76,12 @@ function MediaDescription() {
                 />
                 {
                     // Lists that contain this media.
-                    listsData && listsData.data.length > 0 && <ListsInMedia title={t('media_lists')} data={listsData.data}/>
+                    listsData && listsData.data.length > 0 &&
+                    <ListsInMedia title={t('media_lists')} data={listsData.data}/>
                 }
                 <CommentSection commentsUrl={mediaData.commentsUrl} type={CommentSectionType.MEDIA}/>
             </> : <Spinner/>}
-        </>
+        </section>
     );
 }
 
