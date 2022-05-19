@@ -3,7 +3,6 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React, {Suspense, lazy} from "react";
 import Loader from "./pages/secondary/errors/Loader";
 import Layout from './components/Layout/Layout';
-import ModeratorRequest from "./pages/secondary/admin/ModeratorRequest";
 import LoggedGate from "./components/permissions/LoggedGate";
 
 const Films = lazy(() => import('./pages/primary/Films'));
@@ -12,6 +11,9 @@ const Lists = lazy(() => import('./pages/primary/Lists'));
 const Home = lazy(() => import('./pages/primary/Home'));
 const MediaDescription = lazy(() => import('./pages/secondary/media/MediaDescription'));
 const ListsDescription = lazy(() => import('./pages/secondary/lists/ListsDescription'));
+const ListsCreation = lazy(() => import('./pages/secondary/lists/ListsCreation'));
+const ListsEdition = lazy(() => import('./pages/secondary/lists/ListsEdition'));
+const SearchPage = lazy(() => import('./pages/secondary/search/SearchPage'));
 const Genres = lazy(() => import('./pages/secondary/genres/Genres'));
 const Studio = lazy(() => import('./pages/secondary/studios/Studio'));
 const StaffProfile = lazy(() => import('./pages/secondary/staff/StaffProfile'));
@@ -32,10 +34,8 @@ const AdminPanel = lazy(() => import('./pages/secondary/admin/AdminPanel'));
 const Reports = lazy(() => import('./pages/secondary/admin/Reports'));
 const BannedUsers = lazy(() => import('./pages/secondary/admin/BannedUsers'));
 const Moderators = lazy(() => import('./pages/secondary/admin/Moderators'));
+const ModeratorRequest = lazy(() => import('./pages/secondary/admin/ModeratorRequest'))
 const Error404 = lazy(() => import('./pages/secondary/errors/Error404'));
-const ListsCreation = lazy(() => import('./pages/secondary/lists/ListsCreation'));
-const SearchPage = lazy(() => import('./pages/secondary/search/SearchPage'));
-const ListsEdition = lazy(() => import('./pages/secondary/lists/ListsEdition'));
 
 export default function App() {
     const helmetContext = {};
