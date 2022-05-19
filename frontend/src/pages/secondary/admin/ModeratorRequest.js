@@ -1,9 +1,8 @@
 import BrandingImg from "../../../components/login/BrandingImg";
 import {useTranslation} from "react-i18next";
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Spinner from "../../../components/animation/Spinner";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import {Link} from "react-router-dom";
 import userService from "../../../services/UserService";

@@ -8,11 +8,13 @@ import AuthContext from "../../../store/AuthContext";
 import UserService from "../../../services/UserService";
 import Spinner from "../../../components/animation/Spinner";
 import useErrorStatus from "../../../hooks/useErrorStatus";
+import UserContext from "../../../store/UserContext";
 
 
 const Profile = () => {
     let {username} = useParams();
     const loggedUsername = useContext(AuthContext).username;
+    const userContext = useContext(UserContext).user;
     const [isCurrUser, setIsCurrUser] = useState(username.localeCompare(loggedUsername) === 0);
     const [userData, setUserData] = useState(undefined);
     const mountedUser = useRef(true);
@@ -30,20 +32,24 @@ const Profile = () => {
 
         async function getUserByUsername() {
             if (username && mountedUser.current) {
-                try {
-                    const user = await UserService.getUserByUsername(username);
-                    setUserData(user);
-                } catch (error) {
-                    setErrorStatusCode(error.response.status);
+                if (!isCurrUser) {
+                    try {
+                        const user = await UserService.getUserByUsername(username);
+                        setUserData(user);
+                    } catch (error) {
+                        setErrorStatusCode(error.response.status);
+                    }
+                }else{
+                    setUserData(userContext);
                 }
             }
-        };
+        }
 
         getUserByUsername();
         return () => {
             mountedUser.current = false;
         }
-    }, [username, setErrorStatusCode])
+    }, [username, setErrorStatusCode, isCurrUser, userContext])
 
     return (
         <>

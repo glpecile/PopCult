@@ -8,10 +8,10 @@ import AuthContext from "../../../store/AuthContext";
 import Spinner from "../../../components/animation/Spinner";
 import NoButtonDialog from "../../../components/modal/NoButtonDialog";
 import PersonRemoveOutlinedIcon from '@mui/icons-material/PersonRemoveOutlined';
+import UserContext from "../../../store/UserContext";
 
 const Settings = () => {
     const {t} = useTranslation();
-    const mountedUser = useRef(true);
     const mountedEditUser = useRef(true);
     const [toEditData, setToEditData] = useState(undefined);
     const [userData, setUserData] = useState(undefined);
@@ -21,29 +21,18 @@ const Settings = () => {
     const [errorModal, setErrorModal] = useState(false);
     const username = useRef(useContext(AuthContext)).current.username;
     const authContext = useContext(AuthContext);
+    const userContext = useContext(UserContext).user;
     const navigate = useNavigate();
 
 
-    const getUserByUsername = useCallback(async () => {
-        if (username) {
-            try {
-                const user = await UserService.getUserByUsername(username);
-                setUserData(user);
-                console.log(user);
-            } catch (error) {
-                console.log(error);
-                navigate(`/user/${username}`);
-            }
-        }
-    }, [username, navigate]);
-
     useEffect(() => {
-        mountedUser.current = true;
-        getUserByUsername();
-        return () => {
-            mountedUser.current = false;
+        if (authContext.isLoggedIn) {
+            if (userContext)
+                setUserData(userContext);
+        } else {
+            navigate(`/user/${username}`);
         }
-    }, [username, getUserByUsername])
+    }, [username, userContext, authContext.isLoggedIn, navigate])
 
 
     const editUser = useCallback(async () => {
@@ -69,7 +58,9 @@ const Settings = () => {
                 try {
                     console.log(userData);
                     await UserService.changeUserPassword({
-                        url: userData.changePasswordUrl, currentPassword: toEditData.currentPassword, newPassword: toEditData.password
+                        url: userData.changePasswordUrl,
+                        currentPassword: toEditData.currentPassword,
+                        newPassword: toEditData.password
                     });
                 } catch (error) {
                     wrongPass = true;
