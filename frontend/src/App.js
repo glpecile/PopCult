@@ -7,6 +7,7 @@ import Lists from "./pages/primary/Lists";
 import Home from "./pages/primary/Home";
 import MediaDescription from "./pages/secondary/media/MediaDescription";
 import ListsDescription from "./pages/secondary/lists/ListsDescription";
+import ListsEdition from "./pages/secondary/lists/ListsEdition";
 import Genres from "./pages/secondary/genres/Genres";
 import Studio from "./pages/secondary/studios/Studio"
 import StaffProfile from "./pages/secondary/staff/StaffProfile";
@@ -31,8 +32,8 @@ import Error404 from "./pages/secondary/errors/Error404";
 import Loader from "./pages/secondary/errors/Loader";
 import ListsCreation from "./pages/secondary/lists/ListsCreation";
 import SearchPage from "./pages/secondary/search/SearchPage";
+import ModeratorRequest from "./pages/secondary/admin/ModeratorRequest";
 import Layout from "./components/Layout/Layout";
-import ListsEdition from "./pages/secondary/lists/ListsEdition";
 import LoggedGate from "./components/permissions/LoggedGate";
 
 export default function App() {
@@ -74,6 +75,7 @@ export default function App() {
                             <Route path='/admin/bans' element={<BannedUsers/>}/>
                             <Route path='/admin/mods' element={<Moderators/>}/>
                             <Route path='/search' element={<SearchPage/>}/>
+                            <Route path='/requestMod' element={<LoggedGate><ModeratorRequest/></LoggedGate>}/>
                             <Route path='*' element={<Error404/>}/>
                         </Routes>
                     </Layout>

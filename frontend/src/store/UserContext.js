@@ -23,7 +23,7 @@ export const UserContextProvider = (props) => {
 
         if (authContext.isLoggedIn)
             getUser();
-    }, [setErrorStatusCode, authContext]);
+    }, [setErrorStatusCode, authContext.isLoggedIn]);
 
     return <UserContext.Provider
         value={{user: user}}>{props.children}</UserContext.Provider>
