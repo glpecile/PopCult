@@ -1,39 +1,58 @@
 import {HelmetProvider} from "react-helmet-async";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import React, {Suspense} from "react";
-import Films from "./pages/primary/Films";
-import Series from "./pages/primary/Series";
-import Lists from "./pages/primary/Lists";
-import Home from "./pages/primary/Home";
-import MediaDescription from "./pages/secondary/media/MediaDescription";
-import ListsDescription from "./pages/secondary/lists/ListsDescription";
-import Genres from "./pages/secondary/genres/Genres";
-import Studio from "./pages/secondary/studios/Studio"
-import StaffProfile from "./pages/secondary/staff/StaffProfile";
-import Login from "./pages/secondary/login/Login";
-import Recovery from "./pages/secondary/login/Recovery";
-import ResetPassword from "./pages/secondary/login/ResetPassword";
-import Register from "./pages/secondary/login/Register";
-import SuccessfulRegister from "./pages/secondary/login/SuccessfulRegister";
-import ExpiredToken from "./pages/secondary/login/ExpiredToken";
-import Profile from "./pages/secondary/user/Profile";
-import Settings from "./pages/secondary/user/Settings";
-import Verification from "./pages/secondary/login/Verification";
-import UserPanel from "./pages/secondary/user/panel/UserPanel";
-import UserRequests from "./pages/secondary/user/panel/UserRequests";
-import UserNotifications from "./pages/secondary/user/panel/UserNotifications";
-import UserLists from "./pages/secondary/user/UserLists";
-import AdminPanel from "./pages/secondary/admin/AdminPanel";
-import Reports from "./pages/secondary/admin/Reports";
-import BannedUsers from "./pages/secondary/admin/BannedUsers";
-import Moderators from "./pages/secondary/admin/Moderators";
-import Error404 from "./pages/secondary/errors/Error404";
+import React, {Suspense, lazy} from "react";
 import Loader from "./pages/secondary/errors/Loader";
-import ListsCreation from "./pages/secondary/lists/ListsCreation";
-import SearchPage from "./pages/secondary/search/SearchPage";
-import Layout from "./components/Layout/Layout";
-import ListsEdition from "./pages/secondary/lists/ListsEdition";
+import Layout from './components/Layout/Layout';
 import LoggedGate from "./components/permissions/LoggedGate";
+
+const DELAY = 250;
+
+const Films = lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(import('./pages/primary/Films')), DELAY);
+    });
+});
+const Series = lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(import('./pages/primary/Series')), DELAY);
+    });
+});
+const Lists = lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(import('./pages/primary/Lists')), DELAY);
+    });
+});
+const Home = lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(import('./pages/primary/Home')), DELAY);
+    });
+});
+const MediaDescription = lazy(() => import('./pages/secondary/media/MediaDescription'));
+const ListsDescription = lazy(() => import('./pages/secondary/lists/ListsDescription'));
+const Genres = lazy(() => import('./pages/secondary/genres/Genres'));
+const Studio = lazy(() => import('./pages/secondary/studios/Studio'));
+const StaffProfile = lazy(() => import('./pages/secondary/staff/StaffProfile'));
+const Login = lazy(() => import('./pages/secondary/login/Login'));
+const Recovery = lazy(() => import('./pages/secondary/login/Recovery'));
+const ResetPassword = lazy(() => import('./pages/secondary/login/ResetPassword'));
+const Register = lazy(() => import('./pages/secondary/login/Register'));
+const SuccessfulRegister = lazy(() => import('./pages/secondary/login/SuccessfulRegister'));
+const ExpiredToken = lazy(() => import('./pages/secondary/login/ExpiredToken'));
+const Profile = lazy(() => import('./pages/secondary/user/Profile'));
+const Settings = lazy(() => import('./pages/secondary/user/Settings'));
+const Verification = lazy(() => import('./pages/secondary/login/Verification'));
+const UserPanel = lazy(() => import('./pages/secondary/user/panel/UserPanel'));
+const UserRequests = lazy(() => import('./pages/secondary/user/panel/UserRequests'));
+const UserNotifications = lazy(() => import('./pages/secondary/user/panel/UserNotifications'));
+const UserLists = lazy(() => import('./pages/secondary/user/UserLists'));
+const AdminPanel = lazy(() => import('./pages/secondary/admin/AdminPanel'));
+const Reports = lazy(() => import('./pages/secondary/admin/Reports'));
+const BannedUsers = lazy(() => import('./pages/secondary/admin/BannedUsers'));
+const Moderators = lazy(() => import('./pages/secondary/admin/Moderators'));
+const Error404 = lazy(() => import('./pages/secondary/errors/Error404'));
+const ListsCreation = lazy(() => import('./pages/secondary/lists/ListsCreation'));
+const SearchPage = lazy(() => import('./pages/secondary/search/SearchPage'));
+const ListsEdition = lazy(() => import('./pages/secondary/lists/ListsEdition'));
 
 export default function App() {
     const helmetContext = {};
