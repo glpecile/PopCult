@@ -5,28 +5,10 @@ import Loader from "./pages/secondary/errors/Loader";
 import Layout from './components/Layout/Layout';
 import LoggedGate from "./components/permissions/LoggedGate";
 
-const DELAY = 250;
-
-const Films = lazy(() => {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(import('./pages/primary/Films')), DELAY);
-    });
-});
-const Series = lazy(() => {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(import('./pages/primary/Series')), DELAY);
-    });
-});
-const Lists = lazy(() => {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(import('./pages/primary/Lists')), DELAY);
-    });
-});
-const Home = lazy(() => {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(import('./pages/primary/Home')), DELAY);
-    });
-});
+const Films = lazy(() => import('./pages/primary/Films'));
+const Series = lazy(() => import('./pages/primary/Series'));
+const Lists = lazy(() => import('./pages/primary/Lists'));
+const Home = lazy(() => import('./pages/primary/Home'));
 const MediaDescription = lazy(() => import('./pages/secondary/media/MediaDescription'));
 const ListsDescription = lazy(() => import('./pages/secondary/lists/ListsDescription'));
 const Genres = lazy(() => import('./pages/secondary/genres/Genres'));
@@ -60,8 +42,8 @@ export default function App() {
     return (
         <HelmetProvider context={helmetContext}>
             <BrowserRouter basename={process.env.PUBLIC_URL}>
-                <Suspense fallback={<Loader/>}>
-                    <Layout>
+                <Layout>
+                    <Suspense fallback={<Loader/>}>
                         <Routes>
                             <Route path='/' element={<Home/>}/>
                             <Route path='/media/films' element={<Films/>}/>
@@ -95,8 +77,8 @@ export default function App() {
                             <Route path='/search' element={<SearchPage/>}/>
                             <Route path='*' element={<Error404/>}/>
                         </Routes>
-                    </Layout>
-                </Suspense>
+                    </Suspense>
+                </Layout>
             </BrowserRouter>
         </HelmetProvider>
     );
