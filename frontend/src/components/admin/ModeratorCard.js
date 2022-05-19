@@ -10,7 +10,7 @@ const ModeratorCard = (moderator) => {
         moderator.removeModerator(moderator.url);
     }
 
-    return (<div className="w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between mt-2">
+    return (<div className="w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between mt-2">
         <div className="flex">
             <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
                  src={moderator.image}/>
@@ -25,14 +25,15 @@ const ModeratorCard = (moderator) => {
         </div>
         <div className="flex justify-between p-3 text-center justify-center items-center">
             <OneButtonDialog
-                buttonClassName="hover:text-amber-500"
-                buttonIcon={<Close/>}
+                buttonClassName="btn btn-link btn-rounded text-red-500 hover:text-red-900 m-1 h-min flex items-center"
+                buttonIcon={<Close fontSize="small" className="group-hover:text-white mr-2"/>}
+                buttonText={t("moderator_remove")}
                 title={t("moderator_remove")}
                 body={t('moderator_remove_body', {username: moderator.username})}
                 actionTitle={t('remove')}
                 onActionAccepted={removeMod}
                 isOpened={false}
-                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 outline"
+                submitButtonClassName="btn btn-link btn-rounded text-red-500 hover:text-red-900"
             />
         </div>
     </div>);

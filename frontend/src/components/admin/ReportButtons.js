@@ -9,7 +9,7 @@ const ReportButtons = (props) => {
     return (<div className="flex justify-end items-end text-end mr-2 mb-2 space-x-2">
         <OneButtonDialog
             buttonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900 h-min flex items-center"
-            buttonIcon={<CheckOutlinedIcon/>}
+            buttonIcon={<CheckOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
             buttonText={t('accept_report_title')}
             title={t('accept_report_title')}
             body={t('accept_report_body', {username: props.reporterUsername})}
@@ -20,7 +20,7 @@ const ReportButtons = (props) => {
         <OneButtonDialog
             buttonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 h-min flex items-center"
             buttonText={t('reject_report_title')}
-            buttonIcon={<ClearIcon/>}
+            buttonIcon={<ClearIcon fontSize="small" className="group-hover:text-white mr-2"/>}
             title={t('reject_report_title')}
             body={t('reject_report_body', {username: props.reporterUsername})}
             actionTitle={t('reject')}
