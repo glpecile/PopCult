@@ -318,5 +318,11 @@
   "user_panel_title": "El panel de {{username}}",
   "username_error": "Los nombres de usuario validos contienen entre 1 y 20\ncaracteres no especiales.",
   "welcome_body": "Gracias por elegirnos! Se te enviara un email a tu casilla de correo para que puedas verificar y comenzar a utilizar tu cuenta. Esperamos que puedas disfrutar todo lo que PopCult tiene para ofrecer! \n\nNos vemos pronto!!\nEl equipo de PopCult.",
-  "welcome_popcult": "Bienvenido a PopCult!"
+  "welcome_popcult": "Bienvenido a PopCult!",
+  "moderator_request_wait": "Estamos procesado tu pedido! Esto podria tardar unos segundos...",
+  "moderator_request_sent_title": "¡Tu pedido ha sido enviado satisfactoriamente!",
+  "moderator_request_sent_body": "¡Nuestros moderadores revisarán tu solicitud!\n¡Muchas gracias por formar parte de la comunidad de PopCult!\n\n",
+  "moderator_request_error_title": "Ha ocurrido un error con tu pedido.",
+  "moderator_request_error_body": "Algo ha ocurrido y no hemos podido enviar tu solicitud.\nPor favor, verifica si actualmente ya eres moderador y sino intenta nuevamente pronto.\n\n"
+
 }

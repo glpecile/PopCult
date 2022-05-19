@@ -318,5 +318,11 @@
   "user_panel_title": "{{username}}'s Panel",
   "username_error": "Valid usernames contain between 1 and 20\nnon special characters.",
   "welcome_body": "Thanks for choosing us! An email will be sent to your inbox for you to verify and start using you account. We hope you enjoy everything PopCult has to offer! \n\nSee you soon!\nThe PopCult Team.",
-  "welcome_popcult": "Welcome to PopCult!"
+  "welcome_popcult": "Welcome to PopCult!",
+  "moderator_request_wait": "We are processing your request! This may take a second...",
+  "moderator_request_sent_title": "Your request has been successfully sent!",
+  "moderator_request_sent_body": "Your solicitude will now be managed by our moderators!\nThanks for being part of the PopCult community!\n\n",
+  "moderator_request_error_title": "There has been an error with your request.",
+  "moderator_request_error_body": "Something occurred and we weren't able to send your solicitude.\nPlease, check if you are currently already a moderator, or else try again soon.\n\n"
+
 }

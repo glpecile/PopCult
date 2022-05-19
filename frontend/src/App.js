@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React, {Suspense, lazy} from "react";
 import Loader from "./pages/secondary/errors/Loader";
 import Layout from './components/Layout/Layout';
+import ModeratorRequest from "./pages/secondary/admin/ModeratorRequest";
 import LoggedGate from "./components/permissions/LoggedGate";
 
 const Films = lazy(() => import('./pages/primary/Films'));
@@ -75,6 +76,7 @@ export default function App() {
                             <Route path='/admin/bans' element={<BannedUsers/>}/>
                             <Route path='/admin/mods' element={<Moderators/>}/>
                             <Route path='/search' element={<SearchPage/>}/>
+                            <Route path='/requestMod' element={<LoggedGate><ModeratorRequest/></LoggedGate>}/>
                             <Route path='*' element={<Error404/>}/>
                         </Routes>
                     </Suspense>
