@@ -18,6 +18,9 @@ const SearchResults = (props) => {
         <>
             <div className="flex justify-center w-full">
                 <Tabs value={props.activeTab}
+                      variant="scrollable"
+                      allowScrollButtonsMobile
+                      scrollButtons="auto"
                       onChange={handleTabs}
                       textColor="secondary"
                       indicatorColor="secondary"

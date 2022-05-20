@@ -13,7 +13,7 @@ const ModeratorsRequest = (user) => {
     const rejectRequest = () => {
         user.rejectModerator(user.url);
     }
-    return (<div className="w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between mt-2">
+    return (<div className="w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between mt-2 transition duration-300 ease-in-out hover:bg-violet-50/50 hover:shadow-indigo-500/50 relative">
         <div className="flex">
             <img className="inline-block object-cover rounded-full h-12 w-12 mt-3.5 ml-5" alt="profile_image"
                  src={user.image}/>

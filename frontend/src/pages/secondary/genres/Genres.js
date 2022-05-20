@@ -11,6 +11,8 @@ import ResponsiveMediaGrid from "../../../components/ResponsiveMediaGrid";
 import MediaCard from "../../../components/media/MediaCard";
 import PaginationComponent from "../../../components/PaginationComponent";
 import NoResults from "../../../components/search/NoResults";
+import {Helmet} from "react-helmet-async";
+import * as React from "react";
 
 export default function Genres() {
     const {t} = useTranslation();
@@ -59,6 +61,9 @@ export default function Genres() {
         {
             (genresFromContext && mediaPaginated !== undefined && listsCarrousel !== undefined) ?
                 <div className="space-y-3">
+                    <Helmet>
+                        <title>{t('genre_' + genreParam.toLowerCase())} • PopCult</title>
+                    </Helmet>
                     <h1 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                         {t('genre_' + genreParam.toLowerCase())}
                     </h1>

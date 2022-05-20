@@ -53,7 +53,7 @@ export default function FormDialog(props) {
                                 <button type="submit" onClick={() => {
                                     setOpen(false);
                                 }}
-                                        className="text-amber-500 hover:text-amber-700">{props.actionTitle}</button>
+                                        className="btn btn-link text-amber-500 hover:text-amber-700 btn-rounded">{props.actionTitle}</button>
                             </div>
                         </form>
                     </div>

@@ -11,6 +11,7 @@ import {Link, useParams} from "react-router-dom";
 import ListLowerIcons from "../../../components/lists/description/ListLowerIcons";
 import ListForks from "../../../components/lists/description/ListForks";
 import {CommentSectionType} from "../../../enums/CommentSectionType";
+import {Helmet} from "react-helmet-async";
 
 function ListsDescription() {
     let {id} = useParams();
@@ -37,6 +38,11 @@ function ListsDescription() {
 
     return (<>
         {list ? (<>
+            <Helmet>
+                <title>
+                    {list.name} • PopCult
+                </title>
+            </Helmet>
             <div className="flex flex-wrap pt-2">
                 <h2 className="text-5xl font-black capitalize justify-start pt-2 break-words max-w-full tracking-wide">
                     {list.name}

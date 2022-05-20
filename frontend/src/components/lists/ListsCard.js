@@ -12,14 +12,13 @@ function ListsCard(content) {
         async function getMediaPictures() {
             try {
                 const data = await listService.getMediaInList({url: content.mediaUrl, pageSize: 4});
-                let media = data.data;
-                media = media ? media : []
-                while (media.length < 4)
-                    media.push({
+                const mediaToAdd = data.data ? data.data : [];
+                while (mediaToAdd.length < 4)
+                    mediaToAdd.push({
                         id: Math.random() * 999, // random integer from 0 to 999.
                         imageUrl: require("../../images/TransparentMediaPoster.webp"),
                     })
-                setMedia(media);
+                setMedia(mediaToAdd);
             } catch (error) {
                 setErrorStatusCode(error.response.status);
             }

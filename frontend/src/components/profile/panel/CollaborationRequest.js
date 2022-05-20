@@ -29,7 +29,7 @@ const CollaborationRequest = (props) => {
     }
 
     return (<div
-        className={"my-1 w-full h-20 bg-white overflow-hidden rounded-lg shadow-md flex justify-between transition duration-500 ease-in-out hover:bg-gray-50 transform hover:-translate-y-1 hover:scale-107 " + props.className}>
+        className={"my-1 w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between transition duration-300 ease-in-out hover:bg-violet-50/50 hover:shadow-indigo-500/50 relative " + props.className}>
         <div className="flex items-center">
             <h4 className="text-base pl-3 py-4 text-xl font-normal tracking-tight">
                 <Trans i18nKey="panel_collaborators">
@@ -40,24 +40,27 @@ const CollaborationRequest = (props) => {
                 </Trans>
             </h4>
         </div>
-        <div className="flex justify-between p-3 text-center justify-center items-center">
+        <div className="flex justify-end items-center mr-2 mb-2 space-x-2">
             <OneButtonDialog
-                buttonClassName="text-green-500 hover:text-green-900 m-1 h-min w-min"
-                buttonIcon={<CheckOutlinedIcon className="mb-1 align-top"/>}
+                buttonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900 h-min flex items-center"
+                buttonIcon={<CheckOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
+                buttonText={t("accept")}
                 title={t("collaborator_accept")}
                 body={t('collaborator_accept_body', {username: props.listname})}
                 actionTitle={t('accept')}
                 onActionAccepted={acceptRequest}
+                submitButtonClassName="btn btn-link btn-rounded text-violet-500 hover:text-violet-900"
                 isOpened={false}/>
             {/* TODO: check style */}
             <OneButtonDialog
-                buttonClassName="text-red-500 hover:text-red-900 m-1 h-min w-min"
-                buttonIcon={<Close className="mb-1 align-top"/>}
+                buttonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900 h-min flex items-center"
+                buttonIcon={<Close fontSize="small" className="group-hover:text-white mr-2"/>}
+                buttonText={t("reject")}
                 title={t('collaborator_reject')}
                 body={t('collaborator_reject_body', {username: props.username})}
                 actionTitle={t('reject')}
                 onActionAccepted={rejectRequest}
-                submitButtonClassName="text-red-500 hover:text-red-900"
+                submitButtonClassName="btn btn-link btn-rounded text-amber-500 hover:text-amber-900"
                 isOpened={false}/>
         </div>
     </div>)

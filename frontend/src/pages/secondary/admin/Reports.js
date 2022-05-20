@@ -13,6 +13,7 @@ import PaginationComponent from "../../../components/PaginationComponent";
 import ListCommentReport from "../../../components/admin/ListCommentReport";
 import {a11yProps, TabPanel} from "../../../components/TabsComponent";
 import MediaCommentReport from "../../../components/admin/MediaCommentReport";
+import {Helmet} from "react-helmet-async";
 
 const Reports = () => {
     let tabStyle = "capitalize";
@@ -110,11 +111,17 @@ const Reports = () => {
     };
 
     return (<RolesGate level={Roles.MOD}>
+        <Helmet>
+            <title>{t('reports_title')}</title>
+        </Helmet>
         <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
             {t('reports')}
         </h1>
         <div className="flex justify-center">
             <Tabs value={value}
+                  variant="scrollable"
+                  allowScrollButtonsMobile
+                  scrollButtons="auto"
                   onChange={handleChange}
                   textColor="secondary"
                   indicatorColor="secondary"

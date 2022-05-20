@@ -12,6 +12,7 @@ import ModeratorsRequest from "../../../components/admin/ModeratorsRequest";
 import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
 import PaginationComponent from "../../../components/PaginationComponent";
+import {Helmet} from "react-helmet-async";
 
 const Moderators = () => {
     // const query = new URLSearchParams(useLocation().search);
@@ -108,11 +109,17 @@ const Moderators = () => {
     };
 
     return (<RolesGate level={Roles.ADMIN}>
+        <Helmet>
+            <title>{t('moderators_title')}</title>
+        </Helmet>
         <h1 className="text-3xl fw-bolder fw-bolder py-4 text-center">
             {t('moderators')}
         </h1>
         <div className="flex justify-center">
             <Tabs value={value}
+                  variant="scrollable"
+                  allowScrollButtonsMobile
+                  scrollButtons="auto"
                   onChange={handleChange}
                   textColor="secondary"
                   indicatorColor="secondary"

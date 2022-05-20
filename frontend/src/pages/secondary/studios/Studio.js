@@ -9,6 +9,8 @@ import ResponsiveMediaGrid from "../../../components/ResponsiveMediaGrid";
 import MediaCard from "../../../components/media/MediaCard";
 import PaginationComponent from "../../../components/PaginationComponent";
 import Loader from "../errors/Loader";
+import {Helmet} from "react-helmet-async";
+import * as React from "react";
 
 
 export default function Studio() {
@@ -45,6 +47,9 @@ export default function Studio() {
         {
             (mediaPaginated !== undefined) ?
                 <div>
+                    <Helmet>
+                        <title>{studioData.name} • PopCult</title>
+                    </Helmet>
                     <div className="flex flex-col lg:flex-row gap-4 space-y-3">
                         <div className="flex flex-col basis-1/3">
                             <img className="w-full object-center rounded-lg shadow-md" src={studioData.imageUrl}

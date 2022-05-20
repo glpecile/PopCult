@@ -131,7 +131,7 @@ const MediaOptions = (props) => {
     return (
         <div className="flex justify-around py-2">
             <FavoriteButton isLiked={isLiked} handleLike={handleLike}/>
-            <Tooltip title={isWatched ? t('media_details_add_watched') : t('media_details_remove_watched')} arrow>
+            <Tooltip title={isWatched ? t('media_details_remove_watched') : t('media_details_add_watched')} arrow>
                 <IconButton onClick={handleWatched} className={buttonStyle}>
                     {
                         isWatched ? <VisibilityIcon fontSize="large" className={iconStyle}/> :
@@ -139,7 +139,7 @@ const MediaOptions = (props) => {
                     }
                 </IconButton>
             </Tooltip>
-            <Tooltip title={isInWatchlist ? t('media_details_add_watchlist') : t('media_details_remove_watchlist')}
+            <Tooltip title={isInWatchlist ? t('media_details_remove_watchlist') : t('media_details_add_watchlist')}
                      arrow>
                 <IconButton onClick={handleInWatchlist} className={buttonStyle}>
                     {

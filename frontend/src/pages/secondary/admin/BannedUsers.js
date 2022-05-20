@@ -8,6 +8,7 @@ import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
 import PaginationComponent from "../../../components/PaginationComponent";
 import * as React from "react";
+import {Helmet} from "react-helmet-async";
 
 const BannedUsers = () => {
     // const query = new URLSearchParams(useLocation().search);
@@ -44,6 +45,9 @@ const BannedUsers = () => {
     }, [getBannedUsers, refresh]);
 
     return (<RolesGate level={Roles.MOD}>
+        <Helmet>
+            <title>{t('banned_users_title')}</title>
+        </Helmet>
         <h1 className="text-3xl fw-bolder fw-bolder text-center py-4">
             {t('banned_users')}
         </h1>

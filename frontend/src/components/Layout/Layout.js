@@ -13,7 +13,8 @@ function Layout(props) {
 
     const isLayoutVisible = useCallback(() => {
         return location.pathname !== '/login' && location.pathname !== '/register'
-            && location.pathname !== '/recovery' && location.pathname !== '/resetPassword' && location.pathname !== '/register/success' && location.pathname !== '/register/expired';
+            && location.pathname !== '/recovery' && location.pathname !== '/resetPassword' && location.pathname !== '/register/success' && location.pathname !== '/register/expired'
+            && location.pathname !== '/requestMod';
     }, [location.pathname]);
 
     useEffect(() => {
