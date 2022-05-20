@@ -296,6 +296,7 @@
   "search_sort_popularity": "Popularity",
   "search_sort_title": "Title",
   "search_title": "Search • PopCult",
+  "search_title_term": "Showing results for '{{term}}'",
   "search_title_all": "Showing all results",
   "search_types": "Types",
   "see_all": "See all",
