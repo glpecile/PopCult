@@ -88,7 +88,7 @@ const CommentComponent = (props) => {
         console.log(comment)
         event.preventDefault();
         try {
-            const data = createReport();
+            const data = await createReport();
             if (data.status === 204) {
                 props.setCommentsUpdate(prev => prev + 1);
                 setStatus(data.status)

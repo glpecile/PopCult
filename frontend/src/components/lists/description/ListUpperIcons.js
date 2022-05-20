@@ -88,7 +88,7 @@ const ListUpperIcons = (list) => {
     async function submitReport(event) {
         event.preventDefault();
         try {
-            const data = reportService.createListCommentReport({url: list.reportsUrl, data: reportBody});
+            const data = await reportService.createListCommentReport({url: list.reportsUrl, data: reportBody});
             if (data.status === 204) {
                 navigate('/lists', {
                     state: {
