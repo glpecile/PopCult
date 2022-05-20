@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useState} from "react";
 import UserService from "../../../services/UserService";
+import {Helmet} from "react-helmet-async";
 
 const ExpiredToken = () => {
     const {t} = useTranslation();
@@ -43,6 +44,9 @@ const ExpiredToken = () => {
     }
     return (
         <>
+            <Helmet>
+                <title>{t('register_title')}</title>
+            </Helmet>
             <BrandingImg/>
             <div className="flex-grow mt-3">
                 <div className="w-full max-w-sm mx-auto p-2.5 font-sans rounded-lg shadow-lg bg-white">

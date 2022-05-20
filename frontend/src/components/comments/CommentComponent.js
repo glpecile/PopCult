@@ -88,7 +88,7 @@ const CommentComponent = (props) => {
         console.log(comment)
         event.preventDefault();
         try {
-            const data = createReport();
+            const data = await createReport();
             if (data.status === 204) {
                 props.setCommentsUpdate(prev => prev + 1);
                 setStatus(data.status)
@@ -112,50 +112,52 @@ const CommentComponent = (props) => {
 
     return (
         <>{(comment && user) &&
-            <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex flex-wrap flex-col">
-                <div className="grid grid-cols-12 gap-2">
-                    <div><img className="inline-block object-cover rounded-full" alt="profile_image"
-                              src={user.imageUrl}/>
-                    </div>
-                    <div className="col-span-10 flex flex-row items-center text-lg">
-                        <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
-                              to={'/user/' + user.username}>{user.username}</Link>
-                        <div className="text-base tracking-tight pl-1 text-gray-400">
-                            &#8226;
+            <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex items-start">
+                <img className="inline-block object-cover rounded-full h-14 w-14 m-2" alt="profile_image" src={user.imageUrl}/>
+                <div className="flex-col w-full">
+                    <div className="flex items-center text-lg justify-between">
+                        <div className="flex">
+                            <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
+                                  to={'/user/' + user.username}>{user.username}</Link>
+                            <div className="text-base tracking-tight pl-1 text-gray-400">
+                                &#8226;
+                            </div>
+                            <div className="text-base tracking-tight pl-1 text-gray-400">
+                                {(comment.creationDate).slice(0, 10)}
+                            </div>
                         </div>
-                        <div className="text-base tracking-tight pl-1 text-gray-400">
-                            {(comment.creationDate).slice(0, 10)}
+                        <div className="flex">
+                            {
+                                // delete and report
+                                (user && currentUser && (currentUser.localeCompare(user.username) === 0)) ?
+                                    <OneButtonDialog
+                                        buttonClassName="text-red-500 hover:text-red-900 m-1 h-min w-min"
+                                        buttonIcon={<Close className="mb-1 align-top"/>}
+                                        title={t('delete_comment_title')}
+                                        body={t('delete_comment_body')}
+                                        actionTitle={t('delete_comment_confirmation')}
+                                        onActionAccepted={deleteComment}
+                                        submitButtonClassName="btn btn-link btn-rounded text-red-500 hover:text-red-900"
+                                        isOpened={false}/> :
+                                    <FormDialog
+                                        tooltip={t('report_content')}
+                                        buttonClassName="text-amber-500 hover:text-amber-700 m-1 h-min w-min"
+                                        buttonIcon={<ErrorOutlineIcon className="mb-1 align-top"/>}
+                                        title={t('report_comment_title')}
+                                        body={t('report_comment_body')}
+                                        submitReport={submitReport}
+                                        actionTitle={t('report_submit')}
+                                        reportBody={reportBody}
+                                        handleReport={handleReport}
+                                        submitButtonClassName="text-amber-500 hover:text-amber-700"
+                                        isOpened={false}/>
+                            }
                         </div>
                     </div>
-                    <div>
-                        {/*delete and report*/}
-                        {(user && currentUser && (currentUser.localeCompare(user.username) === 0)) ?
-                            <OneButtonDialog
-                                buttonClassName="text-red-500 hover:text-red-900 m-1 h-min w-min"
-                                buttonIcon={<Close className="mb-1 align-top"/>}
-                                title={t('delete_comment_title')}
-                                body={t('delete_comment_body')}
-                                actionTitle={t('delete_comment_confirmation')}
-                                onActionAccepted={deleteComment}
-                                submitButtonClassName="text-red-500 hover:text-red-900"
-                                isOpened={false}/> :
-                            <FormDialog
-                                tooltip={t('report_content')}
-                                buttonClassName="text-amber-500 hover:text-amber-700 m-1 h-min w-min"
-                                buttonIcon={<ErrorOutlineIcon className="mb-1 align-top"/>}
-                                title={t('report_comment_title')}
-                                body={t('report_comment_body')}
-                                submitReport={submitReport}
-                                actionTitle={t('report_submit')}
-                                reportBody={reportBody}
-                                handleReport={handleReport}
-                                submitButtonClassName="text-amber-500 hover:text-amber-700"
-                                isOpened={false}/>
+                    <div className="m-0 pb-2 max-w-full break-words">
+                        {
+                            comment.commentBody
                         }
-                    </div>
-                    <div/>
-                    <div className="col-span-11 flex items-center lg:pb-2">
-                        <div className=" m-0 max-w-full break-words"> {comment.commentBody} </div>
                     </div>
                 </div>
             </ListItem>}

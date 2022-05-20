@@ -263,14 +263,14 @@ function ListsEdition() {
             </div>
             <div className="flex justify-between mt-2">
                 <div className="flex justify-start">
-                    <button className="btn btn-link my-2.5 text-amber-500 hover:text-amber-700 btn-rounded outline mr-2"
+                    <button className="btn btn-link my-2.5 text-amber-500 hover:text-amber-700 btn-rounded mr-2"
                             onClick={() => {
                                 navigate(`/lists/${list.id}`)
                             }}><ArrowBackIcon className="mb-1 mr-1"/>{t('discard_changes')}
                     </button>
                     {(authContext.isLoggedIn && isOwner) &&
                         <OneButtonDialog
-                            buttonClassName="btn btn-link my-2.5 text-red-500 hover:text-red-700 btn-rounded outline mr-2"
+                            buttonClassName="btn btn-link my-2.5 text-red-500 hover:text-red-700 btn-rounded mr-2"
                             buttonIcon={<DeleteForeverIcon className="mb-1 mr-1"/>}
                             buttonText={t('list_delete')}
                             title={t('list_delete')}
@@ -280,7 +280,7 @@ function ListsEdition() {
                             isOpened={false}/>}
                 </div>
                 <OneButtonDialog
-                    buttonClassName="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline"
+                    buttonClassName="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded"
                     buttonIcon={<DoneAllIcon className="mb-1 mr-1"/>}
                     buttonText={t('save_changes')}
                     title={t('lists_edit')}

@@ -16,7 +16,7 @@ const MediaFilters = (props) => {
         props.setType(event.target.value);
     };
 
-    return <div className="flex justify-items-start">
+    return <div className="flex justify-items-start flex-wrap">
         <CommonFilters sortBy={props.sortBy} setSortBy={props.setSortBy} categories={props.categories}
                        setCategories={props.setCategories}
                        decades={props.decades} setDecades={props.setDecades} genres={props.genres}>

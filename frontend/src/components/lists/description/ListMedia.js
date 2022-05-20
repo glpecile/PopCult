@@ -10,7 +10,7 @@ const ListMedia = (props) => {
     const {t} = useTranslation();
 
     const [page, setPage] = useState(1);
-    const pageSize = 4;
+    const pageSize = 12;
     const {setErrorStatusCode} = useErrorStatus();
     const [mediaInlist, setMediaInList] = useState(undefined);
 

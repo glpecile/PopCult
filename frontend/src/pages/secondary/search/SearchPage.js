@@ -8,6 +8,7 @@ import listService from "../../../services/ListService";
 import Spinner from "../../../components/animation/Spinner";
 import {useTranslation} from "react-i18next";
 import GenresContext from "../../../store/GenresContext";
+import {Helmet} from "react-helmet-async";
 
 export default function SearchPage() {
     const {t} = useTranslation();
@@ -123,7 +124,10 @@ export default function SearchPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-black justify-start p-2 break-words max-w-full tracking-wide">
+            <Helmet>
+                <title>{t('search_title')}</title>
+            </Helmet>
+            <h1 className="text-4xl font-black justify-start p-2 break-words max-w-full tracking-wide">
                 {term.length ? t('search_title', {term: term}) : t('search_title_all')}
             </h1>
             {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters}

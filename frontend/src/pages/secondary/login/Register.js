@@ -3,8 +3,11 @@ import RegisterForm from "../../../components/login/RegisterForm";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import UserService from "../../../services/UserService";
+import {Helmet} from "react-helmet-async";
+import {useTranslation} from "react-i18next";
 
 const Register = () => {
+    const {t} = useTranslation();
     const [registerError, setRegisterError] = useState(false);
     const [userToRegister, setUserToRegister] = useState(undefined);
     const [usernameExists, setUsernameExists] = useState(false);
@@ -53,11 +56,15 @@ const Register = () => {
         console.log(user);
         setUserToRegister(user);
     }
-    return (
-        <RegisterCard>
-            <RegisterForm onSuccessfulRegister={SendRegForm} registrationError={registerError}
-                          usernameExists={usernameExists} emailExists={emailExists}/>
-        </RegisterCard>
+    return (<>
+            <Helmet>
+                <title>{t('register_title')}</title>
+            </Helmet>
+            <RegisterCard>
+                <RegisterForm onSuccessfulRegister={SendRegForm} registrationError={registerError}
+                              usernameExists={usernameExists} emailExists={emailExists}/>
+            </RegisterCard>
+        </>
     );
 }
 export default Register;

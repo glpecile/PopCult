@@ -310,7 +310,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().
-                antMatchers("/resources/**"); //Apago SpringSecurity para los assets publicos
+                antMatchers("/resources/**", "/static/**"); //Apago SpringSecurity para los assets publicos
     }
 }
 

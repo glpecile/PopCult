@@ -52,7 +52,7 @@ const NewComment = (props) => {
             className="rounded w-full bg-gray-50 mt-2"
             value={comment} onChange={insertComment}/>
         <div className="flex justify-end">
-            <button type="submit" disabled={comment.length === 0}
+            <button type="submit" disabled={comment.length === 0 || comment.length > 1000}
                     className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
             > {t('comments_submit_comment')}
             </button>

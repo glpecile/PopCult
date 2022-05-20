@@ -66,7 +66,7 @@ const UserNotifications = () => {
                         </div>
                     </>
                     :
-                    <NoResults/>}
+                    <NoResults title={t('notifications_no_results')}/>}
             </>
             :
             <Spinner/>}

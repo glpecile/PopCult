@@ -13,6 +13,7 @@ import NoResults from "../../../components/search/NoResults";
 import ResponsiveMediaGrid from "../../../components/ResponsiveMediaGrid";
 import MediaCard from "../../../components/media/MediaCard";
 import PaginationComponent from "../../../components/PaginationComponent";
+import {Helmet} from "react-helmet-async";
 
 export default function StaffProfile() {
     const {id: staffIdParam} = useParams();
@@ -73,6 +74,9 @@ export default function StaffProfile() {
     return (<>{
         (staffMember && staffMediaAll !== undefined) ?
             <div className="space-y-2">
+                <Helmet>
+                    <title>{staffMember.name} • PopCult</title>
+                </Helmet>
                 <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex flex-col basis-1/3">
                         <div className="shadow-md rounded-lg divide-y divide-slate-300 my-3 bg-white">
@@ -92,6 +96,9 @@ export default function StaffProfile() {
 
                 <div className="flex justify-center">
                     <Tabs value={value}
+                          variant="scrollable"
+                          allowScrollButtonsMobile
+                          scrollButtons="auto"
                           onChange={(event, newValue) => {
                               setValue(newValue)
                           }}
