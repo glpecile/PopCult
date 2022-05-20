@@ -68,7 +68,6 @@ export default function SearchPage() {
 
     useEffect(() => {
         if (firstLoad.current !== true) {
-            console.log("nav")
             navigate({
                 pathname: '/search',
                 search: createSearchParams({
