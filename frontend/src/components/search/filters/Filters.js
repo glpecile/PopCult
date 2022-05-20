@@ -89,12 +89,12 @@ const Filters = (props) => {
                               setCategories={setLCategories}
                               decades={lDecades} setDecades={setLDecades} genres={props.genres}/>)
             }
-            <div className="flex justify-end">
+            <div className="flex justify-end flex-wrap">
                 <button type="submit" className="btn btn-link my-2 text-violet-500 hover:text-violet-900 btn-rounded">
                     <FilterAltOutlinedIcon className="pb-1"/>{t('search_filters_apply')}
                 </button>
-                <button className="btn btn-link my-2 text-violet-500 hover:text-violet-900 btn-rounded"
-                        onClick={cleanFilters}><CancelOutlinedIcon className="pb-1"/>{t('search_filters_clear')}
+                <button className="btn btn-link my-2 text-violet-500 hover:text-violet-900 btn-rounded" onClick={cleanFilters}>
+                    <CancelOutlinedIcon className="pb-1"/>{t('search_filters_clear')}
                 </button>
             </div>
         </form>

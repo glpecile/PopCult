@@ -35,7 +35,7 @@ const CommonFilters = (props) => {
         );
     };
 
-    return <div className="flex justify-items-start">
+    return <div className="flex justify-items-start flex-wrap">
         {/* Sorted By */}
         {props.genres && <><FormControl sx={style} size="small">
             <InputLabel id="sort-by-select-label" className="text-violet-500">{t('search_sort')}</InputLabel>
