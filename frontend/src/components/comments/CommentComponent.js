@@ -118,7 +118,7 @@ const CommentComponent = (props) => {
         <>{(comment && user) &&
             <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex items-start">
                 <img className="inline-block object-cover rounded-full h-14 w-14 m-2" alt="profile_image" src={user.imageUrl}/>
-                <div className="flex-col w-full">
+                <div className="flex-col">
                     <div className="flex items-center text-lg justify-between">
                         <div className="flex">
                             <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
@@ -158,16 +158,14 @@ const CommentComponent = (props) => {
                             }
                         </div>
                     </div>
-                    <div className="m-0 pb-2 max-w-full break-words">
-                        {
-                            comment.commentBody
-                        }
+                    <div className="m-0 pb-2 max-w-full break-all">
+                        {comment.commentBody}
                     </div>
                 </div>
             </ListItem>}
             <Snackbar open={showAlert} autoHideDuration={6000}
                       anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-                <Alert severity={!error? "success" : "warning"}>
+                <Alert severity={!error ? "success" : "warning"}>
                     {status === 201 ? <>{t('report_success')} </> : status === 204 ? <>{t('report_admin_success')}</> : <>{t('report_error')}</>}
                 </Alert>
             </Snackbar>
