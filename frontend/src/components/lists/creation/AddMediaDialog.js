@@ -86,6 +86,9 @@ export default function AddMediaDialog(props) {
                 <DialogContent dividers>
                     <div className="flex justify-center w-full">
                         <Tabs value={tabValue}
+                              variant="scrollable"
+                              allowScrollButtonsMobile
+                              scrollButtons="auto"
                               onChange={handleTabs}
                               textColor="secondary"
                               indicatorColor="secondary"

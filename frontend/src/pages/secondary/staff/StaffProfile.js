@@ -96,6 +96,9 @@ export default function StaffProfile() {
 
                 <div className="flex justify-center">
                     <Tabs value={value}
+                          variant="scrollable"
+                          allowScrollButtonsMobile
+                          scrollButtons="auto"
                           onChange={(event, newValue) => {
                               setValue(newValue)
                           }}

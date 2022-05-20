@@ -119,6 +119,9 @@ const Reports = () => {
         </h1>
         <div className="flex justify-center">
             <Tabs value={value}
+                  variant="scrollable"
+                  allowScrollButtonsMobile
+                  scrollButtons="auto"
                   onChange={handleChange}
                   textColor="secondary"
                   indicatorColor="secondary"
