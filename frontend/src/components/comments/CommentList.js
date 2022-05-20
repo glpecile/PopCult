@@ -5,6 +5,7 @@ import {List} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import {CommentSectionType} from "../../enums/CommentSectionType";
+import NoResults from "../search/NoResults";
 
 const CommentList = (props) => {
     const {t} = useTranslation();
@@ -70,8 +71,7 @@ const CommentList = (props) => {
                 })}
             </List>}
         <div className="flex justify-center">
-            {maxPage === 0 ? <div
-                className="text-base tracking-tight pl-1 text-gray-400">{t('comments_no_comments')}</div> : <>{page !== maxPage ? (
+            {maxPage === 0 ? <NoResults title={t('comments_no_comments')}/> : <>{page !== maxPage ? (
                 <button
                     className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
                     onClick={() => setPage(page + 1)}>{t('comments_load_more')}
