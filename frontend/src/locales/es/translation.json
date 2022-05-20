@@ -89,6 +89,7 @@
   "home_title_series": "Series Recientemente Agregadas",
   "home_title_series_discovery": "Series que tal vez te gusten",
   "home_viewAll": "Ver Todo",
+  "length_count": "{{current}} / {{max}}",
   "list_add_media": "Agrega nueva contenido",
   "list_already_media": "Maneja el contenido de esta lista",
   "list_by": "por: <0>{{username}}</0>",

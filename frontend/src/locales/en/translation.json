@@ -89,6 +89,7 @@
   "home_title_series": "Recently Added Series",
   "home_title_series_discovery": "Series you might like",
   "home_viewAll": "View All",
+  "length_count": "{{current}} / {{max}}",
   "list_add_media": "Add new media",
   "list_already_media": "Handle media in this list",
   "list_by": "by: <0>{{username}}</0>",
