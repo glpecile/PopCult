@@ -29,7 +29,7 @@ const CollaborationRequest = (props) => {
     }
 
     return (<div
-        className={"my-1 w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between " + props.className}>
+        className={"my-1 w-full h-min-20 flex-wrap bg-white overflow-hidden rounded-lg shadow-md flex justify-evenly lg:justify-between transition duration-300 ease-in-out hover:bg-violet-50/50 hover:shadow-indigo-500/50 relative " + props.className}>
         <div className="flex items-center">
             <h4 className="text-base pl-3 py-4 text-xl font-normal tracking-tight">
                 <Trans i18nKey="panel_collaborators">
