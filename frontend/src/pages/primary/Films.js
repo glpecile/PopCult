@@ -39,7 +39,6 @@ export default function Films() {
     const pageSize = 12;
 
     useEffect(() => {
-        firstLoad.current = true;
         setPage(searchParams.get("page"));
         setFilmFilters(getMediaFilters)
     }, [searchParams, getMediaFilters]);
@@ -75,7 +74,7 @@ export default function Films() {
         }
 
         getData();
-    }, [page, filmFilters, pageSize, setErrorStatusCode])
+    }, [searchParams, setErrorStatusCode])
 
     useEffect(() => {
         if (firstLoad.current !== true)
@@ -87,6 +86,9 @@ export default function Films() {
                 }).toString()
             });
         firstLoad.current = false;
+        return () => {
+            firstLoad.current = false;
+        }
     }, [page, filmFilters, navigate]);
 
 

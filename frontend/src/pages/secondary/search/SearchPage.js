@@ -103,7 +103,7 @@ export default function SearchPage() {
         }
 
         getMedia();
-    }, [term, mediaPage, setErrorStatusCode, mediaFilters]);
+    }, [searchParams, setErrorStatusCode]);
 
     useEffect(() => {
         async function getLists() {
@@ -120,7 +120,7 @@ export default function SearchPage() {
         }
 
         getLists();
-    }, [term, listPage, setErrorStatusCode, listFilters]);
+    }, [searchParams, setErrorStatusCode]);
 
     return (
         <div>
