@@ -104,6 +104,17 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
+    <!-- PPT Optimizaciones Diap 11   -->
+    <!-- Unconditional Cache Filter   -->
+    <filter>
+        <filter-name>StaticCacheFilter</filter-name>
+        <filter-class>ar.edu.itba.paw.webapp.config.StaticCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>StaticCacheFilter</filter-name>
+        <url-pattern>/static/*</url-pattern>
+    </filter-mapping>
+
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/static/*</url-pattern>
