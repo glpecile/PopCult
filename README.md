@@ -1,6 +1,6 @@
 # Proyectos de Aplicaciones Web
 
-![logo](webapp/src/main/webapp/resources/images/PopCultCompleteLogo.png)
+![logo](frontend/src/images/PopCultCompleteLogo.webp)
 
 Repositorio del TPE **72.38 - Proyecto de Aplicaciones Web** realizado a lo largo de 2021 segundo cuatrimestre.
 
@@ -58,3 +58,7 @@ Los scripts se encuentran disponibles en [`/persistence/src/main/resources`](per
 - User:
     - PopUser
     - 123456789
+
+## Documentación
+En el siguiente [link](https://docs.google.com/spreadsheets/d/12-d4w7wpwGuRHetUvtA7HINCAAQFAsUD5CVlg7ucaQ8/edit?usp=sharing) 
+se puede encontrar la documentación de los endpoints de la API.
