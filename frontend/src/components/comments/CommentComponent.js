@@ -137,7 +137,7 @@ const CommentComponent = (props) => {
                                 body={t('delete_comment_body')}
                                 actionTitle={t('delete_comment_confirmation')}
                                 onActionAccepted={deleteComment}
-                                submitButtonClassName="text-red-500 hover:text-red-900"
+                                submitButtonClassName="btn btn-link btn-rounded text-red-500 hover:text-red-900"
                                 isOpened={false}/> :
                             <FormDialog
                                 tooltip={t('report_content')}
