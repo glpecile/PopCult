@@ -118,7 +118,7 @@ const CommentComponent = (props) => {
         <>{(comment && user) &&
             <ListItem className="p-1 my-2 ring-2 ring-gray-200 bg-white rounded-lg flex items-start">
                 <img className="inline-block object-cover rounded-full h-14 w-14 m-2" alt="profile_image" src={user.imageUrl}/>
-                <div className="flex-col">
+                <div className="flex-col w-full">
                     <div className="flex items-center text-lg justify-between">
                         <div className="flex">
                             <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
