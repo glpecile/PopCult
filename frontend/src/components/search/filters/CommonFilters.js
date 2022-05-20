@@ -12,9 +12,7 @@ const CommonFilters = (props) => {
     const {t} = useTranslation();
 
     const style = {
-        "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: 'rgb(139 92 246)',
-        }, m: 1, minWidth: 120, borderColor: 'rgb(139 92 246)'
+        m: 1, minWidth: 120
     }
 
     const handleSortBy = (event) => {
