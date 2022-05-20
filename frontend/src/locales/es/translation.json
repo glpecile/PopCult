@@ -201,6 +201,7 @@
   "nav_sign_in": "Ingresar",
   "nav_sign_out": "Cerrar Sesión",
   "notification_comment_title": "<0>{{username}}</0> ha comentado en tu lista <1>{{list}}</1>:",
+  "notifications_no_results": "No tienes notificaciones en este momento.",
   "panel_collaborators": "<0>{{username}}</0> quiere colaborar en tu lista: <1>{{list}}</1>",
   "profile_description": "O como nos gusta llamarte: <0>{{username}}</0>",
   "profile_edit": "Editar Perfil",

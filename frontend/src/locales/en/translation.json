@@ -201,6 +201,7 @@
   "nav_sign_in": "Sign In",
   "nav_sign_out": "Sign Out",
   "notification_comment_title": "<0>{{username}}</0> commented on your list <1>{{list}}</1>:",
+  "notifications_no_results": "There are no notifications at the moment.",
   "panel_collaborators": "<0>{{username}}</0> wants to collaborate in your list: <1>{{list}}</1>",
   "profile_description": "Or as we like to call you: <0>{{username}}</0>",
   "profile_edit": "Edit Profile",
