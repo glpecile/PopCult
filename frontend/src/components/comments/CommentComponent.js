@@ -24,6 +24,7 @@ const CommentComponent = (props) => {
 
     const [showAlert, setShowAlert] = useState(false);
     const [status, setStatus] = useState(0);
+    const [error, setError] = useState(false);
 
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -96,9 +97,12 @@ const CommentComponent = (props) => {
             } else if (data.status === 201) {
                 setStatus(data.status)
                 setShowAlert(true);
+                setError(false);
             }
         } catch (error) {
-            setErrorStatusCode(error.response.status);
+            setStatus(error.response.status)
+            setShowAlert(true);
+            setError(true);
         }
     }
 
@@ -163,8 +167,8 @@ const CommentComponent = (props) => {
             </ListItem>}
             <Snackbar open={showAlert} autoHideDuration={6000}
                       anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-                <Alert severity="success">
-                    {status === 201 ? <>{t('report_success')} </> : <>{t('report_admin_success')}</>}
+                <Alert severity={!error? "success" : "warning"}>
+                    {status === 201 ? <>{t('report_success')} </> : status === 204 ? <>{t('report_admin_success')}</> : <>{t('report_error')}</>}
                 </Alert>
             </Snackbar>
         </>
