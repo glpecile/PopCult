@@ -65,7 +65,6 @@ const Settings = () => {
                 } catch (error) {
                     wrongPass = true;
                     setPasswordError(true);
-                    console.log(error);
                 }
             }
             if (!wrongPass) navigate(`/user/${username}`);
@@ -92,7 +91,6 @@ const Settings = () => {
             }, 5000);
         } catch (error) {
             setErrorModal(true);
-            console.log(error.response);
             setTimeout(() => {
                 setSuccessModal(false);
                 setErrorModal(false);

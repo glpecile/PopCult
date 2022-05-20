@@ -13,6 +13,7 @@ import RolesGate from "../../../components/permissions/RolesGate";
 import {Roles} from "../../../enums/Roles";
 import PaginationComponent from "../../../components/PaginationComponent";
 import {Helmet} from "react-helmet-async";
+import ErrorSnackbar from "../../../components/ErrorSnackbar";
 
 const Moderators = () => {
     // const query = new URLSearchParams(useLocation().search);
@@ -25,6 +26,8 @@ const Moderators = () => {
 
     const [activeModeratorsRefresh, setActiveModeratorsRefresh] = useState(false);
     const [moderatorsRequestRefresh, setModeratorsRequestRefresh] = useState(false);
+
+    const [error, setError] = useState(false);
 
     const moderatorsUsersMounted = useRef(true);
     const moderatorsRequestMounted = useRef(true);
@@ -40,7 +43,7 @@ const Moderators = () => {
                 const mods = await UserService.getModerators({page: moderatorsPage, pageSize: 12});
                 setActiveModerators(mods);
             } catch (error) {
-                console.log(error);
+                setError(true);
             }
         }
     }, [moderatorsPage]);
@@ -53,7 +56,7 @@ const Moderators = () => {
                 });
                 setModeratorsRequests(requests);
             } catch (error) {
-                console.log(error);
+                setError(true);
             }
         }
     }, [requestsPage]);
@@ -63,7 +66,7 @@ const Moderators = () => {
             await UserService.removeMod(url);
             setActiveModeratorsRefresh((prevState => !prevState));
         } catch (error) {
-            console.log(error);
+            setError(true);
         }
     }, []);
 
@@ -72,7 +75,7 @@ const Moderators = () => {
             await ModRequestService.rejectModRequest(url);
             setModeratorsRequestRefresh((prevState => !prevState));
         } catch (error) {
-            console.log(error);
+            setError(true);
         }
     }, []);
 
@@ -81,7 +84,7 @@ const Moderators = () => {
             await ModRequestService.promoteToMod(url);
             setModeratorsRequestRefresh((prevState => !prevState));
         } catch (error) {
-            console.log(error);
+            setError(true);
         }
     }, []);
 
@@ -103,6 +106,14 @@ const Moderators = () => {
         }
 
     }, [getModerators, activeModeratorsRefresh, moderatorsRequestRefresh]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setError(false);
+        }, 5000);
+
+        return () => clearTimeout(timeout);
+    },[error]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -167,6 +178,7 @@ const Moderators = () => {
                     </div>
                 </>}</>}
         </TabPanel>
+        <ErrorSnackbar show={error} text={t('error400_body')}/>
     </RolesGate>);
 }
 export default Moderators;

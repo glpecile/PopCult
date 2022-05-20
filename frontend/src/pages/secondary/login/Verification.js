@@ -3,12 +3,14 @@ import {useCallback, useContext, useEffect, useState} from "react";
 import UserService from "../../../services/UserService";
 import AuthContext from "../../../store/AuthContext";
 import jwtDecode from "jwt-decode";
+import useErrorStatus from "../../../hooks/useErrorStatus";
 
 const Verification = () => {
     const [successfulVerification, setSuccessfulVerification] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const token = query.get('token');
     const authContext = useContext(AuthContext);
+    const {setErrorStatusCode} = useErrorStatus();
 
     const verifyAccount = useCallback(async (token) => {
         try {
@@ -17,12 +19,11 @@ const Verification = () => {
             authContext.onLogin(key, jwtDecode(key).sub);
             sessionStorage.setItem("userAuthToken", JSON.stringify(key));
         } catch (error) {
-            console.log(error);
+            setErrorStatusCode(error.response.status);
         }
-    }, [authContext]);
+    }, [authContext, setErrorStatusCode]);
 
     useEffect(() => {
-        console.log("token " + token);
         if (token !== null && token.length !== 0) {
             verifyAccount(token);
         }
