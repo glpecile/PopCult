@@ -120,7 +120,7 @@ const CommentComponent = (props) => {
                 <img className="inline-block object-cover rounded-full h-14 w-14 m-2" alt="profile_image" src={user.imageUrl}/>
                 <div className="flex-col w-full">
                     <div className="flex items-center text-lg justify-between">
-                        <div className="flex">
+                        <div className="flex items-center">
                             <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
                                   to={'/user/' + user.username}>{user.username}</Link>
                             <div className="text-base tracking-tight pl-1 text-gray-400">
