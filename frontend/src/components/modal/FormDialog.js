@@ -5,12 +5,18 @@ import LocalDialog from "./LocalDialog";
 import {useLocation, useNavigate} from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import {Tooltip} from "@mui/material";
+import {useTranslation} from "react-i18next";
+import LengthProgress from "../comments/LengthProgress";
 
 export default function FormDialog(props) {
+    const {t} = useTranslation();
     const [open, setOpen] = useState(props.isOpened);
     const navigate = useNavigate();
     const context = useContext(AuthContext);
     const location = useLocation();
+    const MIN_LENGTH = 1;
+    const MAX_LENGTH = 1000;
+
 
 
     const handleState = () => {
@@ -49,8 +55,9 @@ export default function FormDialog(props) {
                             <textarea
                                 className={"rounded w-full bg-gray-50"}
                                 value={props.reportBody} onChange={props.handleReport}/>
+                            <LengthProgress length={props.reportBody.length} max={MAX_LENGTH} text={t('length_count', {current: props.reportBody.length, max: MAX_LENGTH})}/>
                             <div className="flex justify-end">
-                                <button type="submit" onClick={() => {
+                                <button type="submit" disabled={!props.reportBody || props.reportBody.length < MIN_LENGTH || props.reportBody.length > MAX_LENGTH} onClick={() => {
                                     setOpen(false);
                                 }}
                                         className="btn btn-link text-amber-500 hover:text-amber-700 btn-rounded">{props.actionTitle}</button>

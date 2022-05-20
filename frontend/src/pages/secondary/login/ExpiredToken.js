@@ -23,7 +23,6 @@ const ExpiredToken = () => {
         try {
             await UserService.sendVerificationToken(enteredEmail);
         } catch (error) {
-            console.log(error);
             hasError = true;
             setEmailError(true);
         }

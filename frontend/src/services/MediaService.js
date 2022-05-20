@@ -5,7 +5,6 @@ import {parsePaginatedResponse} from "./ResponseUtils";
 
 const MediaService = (() => {
 
-    // TODO use sortType enum
     const getMediaList = async ({page, pageSize, mediaType, genres, sortType, decades, query, notInList}) => {
         const res = await mediaApi.getMediaList({page, pageSize, mediaType, genres, sortType, decades, query, notInList});
         return parsePaginatedResponse(res);

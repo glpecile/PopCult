@@ -20,6 +20,7 @@ const ListUpperIcons = (list) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [snackbar, setSnackbar] = useState(false);
+    const [error, setError] = useState(false);
 
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -96,10 +97,12 @@ const ListUpperIcons = (list) => {
                     }
                 });
             } else if (data.status === 201) {
+                setError(false);
                 setSnackbar(true);
             }
         } catch (error) {
-            setErrorStatusCode(error.response.status);
+            setError(true);
+            setSnackbar(true);
         }
     }
 
@@ -119,8 +122,8 @@ const ListUpperIcons = (list) => {
             isOpened={false}/>}
         <Snackbar open={snackbar} autoHideDuration={6000}
                   anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-            <Alert severity="success">
-                {t('report_success')}
+            <Alert severity={!error? "success" : "warning"}>
+                {!error? <>{t('report_success')}</> : <>{t('report_error')}</>}
             </Alert>
         </Snackbar>
     </div>;

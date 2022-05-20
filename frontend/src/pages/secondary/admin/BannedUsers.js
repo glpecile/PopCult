@@ -9,6 +9,7 @@ import {Roles} from "../../../enums/Roles";
 import PaginationComponent from "../../../components/PaginationComponent";
 import * as React from "react";
 import {Helmet} from "react-helmet-async";
+import ErrorSnackbar from "../../../components/ErrorSnackbar";
 
 const BannedUsers = () => {
     // const query = new URLSearchParams(useLocation().search);
@@ -16,6 +17,8 @@ const BannedUsers = () => {
     const [bannedUsers, setBannedUsers] = useState(undefined);
     const [refresh, setRefresh] = useState(false);
     const bannedUsersMounted = useRef(true);
+    const [error, setError] = useState(false);
+
     const {t} = useTranslation();
 
     const getBannedUsers = useCallback(async () => {
@@ -23,7 +26,7 @@ const BannedUsers = () => {
             const users = await UserService.getBannedUsers({page, pageSize: 12});
             setBannedUsers(users);
         } catch (error) {
-            console.log(error);
+            setError(true)
         }
     }, [page]);
 
@@ -32,7 +35,7 @@ const BannedUsers = () => {
             await UserService.unbanUser(url);
             setRefresh((prevState => prevState + 1));
         } catch (error) {
-            console.log(error);
+            setError(true);
         }
     }, []);
 
@@ -43,6 +46,14 @@ const BannedUsers = () => {
             bannedUsersMounted.current = false;
         }
     }, [getBannedUsers, refresh]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setError(false);
+        }, 5000);
+
+        return () => clearTimeout(timeout);
+    },[error]);
 
     return (<RolesGate level={Roles.MOD}>
         <Helmet>
@@ -67,6 +78,7 @@ const BannedUsers = () => {
                     }
                 </div>
             </>}
+        <ErrorSnackbar show={error} text={t('error400_body')}/>
     </RolesGate>);
 
 }

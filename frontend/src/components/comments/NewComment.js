@@ -5,13 +5,15 @@ import AuthContext from "../../store/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import useErrorStatus from "../../hooks/useErrorStatus";
 import {CommentSectionType} from "../../enums/CommentSectionType";
+import LengthProgress from "./LengthProgress";
 
 const NewComment = (props) => {
     const {t} = useTranslation();
     const userIsLogged = useContext(AuthContext).isLoggedIn;
     const location = useLocation()
     const navigate = useNavigate();
-
+    const MIN_LENGTH = 1;
+    const MAX_LENGTH = 1000;
     const [comment, setComment] = useState("");
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -51,8 +53,9 @@ const NewComment = (props) => {
             placeholder={t('comments_placeholder')}
             className="rounded w-full bg-gray-50 mt-2"
             value={comment} onChange={insertComment}/>
+        <LengthProgress length={comment.length} max={MAX_LENGTH} text={t('length_count', {current: comment.length, max: MAX_LENGTH})}/>
         <div className="flex justify-end">
-            <button type="submit" disabled={comment.length === 0 || comment.length > 1000}
+            <button type="submit" disabled={comment.length < MIN_LENGTH || comment.length > MAX_LENGTH}
                     className="btn btn-link my-2.5 text-violet-500 hover:text-violet-900 btn-rounded outline outline-1"
             > {t('comments_submit_comment')}
             </button>

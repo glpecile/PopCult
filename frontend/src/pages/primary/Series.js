@@ -76,7 +76,7 @@ function Series() {
         }
 
         getData();
-    }, [page, seriesFilters, pageSize, setErrorStatusCode])
+    }, [searchParams, setErrorStatusCode])
 
     useEffect(() => {
         if (firstLoad.current !== true)
