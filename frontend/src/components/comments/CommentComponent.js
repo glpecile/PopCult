@@ -24,6 +24,7 @@ const CommentComponent = (props) => {
 
     const [showAlert, setShowAlert] = useState(false);
     const [status, setStatus] = useState(0);
+    const [error, setError] = useState(false);
 
     const {setErrorStatusCode} = useErrorStatus();
 
@@ -96,9 +97,12 @@ const CommentComponent = (props) => {
             } else if (data.status === 201) {
                 setStatus(data.status)
                 setShowAlert(true);
+                setError(false);
             }
         } catch (error) {
-            setErrorStatusCode(error.response.status);
+            setStatus(error.response.status)
+            setShowAlert(true);
+            setError(true);
         }
     }
 
@@ -116,7 +120,7 @@ const CommentComponent = (props) => {
                 <img className="inline-block object-cover rounded-full h-14 w-14 m-2" alt="profile_image" src={user.imageUrl}/>
                 <div className="flex-col w-full">
                     <div className="flex items-center text-lg justify-between">
-                        <div className="flex">
+                        <div className="flex items-center">
                             <Link className="text-decoration-none text-violet-500 hover:text-violet-900"
                                   to={'/user/' + user.username}>{user.username}</Link>
                             <div className="text-base tracking-tight pl-1 text-gray-400">
@@ -154,17 +158,15 @@ const CommentComponent = (props) => {
                             }
                         </div>
                     </div>
-                    <div className="m-0 pb-2 max-w-full break-words">
-                        {
-                            comment.commentBody
-                        }
+                    <div className="m-0 pb-2 max-w-full break-all">
+                        {comment.commentBody}
                     </div>
                 </div>
             </ListItem>}
             <Snackbar open={showAlert} autoHideDuration={6000}
                       anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-                <Alert severity="success">
-                    {status === 201 ? <>{t('report_success')} </> : <>{t('report_admin_success')}</>}
+                <Alert severity={!error ? "success" : "warning"}>
+                    {status === 201 ? <>{t('report_success')} </> : status === 204 ? <>{t('report_admin_success')}</> : <>{t('report_error')}</>}
                 </Alert>
             </Snackbar>
         </>

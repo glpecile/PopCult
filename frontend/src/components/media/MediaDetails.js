@@ -19,9 +19,6 @@ function MediaDetails(props) {
                     <img className="w-full object-center rounded-t-lg" src={`${props.image}?size=lg`} alt="Media Details"/>
                     <MediaOptions mediaData={props.mediaData}/>
                     <ShareMenu isOpened={false}/>
-                    {
-                        // TODO: Add to list component
-                    }
                 </div>
             </div>
 

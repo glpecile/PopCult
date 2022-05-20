@@ -71,7 +71,6 @@ export default function Login() {
                 authContext.onLogin(key, enteredUsername);
                 enteredRememberMe === true ? localStorage.setItem("userAuthToken", JSON.stringify(key)) : sessionStorage.setItem("userAuthToken", JSON.stringify(key));
             } catch (error) {
-                console.log(error);
                 setErrorMessage();
             }
 

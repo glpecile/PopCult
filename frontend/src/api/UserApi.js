@@ -67,7 +67,6 @@ const userApi = (() => {
     }
 
     const changePassword = ({url, currentPassword, newPassword}) => {
-        console.log(currentPassword + '.' + newPassword);
         return api.put(url,
             {
                 'currentPassword': currentPassword,

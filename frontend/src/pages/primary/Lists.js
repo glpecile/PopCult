@@ -77,7 +77,7 @@ function Lists() {
         }
 
         getLists();
-    }, [page, setErrorStatusCode, listFilters, pageSize]);
+    }, [setErrorStatusCode, searchParams]);
 
     const createNewList = () => {
         navigate('/lists/new');

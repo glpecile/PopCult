@@ -68,7 +68,6 @@ export default function SearchPage() {
 
     useEffect(() => {
         if (firstLoad.current !== true) {
-            console.log("nav")
             navigate({
                 pathname: '/search',
                 search: createSearchParams({
@@ -103,7 +102,7 @@ export default function SearchPage() {
         }
 
         getMedia();
-    }, [term, mediaPage, setErrorStatusCode, mediaFilters]);
+    }, [searchParams, setErrorStatusCode]);
 
     useEffect(() => {
         async function getLists() {
@@ -120,7 +119,7 @@ export default function SearchPage() {
         }
 
         getLists();
-    }, [term, listPage, setErrorStatusCode, listFilters]);
+    }, [searchParams, setErrorStatusCode]);
 
     return (
         <div>
@@ -128,7 +127,7 @@ export default function SearchPage() {
                 <title>{t('search_title')}</title>
             </Helmet>
             <h1 className="text-4xl font-black justify-start p-2 break-words max-w-full tracking-wide">
-                {term.length ? t('search_title', {term: term}) : t('search_title_all')}
+                {term.length ? t('search_title_term', {term: term}) : t('search_title_all')}
             </h1>
             {<Filters showMediaFilters={activeTab === 0} showMediaType={true} setMediaFilters={setMediaFilters}
                       mediaFilters={mediaFilters}

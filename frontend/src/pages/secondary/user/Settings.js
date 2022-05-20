@@ -65,7 +65,6 @@ const Settings = () => {
                 } catch (error) {
                     wrongPass = true;
                     setPasswordError(true);
-                    console.log(error);
                 }
             }
             if (!wrongPass) navigate(`/user/${username}`);
@@ -92,7 +91,6 @@ const Settings = () => {
             }, 5000);
         } catch (error) {
             setErrorModal(true);
-            console.log(error.response);
             setTimeout(() => {
                 setSuccessModal(false);
                 setErrorModal(false);
@@ -124,7 +122,7 @@ const Settings = () => {
                                  email={userData.email} isIncorrectPassword={passwordError}
                                  onSaveUserData={updateUserData}
                                  onDeleteAccount={deleteAccount}/>
-            {// TODO: check style.
+            {
                 successModal && <NoButtonDialog
                     buttonClassName="btn bg-gray-300 shadow-md group hover:bg-green-400 hover:shadow-green-300 text-gray-700 font-semibold hover:text-white my-2"
                     buttonIcon={<PersonRemoveOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}
@@ -132,7 +130,7 @@ const Settings = () => {
                     title={t('modal_success')}
                     body={t('modal_user_delete_success')}
                     isOpened={true}/>}
-            {// TODO: check style.
+            {
                 errorModal && <NoButtonDialog
                     buttonClassName="btn my-2 bg-gray-300 shadow-md group hover:bg-red-400 hover:shadow-red-400 text-gray-700 font-semibold hover:text-white"
                     buttonIcon={<PersonRemoveOutlinedIcon fontSize="small" className="group-hover:text-white mr-2"/>}

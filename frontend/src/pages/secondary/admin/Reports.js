@@ -8,12 +8,12 @@ import Spinner from "../../../components/animation/Spinner";
 import NothingToShow from "../../../components/admin/NothingToShow";
 import RolesGate from "../../../components/permissions/RolesGate";
 import ListReport from "../../../components/admin/ListReport";
-import useErrorStatus from "../../../hooks/useErrorStatus";
 import PaginationComponent from "../../../components/PaginationComponent";
 import ListCommentReport from "../../../components/admin/ListCommentReport";
 import {a11yProps, TabPanel} from "../../../components/TabsComponent";
 import MediaCommentReport from "../../../components/admin/MediaCommentReport";
 import {Helmet} from "react-helmet-async";
+import ErrorSnackbar from "../../../components/ErrorSnackbar";
 
 const Reports = () => {
     let tabStyle = "capitalize";
@@ -36,7 +36,7 @@ const Reports = () => {
     const reportedListCommentsMounted = useRef(true);
     const reportedMediaCommentsMounted = useRef(true);
 
-    const {setErrorStatusCode} = useErrorStatus();
+    const [error, setError] = useState(false);
 
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const Reports = () => {
                     const lists = await ReportService.getListReports({page: listsReportsPage, pageSize: 12});
                     setReportedLists(lists);
                 } catch (error) {
-                    setErrorStatusCode(error.response.status);
+                    setError(true);
                 }
             }
         }
@@ -57,7 +57,7 @@ const Reports = () => {
         return () => {
             reportedListsMounted.current = false;
         }
-    }, [listsReportsPage, setErrorStatusCode, refreshLists]);
+    }, [listsReportsPage, refreshLists]);
 
     useEffect(() => {
         reportedListCommentsMounted.current = true;
@@ -70,9 +70,8 @@ const Reports = () => {
                         pageSize: 12
                     });
                     setReportedListComments(comments);
-                    console.log(comments);
                 } catch (error) {
-                    setErrorStatusCode(error.response.status);
+                    setError(true);
                 }
             }
         }
@@ -81,7 +80,7 @@ const Reports = () => {
         return () => {
             reportedListCommentsMounted.current = false;
         }
-    }, [listsCommentsReportsPage, setErrorStatusCode, refreshListComments]);
+    }, [listsCommentsReportsPage, refreshListComments]);
 
     useEffect(() => {
         reportedMediaCommentsMounted.current = true;
@@ -92,10 +91,9 @@ const Reports = () => {
                         page: mediaCommentsReportsPage,
                         pageSize: 12
                     });
-                    console.log(comments)
                     setReportedMediaComments(comments);
                 } catch (error) {
-                    setErrorStatusCode(error.response.status);
+                    setError(true);
                 }
             }
         }
@@ -104,7 +102,15 @@ const Reports = () => {
         return () => {
             reportedMediaCommentsMounted.current = false;
         }
-    }, [mediaCommentsReportsPage, setErrorStatusCode, refreshMediaComments]);
+    }, [mediaCommentsReportsPage, refreshMediaComments]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setError(false);
+        }, 5000);
+
+        return () => clearTimeout(timeout);
+    },[error]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -204,6 +210,7 @@ const Reports = () => {
                     }
                 </>: <Spinner/>}
         </TabPanel>
+        <ErrorSnackbar show={error} text={t('error400_body')}/>
     </RolesGate>);
 
 }

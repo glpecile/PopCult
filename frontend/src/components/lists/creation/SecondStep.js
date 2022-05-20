@@ -48,7 +48,6 @@ const SecondStep = (props) => {
                     <div className="flex flex-col">
                         {t('lists_already_media')}
                     </div>
-                    {/*TODO esto se podria paginar con setPagination*/}
                     {Array.from(props.addedMedia.values()).map(media => {
                         return <CompactMediaCard title={media.title}
                                                  releaseDate={media.releaseDate.slice(0,4)}

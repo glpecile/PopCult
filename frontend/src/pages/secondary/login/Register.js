@@ -37,7 +37,6 @@ const Register = () => {
                     }, 5000)
                 }
                 setRegisterError(true);
-                console.log(error.response.data);
             }
             if (!regError) navigate("/register/success")
         }
@@ -53,7 +52,6 @@ const Register = () => {
     }, [userToRegister, registerUser]);
 
     const SendRegForm = (user) => {
-        console.log(user);
         setUserToRegister(user);
     }
     return (<>
