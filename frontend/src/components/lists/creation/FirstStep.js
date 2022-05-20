@@ -19,7 +19,6 @@ const FirstStep = (props) => {
     }
 
     const listDescriptionHandler = (event) => {
-        //TODO check this regex behaves weird
         let valid = /[^/><]+/.test(event.target.value) || event.target.value.length === 0;
         valid ? setListDescriptionError(false) : setListDescriptionError(true);
         if (valid) props.setListDescription(event.target.value);
