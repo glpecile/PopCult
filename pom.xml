@@ -28,7 +28,7 @@
         <mockito.version>2.25.1</mockito.version>
         <junit.version>4.12</junit.version>
         <org.hsqldb.version>2.5.1</org.hsqldb.version>
-        <org.hibernate.version>5.1.0.Final</org.hibernate.version>
+        <org.hibernate.version>5.4.24.Final</org.hibernate.version>
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <io.jwt.version>0.11.2</io.jwt.version>
