@@ -62,3 +62,12 @@ Los scripts se encuentran disponibles en [`/persistence/src/main/resources`](per
 ## Documentación
 En el siguiente [link](https://docs.google.com/spreadsheets/d/12-d4w7wpwGuRHetUvtA7HINCAAQFAsUD5CVlg7ucaQ8/edit?usp=sharing) 
 se puede encontrar la documentación de los endpoints de la API.
+
+## Correcciones
+- Buen uso de cache no condicional, cache busting, etc.
+- Las fotos de perfil se sirven a full resolution, no hay downsizing adecuado. Estas imágenes además se sirven sin Content-Type.
+- Los endpoints de user `public-lists`, `public-favorite-lists`, `favorite-media`, `watched-media` y `to-watch-media` retorna entidades que en realidad viven en otro lado. ¿Qué significa hacer un PUT pisando propiedades de uno de estos elementos? ¿Estaría modificando el media correspondiente que vive en otra URN?
+- Intentar hacer una operación logueada retorna un 401, que el browser interpreta mostrando el form nativo de login por encima de la pantalla de login del sitio.
+- En el mail de registro el botón de verify no cambia el cursor acorde a que sea clickeable.
+- Buen uso de custom mime types.
+- Tienen algunos tests de frontend, pero los mismos son muy pocos y muy pobres limitándose a hacer API calls mockeadas y revisar que el mock retorna lo esperado, sin comportamiento real.
